@@ -2,10 +2,13 @@ add_subdirectory(Catch2)
 
 include_directories(
   "${PROJECT_SOURCE_DIR}/include"
-  "${PROJECT_SOURCE_DIR}/tests/Catch2/single_include/catch2"
+  "${PROJECT_SOURCE_DIR}/tests/Catch2/single_include"
   )
 
-add_executable(tests main.cc)
+add_executable(tests main.cc
+  time.cc
+  )
+
 target_link_libraries(tests Catch2::Catch2)
 
 include(CTest)
