@@ -1,5 +1,6 @@
 ---
 BasedOnStyle: Chromium
 BreakConstructorInitializersBeforeComma: 'true'
+AllowShortFunctionsOnASingleLine: All
 
 ...
