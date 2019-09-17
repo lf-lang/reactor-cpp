@@ -1,4 +1,5 @@
 set(DEAR_SRC
+  tag.cc
   time.cc
   )
 

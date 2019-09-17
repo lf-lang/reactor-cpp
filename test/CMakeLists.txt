@@ -6,10 +6,11 @@ include_directories(
   )
 
 add_executable(tests main.cc
+  tag.cc
   time.cc
   )
 
-target_link_libraries(tests Catch2::Catch2)
+target_link_libraries(tests Catch2::Catch2 dear)
 
 include(CTest)
 include(Catch2/contrib/Catch.cmake)
