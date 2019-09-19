@@ -7,6 +7,7 @@ include_directories(
 
 add_executable(tests
   main.cc
+  reactor.cc
   tag.cc
   time.cc
   value_ptr.cc

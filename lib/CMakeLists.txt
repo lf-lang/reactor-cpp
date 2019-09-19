@@ -1,4 +1,5 @@
 set(DEAR_SRC
+  reactor.cc
   tag.cc
   time.cc
   )
