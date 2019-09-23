@@ -10,6 +10,10 @@
 
 namespace dear {
 
+class BaseAction;
+class BaseInput;
+class BaseOutput;
+class Reaction;
 class Reactor;
 
-}
+}  // namespace dear

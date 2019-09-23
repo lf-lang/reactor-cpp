@@ -18,7 +18,7 @@ namespace dear {
 
 class ReactorElement {
  public:
-  enum class Type { Reactor };
+  enum class Type { Action, Input, Output, Reaction, Reactor };
 
  private:
   const std::string _name;
@@ -46,14 +46,26 @@ class ReactorElement {
 
 class Reactor : public ReactorElement {
  private:
+  std::set<BaseAction*> _actions;
+  std::set<BaseInput*> _inputs;
+  std::set<BaseOutput*> _outputs;
+  std::set<Reaction*> _reactions;
   std::set<Reactor*> _reactors;
 
+  void register_action(BaseAction* action);
+  void register_input(BaseInput* input);
+  void register_output(BaseOutput* output);
+  void register_reaction(Reaction* reaction);
   void register_reactor(Reactor* reactor);
 
  public:
   Reactor(const std::string& name, Reactor* container = nullptr)
       : ReactorElement(name, ReactorElement::Type::Reactor, container) {}
 
+  const auto& actions() const { return _actions; }
+  const auto& inputs() const { return _inputs; }
+  const auto& outputs() const { return _outputs; }
+  const auto& reactions() const { return _reactions; }
   const auto& reactors() const { return _reactors; }
 
   friend ReactorElement;
