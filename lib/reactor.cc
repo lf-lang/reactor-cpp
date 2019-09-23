@@ -12,10 +12,26 @@
 
 namespace dear {
 
-ReactorElement::ReactorElement(const std::string& name, Reactor* container)
-    : _container(container), _name(name) {
+ReactorElement::ReactorElement(const std::string& name,
+                               ReactorElement::Type type,
+                               Reactor* container)
+    : _name(name), _container(container) {
+  assert(container != nullptr || type == ReactorElement::Type::Reactor);
   if (container != nullptr) {
-    container->insert_element(this);
+    // We need a reinterpret_cast here as the derived class is not yet created
+    // when this constructor is executed. dynamic_cast only works for
+    // completely constructed objects. Technically, the casts here return
+    // invalid pointers as the objects they point to do not yet
+    // exists. However, we are good as long as we only store the pointer and do
+    // not dereference it before construction completeted.
+    // It works, but maybe there is some nicer way of doing this...
+    switch (type) {
+      case Type::Reactor:
+        container->register_reactor(reinterpret_cast<Reactor*>(this));
+        break;
+      default:
+        assert(false);
+    }
   }
 }
 
@@ -32,9 +48,10 @@ std::string ReactorElement::fqn() const {
   return this->fqn_detail(ss).str();
 }
 
-void Reactor::insert_element(ReactorElement* elem) {
-  auto r = this->elements.insert({elem->name(), elem});
-  assert(r.second && "Tried to insert an element that already exists");
+void Reactor::register_reactor(Reactor* reactor) {
+  assert(reactor != nullptr);
+  auto result = _reactors.insert(reactor);
+  assert(result.second);
 }
 
 }  // namespace dear

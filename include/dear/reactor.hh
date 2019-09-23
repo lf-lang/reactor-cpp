@@ -8,26 +8,28 @@
 
 #pragma once
 
-#include <map>
+#include <set>
 #include <sstream>
 #include <string>
 
+#include "fwd.hh"
+
 namespace dear {
 
-// forward declaration
-class Reactor;
-
 class ReactorElement {
+ public:
+  enum class Type { Reactor };
+
  private:
+  const std::string _name;
+
   /// The reactor owning this element
   Reactor* const _container;
-
-  const std::string _name;
 
   std::stringstream& fqn_detail(std::stringstream& ss) const;
 
  public:
-  ReactorElement(const std::string& name, Reactor* container);
+  ReactorElement(const std::string& name, Type type, Reactor* container);
   virtual ~ReactorElement() {}
 
   // not copyable or movable
@@ -44,15 +46,17 @@ class ReactorElement {
 
 class Reactor : public ReactorElement {
  private:
-  std::map<std::string, ReactorElement*> elements;
+  std::set<Reactor*> _reactors;
 
-  void insert_element(ReactorElement* elem);
+  void register_reactor(Reactor* reactor);
 
  public:
   Reactor(const std::string& name, Reactor* container = nullptr)
-      : ReactorElement(name, container) {}
+      : ReactorElement(name, ReactorElement::Type::Reactor, container) {}
+
+  const auto& reactors() const { return _reactors; }
 
   friend ReactorElement;
 };
 
-};  // namespace dear
+}  // namespace dear
