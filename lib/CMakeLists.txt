@@ -1,4 +1,6 @@
 set(DEAR_SRC
+  input.cc
+  output.cc
   reactor.cc
   tag.cc
   time.cc

@@ -16,4 +16,11 @@ class BaseOutput;
 class Reaction;
 class Reactor;
 
+template <class T>
+class Action;
+template <class T>
+class Input;
+template <class T>
+class Output;
+
 }  // namespace dear
