@@ -18,6 +18,7 @@ add_executable(tests
   )
 
 target_link_libraries(tests Catch2::Catch2 dear)
+target_compile_options(tests PRIVATE -Wall -Wextra)
 
 include(CTest)
 include(Catch2/contrib/Catch.cmake)

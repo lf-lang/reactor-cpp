@@ -11,3 +11,4 @@ include_directories(
   )
 
 add_library(dear SHARED ${DEAR_SRC})
+target_compile_options(dear PRIVATE -Wall -Wextra)
