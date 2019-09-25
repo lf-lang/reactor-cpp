@@ -11,16 +11,13 @@
 namespace dear {
 
 class BaseAction;
-class BaseInput;
-class BaseOutput;
+class BasePort;
 class Reaction;
 class Reactor;
 
 template <class T>
 class Action;
 template <class T>
-class Input;
-template <class T>
-class Output;
+class Port;
 
 }  // namespace dear

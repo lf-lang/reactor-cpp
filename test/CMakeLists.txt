@@ -7,9 +7,8 @@ include_directories(
 
 add_executable(tests
   action.cc
-  input.cc
   main.cc
-  output.cc
+  port.cc
   reaction.cc
   reactor.cc
   tag.cc

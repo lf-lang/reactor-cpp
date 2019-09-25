@@ -23,17 +23,14 @@ ReactorElement::ReactorElement(const std::string& name,
     // completely constructed objects. Technically, the casts here return
     // invalid pointers as the objects they point to do not yet
     // exists. However, we are good as long as we only store the pointer and do
-    // not dereference it before construction completeted.
+    // not dereference it before construction is completeted.
     // It works, but maybe there is some nicer way of doing this...
     switch (type) {
       case Type::Action:
         container->register_action(reinterpret_cast<BaseAction*>(this));
         break;
-      case Type::Input:
-        container->register_input(reinterpret_cast<BaseInput*>(this));
-        break;
-      case Type::Output:
-        container->register_output(reinterpret_cast<BaseOutput*>(this));
+      case Type::Port:
+        container->register_port(reinterpret_cast<BasePort*>(this));
         break;
       case Type::Reaction:
         container->register_reaction(reinterpret_cast<Reaction*>(this));
@@ -65,14 +62,9 @@ void Reactor::register_action(BaseAction* action) {
   auto result = _actions.insert(action);
   assert(result.second);
 }
-void Reactor::register_input(BaseInput* input) {
-  assert(input != nullptr);
-  auto result = _inputs.insert(input);
-  assert(result.second);
-}
-void Reactor::register_output(BaseOutput* output) {
-  assert(output != nullptr);
-  auto result = _outputs.insert(output);
+void Reactor::register_port(BasePort* port) {
+  assert(port != nullptr);
+  auto result = _ports.insert(port);
   assert(result.second);
 }
 void Reactor::register_reaction(Reaction* reaction) {
