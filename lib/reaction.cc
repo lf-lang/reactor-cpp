@@ -14,6 +14,12 @@
 
 namespace dear {
 
+Reaction::Reaction(const std::string& name, int priority, Reactor* container)
+    : ReactorElement(name, ReactorElement::Type::Reaction, container)
+    , _priority(priority) {
+  assert(priority != 0);
+}
+
 void Reaction::declare_trigger(BaseAction* action) {
   assert(action != nullptr);
   // this reaction must belong to the same reactor as the action
