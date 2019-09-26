@@ -12,7 +12,7 @@
 #include "action.hh"
 #include "environment.hh"
 #include "port.hh"
-#include "reactor.hh"
+#include "reaction.hh"
 #include "reactor.hh"
 #include "tag.hh"
 #include "time.hh"
