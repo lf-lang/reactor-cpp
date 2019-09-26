@@ -22,12 +22,18 @@ class BasePort : public ReactorElement {
   std::set<BasePort*> _outward_bindings;
   const PortType type;
 
+  std::set<Reaction*> _dependencies;
+  std::set<Reaction*> _triggers;
+  std::set<Reaction*> _antidependencies;
+
  protected:
   BasePort(const std::string& name, PortType type, Reactor* container)
       : ReactorElement(name, ReactorElement::Type::Port, container)
       , type(type) {}
 
   void base_bind_to(BasePort* port);
+  void register_dependency(Reaction* reaction, bool is_trigger);
+  void register_antidependency(Reaction* reaction);
 
  public:
   bool is_input() const { return type == PortType::Input; }
@@ -38,6 +44,12 @@ class BasePort : public ReactorElement {
 
   BasePort* inward_binding() const { return _inward_binding; }
   const auto& outward_bindings() const { return _outward_bindings; }
+
+  const auto& triggers() const { return _triggers; }
+  const auto& dependencies() const { return _dependencies; }
+  const auto& antidependencies() const { return _antidependencies; }
+
+  friend class Reaction;
 };
 
 template <class T>

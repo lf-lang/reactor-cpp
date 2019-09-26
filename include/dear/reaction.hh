@@ -8,14 +8,40 @@
 
 #pragma once
 
+#include <set>
+
 #include "reactor.hh"
 
 namespace dear {
 
-class BaseReaction : public ReactorElement {
+class Reaction : public ReactorElement {
+ private:
+  std::set<BaseAction*> _action_triggers;
+  std::set<BaseAction*> _scheduable_actions;
+  std::set<BasePort*> _port_triggers;
+  std::set<BasePort*> _antidependencies;
+  std::set<BasePort*> _dependencies;
+
+ protected:
+  void declare_trigger(BaseAction* action);
+  void declare_trigger(BasePort* port);
+  void declare_scheduable_action(BaseAction* action);
+  void declare_antidependency(BasePort* port);
+  void declare_dependency(BasePort* port);
+
  public:
-  BaseReaction(const std::string& name, Reactor* container)
+  Reaction(const std::string& name, Reactor* container)
       : ReactorElement(name, ReactorElement::Type::Reaction, container) {}
+  virtual ~Reaction() {}
+
+  const auto& action_triggers() const { return _action_triggers; }
+  const auto& port_triggers() const { return _port_triggers; }
+  const auto& antidependencies() const { return _antidependencies; }
+  const auto& dependencies() const { return _dependencies; }
+  const auto& scheduable_actions() const { return _scheduable_actions; }
+
+  virtual void declare() = 0;
+  virtual void body() = 0;
 };
 
 }  // namespace dear
