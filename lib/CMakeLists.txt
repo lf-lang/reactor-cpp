@@ -1,5 +1,6 @@
 set(DEAR_SRC
   action.cc
+  environment.cc
   port.cc
   reaction.cc
   reactor.cc
