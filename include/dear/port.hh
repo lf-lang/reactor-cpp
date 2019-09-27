@@ -63,6 +63,20 @@ class Port : public BasePort {
   const std::set<Port<T>*>& typed_outward_bindings() const;
 };
 
+template <class T>
+class Input : public Port<T> {
+ public:
+  Input(const std::string& name, Reactor* container)
+      : Port<T>(name, PortType::Input, container) {}
+};
+
+template <class T>
+class Output : public Port<T> {
+ public:
+  Output(const std::string& name, Reactor* container)
+      : Port<T>(name, PortType::Output, container) {}
+};
+
 }  // namespace dear
 
 #include "impl/port_impl.hh"
