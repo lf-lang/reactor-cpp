@@ -32,6 +32,7 @@ class BaseAction : public ReactorElement {
 
 template <class T>
 class Action : public BaseAction {
+ public:
   Action(const std::string& name, Reactor* container)
       : BaseAction(name, container) {}
 };
