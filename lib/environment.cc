@@ -7,6 +7,7 @@
  */
 
 #include "dear/environment.hh"
+#include "dear/logging.hh"
 #include "dear/port.hh"
 #include "dear/reaction.hh"
 
@@ -77,6 +78,7 @@ void Environment::build_dependency_graph(Reactor* reactor) {
 }
 
 void Environment::init() {
+  log::Info() << "Initializing the environment";
   // build the dependency graph
   for (auto r : _top_level_reactors) {
     build_dependency_graph(r);
@@ -117,6 +119,7 @@ void Environment::calculate_indexes() {
     graph[d.first].insert(d.second);
   }
 
+  log::Debug() << "Reactions sorted by index:";
   unsigned index = 0;
   while (graph.size() != 0) {
     // find nodes with degree zero and assign index
@@ -126,6 +129,12 @@ void Environment::calculate_indexes() {
         indexes[kv.first] = index;
         degree_zero.insert(kv.first);
       }
+    }
+
+    log::Debug dbg;
+    dbg << index << ": ";
+    for (auto r : degree_zero) {
+      dbg << r->fqn() << ", ";
     }
 
     // reduce graph
