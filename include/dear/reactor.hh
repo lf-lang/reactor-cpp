@@ -51,7 +51,8 @@ class ReactorElement {
 class Reactor : public ReactorElement {
  private:
   std::set<BaseAction*> _actions;
-  std::set<BasePort*> _ports;
+  std::set<BasePort*> _inputs;
+  std::set<BasePort*> _outputs;
   std::set<Reaction*> _reactions;
   std::set<Reactor*> _reactors;
 
@@ -66,7 +67,8 @@ class Reactor : public ReactorElement {
   virtual ~Reactor() {}
 
   const auto& actions() const { return _actions; }
-  const auto& ports() const { return _ports; }
+  const auto& inputs() const { return _inputs; }
+  const auto& outputs() const { return _outputs; }
   const auto& reactions() const { return _reactions; }
   const auto& reactors() const { return _reactors; }
 

@@ -8,6 +8,7 @@
 
 #include "dear/reactor.hh"
 #include "dear/environment.hh"
+#include "dear/port.hh"
 
 #include <cassert>
 
@@ -84,8 +85,13 @@ void Reactor::register_action(BaseAction* action) {
 void Reactor::register_port(BasePort* port) {
   assert(port != nullptr);
   assert(this->environment()->phase() == Environment::Phase::Construction);
-  auto result = _ports.insert(port);
-  assert(result.second);
+  if (port->is_input()) {
+    auto result = _inputs.insert(port);
+    assert(result.second);
+  } else {
+    auto result = _outputs.insert(port);
+    assert(result.second);
+  }
 }
 void Reactor::register_reaction(Reaction* reaction) {
   assert(reaction != nullptr);
