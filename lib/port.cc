@@ -17,6 +17,8 @@ namespace dear {
 void BasePort::base_bind_to(BasePort* port) {
   assert(port != nullptr);
   assert(!port->has_inward_binding());
+  assert(!this->has_dependencies());
+  assert(!port->has_antidependencies());
   assert(this->environment() == port->environment());
   assert(this->environment()->phase() == Environment::Phase::Assembly);
 
@@ -47,6 +49,7 @@ void BasePort::base_bind_to(BasePort* port) {
 
 void BasePort::register_dependency(Reaction* reaction, bool is_trigger) {
   assert(reaction != nullptr);
+  assert(!this->has_outward_bindings());
   assert(this->environment() == reaction->environment());
   assert(this->environment()->phase() == Environment::Phase::Assembly);
 
@@ -69,6 +72,7 @@ void BasePort::register_dependency(Reaction* reaction, bool is_trigger) {
 
 void BasePort::register_antidependency(Reaction* reaction) {
   assert(reaction != nullptr);
+  assert(!this->has_inward_binding());
   assert(this->environment() == reaction->environment());
   assert(this->environment()->phase() == Environment::Phase::Assembly);
 

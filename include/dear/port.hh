@@ -41,6 +41,8 @@ class BasePort : public ReactorElement {
 
   bool has_inward_binding() const { return _inward_binding != nullptr; }
   bool has_outward_bindings() const { return _outward_bindings.size() > 0; }
+  bool has_dependencies() const { return _dependencies.size() > 0; }
+  bool has_antidependencies() const { return _antidependencies.size() > 0; }
 
   BasePort* inward_binding() const { return _inward_binding; }
   const auto& outward_bindings() const { return _outward_bindings; }
