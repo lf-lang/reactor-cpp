@@ -15,9 +15,6 @@
 #include <fstream>
 #include <map>
 
-// xxx
-#include <iostream>
-
 namespace dear {
 
 void Environment::register_reactor(Reactor* reactor) {
@@ -64,7 +61,6 @@ void Environment::build_dependency_graph(Reactor* reactor) {
         source = source->inward_binding();
       }
       for (auto ad : source->antidependencies()) {
-        std::cout << r->fqn() << " depends on " << ad->fqn() << std::endl;
         dependencies.push_back(std::make_pair(r, ad));
       }
     }
@@ -85,6 +81,7 @@ void Environment::init() {
   for (auto r : _top_level_reactors) {
     build_dependency_graph(r);
   }
+  calculate_indexes();
 }
 
 std::string dot_name(ReactorElement* r) {
@@ -108,6 +105,41 @@ void Environment::export_dependency_graph(const std::string& path) {
   dot << "}\n";
 
   dot.close();
+}
+
+void Environment::calculate_indexes() {
+  // build the graph
+  std::map<Reaction*, std::set<Reaction*>> graph;
+  for (auto r : reactions) {
+    graph[r];
+  }
+  for (auto d : dependencies) {
+    graph[d.first].insert(d.second);
+  }
+
+  unsigned index = 0;
+  while (graph.size() != 0) {
+    // find nodes with degree zero and assign index
+    std::set<Reaction*> degree_zero;
+    for (auto& kv : graph) {
+      if (kv.second.size() == 0) {
+        indexes[kv.first] = index;
+        degree_zero.insert(kv.first);
+      }
+    }
+
+    // reduce graph
+    for (auto r : degree_zero) {
+      graph.erase(r);
+    }
+    for (auto& kv : graph) {
+      for (auto r : degree_zero) {
+        kv.second.erase(r);
+      }
+    }
+
+    index++;
+  }
 }
 
 }  // namespace dear

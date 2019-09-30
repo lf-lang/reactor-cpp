@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <map>
 #include <set>
 #include <string>
 #include <vector>
@@ -28,7 +29,10 @@ class Environment {
   std::vector<Dependency> dependencies;
   Phase _phase{Phase::Construction};
 
+  std::map<Reaction*, unsigned> indexes;
+
   void build_dependency_graph(Reactor* reactor);
+  void calculate_indexes();
 
  public:
   Environment() = default;
