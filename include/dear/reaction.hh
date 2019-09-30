@@ -24,17 +24,16 @@ class Reaction : public ReactorElement {
 
   const int _priority;
 
- protected:
+ public:
+  Reaction(const std::string& name, int priority, Reactor* container);
+
+  virtual ~Reaction() {}
+
   void declare_trigger(BaseAction* action);
   void declare_trigger(BasePort* port);
   void declare_scheduable_action(BaseAction* action);
   void declare_antidependency(BasePort* port);
   void declare_dependency(BasePort* port);
-
- public:
-  Reaction(const std::string& name, int priority, Reactor* container);
-
-  virtual ~Reaction() {}
 
   const auto& action_triggers() const { return _action_triggers; }
   const auto& port_triggers() const { return _port_triggers; }
@@ -43,9 +42,6 @@ class Reaction : public ReactorElement {
   const auto& scheduable_actions() const { return _scheduable_actions; }
 
   int priority() const { return _priority; }
-
-  virtual void declare() = 0;
-  virtual void body() = 0;
 };
 
 }  // namespace dear

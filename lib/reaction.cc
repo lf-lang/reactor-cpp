@@ -8,6 +8,7 @@
 
 #include "dear/reaction.hh"
 #include "dear/action.hh"
+#include "dear/environment.hh"
 #include "dear/port.hh"
 
 #include <cassert>
@@ -22,6 +23,8 @@ Reaction::Reaction(const std::string& name, int priority, Reactor* container)
 
 void Reaction::declare_trigger(BaseAction* action) {
   assert(action != nullptr);
+  assert(this->environment() == action->environment());
+  assert(this->environment()->phase() == Environment::Phase::Assembly);
   // this reaction must belong to the same reactor as the action
   assert(this->container() == action->container());
 
@@ -32,6 +35,8 @@ void Reaction::declare_trigger(BaseAction* action) {
 
 void Reaction::declare_scheduable_action(BaseAction* action) {
   assert(action != nullptr);
+  assert(this->environment() == action->environment());
+  assert(this->environment()->phase() == Environment::Phase::Assembly);
   // this reaction must belong to the same reactor as the action
   assert(this->container() == action->container());
 
@@ -42,6 +47,9 @@ void Reaction::declare_scheduable_action(BaseAction* action) {
 
 void Reaction::declare_trigger(BasePort* port) {
   assert(port != nullptr);
+  assert(this->environment() == port->environment());
+  assert(this->environment()->phase() == Environment::Phase::Assembly);
+
   if (port->is_input()) {
     // this reaction must belong to the same reactor as the input port
     assert(this->container() == port->container());
@@ -60,6 +68,9 @@ void Reaction::declare_trigger(BasePort* port) {
 
 void Reaction::declare_dependency(BasePort* port) {
   assert(port != nullptr);
+  assert(this->environment() == port->environment());
+  assert(this->environment()->phase() == Environment::Phase::Assembly);
+
   if (port->is_input()) {
     // this reaction must belong to the same reactor as the input port
     assert(this->container() == port->container());
@@ -76,6 +87,9 @@ void Reaction::declare_dependency(BasePort* port) {
 
 void Reaction::declare_antidependency(BasePort* port) {
   assert(port != nullptr);
+  assert(this->environment() == port->environment());
+  assert(this->environment()->phase() == Environment::Phase::Assembly);
+
   if (port->is_output()) {
     // this reaction must belong to the same reactor as the output port
     assert(this->container() == port->container());

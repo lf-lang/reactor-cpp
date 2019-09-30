@@ -12,6 +12,7 @@ namespace dear {
 
 class BaseAction;
 class BasePort;
+class Environment;
 class Reaction;
 class Reactor;
 

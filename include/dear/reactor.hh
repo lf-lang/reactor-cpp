@@ -26,10 +26,13 @@ class ReactorElement {
   /// The reactor owning this element
   Reactor* const _container;
 
+  Environment* _environment;
+
   std::stringstream& fqn_detail(std::stringstream& ss) const;
 
  public:
   ReactorElement(const std::string& name, Type type, Reactor* container);
+  ReactorElement(const std::string& name, Type type, Environment* environment);
   virtual ~ReactorElement() {}
 
   // not copyable or movable
@@ -39,6 +42,7 @@ class ReactorElement {
   Reactor* container() const { return _container; }
 
   const std::string& name() const { return _name; }
+  Environment* environment() const { return _environment; }
   std::string fqn() const;
 
   bool is_top_level() const { return this->container() == nullptr; }
@@ -57,13 +61,16 @@ class Reactor : public ReactorElement {
   void register_reactor(Reactor* reactor);
 
  public:
-  Reactor(const std::string& name, Reactor* container = nullptr)
-      : ReactorElement(name, ReactorElement::Type::Reactor, container) {}
+  Reactor(const std::string& name, Reactor* container);
+  Reactor(const std::string& name, Environment* environment);
+  virtual ~Reactor() {}
 
   const auto& actions() const { return _actions; }
   const auto& ports() const { return _ports; }
   const auto& reactions() const { return _reactions; }
   const auto& reactors() const { return _reactors; }
+
+  virtual void assemble() = 0;
 
   friend ReactorElement;
 };

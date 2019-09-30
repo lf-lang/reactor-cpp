@@ -16,17 +16,23 @@
 namespace dear {
 
 class Environment {
+ public:
+  enum class Phase { Construction, Assembly };
+
  private:
   std::set<Reactor*> _top_level_reactors;
 
  public:
-  Environment(){};
+  Environment() = default;
 
   void register_reactor(Reactor* reactor);
 
   const auto& top_level_reactors() const { return _top_level_reactors; }
 
+  void assemble();
   void export_dependency_graph(const std::string& path);
+
+  Phase phase() const { return _phase; }
 };
 
 }  // namespace dear

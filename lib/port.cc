@@ -7,6 +7,7 @@
  */
 
 #include "dear/port.hh"
+#include "dear/environment.hh"
 #include "dear/reaction.hh"
 
 #include <cassert>
@@ -16,6 +17,9 @@ namespace dear {
 void BasePort::base_bind_to(BasePort* port) {
   assert(port != nullptr);
   assert(!port->has_inward_binding());
+  assert(this->environment() == port->environment());
+  assert(this->environment()->phase() == Environment::Phase::Assembly);
+
   if (this->is_input() && port->is_input()) {
     // If both ports are inputs, the other port must be owned by an inner
     // reactor and this port must be owned by the same reactor that contains
@@ -43,6 +47,9 @@ void BasePort::base_bind_to(BasePort* port) {
 
 void BasePort::register_dependency(Reaction* reaction, bool is_trigger) {
   assert(reaction != nullptr);
+  assert(this->environment() == reaction->environment());
+  assert(this->environment()->phase() == Environment::Phase::Assembly);
+
   if (this->is_input()) {
     // the reaction must belong to the same reactor as this input port
     assert(this->container() == reaction->container());
@@ -62,6 +69,9 @@ void BasePort::register_dependency(Reaction* reaction, bool is_trigger) {
 
 void BasePort::register_antidependency(Reaction* reaction) {
   assert(reaction != nullptr);
+  assert(this->environment() == reaction->environment());
+  assert(this->environment()->phase() == Environment::Phase::Assembly);
+
   if (this->is_output()) {
     // the reaction must belong to the same reactor as this output port
     assert(this->container() == reaction->container());
