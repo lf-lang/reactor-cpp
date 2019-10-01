@@ -78,6 +78,8 @@ void Environment::build_dependency_graph(Reactor* reactor) {
 }
 
 void Environment::init() {
+  assert(_phase == Phase::Assembly);
+  _phase = Phase::Initialization;
   log::Info() << "Initializing the environment";
   // build the dependency graph
   for (auto r : _top_level_reactors) {
@@ -149,6 +151,15 @@ void Environment::calculate_indexes() {
 
     index++;
   }
+}
+
+std::thread Environment::start() {
+  assert(_phase == Phase::Initialization);
+  _phase = Phase::Execution;
+
+  log::Info() << "Starting execution";
+
+  return std::thread([this]() { this->scheduler.start(); });
 }
 
 }  // namespace dear

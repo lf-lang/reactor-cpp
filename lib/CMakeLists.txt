@@ -5,6 +5,7 @@ set(DEAR_SRC
   port.cc
   reaction.cc
   reactor.cc
+  scheduler.cc
   tag.cc
   time.cc
   )

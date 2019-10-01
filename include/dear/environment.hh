@@ -14,14 +14,16 @@
 #include <vector>
 
 #include "dear/reactor.hh"
+#include "dear/scheduler.hh"
 
 namespace dear {
 
 class Environment {
  public:
-  enum class Phase { Construction, Assembly };
+  enum class Phase { Construction, Assembly, Initialization, Execution };
 
  private:
+  Scheduler scheduler;
   std::set<Reactor*> _top_level_reactors;
 
   std::set<Reaction*> reactions;
@@ -35,7 +37,7 @@ class Environment {
   void calculate_indexes();
 
  public:
-  Environment() = default;
+  Environment(unsigned num_workers) : scheduler(num_workers) {}
 
   void register_reactor(Reactor* reactor);
 

@@ -15,6 +15,7 @@ class BasePort;
 class Environment;
 class Reaction;
 class Reactor;
+class Scheduler;
 
 template <class T>
 class Action;
