@@ -33,7 +33,7 @@ class Tag {
 
   static Tag from_physical_time(time_t offset = 0);
 
-  Tag delay(time_t offset = 0);
+  Tag delay(time_t offset = 0) const;
 };
 
 // define all the comparison operators
