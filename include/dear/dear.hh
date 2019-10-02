@@ -11,8 +11,8 @@
 // include everything that is needed to use dear
 #include "action.hh"
 #include "environment.hh"
+#include "logical_time.hh"
 #include "port.hh"
 #include "reaction.hh"
 #include "reactor.hh"
-#include "tag.hh"
 #include "time.hh"
