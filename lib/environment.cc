@@ -86,6 +86,12 @@ void Environment::init() {
     build_dependency_graph(r);
   }
   calculate_indexes();
+
+  Tag t0 = Tag::from_physical_time();
+  // initialize all reactors
+  for (auto r : _top_level_reactors) {
+    r->init(t0);
+  }
 }
 
 std::string dot_name(ReactorElement* r) {

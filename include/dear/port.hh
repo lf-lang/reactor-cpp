@@ -63,6 +63,8 @@ class Port : public BasePort {
   void bind_to(Port<T>* port) { base_bind_to(port); }
   Port<T>* typed_inward_binding() const;
   const std::set<Port<T>*>& typed_outward_bindings() const;
+
+  void init(const Tag&) override final {}
 };
 
 template <class T>

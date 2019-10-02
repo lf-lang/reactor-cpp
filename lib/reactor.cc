@@ -7,8 +7,10 @@
  */
 
 #include "dear/reactor.hh"
+#include "dear/action.hh"
 #include "dear/environment.hh"
 #include "dear/port.hh"
+#include "dear/reaction.hh"
 
 #include <cassert>
 
@@ -104,6 +106,21 @@ void Reactor::register_reactor(Reactor* reactor) {
   assert(this->environment()->phase() == Environment::Phase::Construction);
   auto result = _reactors.insert(reactor);
   assert(result.second);
+}
+
+void Reactor::init(const Tag& t0) {
+  assert(environment()->phase() == Environment::Phase::Initialization);
+  // call init on all contained objects
+  for (auto x : _actions)
+    x->init(t0);
+  for (auto x : _inputs)
+    x->init(t0);
+  for (auto x : _outputs)
+    x->init(t0);
+  for (auto x : _reactions)
+    x->init(t0);
+  for (auto x : _reactors)
+    x->init(t0);
 }
 
 }  // namespace dear

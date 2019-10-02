@@ -46,6 +46,8 @@ class ReactorElement {
   std::string fqn() const;
 
   bool is_top_level() const { return this->container() == nullptr; }
+
+  virtual void init(const Tag&) = 0;
 };
 
 class Reactor : public ReactorElement {
@@ -71,6 +73,8 @@ class Reactor : public ReactorElement {
   const auto& outputs() const { return _outputs; }
   const auto& reactions() const { return _reactions; }
   const auto& reactors() const { return _reactors; }
+
+  void init(const Tag& t0) override final;
 
   virtual void assemble() = 0;
 

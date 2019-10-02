@@ -13,6 +13,7 @@
 namespace dear {
 
 class BaseAction : public ReactorElement {
+ private:
   std::set<Reaction*> _triggers;
   std::set<Reaction*> _schedulers;
 
@@ -35,6 +36,7 @@ class Action : public BaseAction {
  public:
   Action(const std::string& name, Reactor* container)
       : BaseAction(name, container) {}
-};
 
+  void init(const Tag&) override final {}
+};
 }  // namespace dear

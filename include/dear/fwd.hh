@@ -16,6 +16,7 @@ class Environment;
 class Reaction;
 class Reactor;
 class Scheduler;
+class Tag;
 
 template <class T>
 class Action;

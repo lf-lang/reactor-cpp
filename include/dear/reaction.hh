@@ -42,6 +42,8 @@ class Reaction : public ReactorElement {
   const auto& scheduable_actions() const { return _scheduable_actions; }
 
   int priority() const { return _priority; }
+
+  void init(const Tag&) override final {}
 };
 
 }  // namespace dear
