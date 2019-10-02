@@ -14,6 +14,8 @@ namespace dear {
 
 using mstep_t = unsigned long;  // at least 32 bit
 
+class LogicalTime;
+
 class Tag {
  private:
   const time_t _time;
@@ -32,6 +34,7 @@ class Tag {
   mstep_t micro_step() const { return _micro_step; }
 
   static Tag from_physical_time(time_t offset = 0);
+  static Tag from_logical_time(const LogicalTime& lt);
 
   Tag delay(time_t offset = 0) const;
 };
@@ -57,17 +60,29 @@ class LogicalTime {
 };
 
 bool operator==(const LogicalTime& lt, const Tag& t);
-bool inline operator!=(const LogicalTime& lt, const Tag& t) { return !(lt == t); }
+bool inline operator!=(const LogicalTime& lt, const Tag& t) {
+  return !(lt == t);
+}
 bool operator<(const LogicalTime& lt, const Tag& t);
 bool operator>(const LogicalTime& lt, const Tag& t);
-bool inline operator<=(const LogicalTime& lt, const Tag& t) { return !(lt > t); }
-bool inline operator>=(const LogicalTime& lt, const Tag& t) { return !(lt < t); }
+bool inline operator<=(const LogicalTime& lt, const Tag& t) {
+  return !(lt > t);
+}
+bool inline operator>=(const LogicalTime& lt, const Tag& t) {
+  return !(lt < t);
+}
 
 bool inline operator==(const Tag& t, const LogicalTime& lt) { return lt == t; }
-bool inline operator!=(const Tag& t, const LogicalTime& lt) { return !(lt == t); }
+bool inline operator!=(const Tag& t, const LogicalTime& lt) {
+  return !(lt == t);
+}
 bool inline operator<(const Tag& t, const LogicalTime& lt) { return lt > t; }
 bool inline operator>(const Tag& t, const LogicalTime& lt) { return lt < t; }
-bool inline operator<=(const Tag& t, const LogicalTime& lt) { return !(t > lt); }
-bool inline operator>=(const Tag& t, const LogicalTime& lt) { return !(t < lt); }
+bool inline operator<=(const Tag& t, const LogicalTime& lt) {
+  return !(t > lt);
+}
+bool inline operator>=(const Tag& t, const LogicalTime& lt) {
+  return !(t < lt);
+}
 
 }  // namespace dear

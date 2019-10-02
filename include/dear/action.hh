@@ -39,4 +39,24 @@ class Action : public BaseAction {
 
   void init(const Tag&) override final {}
 };
+
+class Timer : public BaseAction {
+  const time_t _offset;
+  const time_t _period;
+
+  void reschedule();
+
+ public:
+  Timer(const std::string& name,
+        Reactor* container,
+        time_t period = 0,
+        time_t offset = 0)
+      : BaseAction(name, container), _offset(offset), _period(period) {}
+
+  void init(const Tag& t0) override final;
+
+  time_t offset() const { return _offset; }
+  time_t period() const { return _period; }
+};
+
 }  // namespace dear

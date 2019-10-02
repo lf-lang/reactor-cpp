@@ -25,6 +25,10 @@ Tag Tag::from_physical_time(time_t offset) {
   return Tag(get_physical_timepoint() + offset, 0);
 }
 
+Tag Tag::from_logical_time(const LogicalTime& lt) {
+  return Tag(lt.time(), lt.micro_step());
+}
+
 Tag Tag::delay(time_t offset) const {
   if (offset == 0) {
     return Tag(this->_time, this->_micro_step + 1);

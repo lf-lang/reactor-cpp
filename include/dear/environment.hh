@@ -52,6 +52,8 @@ class Environment {
   Phase phase() const { return _phase; }
   const Scheduler* scheduler() const { return &_scheduler; }
   Scheduler* scheduler() { return &_scheduler; }
+
+  const LogicalTime& logical_time() const { return _scheduler.logical_time(); }
 };
 
 }  // namespace dear
