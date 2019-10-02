@@ -3,4 +3,5 @@ include_directories(
   )
 
 add_subdirectory(power_train)
+add_subdirectory(hello)
 
