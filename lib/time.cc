@@ -9,6 +9,7 @@
 #include "dear/time.hh"
 
 #include <cassert>
+#include <thread>
 
 namespace dear {
 
@@ -16,6 +17,12 @@ time_t get_physical_timepoint() {
   auto now = std::chrono::system_clock::now();
   auto duration = now.time_since_epoch();
   return std::chrono::duration_cast<std::chrono::nanoseconds>(duration).count();
+}
+
+void wait_until_physical_timepoint(time_t t) {
+  std::chrono::nanoseconds dur(t);
+  std::chrono::time_point<std::chrono::system_clock> tp(dur);
+  std::this_thread::sleep_until(tp);
 }
 
 void assert_physical_clock_resolution() {
