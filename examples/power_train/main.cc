@@ -136,7 +136,7 @@ class Engine : public Reactor {
 int main() {
   std::cout << "Hello world!\n";
 
-  Environment e;
+  Environment e{4};
 
   LeftPedal left_pedal{&e};
   RightPedal right_pedal{&e};
@@ -155,6 +155,10 @@ int main() {
 
   e.init();
   e.export_dependency_graph("graph.dot");
+
+  auto t = e.start();
+  t.join();
+
 
   return 0;
 }

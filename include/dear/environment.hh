@@ -23,7 +23,7 @@ class Environment {
   enum class Phase { Construction, Assembly, Initialization, Execution };
 
  private:
-  Scheduler scheduler;
+  Scheduler _scheduler;
   std::set<Reactor*> _top_level_reactors;
 
   std::set<Reaction*> reactions;
@@ -37,7 +37,7 @@ class Environment {
   void calculate_indexes();
 
  public:
-  Environment(unsigned num_workers) : scheduler(num_workers) {}
+  Environment(unsigned num_workers) : _scheduler(num_workers) {}
 
   void register_reactor(Reactor* reactor);
 
@@ -45,9 +45,13 @@ class Environment {
 
   void assemble();
   void init();
+  std::thread start();
+
   void export_dependency_graph(const std::string& path);
 
   Phase phase() const { return _phase; }
+  const Scheduler* scheduler() const { return &_scheduler; }
+  Scheduler* scheduler() { return &_scheduler; }
 };
 
 }  // namespace dear

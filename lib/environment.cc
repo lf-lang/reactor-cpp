@@ -159,7 +159,7 @@ std::thread Environment::start() {
 
   log::Info() << "Starting execution";
 
-  return std::thread([this]() { this->scheduler.start(); });
+  return std::thread([this]() { this->_scheduler.start(); });
 }
 
 }  // namespace dear
