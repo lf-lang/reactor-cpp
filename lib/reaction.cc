@@ -15,9 +15,13 @@
 
 namespace dear {
 
-Reaction::Reaction(const std::string& name, int priority, Reactor* container)
+Reaction::Reaction(const std::string& name,
+                   int priority,
+                   Reactor* container,
+                   std::function<void(void)> body)
     : ReactorElement(name, ReactorElement::Type::Reaction, container)
-    , _priority(priority) {
+    , _priority(priority)
+    , _body(body) {
   assert(priority != 0);
 }
 
@@ -54,8 +58,8 @@ void Reaction::declare_trigger(BasePort* port) {
     // this reaction must belong to the same reactor as the input port
     assert(this->container() == port->container());
   } else {
-    // the reactor containing this reaction must contain the reactor that the
-    // output port belongs to.
+    // the reactor containing this reaction must contain the reactor that
+    // the output port belongs to.
     assert(this->container() == port->container()->container());
   }
 
@@ -75,8 +79,8 @@ void Reaction::declare_dependency(BasePort* port) {
     // this reaction must belong to the same reactor as the input port
     assert(this->container() == port->container());
   } else {
-    // the reactor containing this reaction must contain the reactor that the
-    // input port belongs to.
+    // the reactor containing this reaction must contain the reactor that
+    // the input port belongs to.
     assert(this->container() == port->container()->container());
   }
 
@@ -94,8 +98,8 @@ void Reaction::declare_antidependency(BasePort* port) {
     // this reaction must belong to the same reactor as the output port
     assert(this->container() == port->container());
   } else {
-    // the reactor containing this reaction must contain the reactor that the
-    // output port belongs to.
+    // the reactor containing this reaction must contain the reactor that
+    // the output port belongs to.
     assert(this->container() == port->container()->container());
   }
 

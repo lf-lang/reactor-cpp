@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <functional>
 #include <set>
 
 #include "reactor.hh"
@@ -24,8 +25,13 @@ class Reaction : public ReactorElement {
 
   const int _priority;
 
+  std::function<void(void)> _body;
+
  public:
-  Reaction(const std::string& name, int priority, Reactor* container);
+  Reaction(const std::string& name,
+           int priority,
+           Reactor* container,
+           std::function<void(void)> body);
 
   virtual ~Reaction() {}
 
@@ -44,6 +50,8 @@ class Reaction : public ReactorElement {
   int priority() const { return _priority; }
 
   void init(const Tag&) override final {}
+
+  const std::function<void(void)>& body() { return _body; }
 };
 
 }  // namespace dear
