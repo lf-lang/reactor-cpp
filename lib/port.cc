@@ -7,86 +7,85 @@
  */
 
 #include "dear/port.hh"
+#include "dear/assert.hh"
 #include "dear/environment.hh"
 #include "dear/reaction.hh"
-
-#include <cassert>
 
 namespace dear {
 
 void BasePort::base_bind_to(BasePort* port) {
-  assert(port != nullptr);
-  assert(!port->has_inward_binding());
-  assert(!this->has_dependencies());
-  assert(!port->has_antidependencies());
-  assert(this->environment() == port->environment());
-  assert(this->environment()->phase() == Environment::Phase::Assembly);
+  ASSERT(port != nullptr);
+  ASSERT(!port->has_inward_binding());
+  ASSERT(!this->has_dependencies());
+  ASSERT(!port->has_antidependencies());
+  ASSERT(this->environment() == port->environment());
+  ASSERT(this->environment()->phase() == Environment::Phase::Assembly);
 
   if (this->is_input() && port->is_input()) {
     // If both ports are inputs, the other port must be owned by an inner
     // reactor and this port must be owned by the same reactor that contains
     // the inner reactor.
-    assert(this->container() == port->container()->container());
+    ASSERT(this->container() == port->container()->container());
   } else if (this->is_output() && port->is_input()) {
     // If we connect an input to an output, the containing reactors must be in
     // the same hierarchy level.
-    assert(this->container()->container() == port->container()->container());
+    ASSERT(this->container()->container() == port->container()->container());
     // But both ports must belong to different reactors
-    assert(this->container() != port->container());
+    ASSERT(this->container() != port->container());
   } else if (this->is_output() && port->is_output()) {
     // If both ports are outputs, this port must be owned by an inner
     // reactor and the other port must be owned by the same reactor that
     // contains the inner reactor.
-    assert(this->container()->container() == port->container());
+    ASSERT(this->container()->container() == port->container());
   } else {
-    assert(false);
+    ASSERT(false);
   }
 
   port->_inward_binding = this;
   auto result = this->_outward_bindings.insert(port);
-  assert(result.second);
+  ASSERT(result.second);
 }
 
 void BasePort::register_dependency(Reaction* reaction, bool is_trigger) {
-  assert(reaction != nullptr);
-  assert(!this->has_outward_bindings());
-  assert(this->environment() == reaction->environment());
-  assert(this->environment()->phase() == Environment::Phase::Assembly);
+  ASSERT(reaction != nullptr);
+  ASSERT(!this->has_outward_bindings());
+  ASSERT(this->environment() == reaction->environment());
+  ASSERT(this->environment()->phase() == Environment::Phase::Assembly);
 
   if (this->is_input()) {
     // the reaction must belong to the same reactor as this input port
-    assert(this->container() == reaction->container());
+    ASSERT(this->container() == reaction->container());
   } else {
     // the reactor containing reaction must contain the reactor that this
     // input port belongs to.
-    assert(this->container()->container() == reaction->container());
+    ASSERT(this->container()->container() == reaction->container());
   }
 
   auto r1 = _dependencies.insert(reaction);
-  assert(r1.second);
+  ASSERT(r1.second);
   if (is_trigger) {
     auto r2 = _triggers.insert(reaction);
-    assert(r2.second);
+    ASSERT(r2.second);
   }
 }
 
 void BasePort::register_antidependency(Reaction* reaction) {
-  assert(reaction != nullptr);
-  assert(!this->has_inward_binding());
-  assert(this->environment() == reaction->environment());
-  assert(this->environment()->phase() == Environment::Phase::Assembly);
+  ASSERT(reaction != nullptr);
+  ASSERT(!this->has_inward_binding());
+  ASSERT(this->environment() == reaction->environment());
+  ASSERT(this->environment()->phase() == Environment::Phase::Assembly);
 
   if (this->is_output()) {
     // the reaction must belong to the same reactor as this output port
-    assert(this->container() == reaction->container());
+    ASSERT(this->container() == reaction->container());
   } else {
     // the reactor containing reaction must contain the reactor that this
     // input port belongs to.
-    assert(this->container()->container() == reaction->container());
+    ASSERT(this->container()->container() == reaction->container());
   }
 
   auto r = _antidependencies.insert(reaction);
-  assert(r.second);
+  ASSERT(r.second);
 }
 
 }  // namespace dear

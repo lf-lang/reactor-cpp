@@ -7,23 +7,23 @@
  */
 
 #include "dear/environment.hh"
+#include "dear/assert.hh"
 #include "dear/logging.hh"
 #include "dear/port.hh"
 #include "dear/reaction.hh"
 
 #include <algorithm>
-#include <cassert>
 #include <fstream>
 #include <map>
 
 namespace dear {
 
 void Environment::register_reactor(Reactor* reactor) {
-  assert(this->phase() == Phase::Construction);
-  assert(reactor != nullptr);
-  assert(reactor->is_top_level());
+  ASSERT(this->phase() == Phase::Construction);
+  ASSERT(reactor != nullptr);
+  ASSERT(reactor->is_top_level());
   auto r = _top_level_reactors.insert(reactor);
-  assert(r.second);
+  ASSERT(r.second);
 }
 
 void recursive_assemble(Reactor* container) {
@@ -34,7 +34,7 @@ void recursive_assemble(Reactor* container) {
 }
 
 void Environment::assemble() {
-  assert(_phase == Phase::Construction);
+  ASSERT(_phase == Phase::Construction);
   _phase = Phase::Assembly;
   for (auto r : _top_level_reactors) {
     recursive_assemble(r);
@@ -51,7 +51,7 @@ void Environment::build_dependency_graph(Reactor* reactor) {
   for (auto r : reactor->reactions()) {
     reactions.insert(r);
     auto result = priority_map.emplace(r->priority(), r);
-    assert(result.second && "priorities must be unique (for now)");
+    ASSERT(result.second && "priorities must be unique (for now)");
   }
 
   // connect all reactions this reaction depends on
@@ -78,7 +78,7 @@ void Environment::build_dependency_graph(Reactor* reactor) {
 }
 
 void Environment::init() {
-  assert(_phase == Phase::Assembly);
+  ASSERT(_phase == Phase::Assembly);
   _phase = Phase::Initialization;
   log::Info() << "Initializing the environment";
   // build the dependency graph
@@ -160,7 +160,7 @@ void Environment::calculate_indexes() {
 }
 
 std::thread Environment::start() {
-  assert(_phase == Phase::Initialization);
+  ASSERT(_phase == Phase::Initialization);
   _phase = Phase::Execution;
 
   log::Info() << "Starting execution";

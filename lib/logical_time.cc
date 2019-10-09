@@ -7,8 +7,7 @@
  */
 
 #include "dear/logical_time.hh"
-
-#include <cassert>
+#include "dear/assert.hh"
 
 namespace dear {
 
@@ -38,7 +37,7 @@ Tag Tag::delay(time_t offset) const {
 }
 
 void LogicalTime::advance_to(const Tag& tag) {
-  assert(*this < tag);
+  ASSERT(*this < tag);
   _time = tag.time();
   _micro_step = tag.micro_step();
 }

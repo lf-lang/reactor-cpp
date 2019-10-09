@@ -8,10 +8,9 @@
 
 #include "dear/scheduler.hh"
 #include "dear/action.hh"
+#include "dear/assert.hh"
 #include "dear/logging.hh"
 #include "dear/reaction.hh"
-
-#include <cassert>
 
 namespace dear {
 
@@ -65,7 +64,7 @@ void Scheduler::next() {
   // We can access event_queue here without acquiring the mutex as all
   // other threads should be waiting
 
-  assert(event_queue.size() > 0);
+  ASSERT(event_queue.size() > 0);
 
   // extract all events with the next tag from the queue
   auto& t_next = event_queue.begin()->first;
@@ -117,7 +116,7 @@ Scheduler::~Scheduler() {}
 void Scheduler::schedule(const Tag& tag,
                          BaseAction* action,
                          std::function<void(void)> pre_handler) {
-  assert(_logical_time < tag);
+  ASSERT(_logical_time < tag);
   // TODO verify that the action is indeed allowed to be scheduled by the
   // current reaction
 

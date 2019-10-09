@@ -7,8 +7,8 @@
  */
 
 #include "dear/time.hh"
+#include "dear/assert.hh"
 
-#include <cassert>
 #include <thread>
 
 namespace dear {
@@ -29,7 +29,7 @@ void assert_physical_clock_resolution() {
   double resolution = (double)std::chrono::high_resolution_clock::period::num /
                       std::chrono::high_resolution_clock::period::den;
   // we assume to have a clock resolution of at least 1ns
-  assert(resolution <= 1.0e-9);
+  ASSERT(resolution <= 1.0e-9);
 }
 
 }  // namespace dear

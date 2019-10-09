@@ -7,31 +7,30 @@
  */
 
 #include "dear/action.hh"
+#include "dear/assert.hh"
 #include "dear/environment.hh"
 #include "dear/reaction.hh"
-
-#include <cassert>
 
 namespace dear {
 
 void BaseAction::register_trigger(Reaction* reaction) {
-  assert(reaction != nullptr);
-  assert(this->environment() == reaction->environment());
-  assert(this->environment()->phase() == Environment::Phase::Assembly);
+  ASSERT(reaction != nullptr);
+  ASSERT(this->environment() == reaction->environment());
+  ASSERT(this->environment()->phase() == Environment::Phase::Assembly);
   // the reaction must belong to the same reactor as this action
-  assert(this->container() == reaction->container());
+  ASSERT(this->container() == reaction->container());
   auto r = _triggers.insert(reaction);
-  assert(r.second);
+  ASSERT(r.second);
 }
 
 void BaseAction::register_scheduler(Reaction* reaction) {
-  assert(reaction != nullptr);
-  assert(this->environment() == reaction->environment());
-  assert(this->environment()->phase() == Environment::Phase::Assembly);
+  ASSERT(reaction != nullptr);
+  ASSERT(this->environment() == reaction->environment());
+  ASSERT(this->environment()->phase() == Environment::Phase::Assembly);
   // the reaction must belong to the same reactor as this action
-  assert(this->container() == reaction->container());
+  ASSERT(this->container() == reaction->container());
   auto r = _triggers.insert(reaction);
-  assert(r.second);
+  ASSERT(r.second);
 }
 
 void Timer::init(const Tag& t0) {

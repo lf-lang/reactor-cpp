@@ -11,8 +11,8 @@
 #include "dear/environment.hh"
 #include "dear/port.hh"
 #include "dear/reaction.hh"
+#include "dear/assert.hh"
 
-#include <cassert>
 
 namespace dear {
 
@@ -20,10 +20,10 @@ ReactorElement::ReactorElement(const std::string& name,
                                ReactorElement::Type type,
                                Reactor* container)
     : _name(name), _container(container) {
-  assert(container != nullptr);
+  ASSERT(container != nullptr);
   this->_environment = container->environment();
-  assert(this->_environment != nullptr);
-  assert(this->_environment->phase() == Environment::Phase::Construction);
+  ASSERT(this->_environment != nullptr);
+  ASSERT(this->_environment->phase() == Environment::Phase::Construction);
   // We need a reinterpret_cast here as the derived class is not yet created
   // when this constructor is executed. dynamic_cast only works for
   // completely constructed objects. Technically, the casts here return
@@ -45,7 +45,7 @@ ReactorElement::ReactorElement(const std::string& name,
       container->register_reactor(reinterpret_cast<Reactor*>(this));
       break;
     default:
-      assert(false);
+      ASSERT(false);
   }
 }
 
@@ -53,9 +53,9 @@ ReactorElement::ReactorElement(const std::string& name,
                                ReactorElement::Type type,
                                Environment* environment)
     : _name(name), _container(nullptr), _environment(environment) {
-  assert(environment != nullptr);
-  assert(type == Type::Reactor);
-  assert(environment->phase() == Environment::Phase::Construction);
+  ASSERT(environment != nullptr);
+  ASSERT(type == Type::Reactor);
+  ASSERT(environment->phase() == Environment::Phase::Construction);
 }
 
 std::stringstream& ReactorElement::fqn_detail(std::stringstream& ss) const {
@@ -79,37 +79,37 @@ Reactor::Reactor(const std::string& name, Environment* environment)
 }
 
 void Reactor::register_action(BaseAction* action) {
-  assert(action != nullptr);
-  assert(this->environment()->phase() == Environment::Phase::Construction);
+  ASSERT(action != nullptr);
+  ASSERT(this->environment()->phase() == Environment::Phase::Construction);
   auto result = _actions.insert(action);
-  assert(result.second);
+  ASSERT(result.second);
 }
 void Reactor::register_port(BasePort* port) {
-  assert(port != nullptr);
-  assert(this->environment()->phase() == Environment::Phase::Construction);
+  ASSERT(port != nullptr);
+  ASSERT(this->environment()->phase() == Environment::Phase::Construction);
   if (port->is_input()) {
     auto result = _inputs.insert(port);
-    assert(result.second);
+    ASSERT(result.second);
   } else {
     auto result = _outputs.insert(port);
-    assert(result.second);
+    ASSERT(result.second);
   }
 }
 void Reactor::register_reaction(Reaction* reaction) {
-  assert(reaction != nullptr);
-  assert(this->environment()->phase() == Environment::Phase::Construction);
+  ASSERT(reaction != nullptr);
+  ASSERT(this->environment()->phase() == Environment::Phase::Construction);
   auto result = _reactions.insert(reaction);
-  assert(result.second);
+  ASSERT(result.second);
 }
 void Reactor::register_reactor(Reactor* reactor) {
-  assert(reactor != nullptr);
-  assert(this->environment()->phase() == Environment::Phase::Construction);
+  ASSERT(reactor != nullptr);
+  ASSERT(this->environment()->phase() == Environment::Phase::Construction);
   auto result = _reactors.insert(reactor);
-  assert(result.second);
+  ASSERT(result.second);
 }
 
 void Reactor::init(const Tag& t0) {
-  assert(environment()->phase() == Environment::Phase::Initialization);
+  ASSERT(environment()->phase() == Environment::Phase::Initialization);
   // call init on all contained objects
   for (auto x : _actions)
     x->init(t0);
