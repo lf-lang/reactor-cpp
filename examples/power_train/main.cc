@@ -15,7 +15,9 @@ class LeftPedal : public Reactor {
   Action<void> req{"req", this};
 
   // reactions
-  Reaction r1{"1", 1, this};
+  Reaction r1{"1", 1, this, [this]() { reaction_1(); }};
+
+  void reaction_1() {}
 
  public:
   LeftPedal(Environment* env) : Reactor("LP", env) {}
@@ -37,9 +39,12 @@ class RightPedal : public Reactor {
   // actions
   Action<void> pol{"pol", this};
 
-  // reactions
-  Reaction r1{"1", 1, this};
-  Reaction r2{"2", 2, this};
+  // reactionns
+  Reaction r1{"1", 1, this, [this]() { reaction_1(); }};
+  Reaction r2{"2", 2, this, [this]() { reaction_2(); }};
+
+  void reaction_1() {}
+  void reaction_2() {}
 
  public:
   RightPedal(Environment* env) : Reactor("RP", env) {}
@@ -60,7 +65,9 @@ class BrakeControl : public Reactor {
   Output<void> force{"force", this};
 
  private:
-  Reaction r1{"1", 1, this};
+  Reaction r1{"1", 1, this, [this]() { reaction_1(); }};
+
+  void reaction_1() {}
 
  public:
   BrakeControl(Environment* env) : Reactor("BC", env) {}
@@ -84,9 +91,13 @@ class EngineControl : public Reactor {
   Action<void> rev{"rev", this};
 
   // reactionns
-  Reaction r1{"1", 1, this};
-  Reaction r2{"2", 2, this};
-  Reaction r3{"3", 3, this};
+  Reaction r1{"1", 1, this, [this]() { reaction_1(); }};
+  Reaction r2{"2", 2, this, [this]() { reaction_2(); }};
+  Reaction r3{"3", 3, this, [this]() { reaction_3(); }};
+
+  void reaction_1() {}
+  void reaction_2() {}
+  void reaction_3() {}
 
  public:
   EngineControl(Environment* env) : Reactor("EC", env) {}
@@ -110,7 +121,9 @@ class Brake : public Reactor {
 
  private:
   // reactions
-  Reaction r1{"1", 1, this};
+  Reaction r1{"1", 1, this, [this]() { reaction_1(); }};
+
+  void reaction_1() {}
 
  public:
   Brake(Environment* env) : Reactor("B", env) {}
@@ -125,7 +138,9 @@ class Engine : public Reactor {
 
  private:
   // reactions
-  Reaction r1{"1", 1, this};
+  Reaction r1{"1", 1, this, [this]() { reaction_1(); }};
+
+  void reaction_1() {}
 
  public:
   Engine(Environment* env) : Reactor("E", env) {}
@@ -134,8 +149,6 @@ class Engine : public Reactor {
 };
 
 int main() {
-  std::cout << "Hello world!\n";
-
   Environment e{4};
 
   LeftPedal left_pedal{&e};
@@ -158,7 +171,6 @@ int main() {
 
   auto t = e.start();
   t.join();
-
 
   return 0;
 }
