@@ -25,7 +25,13 @@ constexpr time_t operator"" _s(time_t x) { return 1'000'000'000ull * x; }
 
 constexpr time_t operator"" _min(time_t x) { return 60'000'000'000ull * x; }
 
-constexpr time_t operator"" _hr(time_t x) { return 3'600'000'000'000ull * x; }
+constexpr time_t operator"" _h(time_t x) { return 3'600'000'000'000ull * x; }
+
+constexpr time_t operator"" _d(time_t x) { return 86'400'000'000'000ull * x; }
+
+constexpr time_t operator"" _weeks(time_t x) {
+  return 604'800'000'000'000ull * x;
+}
 
 time_t get_physical_timepoint();
 
