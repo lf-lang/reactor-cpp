@@ -14,6 +14,8 @@ namespace dear {
 
 using time_t = unsigned long long;  // at least 64 bit
 
+inline namespace literals {
+
 // we assume 1ns clock granularity
 constexpr time_t operator"" _ns(time_t x) { return x; }
 
@@ -32,6 +34,8 @@ constexpr time_t operator"" _d(time_t x) { return 86'400'000'000'000ull * x; }
 constexpr time_t operator"" _weeks(time_t x) {
   return 604'800'000'000'000ull * x;
 }
+
+}  // namespace literals
 
 time_t get_physical_timepoint();
 
