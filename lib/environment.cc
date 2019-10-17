@@ -7,14 +7,15 @@
  */
 
 #include "dear/environment.hh"
-#include "dear/assert.hh"
-#include "dear/logging.hh"
-#include "dear/port.hh"
-#include "dear/reaction.hh"
 
 #include <algorithm>
 #include <fstream>
 #include <map>
+
+#include "dear/assert.hh"
+#include "dear/logging.hh"
+#include "dear/port.hh"
+#include "dear/reaction.hh"
 
 namespace dear {
 
@@ -68,12 +69,14 @@ void Environment::build_dependency_graph(Reactor* reactor) {
   }
 
   // connect reactions by priority
-  auto it = priority_map.begin();
-  auto next = std::next(it);
-  while (next != priority_map.end()) {
-    dependencies.push_back(std::make_pair(next->second, it->second));
-    it++;
-    next = std::next(it);
+  if (priority_map.size() > 1) {
+    auto it = priority_map.begin();
+    auto next = std::next(it);
+    while (next != priority_map.end()) {
+      dependencies.push_back(std::make_pair(next->second, it->second));
+      it++;
+      next = std::next(it);
+    }
   }
 }
 
