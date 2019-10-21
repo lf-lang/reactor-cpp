@@ -7,6 +7,7 @@
  */
 
 #include "dear/action.hh"
+
 #include "dear/assert.hh"
 #include "dear/environment.hh"
 #include "dear/reaction.hh"
@@ -31,6 +32,12 @@ void BaseAction::register_scheduler(Reaction* reaction) {
   ASSERT(this->container() == reaction->container());
   auto r = _triggers.insert(reaction);
   ASSERT(r.second);
+}
+
+void Action<void>::schedule(time_t delay) {
+  auto scheduler = environment()->scheduler();
+  auto tag = Tag::from_logical_time(scheduler->logical_time()).delay(delay);
+  scheduler->schedule(tag, this, [this]() { this->present = true; });
 }
 
 void Timer::init(const Tag& t0) {
