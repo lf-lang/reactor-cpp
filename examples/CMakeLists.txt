@@ -3,6 +3,7 @@ include_directories(
   )
 
 add_custom_target(examples)
+add_subdirectory(count)
 add_subdirectory(hello)
 add_subdirectory(power_train)
 
