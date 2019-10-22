@@ -33,6 +33,7 @@ class BaseAction : public ReactorElement {
   const auto& schedulers() const { return _schedulers; }
 
   friend class Reaction;
+  friend class Scheduler;
 };
 
 template <class T>

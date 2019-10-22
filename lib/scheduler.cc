@@ -7,6 +7,7 @@
  */
 
 #include "dear/scheduler.hh"
+
 #include "dear/action.hh"
 #include "dear/assert.hh"
 #include "dear/logging.hh"
@@ -77,12 +78,12 @@ void Scheduler::next() {
   // advance logical time
   _logical_time.advance_to(t_next);
 
-  // execute all pre_handlers; this sets the values of the corresponding
+  // execute all setup functions; this sets the values of the corresponding
   // actions
   for (auto& kv : *events) {
-    auto& pre_handler = kv.second;
-    if (pre_handler != nullptr) {
-      pre_handler();
+    auto& setup = kv.second;
+    if (setup != nullptr) {
+      setup();
     }
   }
 
@@ -103,6 +104,11 @@ void Scheduler::next() {
   for (auto& f : futures) {
     f.get();
   }
+
+  // cleanup all triggered actions
+  for (auto& kv : *events) {
+    kv.first->cleanup();
+  }
 }
 
 void Scheduler::wait_for_physical_time(const Tag& tag) {
@@ -115,7 +121,7 @@ Scheduler::~Scheduler() {}
 
 void Scheduler::schedule(const Tag& tag,
                          BaseAction* action,
-                         std::function<void(void)> pre_handler) {
+                         std::function<void(void)> setup) {
   ASSERT(_logical_time < tag);
   // TODO verify that the action is indeed allowed to be scheduled by the
   // current reaction
@@ -124,7 +130,7 @@ void Scheduler::schedule(const Tag& tag,
   if (event_queue.find(tag) == event_queue.end())
     event_queue.emplace(tag, std::make_unique<EventMap>());
 
-  (*event_queue[tag])[action] = pre_handler;
+  (*event_queue[tag])[action] = setup;
 }
 
 }  // namespace dear
