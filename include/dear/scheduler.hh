@@ -38,13 +38,8 @@ class Scheduler {
   const unsigned num_workers;
   std::vector<std::thread> worker_threads;
 
-  std::mutex m_post_handlers;
-  std::vector<std::function<void(void)>> post_handlers;
-
   std::mutex m_event_queue;
   std::map<Tag, std::unique_ptr<EventMap>> event_queue;
-
-  std::map<unsigned, std::vector<Reaction*>> ready_reactions;
 
   void work(unsigned id);
 
