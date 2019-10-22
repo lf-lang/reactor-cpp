@@ -57,7 +57,7 @@ class Action : public BaseAction {
     schedule(make_immutable_value<T>(value), delay);
   }
 
-  const ImmutableValuePtr<T> get() const { return value_ptr; }
+  const ImmutableValuePtr<T>& get() const { return value_ptr; }
   bool is_present() const { return value_ptr != nullptr; }
 };
 
