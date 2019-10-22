@@ -11,6 +11,7 @@
 #include "dear/action.hh"
 #include "dear/assert.hh"
 #include "dear/logging.hh"
+#include "dear/port.hh"
 #include "dear/reaction.hh"
 
 namespace dear {
@@ -140,6 +141,12 @@ void Scheduler::next() {
   for (auto& kv : *events) {
     kv.first->cleanup();
   }
+
+  // cleanup all set ports
+  for (auto p : set_ports) {
+    p->cleanup();
+  }
+  set_ports.clear();
 }
 
 void Scheduler::wait_for_physical_time(const Tag& tag) {
@@ -162,6 +169,26 @@ void Scheduler::schedule(const Tag& tag,
     event_queue.emplace(tag, std::make_unique<EventMap>());
 
   (*event_queue[tag])[action] = setup;
+}
+
+void Scheduler::set_port(BasePort* p) {
+  std::lock_guard<std::mutex> lg(m_reaction_queue);
+  set_ports.insert(p);
+  // recursively search for triggered reactions
+  set_port_helper(p);
+}
+
+void Scheduler::set_port_helper(BasePort* p) {
+  ASSERT(!(p->has_outward_bindings() && !p->triggers().empty()));
+  if (p->has_outward_bindings()) {
+    for (auto binding : p->outward_bindings()) {
+      set_port_helper(binding);
+    }
+  } else {
+    for (auto n : p->triggers()) {
+      reaction_queue[_environment->get_index(n)].insert(n);
+    }
+  }
 }
 
 }  // namespace dear

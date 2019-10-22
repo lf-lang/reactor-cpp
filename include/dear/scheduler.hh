@@ -39,6 +39,8 @@ class Scheduler {
   std::mutex m_event_queue;
   std::map<Tag, std::unique_ptr<EventMap>> event_queue;
 
+  std::set<BasePort*> set_ports;
+
   std::mutex m_reaction_queue;
   std::map<unsigned, std::set<Reaction*>> reaction_queue;
   std::vector<Reaction*> ready_reactions;
@@ -54,6 +56,8 @@ class Scheduler {
 
   void wait_for_physical_time(const Tag& tag);
 
+  void set_port_helper(BasePort* p);
+
  public:
   Scheduler(Environment* env, unsigned num_workers)
       : num_workers(num_workers), _environment(env) {}
@@ -63,7 +67,7 @@ class Scheduler {
                 BaseAction* action,
                 std::function<void(void)> pre_handler);
 
-  void set(BasePort*);
+  void set_port(BasePort*);
 
   const LogicalTime& logical_time() const { return _logical_time; }
 

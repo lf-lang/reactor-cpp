@@ -11,6 +11,7 @@
 #include <set>
 
 #include "reactor.hh"
+#include "value_ptr.hh"
 
 namespace dear {
 
@@ -35,6 +36,8 @@ class BasePort : public ReactorElement {
   void register_dependency(Reaction* reaction, bool is_trigger);
   void register_antidependency(Reaction* reaction);
 
+  virtual void cleanup() = 0;
+
  public:
   bool is_input() const { return type == PortType::Input; }
   bool is_output() const { return type == PortType::Output; }
@@ -52,10 +55,16 @@ class BasePort : public ReactorElement {
   const auto& antidependencies() const { return _antidependencies; }
 
   friend class Reaction;
+  friend class Scheduler;
 };
 
 template <class T>
 class Port : public BasePort {
+ private:
+  ImmutableValuePtr<T> value_ptr{nullptr};
+
+  void cleanup() override final { value_ptr = nullptr; }
+
  public:
   Port(const std::string& name, PortType type, Reactor* container)
       : BasePort(name, type, container) {}
@@ -64,7 +73,18 @@ class Port : public BasePort {
   Port<T>* typed_inward_binding() const;
   const std::set<Port<T>*>& typed_outward_bindings() const;
 
+  void set(const ImmutableValuePtr<T>& value_ptr);
+  void set(MutableValuePtr<T>&& value_ptr) {
+    set(ImmutableValuePtr<T>(value_ptr));
+  }
+  void set(const T& value, time_t delay = 0) {
+    set(make_immutable_value<T>(value));
+  }
+
   void init(const Tag&) override final {}
+
+  const ImmutableValuePtr<T>& get() const;
+  bool is_present() const;
 };
 
 template <class T>
