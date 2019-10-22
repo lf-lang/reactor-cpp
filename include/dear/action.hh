@@ -85,7 +85,7 @@ class Timer : public BaseAction {
 
   void reschedule();
 
-  void cleanup() override final {}
+  void cleanup() override final;
 
  public:
   Timer(const std::string& name,

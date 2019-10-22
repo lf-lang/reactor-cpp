@@ -43,18 +43,18 @@ void Action<void>::schedule(time_t delay) {
 void Timer::init(const Tag& t0) {
   if (_offset != 0) {
     Tag t1 = t0.delay(_offset);
-    environment()->scheduler()->schedule(t1, this, [this]() { reschedule(); });
+    environment()->scheduler()->schedule(t1, this, nullptr);
   } else {
-    environment()->scheduler()->schedule(t0, this, [this]() { reschedule(); });
+    environment()->scheduler()->schedule(t0, this, nullptr);
   }
 }
 
-void Timer::reschedule() {
+void Timer::cleanup() {
+  // schedule the timer again
   if (_period != 0) {
     Tag now = Tag::from_logical_time(environment()->logical_time());
     Tag next = now.delay(_period);
-    environment()->scheduler()->schedule(next, this,
-                                         [this]() { reschedule(); });
+    environment()->scheduler()->schedule(next, this, nullptr);
   }
 }
 
