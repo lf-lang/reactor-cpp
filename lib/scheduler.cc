@@ -85,6 +85,8 @@ void Scheduler::next() {
   wait_for_physical_time(t_next);
 
   // advance logical time
+  log::Debug() << "advance logical time to tag [" << t_next.time() << ", "
+               << t_next.micro_step() << "]";
   _logical_time.advance_to(t_next);
 
   // execute all setup functions; this sets the values of the corresponding
@@ -106,18 +108,25 @@ void Scheduler::next() {
     }
   }
 
+  // process all reactions in the queue
   while (!reaction_queue.empty()) {
+    // only process reaction with highest priority
     auto& reactions = reaction_queue.begin()->second;
+    log::Debug() << "Process reactions of priority "
+                 << reaction_queue.begin()->first;
 
+    // we need to acquire the mutex as workers might be running
     std::unique_lock<std::mutex> lock(m_reaction_queue);
     while (!reactions.empty() || !ready_reactions.empty() ||
            !executing_reactions.empty()) {
+      // if there are reactions in the queue, mark them as ready to execute
       if (!reactions.empty()) {
         for (auto r : reactions) {
           log::Debug() << "Schedule reaction " << r->fqn();
           ready_reactions.push_back(r);
         }
         reactions.clear();
+        // notify workers about ready reactions
         cv_ready_reactions.notify_all();
       }
       log::Debug() << "Waiting for workers ...";
