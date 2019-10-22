@@ -104,7 +104,7 @@ void Scheduler::next() {
       // There is no need to acquire the mutex. At this point the scheduler
       // should be the only thread accessing the reaction queue as none of the
       // workers are running
-      reaction_queue[n->priority()].insert(n);
+      reaction_queue[_environment->get_index(n)].insert(n);
     }
   }
 

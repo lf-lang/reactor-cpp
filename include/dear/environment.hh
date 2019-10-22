@@ -37,7 +37,7 @@ class Environment {
   void calculate_indexes();
 
  public:
-  Environment(unsigned num_workers) : _scheduler(num_workers) {}
+  Environment(unsigned num_workers) : _scheduler(this, num_workers) {}
 
   void register_reactor(Reactor* reactor);
 
@@ -52,6 +52,8 @@ class Environment {
   Phase phase() const { return _phase; }
   const Scheduler* scheduler() const { return &_scheduler; }
   Scheduler* scheduler() { return &_scheduler; }
+
+  unsigned get_index(Reaction* r) const { return indexes.at(r); }
 
   const LogicalTime& logical_time() const { return _scheduler.logical_time(); }
 };

@@ -33,6 +33,7 @@ class Scheduler {
   LogicalTime _logical_time{};
 
   const unsigned num_workers;
+  Environment* _environment;
   std::vector<std::thread> worker_threads;
 
   std::mutex m_event_queue;
@@ -54,12 +55,15 @@ class Scheduler {
   void wait_for_physical_time(const Tag& tag);
 
  public:
-  Scheduler(unsigned num_workers) : num_workers(num_workers) {}
+  Scheduler(Environment* env, unsigned num_workers)
+      : num_workers(num_workers), _environment(env) {}
   ~Scheduler();
 
   void schedule(const Tag& tag,
                 BaseAction* action,
                 std::function<void(void)> pre_handler);
+
+  void set(BasePort*);
 
   const LogicalTime& logical_time() const { return _logical_time; }
 
