@@ -19,20 +19,29 @@ void Scheduler::work(unsigned id) {
   log::Debug() << "Starting worker " << id;
 
   while (true) {
-    std::unique_lock<std::mutex> lock(m_work_queue);
-    cv_workers.wait(
-        lock, [this]() { return this->work_queue.size() > 0 || terminate; });
+    std::unique_lock<std::mutex> lock(m_reaction_queue);
+    cv_ready_reactions.wait(
+        lock, [this]() { return !this->ready_reactions.empty() || terminate; });
     if (terminate) {
       lock.unlock();
       break;
     }
 
-    auto work = std::move(work_queue.back());
-    work_queue.pop_back();
+    auto reaction = ready_reactions.back();
+    ready_reactions.pop_back();
+    executing_reactions.insert(reaction);
     lock.unlock();
 
+    log::Debug() << "Execute reaction " << reaction->fqn();
+
     // do the work
-    (*work)();
+    auto body{reaction->body()};
+    body();
+
+    lock.lock();
+    executing_reactions.erase(reaction);
+    lock.unlock();
+    cv_done_reactions.notify_one();
   }
 
   log::Debug() << "Stopping worker " << id;
@@ -53,7 +62,7 @@ void Scheduler::start() {
   log::Debug() << "No more events in queue. -> Terminate!";
 
   terminate = true;
-  cv_workers.notify_all();
+  cv_ready_reactions.notify_all();
 
   // join all worker threads
   for (auto& t : worker_threads) {
@@ -90,19 +99,32 @@ void Scheduler::next() {
   std::vector<std::future<void>> futures;
   for (auto& kv : *events) {
     for (auto n : kv.first->triggers()) {
-      auto task = std::make_unique<WorkItem>(n->body());
-      futures.push_back(task->get_future());
-      // no need to acquire the mutex as there shouldn't be any
-      // workers running
-      work_queue.push_back(std::move(task));
+      // There is no need to acquire the mutex. At this point the scheduler
+      // should be the only thread accessing the reaction queue as none of the
+      // workers are running
+      reaction_queue[n->priority()].insert(n);
     }
   }
-  // notify workers to start processing enqueued tasks
-  cv_workers.notify_all();
 
-  // wait for all tasks to finish
-  for (auto& f : futures) {
-    f.get();
+  while (!reaction_queue.empty()) {
+    auto& reactions = reaction_queue.begin()->second;
+
+    std::unique_lock<std::mutex> lock(m_reaction_queue);
+    while (!reactions.empty() || !ready_reactions.empty() ||
+           !executing_reactions.empty()) {
+      if (!reactions.empty()) {
+        for (auto r : reactions) {
+          log::Debug() << "Schedule reaction " << r->fqn();
+          ready_reactions.push_back(r);
+        }
+        reactions.clear();
+        cv_ready_reactions.notify_all();
+      }
+      log::Debug() << "Waiting for workers ...";
+      cv_done_reactions.wait(lock);
+    }
+    reaction_queue.erase(reaction_queue.begin());
+    lock.unlock();
   }
 
   // cleanup all triggered actions

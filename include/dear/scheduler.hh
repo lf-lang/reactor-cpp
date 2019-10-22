@@ -8,16 +8,17 @@
 
 #pragma once
 
-#include "dear/fwd.hh"
-#include "dear/logical_time.hh"
-
 #include <condition_variable>
 #include <functional>
 #include <future>
 #include <map>
 #include <mutex>
+#include <set>
 #include <thread>
 #include <vector>
+
+#include "dear/fwd.hh"
+#include "dear/logical_time.hh"
 
 namespace dear {
 
@@ -31,15 +32,18 @@ class Scheduler {
   bool terminate{false};
   LogicalTime _logical_time{};
 
-  std::vector<WorkPtr> work_queue;
-  std::mutex m_work_queue;
-  std::condition_variable cv_workers;
-
   const unsigned num_workers;
   std::vector<std::thread> worker_threads;
 
   std::mutex m_event_queue;
   std::map<Tag, std::unique_ptr<EventMap>> event_queue;
+
+  std::mutex m_reaction_queue;
+  std::map<unsigned, std::set<Reaction*>> reaction_queue;
+  std::vector<Reaction*> ready_reactions;
+  std::set<Reaction*> executing_reactions;
+  std::condition_variable cv_ready_reactions;
+  std::condition_variable cv_done_reactions;
 
   void work(unsigned id);
 
