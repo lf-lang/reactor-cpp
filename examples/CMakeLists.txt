@@ -4,6 +4,7 @@ include_directories(
 
 add_custom_target(examples)
 add_subdirectory(count)
+add_subdirectory(ports)
 add_subdirectory(hello)
-add_subdirectory(power_train)
+# add_subdirectory(power_train)
 
