@@ -87,6 +87,27 @@ class Port : public BasePort {
   bool is_present() const;
 };
 
+template <>
+class Port<void> : public BasePort {
+ private:
+  bool present{false};
+
+  void cleanup() override final { present = false; }
+
+ public:
+  Port(const std::string& name, PortType type, Reactor* container)
+      : BasePort(name, type, container) {}
+
+  void bind_to(Port<void>* port) { base_bind_to(port); }
+  Port<void>* typed_inward_binding() const;
+  const std::set<Port<void>*>& typed_outward_bindings() const;
+
+  void set();
+  bool is_present() const { return present; }
+
+  void init(const Tag&) override final {}
+};
+
 template <class T>
 class Input : public Port<T> {
  public:

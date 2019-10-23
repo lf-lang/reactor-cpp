@@ -7,6 +7,7 @@
  */
 
 #include "dear/port.hh"
+
 #include "dear/assert.hh"
 #include "dear/environment.hh"
 #include "dear/reaction.hh"
@@ -86,6 +87,21 @@ void BasePort::register_antidependency(Reaction* reaction) {
 
   auto r = _antidependencies.insert(reaction);
   ASSERT(r.second);
+}
+
+const std::set<Port<void>*>& Port<void>::typed_outward_bindings() const {
+  return reinterpret_cast<const std::set<Port<void>*>&>(outward_bindings());
+}
+
+Port<void>* Port<void>::typed_inward_binding() const {
+  return dynamic_cast<Port<void>*>(inward_binding());
+}
+
+void Port<void>::set() {
+  ASSERT(!has_inward_binding());
+  auto scheduler = environment()->scheduler();
+  this->present = true;
+  scheduler->set_port(this);
 }
 
 }  // namespace dear
