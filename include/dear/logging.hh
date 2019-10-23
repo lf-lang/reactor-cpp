@@ -12,22 +12,29 @@
 #include <memory>
 #include <mutex>
 
+#ifndef DEAR_LOG_LEVEL
+#define DEAR_LOG_LEVEL 3
+#endif
+
 namespace dear {
 
 namespace log {
 
-class BaseLogger {
+template <bool enabled>
+class BaseLogger {};
+
+template <>
+class BaseLogger<true> {
  private:
   using Lock = std::unique_lock<std::mutex>;
 
-  unsigned log_level;
-  std::string log_prefix;
+  const std::string log_prefix;
   static std::mutex mutex;
   Lock lock;
 
  public:
-  BaseLogger(unsigned log_level, std::string log_prefix)
-    : log_level(log_level), log_prefix(log_prefix), lock(mutex) {
+  BaseLogger(const std::string& log_prefix)
+      : log_prefix(log_prefix), lock(mutex) {
     std::cerr << log_prefix;
   }
 
@@ -43,22 +50,37 @@ class BaseLogger {
   }
 };
 
-struct Debug : BaseLogger {
-  Debug() : BaseLogger(0, "[DEBUG] ") {}
+template <>
+class BaseLogger<false> {
+ public:
+  BaseLogger(const std::string&) {}
+
+  template <class T>
+  const BaseLogger& operator<<(const T&) const { return *this;}
+
+  ~BaseLogger() {}
 };
 
-struct Info : BaseLogger {
-  Info() : BaseLogger(1, "[INFO]  ") {}
+constexpr bool debug_enabled = 4 <= DEAR_LOG_LEVEL;
+constexpr bool info_enabled = 3 <= DEAR_LOG_LEVEL;
+constexpr bool warning_enabled = 2 <= DEAR_LOG_LEVEL;
+constexpr bool error_enabled = 1 <= DEAR_LOG_LEVEL;
+
+struct Debug : BaseLogger<debug_enabled> {
+  Debug() : BaseLogger<debug_enabled>("[DEBUG] ") {}
 };
 
-struct Warn : BaseLogger {
-  Warn() : BaseLogger(2, "[WARN]  ") {}
+struct Info : BaseLogger<info_enabled> {
+  Info() : BaseLogger<info_enabled>("[INFO]  ") {}
 };
 
-struct Error : BaseLogger {
-  Error() : BaseLogger(3, "[ERROR] ") {}
+struct Warn : BaseLogger<warning_enabled> {
+  Warn() : BaseLogger<warning_enabled>("[WARN]  ") {}
+};
+
+struct Error : BaseLogger<error_enabled> {
+  Error() : BaseLogger<error_enabled>("[ERROR] ") {}
 };
 
 }  // namespace log
-
 };  // namespace dear

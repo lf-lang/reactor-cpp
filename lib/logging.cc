@@ -11,7 +11,7 @@
 namespace dear {
 namespace log {
 
-std::mutex BaseLogger::mutex;
+std::mutex BaseLogger<true>::mutex;
 
 }
 }  // namespace dear
