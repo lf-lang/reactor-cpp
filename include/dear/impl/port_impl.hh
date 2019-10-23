@@ -35,7 +35,7 @@ void Port<T>::set(const ImmutableValuePtr<T>& value_ptr) {
 template <class T>
 const ImmutableValuePtr<T>& Port<T>::get() const {
   if (has_inward_binding()) {
-    return dynamic_cast<Port<T>*>(inward_binding())->get();
+    return typed_inward_binding()->get();
   } else {
     return value_ptr;
   }
@@ -44,7 +44,7 @@ const ImmutableValuePtr<T>& Port<T>::get() const {
 template <class T>
 bool Port<T>::is_present() const {
   if (has_inward_binding()) {
-    return dynamic_cast<Port<T>*>(inward_binding())->is_present();
+    return typed_inward_binding()->is_present();
   } else {
     return value_ptr != nullptr;
   }
