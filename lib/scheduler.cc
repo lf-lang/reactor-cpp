@@ -163,6 +163,8 @@ void Scheduler::schedule(const Tag& tag,
   ASSERT(_logical_time < tag);
   // TODO verify that the action is indeed allowed to be scheduled by the
   // current reaction
+  log::Debug() << "Schedule action " << action->fqn() << " with tag ["
+               << tag.time() << ", " << tag.micro_step() << "]";
 
   std::lock_guard<std::mutex> lg(m_event_queue);
   if (event_queue.find(tag) == event_queue.end())
@@ -172,6 +174,7 @@ void Scheduler::schedule(const Tag& tag,
 }
 
 void Scheduler::set_port(BasePort* p) {
+  log::Debug() << "Set port " << p->fqn();
   std::lock_guard<std::mutex> lg(m_reaction_queue);
   set_ports.insert(p);
   // recursively search for triggered reactions
