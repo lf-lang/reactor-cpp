@@ -30,7 +30,7 @@ void BaseAction::register_scheduler(Reaction* reaction) {
   ASSERT(this->environment()->phase() == Environment::Phase::Assembly);
   // the reaction must belong to the same reactor as this action
   ASSERT(this->container() == reaction->container());
-  auto r = _triggers.insert(reaction);
+  auto r = _schedulers.insert(reaction);
   ASSERT(r.second);
 }
 
