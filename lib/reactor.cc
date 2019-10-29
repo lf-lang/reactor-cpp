@@ -7,12 +7,12 @@
  */
 
 #include "dear/reactor.hh"
+
 #include "dear/action.hh"
+#include "dear/assert.hh"
 #include "dear/environment.hh"
 #include "dear/port.hh"
 #include "dear/reaction.hh"
-#include "dear/assert.hh"
-
 
 namespace dear {
 
@@ -110,6 +110,7 @@ void Reactor::register_reactor(Reactor* reactor) {
 
 void Reactor::init(const Tag& t0) {
   ASSERT(environment()->phase() == Environment::Phase::Initialization);
+  _t0 = t0.time();
   // call init on all contained objects
   for (auto x : _actions)
     x->init(t0);
@@ -121,6 +122,18 @@ void Reactor::init(const Tag& t0) {
     x->init(t0);
   for (auto x : _reactors)
     x->init(t0);
+}
+
+time_t Reactor::get_physical_time() const {
+  return get_physical_timepoint();
+}
+
+time_t Reactor::get_logical_time() const {
+  return environment()->scheduler()->logical_time().time();
+}
+
+time_t Reactor::get_elapsed_logical_time() const {
+  return get_logical_time() - _t0;
 }
 
 }  // namespace dear

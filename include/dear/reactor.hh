@@ -12,6 +12,7 @@
 #include <sstream>
 #include <string>
 
+#include "dear/time.hh"
 #include "fwd.hh"
 
 namespace dear {
@@ -63,6 +64,8 @@ class Reactor : public ReactorElement {
   void register_reaction(Reaction* reaction);
   void register_reactor(Reactor* reactor);
 
+  time_t _t0;
+
  public:
   Reactor(const std::string& name, Reactor* container);
   Reactor(const std::string& name, Environment* environment);
@@ -77,6 +80,10 @@ class Reactor : public ReactorElement {
   void init(const Tag& t0) override final;
 
   virtual void assemble() = 0;
+
+  time_t get_physical_time() const;
+  time_t get_logical_time() const;
+  time_t get_elapsed_logical_time() const;
 
   friend ReactorElement;
 };
