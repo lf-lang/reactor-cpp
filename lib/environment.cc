@@ -171,4 +171,12 @@ std::thread Environment::start() {
   return std::thread([this]() { this->_scheduler.start(); });
 }
 
+void Environment::stop() {
+  ASSERT(_phase == Phase::Execution);
+
+  log::Info() << "Stopping execution";
+
+  _scheduler.stop();
+}
+
 }  // namespace reactor

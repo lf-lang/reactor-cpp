@@ -55,10 +55,14 @@ void Scheduler::start() {
     worker_threads.emplace_back([this, i]() { this->work(i); });
   }
 
-  while (next()) {
+  while (next() && !_stop) {
   }
 
-  log::Debug() << "No more events in queue. -> Terminate!";
+  if (_stop) {
+    log::Debug() << "Called stop() on the scheduler -> Terminate!";
+  } else {
+    log::Debug() << "No more events in queue. -> Terminate!";
+  }
 
   terminate = true;
   cv_ready_reactions.notify_all();
@@ -73,8 +77,8 @@ bool Scheduler::next() {
   std::unique_ptr<EventMap> events{nullptr};
   std::unique_lock<std::mutex> queue_lock(m_event_queue);
 
-  // abort if there are no more events in the queue
-  if (event_queue.empty()) {
+  // abort if there are no more events in the queue or stop() was called
+  if (event_queue.empty() || _stop) {
     queue_lock.unlock();
     return false;
   }
@@ -89,6 +93,10 @@ bool Scheduler::next() {
 
     // wait until the next tag or until a new event is inserted into the queue
     auto status = cv_event_queue.wait_until(queue_lock, tp);
+
+    if (_stop) {
+      return false;
+    }
 
     // if we reached the timeout, physical time is greater than the next tags
     // and we can process the associated events
@@ -207,6 +215,11 @@ void Scheduler::set_port_helper(BasePort* p) {
       reaction_queue[_environment->get_index(n)].insert(n);
     }
   }
+}
+
+void Scheduler::stop() {
+  _stop = true;
+  cv_event_queue.notify_one();
 }
 
 }  // namespace reactor

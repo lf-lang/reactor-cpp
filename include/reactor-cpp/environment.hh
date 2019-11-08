@@ -46,6 +46,7 @@ class Environment {
   void assemble();
   void init();
   std::thread start();
+  void stop();
 
   void export_dependency_graph(const std::string& path);
 

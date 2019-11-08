@@ -55,6 +55,8 @@ class Scheduler {
 
   void set_port_helper(BasePort* p);
 
+  std::atomic<bool> _stop{false};
+
  public:
   Scheduler(Environment* env, unsigned num_workers)
       : num_workers(num_workers), _environment(env) {}
@@ -69,6 +71,8 @@ class Scheduler {
   const LogicalTime& logical_time() const { return _logical_time; }
 
   void start();
+
+  void stop();
 };
 
 }  // namespace reactor

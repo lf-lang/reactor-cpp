@@ -28,6 +28,8 @@ int main() {
   e.init();
 
   auto t = e.start();
+  std::this_thread::sleep_for(std::chrono::seconds(5));
+  e.stop();
   t.join();
 
   return 0;
