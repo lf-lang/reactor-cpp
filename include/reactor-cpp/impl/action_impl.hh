@@ -15,10 +15,14 @@ template <class T>
 void Action<T>::schedule(const ImmutableValuePtr<T>& value_ptr, time_t delay) {
   ASSERT(value_ptr != nullptr);
   auto scheduler = environment()->scheduler();
-  auto tag = Tag::from_logical_time(scheduler->logical_time()).delay(delay);
-  scheduler->schedule(tag, this, [value_ptr, this]() {
-    this->value_ptr = std::move(value_ptr);
-  });
+  auto setup = [value_ptr, this]() { this->value_ptr = std::move(value_ptr); };
+  if (is_logical()) {
+    auto tag = Tag::from_logical_time(scheduler->logical_time()).delay(delay);
+    scheduler->schedule(tag, this, setup);
+  } else {
+    auto tag = Tag::from_physical_time(delay);
+    scheduler->schedule(tag, this, setup);
+  }
 }
 
 }  // namespace reactor

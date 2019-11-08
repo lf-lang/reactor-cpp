@@ -19,18 +19,25 @@ class BaseAction : public ReactorElement {
   std::set<Reaction*> _triggers;
   std::set<Reaction*> _schedulers;
 
+  bool _logical;
+
  protected:
   void register_trigger(Reaction* reaction);
   void register_scheduler(Reaction* reaction);
 
   virtual void cleanup() = 0;
 
- public:
-  BaseAction(const std::string& name, Reactor* container)
-      : ReactorElement(name, ReactorElement::Type::Action, container) {}
+ protected:
+  BaseAction(const std::string& name, Reactor* container, bool logical)
+      : ReactorElement(name, ReactorElement::Type::Action, container)
+      , _logical(logical) {}
 
+ public:
   const auto& triggers() const { return _triggers; }
   const auto& schedulers() const { return _schedulers; }
+
+  bool is_logical() const { return _logical; }
+  bool is_physical() const { return !_logical; }
 
   friend class Reaction;
   friend class Scheduler;
@@ -43,10 +50,11 @@ class Action : public BaseAction {
 
   void cleanup() override final { value_ptr = nullptr; }
 
- public:
-  Action(const std::string& name, Reactor* container)
-      : BaseAction(name, container) {}
+ protected:
+  Action(const std::string& name, Reactor* container, bool logical)
+      : BaseAction(name, container, logical) {}
 
+ public:
   void init(const Tag&) override final {}
 
   void schedule(const ImmutableValuePtr<T>& value_ptr, time_t delay = 0);
@@ -68,14 +76,29 @@ class Action<void> : public BaseAction {
 
   void cleanup() override final { present = false; }
 
- public:
-  Action(const std::string& name, Reactor* container)
-      : BaseAction(name, container) {}
+ protected:
+  Action(const std::string& name, Reactor* container, bool logical)
+      : BaseAction(name, container, logical) {}
 
+ public:
   void init(const Tag&) override final {}
 
   void schedule(time_t delay = 0);
   bool is_present() const { return present; }
+};
+
+template <class T>
+class PhysicalAction : public Action<T> {
+ public:
+  PhysicalAction(const std::string& name, Reactor* container)
+      : Action<T>(name, container, false) {}
+};
+
+template <class T>
+class LogicalAction : public Action<T> {
+ public:
+  LogicalAction(const std::string& name, Reactor* container)
+      : Action<T>(name, container, true) {}
 };
 
 class Timer : public BaseAction {
@@ -92,7 +115,7 @@ class Timer : public BaseAction {
         Reactor* container,
         time_t period = 0,
         time_t offset = 0)
-      : BaseAction(name, container), _offset(offset), _period(period) {}
+      : BaseAction(name, container, true), _offset(offset), _period(period) {}
 
   void init(const Tag& t0) override final;
 

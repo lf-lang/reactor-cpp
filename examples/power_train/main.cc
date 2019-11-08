@@ -12,7 +12,7 @@ class LeftPedal : public Reactor {
 
  private:
   // actions
-  Action<void> req{"req", this};
+  PhysicalAction<void> req{"req", this};
 
   // reactions
   Reaction r1{"1", 1, this, [this]() { reaction_1(); }};
@@ -37,7 +37,7 @@ class RightPedal : public Reactor {
 
  private:
   // actions
-  Action<void> pol{"pol", this};
+  PhysicalAction<void> pol{"pol", this};
 
   // reactionns
   Reaction r1{"1", 1, this, [this]() { reaction_1(); }};
@@ -88,7 +88,7 @@ class EngineControl : public Reactor {
 
  private:
   // actions
-  Action<void> rev{"rev", this};
+  PhysicalAction<void> rev{"rev", this};
 
   // reactionns
   Reaction r1{"1", 1, this, [this]() { reaction_1(); }};

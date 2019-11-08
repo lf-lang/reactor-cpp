@@ -8,7 +8,7 @@ class Count : public Reactor {
  private:
   // actions
   Timer timer{"timer", this};
-  Action<int> counter{"counter", this};
+  LogicalAction<int> counter{"counter", this};
 
   // reactions
   Reaction r_init{"r_init", 1, this, [this]() { init(); }};
