@@ -37,6 +37,7 @@ class Scheduler {
   std::vector<std::thread> worker_threads;
 
   std::mutex m_event_queue;
+  std::condition_variable cv_event_queue;
   std::map<Tag, std::unique_ptr<EventMap>> event_queue;
 
   std::set<BasePort*> set_ports;
@@ -50,11 +51,7 @@ class Scheduler {
 
   void work(unsigned id);
 
-  void next();
-
-  Tag next_tag();
-
-  void wait_for_physical_time(const Tag& tag);
+  bool next();
 
   void set_port_helper(BasePort* p);
 

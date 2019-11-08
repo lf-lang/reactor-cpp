@@ -55,8 +55,7 @@ void Scheduler::start() {
     worker_threads.emplace_back([this, i]() { this->work(i); });
   }
 
-  while (event_queue.size() > 0) {
-    next();
+  while (next()) {
   }
 
   log::Debug() << "No more events in queue. -> Terminate!";
@@ -70,24 +69,40 @@ void Scheduler::start() {
   }
 }
 
-void Scheduler::next() {
-  // We can access event_queue here without acquiring the mutex as all
-  // other threads should be waiting
+bool Scheduler::next() {
+  std::unique_ptr<EventMap> events{nullptr};
+  std::unique_lock<std::mutex> queue_lock(m_event_queue);
 
-  ASSERT(event_queue.size() > 0);
+  // abort if there are no more events in the queue
+  if (event_queue.empty()) {
+    queue_lock.unlock();
+    return false;
+  }
 
-  // extract all events with the next tag from the queue
-  auto& t_next = event_queue.begin()->first;
-  auto events = std::move(event_queue.begin()->second);
-  event_queue.erase(event_queue.begin());
+  // collect events of the next tag
+  while (events == nullptr) {
+    auto& t_next = event_queue.begin()->first;
 
-  // align with the physical clock
-  wait_for_physical_time(t_next);
+    // calculate the corresponding
+    std::chrono::nanoseconds dur(t_next.time());
+    std::chrono::time_point<std::chrono::system_clock> tp(dur);
 
-  // advance logical time
-  log::Debug() << "advance logical time to tag [" << t_next.time() << ", "
-               << t_next.micro_step() << "]";
-  _logical_time.advance_to(t_next);
+    // wait until the next tag or until a new event is inserted into the queue
+    auto status = cv_event_queue.wait_until(queue_lock, tp);
+
+    // if we reached the timeout, physical time is greater than the next tags
+    // and we can process the associated events
+    if (status == std::cv_status::timeout) {
+      events = std::move(event_queue.begin()->second);
+      event_queue.erase(event_queue.begin());
+
+      // advance logical time
+      log::Debug() << "advance logical time to tag [" << t_next.time() << ", "
+                   << t_next.micro_step() << "]";
+      _logical_time.advance_to(t_next);
+    }
+  }
+  queue_lock.unlock();
 
   // execute all setup functions; this sets the values of the corresponding
   // actions
@@ -146,12 +161,8 @@ void Scheduler::next() {
     p->cleanup();
   }
   set_ports.clear();
-}
 
-void Scheduler::wait_for_physical_time(const Tag& tag) {
-  if (tag.time() > get_physical_timepoint()) {
-    wait_until_physical_timepoint(tag.time());
-  }
+  return true;
 }
 
 Scheduler::~Scheduler() {}
@@ -162,14 +173,19 @@ void Scheduler::schedule(const Tag& tag,
   ASSERT(_logical_time < tag);
   // TODO verify that the action is indeed allowed to be scheduled by the
   // current reaction
-  log::Debug() << "Schedule action " << action->fqn() << " with tag ["
-               << tag.time() << ", " << tag.micro_step() << "]";
+  log::Debug() << "Schedule action " << action->fqn()
+               << (action->is_logical() ? " synchronously "
+                                        : " asynchronously ")
+               << " with tag [" << tag.time() << ", " << tag.micro_step()
+               << "]";
+  {
+    std::lock_guard<std::mutex> lg(m_event_queue);
+    if (event_queue.find(tag) == event_queue.end())
+      event_queue.emplace(tag, std::make_unique<EventMap>());
 
-  std::lock_guard<std::mutex> lg(m_event_queue);
-  if (event_queue.find(tag) == event_queue.end())
-    event_queue.emplace(tag, std::make_unique<EventMap>());
-
-  (*event_queue[tag])[action] = setup;
+    (*event_queue[tag])[action] = setup;
+  }
+  cv_event_queue.notify_one();
 }
 
 void Scheduler::set_port(BasePort* p) {
