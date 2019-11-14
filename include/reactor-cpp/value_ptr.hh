@@ -31,9 +31,9 @@ class MutableValuePtr {
   MutableValuePtr(MutableValuePtr&&) = default;
 
   constexpr MutableValuePtr() : internal_ptr(nullptr) {}
-  explicit constexpr MutableValuePtr(nullptr_t) : internal_ptr(nullptr) {}
+  explicit constexpr MutableValuePtr(std::nullptr_t) : internal_ptr(nullptr) {}
 
-  MutableValuePtr& operator=(nullptr_t) {
+  MutableValuePtr& operator=(std::nullptr_t) {
     this->internal_ptr = nullptr;
     return *this;
   }
@@ -65,11 +65,12 @@ class ImmutableValuePtr {
   ImmutableValuePtr(const ImmutableValuePtr&) = default;
   ImmutableValuePtr(ImmutableValuePtr&&) = default;
 
-  explicit constexpr ImmutableValuePtr(nullptr_t) : internal_ptr(nullptr) {}
+  explicit constexpr ImmutableValuePtr(std::nullptr_t)
+      : internal_ptr(nullptr) {}
   explicit ImmutableValuePtr(MutableValuePtr<T>&& ptr)
       : internal_ptr(std::move(ptr.internal_ptr)) {}
 
-  ImmutableValuePtr& operator=(nullptr_t) {
+  ImmutableValuePtr& operator=(std::nullptr_t) {
     this->internal_ptr = nullptr;
     return *this;
   }
@@ -123,19 +124,19 @@ bool operator==(const MutableValuePtr<T>& x, const ImmutableValuePtr<U>& y) {
   return x.get() == y.get();
 }
 template <class T>
-bool operator==(const MutableValuePtr<T>& x, nullptr_t) {
+bool operator==(const MutableValuePtr<T>& x, std::nullptr_t) {
   return x.get() == nullptr;
 }
 template <class T>
-bool operator==(nullptr_t, const MutableValuePtr<T>& x) {
+bool operator==(std::nullptr_t, const MutableValuePtr<T>& x) {
   return x.get() == nullptr;
 }
 template <class T>
-bool operator==(const ImmutableValuePtr<T>& x, nullptr_t) {
+bool operator==(const ImmutableValuePtr<T>& x, std::nullptr_t) {
   return x.get() == nullptr;
 }
 template <class T>
-bool operator==(nullptr_t, const ImmutableValuePtr<T>& x) {
+bool operator==(std::nullptr_t, const ImmutableValuePtr<T>& x) {
   return x.get() == nullptr;
 }
 
@@ -156,19 +157,19 @@ bool operator!=(const MutableValuePtr<T>& x, const ImmutableValuePtr<U>& y) {
   return x.get() != y.get();
 }
 template <class T>
-bool operator!=(const MutableValuePtr<T>& x, nullptr_t) {
+bool operator!=(const MutableValuePtr<T>& x, std::nullptr_t) {
   return x.get() != nullptr;
 }
 template <class T>
-bool operator!=(nullptr_t, const MutableValuePtr<T>& x) {
+bool operator!=(std::nullptr_t, const MutableValuePtr<T>& x) {
   return x.get() != nullptr;
 }
 template <class T>
-bool operator!=(const ImmutableValuePtr<T>& x, nullptr_t) {
+bool operator!=(const ImmutableValuePtr<T>& x, std::nullptr_t) {
   return x.get() != nullptr;
 }
 template <class T>
-bool operator!=(nullptr_t, const ImmutableValuePtr<T>& x) {
+bool operator!=(std::nullptr_t, const ImmutableValuePtr<T>& x) {
   return x.get() != nullptr;
 }
 
