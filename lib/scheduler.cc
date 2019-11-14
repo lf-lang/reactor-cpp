@@ -36,8 +36,7 @@ void Scheduler::work(unsigned id) {
     log::Debug() << "Execute reaction " << reaction->fqn();
 
     // do the work
-    auto body{reaction->body()};
-    body();
+    reaction->trigger();
 
     lock.lock();
     executing_reactions.erase(reaction);

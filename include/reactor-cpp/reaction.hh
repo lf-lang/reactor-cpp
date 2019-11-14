@@ -25,7 +25,10 @@ class Reaction : public ReactorElement {
 
   const int _priority;
 
-  std::function<void(void)> _body;
+  std::function<void(void)> body;
+
+  time_t deadline{0};
+  std::function<void(void)> deadline_handler{nullptr};
 
  public:
   Reaction(const std::string& name,
@@ -51,7 +54,10 @@ class Reaction : public ReactorElement {
 
   void init(const Tag&) override final {}
 
-  const std::function<void(void)>& body() { return _body; }
+  void trigger();
+
+  void set_deadline(time_t deadline, std::function<void(void)> handler);
+  bool has_deadline() const { return deadline != 0; }
 };
 
 }  // namespace reactor

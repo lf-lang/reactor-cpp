@@ -21,7 +21,7 @@ Reaction::Reaction(const std::string& name,
                    std::function<void(void)> body)
     : ReactorElement(name, ReactorElement::Type::Reaction, container)
     , _priority(priority)
-    , _body(body) {
+    , body(body) {
   ASSERT(priority != 0);
 }
 
@@ -106,6 +106,28 @@ void Reaction::declare_antidependency(BasePort* port) {
   auto r = _antidependencies.insert(port);
   ASSERT(r.second);
   port->register_antidependency(this);
+}
+
+void Reaction::trigger() {
+  if (has_deadline()) {
+    ASSERT(deadline_handler != nullptr);
+    auto lag =
+        container()->get_physical_time() - container()->get_logical_time();
+    if (lag > deadline) {
+      deadline_handler();
+      return;
+    }
+  }
+
+  body();
+}
+
+void Reaction::set_deadline(time_t deadline,
+                            std::function<void(void)> handler) {
+  ASSERT(!has_deadline());
+  ASSERT(handler != nullptr);
+  this->deadline = deadline;
+  this->deadline_handler = handler;
 }
 
 }  // namespace reactor
