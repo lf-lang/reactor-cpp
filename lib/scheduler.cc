@@ -51,7 +51,7 @@ void Scheduler::start() {
   log::Debug() << "Starting the scheduler...";
 
   // start worker threads
-  for (unsigned i = 0; i < num_workers; i++) {
+  for (unsigned i = 0; i < _environment->num_workers(); i++) {
     worker_threads.emplace_back([this, i]() { this->work(i); });
   }
 

@@ -23,6 +23,7 @@ class Environment {
   enum class Phase { Construction, Assembly, Initialization, Execution };
 
  private:
+  const unsigned _num_workers;
   Scheduler _scheduler;
   std::set<Reactor*> _top_level_reactors;
 
@@ -37,7 +38,8 @@ class Environment {
   void calculate_indexes();
 
  public:
-  Environment(unsigned num_workers) : _scheduler(this, num_workers) {}
+  Environment(unsigned num_workers)
+      : _num_workers(num_workers), _scheduler(this) {}
 
   void register_reactor(Reactor* reactor);
 
@@ -57,6 +59,8 @@ class Environment {
   unsigned get_index(Reaction* r) const { return indexes.at(r); }
 
   const LogicalTime& logical_time() const { return _scheduler.logical_time(); }
+
+  unsigned num_workers() const { return _num_workers; }
 };
 
 }  // namespace reactor

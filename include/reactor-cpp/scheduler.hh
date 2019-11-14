@@ -32,7 +32,6 @@ class Scheduler {
   bool terminate{false};
   LogicalTime _logical_time{};
 
-  const unsigned num_workers;
   Environment* _environment;
   std::vector<std::thread> worker_threads;
 
@@ -58,8 +57,7 @@ class Scheduler {
   std::atomic<bool> _stop{false};
 
  public:
-  Scheduler(Environment* env, unsigned num_workers)
-      : num_workers(num_workers), _environment(env) {}
+  Scheduler(Environment* env) : _environment(env) {}
   ~Scheduler();
 
   void schedule(const Tag& tag,
