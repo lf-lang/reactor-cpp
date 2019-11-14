@@ -35,7 +35,7 @@ class Count : public Reactor {
 };
 
 int main() {
-  Environment e{4};
+  Environment e{4, true};
 
   Count count{&e};
   e.assemble();

@@ -85,22 +85,34 @@ bool Scheduler::next() {
 
   // collect events of the next tag
   while (events == nullptr) {
-    auto& t_next = event_queue.begin()->first;
+    auto t_next = event_queue.begin()->first;
 
-    // calculate the corresponding
-    std::chrono::nanoseconds dur(t_next.time());
-    std::chrono::time_point<std::chrono::system_clock> tp(dur);
+    bool continue_execution = false;
+    if (_environment->fast_fwd_execution()) {
+      // Fast forward execution. Logical time may run ahead of physical time
+      continue_execution = true;
+    } else {
+      // Normal operation. Always synchronize with physical time
 
-    // wait until the next tag or until a new event is inserted into the queue
-    auto status = cv_event_queue.wait_until(queue_lock, tp);
+      // calculate the corresponding
+      std::chrono::nanoseconds dur(t_next.time());
+      std::chrono::time_point<std::chrono::system_clock> tp(dur);
+
+      // wait until the next tag or until a new event is inserted into the queue
+      auto status = cv_event_queue.wait_until(queue_lock, tp);
+      // if we reached the timeout, physical time is greater than the next tags
+      // and we can process the associated events
+      if (status == std::cv_status::timeout) {
+        continue_execution = true;
+      }
+    }
 
     if (_stop) {
+      queue_lock.unlock();
       return false;
     }
 
-    // if we reached the timeout, physical time is greater than the next tags
-    // and we can process the associated events
-    if (status == std::cv_status::timeout) {
+    if (continue_execution) {
       events = std::move(event_queue.begin()->second);
       event_queue.erase(event_queue.begin());
 

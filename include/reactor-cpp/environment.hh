@@ -25,6 +25,7 @@ class Environment {
  private:
   const unsigned _num_workers;
   Scheduler _scheduler;
+  const bool _fast_fwd_execution;
   std::set<Reactor*> _top_level_reactors;
 
   std::set<Reaction*> reactions;
@@ -38,8 +39,10 @@ class Environment {
   void calculate_indexes();
 
  public:
-  Environment(unsigned num_workers)
-      : _num_workers(num_workers), _scheduler(this) {}
+  Environment(unsigned num_workers, bool fast_fwd_execution = false)
+      : _num_workers(num_workers)
+      , _scheduler(this)
+      , _fast_fwd_execution(fast_fwd_execution) {}
 
   void register_reactor(Reactor* reactor);
 
@@ -61,6 +64,7 @@ class Environment {
   const LogicalTime& logical_time() const { return _scheduler.logical_time(); }
 
   unsigned num_workers() const { return _num_workers; }
+  bool fast_fwd_execution() const { return _fast_fwd_execution; }
 };
 
 }  // namespace reactor
