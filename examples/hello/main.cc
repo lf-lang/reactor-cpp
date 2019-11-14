@@ -1,10 +1,8 @@
 #include <iostream>
 
-#include "dear/dear.hh"
+#include "reactor-cpp/reactor-cpp.hh"
 
-#include <iostream>
-
-using namespace dear;
+using namespace reactor;
 
 class Hello : public Reactor {
  private:

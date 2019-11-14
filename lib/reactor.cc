@@ -6,15 +6,15 @@
  *   Christian Menard
  */
 
-#include "dear/reactor.hh"
+#include "reactor-cpp/reactor.hh"
 
-#include "dear/action.hh"
-#include "dear/assert.hh"
-#include "dear/environment.hh"
-#include "dear/port.hh"
-#include "dear/reaction.hh"
+#include "reactor-cpp/action.hh"
+#include "reactor-cpp/assert.hh"
+#include "reactor-cpp/environment.hh"
+#include "reactor-cpp/port.hh"
+#include "reactor-cpp/reaction.hh"
 
-namespace dear {
+namespace reactor {
 
 ReactorElement::ReactorElement(const std::string& name,
                                ReactorElement::Type type,
@@ -124,9 +124,7 @@ void Reactor::init(const Tag& t0) {
     x->init(t0);
 }
 
-time_t Reactor::get_physical_time() const {
-  return get_physical_timepoint();
-}
+time_t Reactor::get_physical_time() const { return get_physical_timepoint(); }
 
 time_t Reactor::get_logical_time() const {
   return environment()->scheduler()->logical_time().time();
@@ -136,4 +134,4 @@ time_t Reactor::get_elapsed_logical_time() const {
   return get_logical_time() - _t0;
 }
 
-}  // namespace dear
+}  // namespace reactor

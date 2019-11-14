@@ -13,10 +13,10 @@
 #include <string>
 #include <vector>
 
-#include "dear/reactor.hh"
-#include "dear/scheduler.hh"
+#include "reactor.hh"
+#include "scheduler.hh"
 
-namespace dear {
+namespace reactor {
 
 class Environment {
  public:
@@ -58,4 +58,4 @@ class Environment {
   const LogicalTime& logical_time() const { return _scheduler.logical_time(); }
 };
 
-}  // namespace dear
+}  // namespace reactor

@@ -11,7 +11,7 @@
 #include <memory>
 #include <type_traits>
 
-namespace dear {
+namespace reactor {
 
 template <class T>
 class ImmutableValuePtr;
@@ -172,4 +172,4 @@ bool operator!=(nullptr_t, const ImmutableValuePtr<T>& x) {
   return x.get() != nullptr;
 }
 
-}  // namespace dear
+}  // namespace reactor

@@ -10,7 +10,7 @@
 
 #include "time.hh"
 
-namespace dear {
+namespace reactor {
 
 using mstep_t = unsigned long;  // at least 32 bit
 
@@ -85,4 +85,4 @@ bool inline operator>=(const Tag& t, const LogicalTime& lt) {
   return !(t < lt);
 }
 
-}  // namespace dear
+}  // namespace reactor

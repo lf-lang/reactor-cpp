@@ -12,11 +12,11 @@
 #include <memory>
 #include <mutex>
 
-#ifndef DEAR_LOG_LEVEL
-#define DEAR_LOG_LEVEL 3
+#ifndef REACTOR_CPP_LOG_LEVEL
+#define REACTOR_CPP_LOG_LEVEL 3
 #endif
 
-namespace dear {
+namespace reactor {
 
 namespace log {
 
@@ -61,10 +61,10 @@ class BaseLogger<false> {
   ~BaseLogger() {}
 };
 
-constexpr bool debug_enabled = 4 <= DEAR_LOG_LEVEL;
-constexpr bool info_enabled = 3 <= DEAR_LOG_LEVEL;
-constexpr bool warning_enabled = 2 <= DEAR_LOG_LEVEL;
-constexpr bool error_enabled = 1 <= DEAR_LOG_LEVEL;
+constexpr bool debug_enabled = 4 <= REACTOR_CPP_LOG_LEVEL;
+constexpr bool info_enabled = 3 <= REACTOR_CPP_LOG_LEVEL;
+constexpr bool warning_enabled = 2 <= REACTOR_CPP_LOG_LEVEL;
+constexpr bool error_enabled = 1 <= REACTOR_CPP_LOG_LEVEL;
 
 struct Debug : BaseLogger<debug_enabled> {
   Debug() : BaseLogger<debug_enabled>("[DEBUG] ") {}
@@ -83,4 +83,4 @@ struct Error : BaseLogger<error_enabled> {
 };
 
 }  // namespace log
-};  // namespace dear
+};  // namespace reactor

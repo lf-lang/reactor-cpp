@@ -17,10 +17,10 @@
 #include <thread>
 #include <vector>
 
-#include "dear/fwd.hh"
-#include "dear/logical_time.hh"
+#include "fwd.hh"
+#include "logical_time.hh"
 
-namespace dear {
+namespace reactor {
 
 class Scheduler {
  public:
@@ -74,4 +74,4 @@ class Scheduler {
   void start();
 };
 
-}  // namespace dear
+}  // namespace reactor

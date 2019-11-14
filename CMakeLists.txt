@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(dear LANGUAGES CXX VERSION 0.0.1)
+project(reactor-cpp LANGUAGES CXX VERSION 0.0.1)
 
 find_package (Threads)
 

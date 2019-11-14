@@ -6,13 +6,14 @@
  *   Christian Menard
  */
 
-#include "dear/reaction.hh"
-#include "dear/action.hh"
-#include "dear/assert.hh"
-#include "dear/environment.hh"
-#include "dear/port.hh"
+#include "reactor-cpp/reaction.hh"
 
-namespace dear {
+#include "reactor-cpp/action.hh"
+#include "reactor-cpp/assert.hh"
+#include "reactor-cpp/environment.hh"
+#include "reactor-cpp/port.hh"
+
+namespace reactor {
 
 Reaction::Reaction(const std::string& name,
                    int priority,
@@ -107,4 +108,4 @@ void Reaction::declare_antidependency(BasePort* port) {
   port->register_antidependency(this);
 }
 
-}  // namespace dear
+}  // namespace reactor

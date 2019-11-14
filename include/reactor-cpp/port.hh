@@ -13,7 +13,7 @@
 #include "reactor.hh"
 #include "value_ptr.hh"
 
-namespace dear {
+namespace reactor {
 
 enum class PortType { Input, Output };
 
@@ -122,6 +122,6 @@ class Output : public Port<T> {
       : Port<T>(name, PortType::Output, container) {}
 };
 
-}  // namespace dear
+}  // namespace reactor
 
 #include "impl/port_impl.hh"

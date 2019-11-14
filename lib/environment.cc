@@ -6,18 +6,18 @@
  *   Christian Menard
  */
 
-#include "dear/environment.hh"
+#include "reactor-cpp/environment.hh"
 
 #include <algorithm>
 #include <fstream>
 #include <map>
 
-#include "dear/assert.hh"
-#include "dear/logging.hh"
-#include "dear/port.hh"
-#include "dear/reaction.hh"
+#include "reactor-cpp/assert.hh"
+#include "reactor-cpp/logging.hh"
+#include "reactor-cpp/port.hh"
+#include "reactor-cpp/reaction.hh"
 
-namespace dear {
+namespace reactor {
 
 void Environment::register_reactor(Reactor* reactor) {
   ASSERT(this->phase() == Phase::Construction);
@@ -171,4 +171,4 @@ std::thread Environment::start() {
   return std::thread([this]() { this->_scheduler.start(); });
 }
 
-}  // namespace dear
+}  // namespace reactor

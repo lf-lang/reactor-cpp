@@ -8,7 +8,7 @@
 
 #pragma once
 
-namespace dear {
+namespace reactor {
 
 class BaseAction;
 class BasePort;
@@ -23,4 +23,4 @@ class Action;
 template <class T>
 class Port;
 
-}  // namespace dear
+}  // namespace reactor

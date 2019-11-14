@@ -6,12 +6,13 @@
  *   Christian Menard
  */
 
-#include "dear/time.hh"
-#include "dear/assert.hh"
+#include "reactor-cpp/time.hh"
 
 #include <thread>
 
-namespace dear {
+#include "reactor-cpp/assert.hh"
+
+namespace reactor {
 
 time_t get_physical_timepoint() {
   auto now = std::chrono::system_clock::now();
@@ -32,4 +33,4 @@ void assert_physical_clock_resolution() {
   ASSERT(resolution <= 1.0e-9);
 }
 
-}  // namespace dear
+}  // namespace reactor

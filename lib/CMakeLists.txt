@@ -10,23 +10,23 @@ set(SOURCE_FILES
   time.cc
   )
 
-add_library(dear SHARED ${SOURCE_FILES})
-target_include_directories(dear PUBLIC
+add_library(reactor-cpp SHARED ${SOURCE_FILES})
+target_include_directories(reactor-cpp PUBLIC
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
     PRIVATE src)
-target_compile_options(dear PRIVATE -Wall -Wextra)
-target_link_libraries(dear ${CMAKE_THREAD_LIBS_INIT})
+target_compile_options(reactor-cpp PRIVATE -Wall -Wextra)
+target_link_libraries(reactor-cpp ${CMAKE_THREAD_LIBS_INIT})
 
-set_target_properties(dear PROPERTIES
+set_target_properties(reactor-cpp PROPERTIES
     VERSION ${PROJECT_VERSION}
     SOVERSION 1)
 
-install(TARGETS dear EXPORT DearConfig
+install(TARGETS reactor-cpp EXPORT ReactorCppConfig
     ARCHIVE  DESTINATION ${CMAKE_INSTALL_LIBDIR}
     LIBRARY  DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME  DESTINATION ${CMAKE_INSTALL_BINDIR})
 
-install(EXPORT DearConfig DESTINATION share/dear/cmake)
+install(EXPORT ReactorCppConfig DESTINATION share/reactor/cmake)
 
-export(TARGETS ${PROJECT_NAME} FILE DearConfig.cmake)
+export(TARGETS ${PROJECT_NAME} FILE ReactorCppConfig.cmake)

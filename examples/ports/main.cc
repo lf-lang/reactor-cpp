@@ -1,8 +1,8 @@
 #include <iostream>
 
-#include "dear/dear.hh"
+#include "reactor-cpp/reactor-cpp.hh"
 
-using namespace dear;
+using namespace reactor;
 
 class Trigger : public Reactor {
  private:
@@ -11,7 +11,7 @@ class Trigger : public Reactor {
   Reaction r_timer{"r_timer", 1, this, [this]() { on_timer(); }};
 
  public:
-  Trigger(const std::string& name, Environment* env, dear::time_t period)
+  Trigger(const std::string& name, Environment* env, reactor::time_t period)
       : Reactor(name, env), timer{"timer", this, period, 0} {}
 
   Output<void> trigger{"trigger", this};

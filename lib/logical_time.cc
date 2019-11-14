@@ -6,10 +6,11 @@
  *   Christian Menard
  */
 
-#include "dear/logical_time.hh"
-#include "dear/assert.hh"
+#include "reactor-cpp/logical_time.hh"
 
-namespace dear {
+#include "reactor-cpp/assert.hh"
+
+namespace reactor {
 
 bool operator==(const Tag& lhs, const Tag& rhs) {
   return lhs.time() == rhs.time() && lhs.micro_step() == rhs.micro_step();
@@ -56,4 +57,4 @@ bool operator>(const LogicalTime& lhs, const Tag& rhs) {
          (lhs.time() == rhs.time() && lhs.micro_step() > rhs.micro_step());
 }
 
-}  // namespace dear
+}  // namespace reactor

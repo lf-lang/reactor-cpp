@@ -9,7 +9,7 @@
 #include "../assert.hh"
 #include "../environment.hh"
 
-namespace dear {
+namespace reactor {
 
 template <class T>
 void Action<T>::schedule(const ImmutableValuePtr<T>& value_ptr, time_t delay) {
@@ -21,4 +21,4 @@ void Action<T>::schedule(const ImmutableValuePtr<T>& value_ptr, time_t delay) {
   });
 }
 
-}  // namespace dear
+}  // namespace reactor

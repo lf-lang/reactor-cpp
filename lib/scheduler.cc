@@ -6,15 +6,15 @@
  *   Christian Menard
  */
 
-#include "dear/scheduler.hh"
+#include "reactor-cpp/scheduler.hh"
 
-#include "dear/action.hh"
-#include "dear/assert.hh"
-#include "dear/logging.hh"
-#include "dear/port.hh"
-#include "dear/reaction.hh"
+#include "reactor-cpp/action.hh"
+#include "reactor-cpp/assert.hh"
+#include "reactor-cpp/logging.hh"
+#include "reactor-cpp/port.hh"
+#include "reactor-cpp/reaction.hh"
 
-namespace dear {
+namespace reactor {
 
 void Scheduler::work(unsigned id) {
   log::Debug() << "Starting worker " << id;
@@ -194,4 +194,4 @@ void Scheduler::set_port_helper(BasePort* p) {
   }
 }
 
-}  // namespace dear
+}  // namespace reactor

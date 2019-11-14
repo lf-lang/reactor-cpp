@@ -6,13 +6,13 @@
  *   Christian Menard
  */
 
-#include "dear/action.hh"
+#include "reactor-cpp/action.hh"
 
-#include "dear/assert.hh"
-#include "dear/environment.hh"
-#include "dear/reaction.hh"
+#include "reactor-cpp/assert.hh"
+#include "reactor-cpp/environment.hh"
+#include "reactor-cpp/reaction.hh"
 
-namespace dear {
+namespace reactor {
 
 void BaseAction::register_trigger(Reaction* reaction) {
   ASSERT(reaction != nullptr);
@@ -58,4 +58,4 @@ void Timer::cleanup() {
   }
 }
 
-}  // namespace dear
+}  // namespace reactor

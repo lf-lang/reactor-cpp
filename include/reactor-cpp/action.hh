@@ -12,7 +12,7 @@
 #include "reactor.hh"
 #include "value_ptr.hh"
 
-namespace dear {
+namespace reactor {
 
 class BaseAction : public ReactorElement {
  private:
@@ -100,6 +100,6 @@ class Timer : public BaseAction {
   time_t period() const { return _period; }
 };
 
-}  // namespace dear
+}  // namespace reactor
 
 #include "impl/action_impl.hh"

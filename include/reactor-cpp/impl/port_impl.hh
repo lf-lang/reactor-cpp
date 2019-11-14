@@ -9,7 +9,7 @@
 #include "../assert.hh"
 #include "../environment.hh"
 
-namespace dear {
+namespace reactor {
 
 template <class T>
 const std::set<Port<T>*>& Port<T>::typed_outward_bindings() const {
@@ -50,4 +50,4 @@ bool Port<T>::is_present() const {
   }
 }
 
-}  // namespace dear
+}  // namespace reactor

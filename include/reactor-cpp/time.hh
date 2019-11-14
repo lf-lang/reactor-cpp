@@ -10,7 +10,7 @@
 
 #include <chrono>
 
-namespace dear {
+namespace reactor {
 
 using time_t = unsigned long long;  // at least 64 bit
 
@@ -43,4 +43,4 @@ void wait_until_physical_timepoint(time_t t);
 
 void assert_physical_clock_resolution();
 
-}  // namespace dear
+}  // namespace reactor

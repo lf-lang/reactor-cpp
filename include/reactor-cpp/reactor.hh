@@ -12,10 +12,10 @@
 #include <sstream>
 #include <string>
 
-#include "dear/time.hh"
 #include "fwd.hh"
+#include "time.hh"
 
-namespace dear {
+namespace reactor {
 
 class ReactorElement {
  public:
@@ -88,4 +88,4 @@ class Reactor : public ReactorElement {
   friend ReactorElement;
 };
 
-}  // namespace dear
+}  // namespace reactor

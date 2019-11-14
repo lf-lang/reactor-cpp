@@ -13,7 +13,7 @@
 
 #include "reactor.hh"
 
-namespace dear {
+namespace reactor {
 
 class Reaction : public ReactorElement {
  private:
@@ -54,4 +54,4 @@ class Reaction : public ReactorElement {
   const std::function<void(void)>& body() { return _body; }
 };
 
-}  // namespace dear
+}  // namespace reactor

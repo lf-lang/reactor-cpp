@@ -6,12 +6,12 @@
  *   Christian Menard
  */
 
-#include "dear/logging.hh"
+#include "reactor-cpp/logging.hh"
 
-namespace dear {
+namespace reactor {
 namespace log {
 
 std::mutex BaseLogger<true>::mutex;
 
 }
-}  // namespace dear
+}  // namespace reactor

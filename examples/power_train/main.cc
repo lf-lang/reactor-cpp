@@ -1,8 +1,8 @@
 #include <iostream>
 
-#include "dear/dear.hh"
+#include "reactor-cpp/reactor-cpp.hh"
 
-using namespace dear;
+using namespace reactor;
 
 class LeftPedal : public Reactor {
  public:

@@ -6,13 +6,13 @@
  *   Christian Menard
  */
 
-#include "dear/port.hh"
+#include "reactor-cpp/port.hh"
 
-#include "dear/assert.hh"
-#include "dear/environment.hh"
-#include "dear/reaction.hh"
+#include "reactor-cpp/assert.hh"
+#include "reactor-cpp/environment.hh"
+#include "reactor-cpp/reaction.hh"
 
-namespace dear {
+namespace reactor {
 
 void BasePort::base_bind_to(BasePort* port) {
   ASSERT(port != nullptr);
@@ -104,4 +104,4 @@ void Port<void>::set() {
   scheduler->set_port(this);
 }
 
-}  // namespace dear
+}  // namespace reactor
