@@ -77,9 +77,7 @@ class Port : public BasePort {
   void set(MutableValuePtr<T>&& value_ptr) {
     set(ImmutableValuePtr<T>(value_ptr));
   }
-  void set(const T& value, time_t delay = 0) {
-    set(make_immutable_value<T>(value));
-  }
+  void set(const T& value) { set(make_immutable_value<T>(value)); }
 
   void init(const Tag&) override final {}
 
