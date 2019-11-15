@@ -68,4 +68,9 @@ void Timer::cleanup() {
   }
 }
 
+void ShutdownAction::shutdown() {
+  Tag t = Tag::from_logical_time(environment()->logical_time()).delay();
+  environment()->scheduler()->schedule(t, this, nullptr);
+}
+
 }  // namespace reactor

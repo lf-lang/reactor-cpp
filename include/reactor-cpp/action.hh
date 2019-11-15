@@ -126,6 +126,22 @@ class Timer : public BaseAction {
   time_t period() const { return _period; }
 };
 
+class StartupAction : public Timer {
+ public:
+  StartupAction(const std::string& name, Reactor* container)
+      : Timer(name, container, 0, 0) {}
+};
+
+class ShutdownAction : public BaseAction {
+ public:
+  ShutdownAction(const std::string& name, Reactor* container)
+    : BaseAction(name, container, true) {}
+
+  void cleanup() override final {}
+  void startup() override final {}
+  void shutdown() override final;
+};
+
 }  // namespace reactor
 
 #include "impl/action_impl.hh"
