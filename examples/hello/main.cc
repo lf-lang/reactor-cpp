@@ -25,11 +25,10 @@ int main() {
 
   Hello hello{&e};
   e.assemble();
-  e.init();
 
-  auto t = e.start();
+  auto t = e.startup();
   std::this_thread::sleep_for(std::chrono::seconds(5));
-  e.stop();
+  e.shutdown();
   t.join();
 
   return 0;

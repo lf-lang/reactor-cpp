@@ -52,7 +52,7 @@ class Reaction : public ReactorElement {
 
   int priority() const { return _priority; }
 
-  void init(const Tag&) override final {}
+  void startup(const Tag&) override final {}
 
   void trigger();
 

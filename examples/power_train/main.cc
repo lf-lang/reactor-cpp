@@ -166,10 +166,9 @@ int main() {
   engine_control.check.bind_to(&right_pedal.check);
   engine_control.torque.bind_to(&engine.torque);
 
-  e.init();
   e.export_dependency_graph("graph.dot");
 
-  auto t = e.start();
+  auto t = e.startup();
   t.join();
 
   return 0;

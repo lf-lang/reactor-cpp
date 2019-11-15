@@ -80,21 +80,27 @@ void Environment::build_dependency_graph(Reactor* reactor) {
   }
 }
 
-void Environment::init() {
+std::thread Environment::startup() {
   ASSERT(_phase == Phase::Assembly);
-  _phase = Phase::Initialization;
-  log::Info() << "Initializing the environment";
+
   // build the dependency graph
   for (auto r : _top_level_reactors) {
     build_dependency_graph(r);
   }
   calculate_indexes();
 
+  log::Info() << "Starting the execution";
+  _phase = Phase::Startup;
+
   Tag t0 = Tag::from_physical_time();
-  // initialize all reactors
+  // startupialize all reactors
   for (auto r : _top_level_reactors) {
-    r->init(t0);
+    r->startup(t0);
   }
+
+  // start processing events
+  _phase = Phase::Execution;
+  return std::thread([this]() { this->_scheduler.start(); });
 }
 
 std::string dot_name(ReactorElement* r) {
@@ -162,21 +168,15 @@ void Environment::calculate_indexes() {
   }
 }
 
-std::thread Environment::start() {
-  ASSERT(_phase == Phase::Initialization);
-  _phase = Phase::Execution;
-
-  log::Info() << "Starting execution";
-
-  return std::thread([this]() { this->_scheduler.start(); });
-}
-
-void Environment::stop() {
+void Environment::shutdown() {
   ASSERT(_phase == Phase::Execution);
+  _phase = Phase::Termination;
 
-  log::Info() << "Stopping execution";
+  log::Info() << "Terminating the execution";
 
   _scheduler.stop();
+
+  _phase = Phase::Deconstruction;
 }
 
 }  // namespace reactor

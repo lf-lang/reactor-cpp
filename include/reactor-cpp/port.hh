@@ -79,7 +79,7 @@ class Port : public BasePort {
   }
   void set(const T& value) { set(make_immutable_value<T>(value)); }
 
-  void init(const Tag&) override final {}
+  void startup(const Tag&) override final {}
 
   const ImmutableValuePtr<T>& get() const;
   bool is_present() const;
@@ -103,7 +103,7 @@ class Port<void> : public BasePort {
   void set();
   bool is_present() const { return present; }
 
-  void init(const Tag&) override final {}
+  void startup(const Tag&) override final {}
 };
 
 template <class T>

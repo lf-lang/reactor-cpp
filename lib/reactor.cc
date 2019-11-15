@@ -108,20 +108,20 @@ void Reactor::register_reactor(Reactor* reactor) {
   ASSERT(result.second);
 }
 
-void Reactor::init(const Tag& t0) {
-  ASSERT(environment()->phase() == Environment::Phase::Initialization);
+void Reactor::startup(const Tag& t0) {
+  ASSERT(environment()->phase() == Environment::Phase::Startup);
   _t0 = t0.time();
-  // call init on all contained objects
+  // call startup on all contained objects
   for (auto x : _actions)
-    x->init(t0);
+    x->startup(t0);
   for (auto x : _inputs)
-    x->init(t0);
+    x->startup(t0);
   for (auto x : _outputs)
-    x->init(t0);
+    x->startup(t0);
   for (auto x : _reactions)
-    x->init(t0);
+    x->startup(t0);
   for (auto x : _reactors)
-    x->init(t0);
+    x->startup(t0);
 }
 
 time_t Reactor::get_physical_time() const { return get_physical_timepoint(); }

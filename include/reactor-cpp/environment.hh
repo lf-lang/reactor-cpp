@@ -20,7 +20,14 @@ namespace reactor {
 
 class Environment {
  public:
-  enum class Phase { Construction, Assembly, Initialization, Execution };
+  enum class Phase {
+    Construction,
+    Assembly,
+    Startup,
+    Execution,
+    Termination,
+    Deconstruction
+  };
 
  private:
   const unsigned _num_workers;
@@ -49,9 +56,8 @@ class Environment {
   const auto& top_level_reactors() const { return _top_level_reactors; }
 
   void assemble();
-  void init();
-  std::thread start();
-  void stop();
+  std::thread startup();
+  void shutdown();
 
   void export_dependency_graph(const std::string& path);
 

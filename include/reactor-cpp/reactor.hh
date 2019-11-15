@@ -48,7 +48,7 @@ class ReactorElement {
 
   bool is_top_level() const { return this->container() == nullptr; }
 
-  virtual void init(const Tag&) = 0;
+  virtual void startup(const Tag&) = 0;
 };
 
 class Reactor : public ReactorElement {
@@ -77,7 +77,7 @@ class Reactor : public ReactorElement {
   const auto& reactions() const { return _reactions; }
   const auto& reactors() const { return _reactors; }
 
-  void init(const Tag& t0) override final;
+  void startup(const Tag& t0) override final;
 
   virtual void assemble() = 0;
 

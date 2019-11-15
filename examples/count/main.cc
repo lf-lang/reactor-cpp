@@ -39,9 +39,8 @@ int main() {
 
   Count count{&e};
   e.assemble();
-  e.init();
 
-  auto t = e.start();
+  auto t = e.startup();
   t.join();
 
   return 0;

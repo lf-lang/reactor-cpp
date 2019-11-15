@@ -109,9 +109,8 @@ int main() {
   add.sum.bind_to(&p_add.value);
 
   e.assemble();
-  e.init();
 
-  auto t = e.start();
+  auto t = e.startup();
   t.join();
 
   return 0;

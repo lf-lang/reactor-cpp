@@ -47,7 +47,7 @@ void Action<void>::schedule(time_t delay) {
   }
 }
 
-void Timer::init(const Tag& t0) {
+void Timer::startup(const Tag& t0) {
   if (_offset != 0) {
     Tag t1 = t0.delay(_offset);
     environment()->scheduler()->schedule(t1, this, nullptr);
