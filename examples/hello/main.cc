@@ -28,7 +28,7 @@ int main() {
 
   auto t = e.startup();
   std::this_thread::sleep_for(std::chrono::seconds(5));
-  e.shutdown();
+  e.async_shutdown();
   t.join();
 
   return 0;

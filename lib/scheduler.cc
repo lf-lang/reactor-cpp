@@ -55,13 +55,7 @@ void Scheduler::start() {
     worker_threads.emplace_back([this, i]() { this->work(i); });
   }
 
-  while (next() && !_stop) {
-  }
-
-  if (_stop) {
-    log::Debug() << "Called stop() on the scheduler -> Terminate!";
-  } else {
-    log::Debug() << "No more events in queue. -> Terminate!";
+  while (next()) {
   }
 
   terminate = true;
@@ -75,49 +69,67 @@ void Scheduler::start() {
 
 bool Scheduler::next() {
   std::unique_ptr<EventMap> events{nullptr};
+  bool run_again = true;
 
   {
     std::unique_lock<std::mutex> lock{m_schedule};
 
-    // abort if there are no more events in the queue or stop() was called
-    if (event_queue.empty() || _stop) {
-      return false;
+    // shutdown if there are no more events in the queue
+    if (event_queue.empty()) {
+      log::Debug() << "No more events in queue. -> Terminate!";
+      _environment->sync_shutdown();
+
+      // the shutdown call might schedule shutdown reactions. If non was
+      // scheduled, we simply return
+      if (event_queue.empty()) {
+        return false;
+      }
     }
 
-    // collect events of the next tag
-    while (events == nullptr) {
+    if (_stop) {
+      run_again = false;
+      log::Debug() << "Shutting down the scheduler";
+      Tag t_next = Tag::from_logical_time(_logical_time).delay();
+      if (t_next == event_queue.begin()->first) {
+        log::Debug() << "Schedule the last round of reactions including all "
+                        "termination reactions";
+        events = std::move(event_queue.begin()->second);
+        event_queue.erase(event_queue.begin());
+        log::Debug() << "advance logical time to tag [" << t_next.time() << ", "
+                     << t_next.micro_step() << "]";
+        _logical_time.advance_to(t_next);
+      } else {
+        return false;
+      }
+    } else {
+      // collect events of the next tag
       auto t_next = event_queue.begin()->first;
 
-      bool continue_execution = false;
-      if (_environment->fast_fwd_execution()) {
-        // Fast forward execution. Logical time may run ahead of physical time
-        continue_execution = true;
-      } else {
-        // Normal operation. Always synchronize with physical time
-
-        // calculate the corresponding
+      // synchronize with physical time if not in fast forward mode
+      if (!_environment->fast_fwd_execution()) {
+        // calculate the physical timepoint that corresponds to the next tag
         std::chrono::nanoseconds dur(t_next.time());
         std::chrono::time_point<std::chrono::system_clock> tp(dur);
 
         // wait until the next tag or until a new event is inserted into the
         // queue
         auto status = cv_schedule.wait_until(lock, tp);
-        // if we reached the timeout, physical time is greater than the next
-        // tags and we can process the associated events
-        if (status == std::cv_status::timeout) {
-          continue_execution = true;
+        // Start over if the event queue was modified
+        if (status == std::cv_status::no_timeout) {
+          return true;
         }
+        // continue otherwise
       }
 
-      if (continue_execution) {
-        events = std::move(event_queue.begin()->second);
-        event_queue.erase(event_queue.begin());
+      // retrieve all events with tag equal to current logical time from the
+      // queue
+      events = std::move(event_queue.begin()->second);
+      event_queue.erase(event_queue.begin());
 
-        // advance logical time
-        log::Debug() << "advance logical time to tag [" << t_next.time() << ", "
-                     << t_next.micro_step() << "]";
-        _logical_time.advance_to(t_next);
-      }
+      // advance logical time
+      log::Debug() << "advance logical time to tag [" << t_next.time() << ", "
+                   << t_next.micro_step() << "]";
+      _logical_time.advance_to(t_next);
     }
   }  // mutex m_schedule
 
@@ -179,8 +191,8 @@ bool Scheduler::next() {
   }
   set_ports.clear();
 
-  return true;
-}
+  return run_again;
+}  // namespace reactor
 
 Scheduler::~Scheduler() {}
 

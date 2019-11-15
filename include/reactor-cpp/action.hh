@@ -56,6 +56,7 @@ class Action : public BaseAction {
 
  public:
   void startup() override final {}
+  void shutdown() override final {}
 
   void schedule(const ImmutableValuePtr<T>& value_ptr, time_t delay = 0);
   void schedule(MutableValuePtr<T>&& value_ptr, time_t delay = 0) {
@@ -82,6 +83,7 @@ class Action<void> : public BaseAction {
 
  public:
   void startup() override final {}
+  void shutdown() override final {}
 
   void schedule(time_t delay = 0);
   bool is_present() const { return present; }
@@ -118,6 +120,7 @@ class Timer : public BaseAction {
       : BaseAction(name, container, true), _offset(offset), _period(period) {}
 
   void startup() override final;
+  void shutdown() override final {}
 
   time_t offset() const { return _offset; }
   time_t period() const { return _period; }

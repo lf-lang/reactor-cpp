@@ -103,6 +103,27 @@ std::thread Environment::startup() {
   return std::thread([this]() { this->_scheduler.start(); });
 }
 
+void Environment::sync_shutdown() {
+  ASSERT(_phase == Phase::Execution);
+  _phase = Phase::Shutdown;
+
+  log::Info() << "Terminating the execution";
+
+  for (auto r : _top_level_reactors) {
+    r->shutdown();
+  }
+
+  _phase = Phase::Deconstruction;
+
+  _scheduler.stop();
+}
+
+void Environment::async_shutdown() {
+  _scheduler.lock();
+  sync_shutdown();
+  _scheduler.unlock();
+}
+
 std::string dot_name(ReactorElement* r) {
   std::string fqn = r->fqn();
   std::replace(fqn.begin(), fqn.end(), '.', '_');
@@ -166,17 +187,6 @@ void Environment::calculate_indexes() {
 
     index++;
   }
-}
-
-void Environment::shutdown() {
-  ASSERT(_phase == Phase::Execution);
-  _phase = Phase::Termination;
-
-  log::Info() << "Terminating the execution";
-
-  _scheduler.stop();
-
-  _phase = Phase::Deconstruction;
 }
 
 }  // namespace reactor

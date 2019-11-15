@@ -11,6 +11,7 @@
 #include "reactor-cpp/action.hh"
 #include "reactor-cpp/assert.hh"
 #include "reactor-cpp/environment.hh"
+#include "reactor-cpp/logging.hh"
 #include "reactor-cpp/port.hh"
 #include "reactor-cpp/reaction.hh"
 
@@ -110,6 +111,7 @@ void Reactor::register_reactor(Reactor* reactor) {
 
 void Reactor::startup() {
   ASSERT(environment()->phase() == Environment::Phase::Startup);
+  log::Debug() << "Starting up reactor " << fqn();
   // call startup on all contained objects
   for (auto x : _actions)
     x->startup();
@@ -121,6 +123,22 @@ void Reactor::startup() {
     x->startup();
   for (auto x : _reactors)
     x->startup();
+}
+
+void Reactor::shutdown() {
+  ASSERT(environment()->phase() == Environment::Phase::Shutdown);
+  log::Debug() << "Terminating reactor " << fqn();
+  // call shutdown on all contained objects
+  for (auto x : _actions)
+    x->shutdown();
+  for (auto x : _inputs)
+    x->shutdown();
+  for (auto x : _outputs)
+    x->shutdown();
+  for (auto x : _reactions)
+    x->shutdown();
+  for (auto x : _reactors)
+    x->shutdown();
 }
 
 time_t Reactor::get_physical_time() const { return get_physical_timepoint(); }

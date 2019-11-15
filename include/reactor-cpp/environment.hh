@@ -25,7 +25,7 @@ class Environment {
     Assembly,
     Startup,
     Execution,
-    Termination,
+    Shutdown,
     Deconstruction
   };
 
@@ -59,7 +59,8 @@ class Environment {
 
   void assemble();
   std::thread startup();
-  void shutdown();
+  void sync_shutdown();
+  void async_shutdown();
 
   void export_dependency_graph(const std::string& path);
 
