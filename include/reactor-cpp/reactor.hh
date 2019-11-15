@@ -48,7 +48,7 @@ class ReactorElement {
 
   bool is_top_level() const { return this->container() == nullptr; }
 
-  virtual void startup(const Tag&) = 0;
+  virtual void startup() = 0;
 };
 
 class Reactor : public ReactorElement {
@@ -64,8 +64,6 @@ class Reactor : public ReactorElement {
   void register_reaction(Reaction* reaction);
   void register_reactor(Reactor* reactor);
 
-  time_t _t0;
-
  public:
   Reactor(const std::string& name, Reactor* container);
   Reactor(const std::string& name, Environment* environment);
@@ -77,7 +75,7 @@ class Reactor : public ReactorElement {
   const auto& reactions() const { return _reactions; }
   const auto& reactors() const { return _reactors; }
 
-  void startup(const Tag& t0) override final;
+  void startup() override final;
 
   virtual void assemble() = 0;
 

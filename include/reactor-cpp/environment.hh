@@ -45,6 +45,8 @@ class Environment {
   void build_dependency_graph(Reactor* reactor);
   void calculate_indexes();
 
+  time_t _start_time;
+
  public:
   Environment(unsigned num_workers, bool fast_fwd_execution = false)
       : _num_workers(num_workers)
@@ -68,6 +70,7 @@ class Environment {
   unsigned get_index(Reaction* r) const { return indexes.at(r); }
 
   const LogicalTime& logical_time() const { return _scheduler.logical_time(); }
+  time_t start_time() const { return _start_time; }
 
   unsigned num_workers() const { return _num_workers; }
   bool fast_fwd_execution() const { return _fast_fwd_execution; }

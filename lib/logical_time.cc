@@ -21,8 +21,8 @@ bool operator<(const Tag& lhs, const Tag& rhs) {
          (lhs.time() == rhs.time() && lhs.micro_step() < rhs.micro_step());
 }
 
-Tag Tag::from_physical_time(time_t offset) {
-  return Tag(get_physical_timepoint() + offset, 0);
+Tag Tag::from_physical_time(time_t time_point) {
+  return Tag(time_point, 0);
 }
 
 Tag Tag::from_logical_time(const LogicalTime& lt) {

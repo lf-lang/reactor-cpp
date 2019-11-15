@@ -33,7 +33,7 @@ class Tag {
   time_t time() const { return _time; }
   mstep_t micro_step() const { return _micro_step; }
 
-  static Tag from_physical_time(time_t offset = 0);
+  static Tag from_physical_time(time_t time_point);
   static Tag from_logical_time(const LogicalTime& lt);
 
   Tag delay(time_t offset = 0) const;

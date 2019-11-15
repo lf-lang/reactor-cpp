@@ -20,7 +20,7 @@ void Action<T>::schedule(const ImmutableValuePtr<T>& value_ptr, time_t delay) {
     auto tag = Tag::from_logical_time(scheduler->logical_time()).delay(delay);
     scheduler->schedule(tag, this, setup);
   } else {
-    auto tag = Tag::from_physical_time(delay);
+    auto tag = Tag::from_physical_time(get_physical_timepoint() + delay);
     scheduler->schedule(tag, this, setup);
   }
 }

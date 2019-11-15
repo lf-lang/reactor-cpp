@@ -44,16 +44,16 @@ void Action<void>::schedule(time_t delay) {
   } else {
     // physical action
     scheduler->lock();
-    auto tag = Tag::from_physical_time(delay);
+    auto tag = Tag::from_physical_time(get_physical_timepoint() + delay);
     scheduler->schedule(tag, this, setup);
     scheduler->unlock();
   }
 }
 
-void Timer::startup(const Tag& t0) {
+void Timer::startup() {
+  Tag t0 = Tag::from_physical_time(environment()->start_time());
   if (_offset != 0) {
-    Tag t1 = t0.delay(_offset);
-    environment()->scheduler()->schedule(t1, this, nullptr);
+    environment()->scheduler()->schedule(t0.delay(_offset), this, nullptr);
   } else {
     environment()->scheduler()->schedule(t0, this, nullptr);
   }

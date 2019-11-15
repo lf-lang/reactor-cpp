@@ -108,20 +108,19 @@ void Reactor::register_reactor(Reactor* reactor) {
   ASSERT(result.second);
 }
 
-void Reactor::startup(const Tag& t0) {
+void Reactor::startup() {
   ASSERT(environment()->phase() == Environment::Phase::Startup);
-  _t0 = t0.time();
   // call startup on all contained objects
   for (auto x : _actions)
-    x->startup(t0);
+    x->startup();
   for (auto x : _inputs)
-    x->startup(t0);
+    x->startup();
   for (auto x : _outputs)
-    x->startup(t0);
+    x->startup();
   for (auto x : _reactions)
-    x->startup(t0);
+    x->startup();
   for (auto x : _reactors)
-    x->startup(t0);
+    x->startup();
 }
 
 time_t Reactor::get_physical_time() const { return get_physical_timepoint(); }
@@ -131,7 +130,7 @@ time_t Reactor::get_logical_time() const {
 }
 
 time_t Reactor::get_elapsed_logical_time() const {
-  return get_logical_time() - _t0;
+  return get_logical_time() - environment()->start_time();
 }
 
 }  // namespace reactor
