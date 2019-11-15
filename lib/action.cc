@@ -42,8 +42,11 @@ void Action<void>::schedule(time_t delay) {
     auto tag = Tag::from_logical_time(scheduler->logical_time()).delay(delay);
     scheduler->schedule(tag, this, setup);
   } else {
+    // physical action
+    scheduler->lock();
     auto tag = Tag::from_physical_time(delay);
     scheduler->schedule(tag, this, setup);
+    scheduler->unlock();
   }
 }
 

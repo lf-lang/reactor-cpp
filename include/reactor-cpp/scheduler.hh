@@ -35,8 +35,11 @@ class Scheduler {
   Environment* _environment;
   std::vector<std::thread> worker_threads;
 
+  std::mutex m_schedule;
+  std::unique_lock<std::mutex> schedule_lock{m_schedule, std::defer_lock};
+  std::condition_variable cv_schedule;
+
   std::mutex m_event_queue;
-  std::condition_variable cv_event_queue;
   std::map<Tag, std::unique_ptr<EventMap>> event_queue;
 
   std::set<BasePort*> set_ports;
@@ -63,6 +66,9 @@ class Scheduler {
   void schedule(const Tag& tag,
                 BaseAction* action,
                 std::function<void(void)> pre_handler);
+
+  void lock() { schedule_lock.lock(); }
+  void unlock() { schedule_lock.unlock(); }
 
   void set_port(BasePort*);
 

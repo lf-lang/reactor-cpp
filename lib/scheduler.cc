@@ -75,54 +75,51 @@ void Scheduler::start() {
 
 bool Scheduler::next() {
   std::unique_ptr<EventMap> events{nullptr};
-  std::unique_lock<std::mutex> queue_lock(m_event_queue);
 
-  // abort if there are no more events in the queue or stop() was called
-  if (event_queue.empty() || _stop) {
-    queue_lock.unlock();
-    return false;
-  }
+  {
+    std::unique_lock<std::mutex> lock{m_schedule};
 
-  // collect events of the next tag
-  while (events == nullptr) {
-    auto t_next = event_queue.begin()->first;
-
-    bool continue_execution = false;
-    if (_environment->fast_fwd_execution()) {
-      // Fast forward execution. Logical time may run ahead of physical time
-      continue_execution = true;
-    } else {
-      // Normal operation. Always synchronize with physical time
-
-      // calculate the corresponding
-      std::chrono::nanoseconds dur(t_next.time());
-      std::chrono::time_point<std::chrono::system_clock> tp(dur);
-
-      // wait until the next tag or until a new event is inserted into the queue
-      auto status = cv_event_queue.wait_until(queue_lock, tp);
-      // if we reached the timeout, physical time is greater than the next tags
-      // and we can process the associated events
-      if (status == std::cv_status::timeout) {
-        continue_execution = true;
-      }
-    }
-
-    if (_stop) {
-      queue_lock.unlock();
+    // abort if there are no more events in the queue or stop() was called
+    if (event_queue.empty() || _stop) {
       return false;
     }
 
-    if (continue_execution) {
-      events = std::move(event_queue.begin()->second);
-      event_queue.erase(event_queue.begin());
+    // collect events of the next tag
+    while (events == nullptr) {
+      auto t_next = event_queue.begin()->first;
 
-      // advance logical time
-      log::Debug() << "advance logical time to tag [" << t_next.time() << ", "
-                   << t_next.micro_step() << "]";
-      _logical_time.advance_to(t_next);
+      bool continue_execution = false;
+      if (_environment->fast_fwd_execution()) {
+        // Fast forward execution. Logical time may run ahead of physical time
+        continue_execution = true;
+      } else {
+        // Normal operation. Always synchronize with physical time
+
+        // calculate the corresponding
+        std::chrono::nanoseconds dur(t_next.time());
+        std::chrono::time_point<std::chrono::system_clock> tp(dur);
+
+        // wait until the next tag or until a new event is inserted into the
+        // queue
+        auto status = cv_schedule.wait_until(lock, tp);
+        // if we reached the timeout, physical time is greater than the next
+        // tags and we can process the associated events
+        if (status == std::cv_status::timeout) {
+          continue_execution = true;
+        }
+      }
+
+      if (continue_execution) {
+        events = std::move(event_queue.begin()->second);
+        event_queue.erase(event_queue.begin());
+
+        // advance logical time
+        log::Debug() << "advance logical time to tag [" << t_next.time() << ", "
+                     << t_next.micro_step() << "]";
+        _logical_time.advance_to(t_next);
+      }
     }
-  }
-  queue_lock.unlock();
+  }  // mutex m_schedule
 
   // execute all setup functions; this sets the values of the corresponding
   // actions
@@ -205,7 +202,7 @@ void Scheduler::schedule(const Tag& tag,
 
     (*event_queue[tag])[action] = setup;
   }
-  cv_event_queue.notify_one();
+  cv_schedule.notify_one();
 }
 
 void Scheduler::set_port(BasePort* p) {
@@ -231,7 +228,7 @@ void Scheduler::set_port_helper(BasePort* p) {
 
 void Scheduler::stop() {
   _stop = true;
-  cv_event_queue.notify_one();
+  cv_schedule.notify_one();
 }
 
 }  // namespace reactor
