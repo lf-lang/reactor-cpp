@@ -27,15 +27,28 @@ class Hello : public Reactor {
   void terminate() { std::cout << "Good Bye!" << std::endl; }
 };
 
+class Timeout : public Reactor {
+ private:
+  Timer timer;
+
+  Reaction r_timer{"r_timer", 1, this,
+                   [this]() { environment()->sync_shutdown(); }};
+
+ public:
+  Timeout(Environment* env, reactor::time_t timeout)
+      : Reactor("Timeout", env), timer{"timer", this, 0, timeout} {}
+
+  void assemble() override { r_timer.declare_trigger(&timer); }
+};
+
 int main() {
   Environment e{4};
 
   Hello hello{&e};
+  Timeout timeout{&e, 5_s};
   e.assemble();
 
   auto t = e.startup();
-  std::this_thread::sleep_for(std::chrono::seconds(5));
-  e.async_shutdown();
   t.join();
 
   return 0;
