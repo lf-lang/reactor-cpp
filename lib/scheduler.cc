@@ -75,7 +75,7 @@ bool Scheduler::next() {
     std::unique_lock<std::mutex> lock{m_schedule};
 
     // shutdown if there are no more events in the queue
-    if (event_queue.empty()) {
+    if (event_queue.empty() && !_stop) {
       log::Debug() << "No more events in queue. -> Terminate!";
       _environment->sync_shutdown();
 
