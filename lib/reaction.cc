@@ -122,11 +122,11 @@ void Reaction::trigger() {
   body();
 }
 
-void Reaction::set_deadline(time_t deadline,
+void Reaction::set_deadline(time_t dl,
                             std::function<void(void)> handler) {
   ASSERT(!has_deadline());
   ASSERT(handler != nullptr);
-  this->deadline = deadline;
+  this->deadline = dl;
   this->deadline_handler = handler;
 }
 
