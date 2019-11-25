@@ -56,7 +56,9 @@ class BaseLogger<false> {
   BaseLogger(const std::string&) {}
 
   template <class T>
-  const BaseLogger& operator<<(const T&) const { return *this;}
+  const BaseLogger& operator<<(const T&) const {
+    return *this;
+  }
 
   ~BaseLogger() {}
 };
@@ -83,4 +85,4 @@ struct Error : BaseLogger<error_enabled> {
 };
 
 }  // namespace log
-};  // namespace reactor
+}  // namespace reactor
