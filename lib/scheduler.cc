@@ -109,7 +109,9 @@ bool Scheduler::next() {
       if (!_environment->fast_fwd_execution()) {
         // calculate the physical timepoint that corresponds to the next tag
         std::chrono::nanoseconds dur(t_next.time());
-        std::chrono::time_point<std::chrono::system_clock> tp(dur);
+        std::chrono::time_point<std::chrono::system_clock> tp(
+            std::chrono::duration_cast<std::chrono::system_clock::duration>(
+                dur));
 
         // wait until the next tag or until a new event is inserted into the
         // queue
