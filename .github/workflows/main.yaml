@@ -1,0 +1,26 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+
+    name: Try compilation on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: configure
+      run: |
+        mkdir build
+        cd build
+        cmake ..
+    - name: build the library
+      run: cmake --build build
+    - name: build examples
+      run:
+        cmake --build build --target examples
