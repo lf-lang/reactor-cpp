@@ -22,7 +22,8 @@ time_t get_physical_timepoint() {
 
 void wait_until_physical_timepoint(time_t t) {
   std::chrono::nanoseconds dur(t);
-  std::chrono::time_point<std::chrono::system_clock> tp(dur);
+  std::chrono::time_point<std::chrono::system_clock> tp(
+      std::chrono::duration_cast<std::chrono::system_clock::duration>(dur));
   std::this_thread::sleep_until(tp);
 }
 
