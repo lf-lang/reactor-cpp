@@ -10,7 +10,7 @@ cmake ..
 make
 ```
 
-The examples need to be build explicitly.
+The examples need to be built explicitly.
 
 ```
 make examples
