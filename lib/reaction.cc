@@ -122,8 +122,8 @@ void Reaction::trigger() {
   body();
 }
 
-void Reaction::set_deadline(time_t dl,
-                            std::function<void(void)> handler) {
+void Reaction::set_deadline_impl(Duration dl,
+                                 std::function<void(void)> handler) {
   ASSERT(!has_deadline());
   ASSERT(handler != nullptr);
   this->deadline = dl;

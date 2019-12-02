@@ -18,10 +18,11 @@ class LogicalTime;
 
 class Tag {
  private:
-  const time_t _time;
+  const TimePoint _time_point;
   const mstep_t _micro_step;
 
-  Tag(time_t time, mstep_t micro_step) : _time{time}, _micro_step{micro_step} {}
+  Tag(const TimePoint& time_point, const mstep_t& micro_step)
+      : _time_point{time_point}, _micro_step{micro_step} {}
 
  public:
   // no default constructor, not assignable, but movable and copyable
@@ -30,13 +31,13 @@ class Tag {
   Tag(Tag&&) = default;
   Tag(const Tag&) = default;
 
-  time_t time() const { return _time; }
-  mstep_t micro_step() const { return _micro_step; }
+  const TimePoint& time_point() const { return _time_point; }
+  const mstep_t& micro_step() const { return _micro_step; }
 
-  static Tag from_physical_time(time_t time_point);
+  static Tag from_physical_time(TimePoint time_point);
   static Tag from_logical_time(const LogicalTime& lt);
 
-  Tag delay(time_t offset = 0) const;
+  Tag delay(Duration offset = Duration::zero()) const;
 };
 
 // define all the comparison operators
@@ -49,14 +50,14 @@ bool inline operator>=(const Tag& lhs, const Tag& rhs) { return !(lhs < rhs); }
 
 class LogicalTime {
  private:
-  time_t _time{0};
+  TimePoint _time_point{};
   mstep_t _micro_step{0};
 
  public:
   void advance_to(const Tag& tag);
 
-  time_t time() const { return _time; }
-  mstep_t micro_step() const { return _micro_step; }
+  const TimePoint& time_point() const { return _time_point; }
+  const mstep_t& micro_step() const { return _micro_step; }
 };
 
 bool operator==(const LogicalTime& lt, const Tag& t);

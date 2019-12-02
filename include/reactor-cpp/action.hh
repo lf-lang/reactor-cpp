@@ -58,11 +58,14 @@ class Action : public BaseAction {
   void startup() override final {}
   void shutdown() override final {}
 
-  void schedule(const ImmutableValuePtr<T>& value_ptr, time_t delay = 0);
-  void schedule(MutableValuePtr<T>&& value_ptr, time_t delay = 0) {
+  template <class Dur = Duration>
+  void schedule(const ImmutableValuePtr<T>& value_ptr, Dur delay = Dur::zero());
+  template <class Dur = Duration>
+  void schedule(MutableValuePtr<T>&& value_ptr, Dur delay = Dur::zero()) {
     schedule(ImmutableValuePtr<T>(value_ptr), delay);
   }
-  void schedule(const T& value, time_t delay = 0) {
+  template <class Dur = Duration>
+  void schedule(const T& value, Dur delay = Dur::zero()) {
     schedule(make_immutable_value<T>(value), delay);
   }
 
@@ -85,7 +88,8 @@ class Action<void> : public BaseAction {
   void startup() override final {}
   void shutdown() override final {}
 
-  void schedule(time_t delay = 0);
+  template <class Dur = Duration>
+  void schedule(Dur delay = Dur::zero());
   bool is_present() const { return present; }
 };
 
@@ -105,8 +109,8 @@ class LogicalAction : public Action<T> {
 
 class Timer : public BaseAction {
  private:
-  const time_t _offset;
-  const time_t _period;
+  const Duration _offset;
+  const Duration _period;
 
   void reschedule();
 
@@ -115,27 +119,27 @@ class Timer : public BaseAction {
  public:
   Timer(const std::string& name,
         Reactor* container,
-        time_t period = 0,
-        time_t offset = 0)
+        Duration period = Duration::zero(),
+        Duration offset = Duration::zero())
       : BaseAction(name, container, true), _offset(offset), _period(period) {}
 
   void startup() override final;
   void shutdown() override final {}
 
-  time_t offset() const { return _offset; }
-  time_t period() const { return _period; }
+  const Duration& offset() const { return _offset; }
+  const Duration& period() const { return _period; }
 };
 
 class StartupAction : public Timer {
  public:
   StartupAction(const std::string& name, Reactor* container)
-      : Timer(name, container, 0, 0) {}
+      : Timer(name, container) {}
 };
 
 class ShutdownAction : public BaseAction {
  public:
   ShutdownAction(const std::string& name, Reactor* container)
-    : BaseAction(name, container, true) {}
+      : BaseAction(name, container, true) {}
 
   void cleanup() override final {}
   void startup() override final {}

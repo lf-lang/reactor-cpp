@@ -95,8 +95,8 @@ bool Scheduler::next() {
                         "termination reactions";
         events = std::move(event_queue.begin()->second);
         event_queue.erase(event_queue.begin());
-        log::Debug() << "advance logical time to tag [" << t_next.time() << ", "
-                     << t_next.micro_step() << "]";
+        log::Debug() << "advance logical time to tag [" << t_next.time_point()
+                     << ", " << t_next.micro_step() << "]";
         _logical_time.advance_to(t_next);
       } else {
         return false;
@@ -107,15 +107,9 @@ bool Scheduler::next() {
 
       // synchronize with physical time if not in fast forward mode
       if (!_environment->fast_fwd_execution()) {
-        // calculate the physical timepoint that corresponds to the next tag
-        std::chrono::nanoseconds dur(t_next.time());
-        std::chrono::time_point<std::chrono::system_clock> tp(
-            std::chrono::duration_cast<std::chrono::system_clock::duration>(
-                dur));
-
         // wait until the next tag or until a new event is inserted into the
         // queue
-        auto status = cv_schedule.wait_until(lock, tp);
+        auto status = cv_schedule.wait_until(lock, t_next.time_point());
         // Start over if the event queue was modified
         if (status == std::cv_status::no_timeout) {
           return true;
@@ -129,8 +123,8 @@ bool Scheduler::next() {
       event_queue.erase(event_queue.begin());
 
       // advance logical time
-      log::Debug() << "advance logical time to tag [" << t_next.time() << ", "
-                   << t_next.micro_step() << "]";
+      log::Debug() << "advance logical time to tag [" << t_next.time_point()
+                   << ", " << t_next.micro_step() << "]";
       _logical_time.advance_to(t_next);
     }
   }  // mutex m_schedule
@@ -207,7 +201,7 @@ void Scheduler::schedule(const Tag& tag,
   log::Debug() << "Schedule action " << action->fqn()
                << (action->is_logical() ? " synchronously "
                                         : " asynchronously ")
-               << " with tag [" << tag.time() << ", " << tag.micro_step()
+               << " with tag [" << tag.time_point() << ", " << tag.micro_step()
                << "]";
   {
     std::lock_guard<std::mutex> lg(m_event_queue);

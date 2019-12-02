@@ -3,6 +3,7 @@
 #include "reactor-cpp/reactor-cpp.hh"
 
 using namespace reactor;
+using namespace std::chrono_literals;
 
 class Trigger : public Reactor {
  private:
@@ -11,8 +12,8 @@ class Trigger : public Reactor {
   Reaction r_timer{"r_timer", 1, this, [this]() { on_timer(); }};
 
  public:
-  Trigger(const std::string& name, Environment* env, reactor::time_t period)
-      : Reactor(name, env), timer{"timer", this, period, 0} {}
+  Trigger(const std::string& name, Environment* env, Duration period)
+      : Reactor(name, env), timer{"timer", this, period, Duration::zero()} {}
 
   Output<void> trigger{"trigger", this};
 
@@ -90,13 +91,13 @@ class Adder : public Reactor {
 int main() {
   Environment e{4};
 
-  Trigger t1{"t1", &e, 1_s};
+  Trigger t1{"t1", &e, 1s};
   Counter c1{"c1", &e};
   Printer p1{"p1", &e};
   t1.trigger.bind_to(&c1.trigger);
   c1.count.bind_to(&p1.value);
 
-  Trigger t2{"t2", &e, 2_s};
+  Trigger t2{"t2", &e, 2s};
   Counter c2{"c2", &e};
   Printer p2{"p2", &e};
   t2.trigger.bind_to(&c2.trigger);

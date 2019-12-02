@@ -13,48 +13,51 @@
 namespace reactor {
 
 bool operator==(const Tag& lhs, const Tag& rhs) {
-  return lhs.time() == rhs.time() && lhs.micro_step() == rhs.micro_step();
+  return lhs.time_point() == rhs.time_point() &&
+         lhs.micro_step() == rhs.micro_step();
 }
 
 bool operator<(const Tag& lhs, const Tag& rhs) {
-  return lhs.time() < rhs.time() ||
-         (lhs.time() == rhs.time() && lhs.micro_step() < rhs.micro_step());
+  return lhs.time_point() < rhs.time_point() ||
+         (lhs.time_point() == rhs.time_point() &&
+          lhs.micro_step() < rhs.micro_step());
 }
 
-Tag Tag::from_physical_time(time_t time_point) {
-  return Tag(time_point, 0);
-}
+Tag Tag::from_physical_time(TimePoint time_point) { return Tag(time_point, 0); }
 
 Tag Tag::from_logical_time(const LogicalTime& lt) {
-  return Tag(lt.time(), lt.micro_step());
+  return Tag(lt.time_point(), lt.micro_step());
 }
 
-Tag Tag::delay(time_t offset) const {
-  if (offset == 0) {
-    return Tag(this->_time, this->_micro_step + 1);
+Tag Tag::delay(Duration offset) const {
+  if (offset == Duration::zero()) {
+    return Tag(this->_time_point, this->_micro_step + 1);
   } else {
-    return Tag(this->_time + offset, 0);
+    return Tag(this->_time_point + offset, 0);
   }
 }
 
 void LogicalTime::advance_to(const Tag& tag) {
   ASSERT(*this < tag);
-  _time = tag.time();
+  _time_point = tag.time_point();
   _micro_step = tag.micro_step();
 }
 
 bool operator==(const LogicalTime& lhs, const Tag& rhs) {
-  return lhs.time() == rhs.time() && lhs.micro_step() == rhs.micro_step();
+  return lhs.time_point() == rhs.time_point() &&
+         lhs.micro_step() == rhs.micro_step();
 }
 
 bool operator<(const LogicalTime& lhs, const Tag& rhs) {
-  return lhs.time() < rhs.time() ||
-         (lhs.time() == rhs.time() && lhs.micro_step() < rhs.micro_step());
+  return lhs.time_point() < rhs.time_point() ||
+         (lhs.time_point() == rhs.time_point() &&
+          lhs.micro_step() < rhs.micro_step());
 }
 
 bool operator>(const LogicalTime& lhs, const Tag& rhs) {
-  return lhs.time() > rhs.time() ||
-         (lhs.time() == rhs.time() && lhs.micro_step() > rhs.micro_step());
+  return lhs.time_point() > rhs.time_point() ||
+         (lhs.time_point() == rhs.time_point() &&
+          lhs.micro_step() > rhs.micro_step());
 }
 
 }  // namespace reactor

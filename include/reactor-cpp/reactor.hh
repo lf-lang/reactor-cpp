@@ -81,9 +81,9 @@ class Reactor : public ReactorElement {
 
   virtual void assemble() = 0;
 
-  time_t get_physical_time() const;
-  time_t get_logical_time() const;
-  time_t get_elapsed_logical_time() const;
+  TimePoint get_physical_time() const;
+  TimePoint get_logical_time() const;
+  Duration get_elapsed_logical_time() const;
 
   friend ReactorElement;
 };

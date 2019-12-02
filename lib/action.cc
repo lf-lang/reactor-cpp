@@ -35,24 +35,9 @@ void BaseAction::register_scheduler(Reaction* reaction) {
   ASSERT(r.second);
 }
 
-void Action<void>::schedule(time_t delay) {
-  auto scheduler = environment()->scheduler();
-  auto setup = [this]() { this->present = true; };
-  if (is_logical()) {
-    auto tag = Tag::from_logical_time(scheduler->logical_time()).delay(delay);
-    scheduler->schedule(tag, this, setup);
-  } else {
-    // physical action
-    scheduler->lock();
-    auto tag = Tag::from_physical_time(get_physical_timepoint() + delay);
-    scheduler->schedule(tag, this, setup);
-    scheduler->unlock();
-  }
-}
-
 void Timer::startup() {
   Tag t0 = Tag::from_physical_time(environment()->start_time());
-  if (_offset != 0) {
+  if (_offset != Duration::zero()) {
     environment()->scheduler()->schedule(t0.delay(_offset), this, nullptr);
   } else {
     environment()->scheduler()->schedule(t0, this, nullptr);
@@ -61,7 +46,7 @@ void Timer::startup() {
 
 void Timer::cleanup() {
   // schedule the timer again
-  if (_period != 0) {
+  if (_period != Duration::zero()) {
     Tag now = Tag::from_logical_time(environment()->logical_time());
     Tag next = now.delay(_period);
     environment()->scheduler()->schedule(next, this, nullptr);

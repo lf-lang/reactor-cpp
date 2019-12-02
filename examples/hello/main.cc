@@ -3,11 +3,12 @@
 #include "reactor-cpp/reactor-cpp.hh"
 
 using namespace reactor;
+using namespace std::chrono_literals;
 
 class Hello : public Reactor {
  private:
   // actions
-  Timer timer{"timer", this, 1_s, 2_s};
+  Timer timer{"timer", this, 1s, 2s};
   ShutdownAction sa{"terminate", this};
 
   // reactions
@@ -35,8 +36,9 @@ class Timeout : public Reactor {
                    [this]() { environment()->sync_shutdown(); }};
 
  public:
-  Timeout(Environment* env, reactor::time_t timeout)
-      : Reactor("Timeout", env), timer{"timer", this, 0, timeout} {}
+  Timeout(Environment* env, Duration timeout)
+      : Reactor("Timeout", env)
+      , timer{"timer", this, Duration::zero(), timeout} {}
 
   void assemble() override { r_timer.declare_trigger(&timer); }
 };
@@ -45,7 +47,7 @@ int main() {
   Environment e{4};
 
   Hello hello{&e};
-  Timeout timeout{&e, 5_s};
+  Timeout timeout{&e, 5s};
   e.assemble();
 
   auto t = e.startup();

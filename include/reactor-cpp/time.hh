@@ -9,38 +9,17 @@
 #pragma once
 
 #include <chrono>
+#include <iostream>
 
 namespace reactor {
 
-using time_t = unsigned long long;  // at least 64 bit
+using TimePoint = std::chrono::time_point<std::chrono::system_clock>;
+using Duration = std::chrono::nanoseconds;
 
-inline namespace literals {
-
-// we assume 1ns clock granularity
-constexpr time_t operator"" _ns(time_t x) { return x; }
-
-constexpr time_t operator"" _us(time_t x) { return 1'000ull * x; }
-
-constexpr time_t operator"" _ms(time_t x) { return 1'000'000ull * x; }
-
-constexpr time_t operator"" _s(time_t x) { return 1'000'000'000ull * x; }
-
-constexpr time_t operator"" _min(time_t x) { return 60'000'000'000ull * x; }
-
-constexpr time_t operator"" _h(time_t x) { return 3'600'000'000'000ull * x; }
-
-constexpr time_t operator"" _d(time_t x) { return 86'400'000'000'000ull * x; }
-
-constexpr time_t operator"" _weeks(time_t x) {
-  return 604'800'000'000'000ull * x;
+inline TimePoint get_physical_time() {
+  return std::chrono::system_clock::now();
 }
 
-}  // namespace literals
-
-time_t get_physical_timepoint();
-
-void wait_until_physical_timepoint(time_t t);
-
-void assert_physical_clock_resolution();
+std::ostream& operator<<(std::ostream& os, TimePoint tp);
 
 }  // namespace reactor

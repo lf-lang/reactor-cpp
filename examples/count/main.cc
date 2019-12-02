@@ -3,6 +3,7 @@
 #include "reactor-cpp/reactor-cpp.hh"
 
 using namespace reactor;
+using namespace std::chrono_literals;
 
 class Count : public Reactor {
  private:
@@ -25,12 +26,12 @@ class Count : public Reactor {
   void print_count() {
     auto& value = *(counter.get());
     std::cout << "Count: " << value << std::endl;
-    counter.schedule(value + 1, 1_s);
+    counter.schedule(value + 1, 1s);
   }
 
   void init() {
     std::cout << "Hello World!" << std::endl;
-    counter.schedule(0, 1_s);
+    counter.schedule(0, 1s);
   }
 };
 

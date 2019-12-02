@@ -141,13 +141,15 @@ void Reactor::shutdown() {
     x->shutdown();
 }
 
-time_t Reactor::get_physical_time() const { return get_physical_timepoint(); }
-
-time_t Reactor::get_logical_time() const {
-  return environment()->scheduler()->logical_time().time();
+TimePoint Reactor::get_physical_time() const {
+  return ::reactor::get_physical_time();
 }
 
-time_t Reactor::get_elapsed_logical_time() const {
+TimePoint Reactor::get_logical_time() const {
+  return environment()->scheduler()->logical_time().time_point();
+}
+
+Duration Reactor::get_elapsed_logical_time() const {
   return get_logical_time() - environment()->start_time();
 }
 

@@ -92,7 +92,7 @@ std::thread Environment::startup() {
   log::Info() << "Starting the execution";
   _phase = Phase::Startup;
 
-  _start_time = get_physical_timepoint();
+  _start_time = get_physical_time();
   // startupialize all reactors
   for (auto r : _top_level_reactors) {
     r->startup();

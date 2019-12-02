@@ -27,8 +27,10 @@ class Reaction : public ReactorElement {
 
   std::function<void(void)> body;
 
-  time_t deadline{0};
+  Duration deadline{Duration::zero()};
   std::function<void(void)> deadline_handler{nullptr};
+
+  void set_deadline_impl(Duration deadline, std::function<void(void)> handler);
 
  public:
   Reaction(const std::string& name,
@@ -57,8 +59,11 @@ class Reaction : public ReactorElement {
 
   void trigger();
 
-  void set_deadline(time_t deadline, std::function<void(void)> handler);
-  bool has_deadline() const { return deadline != 0; }
+  template <class Dur>
+  void set_deadline(Dur dl, std::function<void(void)> handler) {
+    set_deadline_impl(std::chrono::duration_cast<Duration>(dl), handler);
+  }
+  bool has_deadline() const { return deadline != Duration::zero(); }
 };
 
 }  // namespace reactor
