@@ -8,7 +8,7 @@
 
 #pragma once
 
-// include everything that is needed to use dear
+// include everything that is needed to use reactor-cpp
 #include "action.hh"
 #include "environment.hh"
 #include "logical_time.hh"
