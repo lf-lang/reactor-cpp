@@ -11,7 +11,6 @@
 #include "reactor-cpp/assert.hh"
 #include "reactor-cpp/environment.hh"
 #include "reactor-cpp/reaction.hh"
-#include "reactor-cpp/validate.hh"
 
 namespace reactor {
 

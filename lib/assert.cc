@@ -6,7 +6,7 @@
  *   Christian Menard
  */
 
-#include "reactor-cpp/validate.hh"
+#include "reactor-cpp/assert.hh"
 
 namespace reactor {
 

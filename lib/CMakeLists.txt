@@ -1,5 +1,6 @@
 set(SOURCE_FILES
   action.cc
+  assert.cc
   environment.cc
   logical_time.cc
   logging.cc
@@ -8,7 +9,6 @@ set(SOURCE_FILES
   reactor.cc
   scheduler.cc
   time.cc
-  validate.cc
   )
 
 add_library(reactor-cpp SHARED ${SOURCE_FILES})

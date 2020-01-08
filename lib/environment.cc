@@ -16,7 +16,6 @@
 #include "reactor-cpp/logging.hh"
 #include "reactor-cpp/port.hh"
 #include "reactor-cpp/reaction.hh"
-#include "reactor-cpp/validate.hh"
 
 namespace reactor {
 
