@@ -8,6 +8,7 @@
 
 #include "../assert.hh"
 #include "../environment.hh"
+#include "../validate.hh"
 
 namespace reactor {
 
@@ -26,7 +27,9 @@ Port<T>* Port<T>::typed_inward_binding() const {
 
 template <class T>
 void Port<T>::set(const ImmutableValuePtr<T>& value_ptr) {
-  ASSERT(!has_inward_binding());
+  validate(!has_inward_binding(),
+           "set() may only be called on a ports that do not have an inward "
+           "binding!");
   auto scheduler = environment()->scheduler();
   this->value_ptr = std::move(value_ptr);
   scheduler->set_port(this);

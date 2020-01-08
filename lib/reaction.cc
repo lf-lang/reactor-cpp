@@ -28,9 +28,11 @@ Reaction::Reaction(const std::string& name,
 void Reaction::declare_trigger(BaseAction* action) {
   ASSERT(action != nullptr);
   ASSERT(this->environment() == action->environment());
-  ASSERT(this->environment()->phase() == Environment::Phase::Assembly);
-  // this reaction must belong to the same reactor as the action
-  ASSERT(this->container() == action->container());
+  validate(this->environment()->phase() == Environment::Phase::Assembly,
+           "Triggers may only be declared during assembly phase!");
+  validate(this->container() == action->container(),
+           "Action triggers must belong to the same reactor as the triggered "
+           "reaction");
 
   auto r = _action_triggers.insert(action);
   ASSERT(r.second);
@@ -40,9 +42,11 @@ void Reaction::declare_trigger(BaseAction* action) {
 void Reaction::declare_scheduable_action(BaseAction* action) {
   ASSERT(action != nullptr);
   ASSERT(this->environment() == action->environment());
-  ASSERT(this->environment()->phase() == Environment::Phase::Assembly);
-  // this reaction must belong to the same reactor as the action
-  ASSERT(this->container() == action->container());
+  validate(this->environment()->phase() == Environment::Phase::Assembly,
+           "Scheduable actions may only be declared during assembly phase!");
+  validate(this->container() == action->container(),
+           "Scheduable actions must belong to the same reactor as the "
+           "triggered reaction");
 
   auto r = _scheduable_actions.insert(action);
   ASSERT(r.second);
@@ -53,14 +57,17 @@ void Reaction::declare_trigger(BasePort* port) {
   ASSERT(port != nullptr);
   ASSERT(this->environment() == port->environment());
   ASSERT(this->environment()->phase() == Environment::Phase::Assembly);
+  validate(this->environment()->phase() == Environment::Phase::Assembly,
+           "Triggers may only be declared during assembly phase!");
 
   if (port->is_input()) {
-    // this reaction must belong to the same reactor as the input port
-    ASSERT(this->container() == port->container());
+    validate(
+        this->container() == port->container(),
+        "Input port triggers must belong to the same reactor as the triggered "
+        "reaction");
   } else {
-    // the reactor containing this reaction must contain the reactor that
-    // the output port belongs to.
-    ASSERT(this->container() == port->container()->container());
+    validate(this->container() == port->container()->container(),
+             "Output port triggers must belong to a contained reactor");
   }
 
   auto r1 = _port_triggers.insert(port);
@@ -73,15 +80,16 @@ void Reaction::declare_trigger(BasePort* port) {
 void Reaction::declare_dependency(BasePort* port) {
   ASSERT(port != nullptr);
   ASSERT(this->environment() == port->environment());
-  ASSERT(this->environment()->phase() == Environment::Phase::Assembly);
+  validate(this->environment()->phase() == Environment::Phase::Assembly,
+           "Dependencies may only be declared during assembly phase!");
 
   if (port->is_input()) {
-    // this reaction must belong to the same reactor as the input port
-    ASSERT(this->container() == port->container());
+    validate(this->container() == port->container(),
+             "Dependent input ports must belong to the same reactor as the "
+             "reaction");
   } else {
-    // the reactor containing this reaction must contain the reactor that
-    // the input port belongs to.
-    ASSERT(this->container() == port->container()->container());
+    validate(this->container() == port->container()->container(),
+             "Dependent output ports must belong to a contained reactor");
   }
 
   auto r = _dependencies.insert(port);
@@ -92,15 +100,16 @@ void Reaction::declare_dependency(BasePort* port) {
 void Reaction::declare_antidependency(BasePort* port) {
   ASSERT(port != nullptr);
   ASSERT(this->environment() == port->environment());
-  ASSERT(this->environment()->phase() == Environment::Phase::Assembly);
+  validate(this->environment()->phase() == Environment::Phase::Assembly,
+           "Antidependencies may only be declared during assembly phase!");
 
   if (port->is_output()) {
-    // this reaction must belong to the same reactor as the output port
-    ASSERT(this->container() == port->container());
+    validate(this->container() == port->container(),
+             "Antidependent output ports must belong to the same reactor as "
+             "the reaction");
   } else {
-    // the reactor containing this reaction must contain the reactor that
-    // the output port belongs to.
-    ASSERT(this->container() == port->container()->container());
+    validate(this->container() == port->container()->container(),
+             "Antidependent input ports must belong to a contained reactor");
   }
 
   auto r = _antidependencies.insert(port);

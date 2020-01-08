@@ -11,35 +11,40 @@
 #include "reactor-cpp/assert.hh"
 #include "reactor-cpp/environment.hh"
 #include "reactor-cpp/reaction.hh"
+#include "reactor-cpp/validate.hh"
 
 namespace reactor {
 
 void BasePort::base_bind_to(BasePort* port) {
   ASSERT(port != nullptr);
-  ASSERT(!port->has_inward_binding());
-  ASSERT(!this->has_dependencies());
-  ASSERT(!port->has_antidependencies());
   ASSERT(this->environment() == port->environment());
-  ASSERT(this->environment()->phase() == Environment::Phase::Assembly);
+  validate(!port->has_inward_binding(), "Ports may only be connected once");
+  validate(!this->has_dependencies(),
+           "Ports with dependencies may not be connected to other ports");
+  validate(!this->has_antidependencies(),
+           "Ports with antidependencies may not be connected to other ports");
+  validate(this->environment()->phase() == Environment::Phase::Construction,
+           "Ports can only be bound during contruction phase!");
 
   if (this->is_input() && port->is_input()) {
-    // If both ports are inputs, the other port must be owned by an inner
-    // reactor and this port must be owned by the same reactor that contains
-    // the inner reactor.
-    ASSERT(this->container() == port->container()->container());
+    validate(
+        this->container() == port->container()->container(),
+        "An input port A may only be bound to another input port B if B is "
+        "contained by a reactor that in turn is contained by the reactor of A");
   } else if (this->is_output() && port->is_input()) {
-    // If we connect an input to an output, the containing reactors must be in
-    // the same hierarchy level.
-    ASSERT(this->container()->container() == port->container()->container());
-    // But both ports must belong to different reactors
-    ASSERT(this->container() != port->container());
+    validate(this->container()->container() == port->container()->container(),
+             "An output port can only be bound to an input port if both ports "
+             "belong to reactors in the same hierarichal level");
+    validate(this->container() != port->container(),
+             "An output port can only be bound to an input port if both ports "
+             "belong to different reactors!");
   } else if (this->is_output() && port->is_output()) {
-    // If both ports are outputs, this port must be owned by an inner
-    // reactor and the other port must be owned by the same reactor that
-    // contains the inner reactor.
-    ASSERT(this->container()->container() == port->container());
+    validate(
+        this->container()->container() == port->container(),
+        "An output port A may only be bound to another output port B if A is "
+        "contained by a reactor that in turn is contained by the reactor of B");
   } else {
-    ASSERT(false);
+    throw std::runtime_error("unexpected case");
   }
 
   port->_inward_binding = this;
@@ -49,17 +54,19 @@ void BasePort::base_bind_to(BasePort* port) {
 
 void BasePort::register_dependency(Reaction* reaction, bool is_trigger) {
   ASSERT(reaction != nullptr);
-  ASSERT(!this->has_outward_bindings());
   ASSERT(this->environment() == reaction->environment());
-  ASSERT(this->environment()->phase() == Environment::Phase::Assembly);
+  validate(!this->has_outward_bindings(),
+           "Dependencies may no be declared on ports with an outward binding!");
+  validate(this->environment()->phase() == Environment::Phase::Assembly,
+           "Dependencies can only be registered during assembly phase!");
 
   if (this->is_input()) {
-    // the reaction must belong to the same reactor as this input port
-    ASSERT(this->container() == reaction->container());
+    validate(this->container() == reaction->container(),
+             "Dependent input ports must belong to the same reactor as the "
+             "reaction");
   } else {
-    // the reactor containing reaction must contain the reactor that this
-    // input port belongs to.
-    ASSERT(this->container()->container() == reaction->container());
+    validate(this->container()->container() == reaction->container(),
+             "Dependent output ports must belong to a contained reactor");
   }
 
   auto r1 = _dependencies.insert(reaction);
@@ -72,17 +79,20 @@ void BasePort::register_dependency(Reaction* reaction, bool is_trigger) {
 
 void BasePort::register_antidependency(Reaction* reaction) {
   ASSERT(reaction != nullptr);
-  ASSERT(!this->has_inward_binding());
   ASSERT(this->environment() == reaction->environment());
-  ASSERT(this->environment()->phase() == Environment::Phase::Assembly);
+  validate(
+      !this->has_inward_binding(),
+      "Antidependencies may no be declared on ports with an inward binding!");
+  validate(this->environment()->phase() == Environment::Phase::Assembly,
+           "Antidependencies can only be registered during assembly phase!");
 
   if (this->is_output()) {
-    // the reaction must belong to the same reactor as this output port
-    ASSERT(this->container() == reaction->container());
+    validate(this->container() == reaction->container(),
+             "Antidependent output ports must belong to the same reactor as "
+             "the reaction");
   } else {
-    // the reactor containing reaction must contain the reactor that this
-    // input port belongs to.
-    ASSERT(this->container()->container() == reaction->container());
+    validate(this->container()->container() == reaction->container(),
+             "Antidependent input ports must belong to a contained reactor");
   }
 
   auto r = _antidependencies.insert(reaction);
@@ -98,7 +108,9 @@ Port<void>* Port<void>::typed_inward_binding() const {
 }
 
 void Port<void>::set() {
-  ASSERT(!has_inward_binding());
+  validate(!has_inward_binding(),
+           "set() may only be called on a ports that do not have an inward "
+           "binding!");
   auto scheduler = environment()->scheduler();
   this->present = true;
   scheduler->set_port(this);

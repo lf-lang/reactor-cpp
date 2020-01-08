@@ -16,13 +16,16 @@
 #include "reactor-cpp/logging.hh"
 #include "reactor-cpp/port.hh"
 #include "reactor-cpp/reaction.hh"
+#include "reactor-cpp/validate.hh"
 
 namespace reactor {
 
 void Environment::register_reactor(Reactor* reactor) {
-  ASSERT(this->phase() == Phase::Construction);
   ASSERT(reactor != nullptr);
-  ASSERT(reactor->is_top_level());
+  validate(this->phase() == Phase::Construction,
+           "Reactors may only be registered during construction phase!");
+  validate(reactor->is_top_level(),
+           "The environment may only contain top level reactors!");
   auto r = _top_level_reactors.insert(reactor);
   ASSERT(r.second);
 }
@@ -35,7 +38,8 @@ void recursive_assemble(Reactor* container) {
 }
 
 void Environment::assemble() {
-  ASSERT(_phase == Phase::Construction);
+  validate(this->phase() == Phase::Construction,
+           "assemble() may only be called during construction phase!");
   _phase = Phase::Assembly;
   for (auto r : _top_level_reactors) {
     recursive_assemble(r);
@@ -52,7 +56,8 @@ void Environment::build_dependency_graph(Reactor* reactor) {
   for (auto r : reactor->reactions()) {
     reactions.insert(r);
     auto result = priority_map.emplace(r->priority(), r);
-    ASSERT(result.second && "priorities must be unique (for now)");
+    validate(result.second,
+             "priorities must be unique for all reactions of the same reactor");
   }
 
   // connect all reactions this reaction depends on
@@ -81,7 +86,8 @@ void Environment::build_dependency_graph(Reactor* reactor) {
 }
 
 std::thread Environment::startup() {
-  ASSERT(_phase == Phase::Assembly);
+  validate(this->phase() == Phase::Assembly,
+           "startup() may only be called during assembly phase!");
 
   // build the dependency graph
   for (auto r : _top_level_reactors) {
@@ -104,7 +110,8 @@ std::thread Environment::startup() {
 }
 
 void Environment::sync_shutdown() {
-  ASSERT(_phase == Phase::Execution);
+  validate(this->phase() == Phase::Execution,
+           "sync_shutdown() may only be called during execution phase!");
   _phase = Phase::Shutdown;
 
   log::Info() << "Terminating the execution";

@@ -11,26 +11,33 @@
 #include "reactor-cpp/assert.hh"
 #include "reactor-cpp/environment.hh"
 #include "reactor-cpp/reaction.hh"
+#include "reactor-cpp/validate.hh"
 
 namespace reactor {
 
 void BaseAction::register_trigger(Reaction* reaction) {
   ASSERT(reaction != nullptr);
   ASSERT(this->environment() == reaction->environment());
-  ASSERT(this->environment()->phase() == Environment::Phase::Assembly);
-  // the reaction must belong to the same reactor as this action
-  ASSERT(this->container() == reaction->container());
+  validate(this->environment()->phase() == Environment::Phase::Assembly,
+           "Triggers may only be registered during assembly phase!");
+  validate(this->container() == reaction->container(),
+           "Action triggers must belong to the same reactor as the triggered "
+           "reaction");
   auto r = _triggers.insert(reaction);
   ASSERT(r.second);
 }
 
 void BaseAction::register_scheduler(Reaction* reaction) {
   ASSERT(reaction != nullptr);
-  ASSERT(is_logical());
   ASSERT(this->environment() == reaction->environment());
-  ASSERT(this->environment()->phase() == Environment::Phase::Assembly);
+  validate(is_logical(), "only logical action can be scheduled by a reaction!");
+  validate(
+      this->environment()->phase() == Environment::Phase::Assembly,
+      "Schedulers for actions may only be registered during assembly phase!");
   // the reaction must belong to the same reactor as this action
-  ASSERT(this->container() == reaction->container());
+  validate(this->container() == reaction->container(),
+           "Scheduable actions must belong to the same reactor as the "
+           "triggered reaction");
   auto r = _schedulers.insert(reaction);
   ASSERT(r.second);
 }
