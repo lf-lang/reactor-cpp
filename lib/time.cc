@@ -6,6 +6,11 @@
  *   Christian Menard
  */
 
+// tell MSCV not to worry about the potential unsafe use of localtime
+#ifdef _MSC_VER
+#pragma warning(disable:4996)
+#endif
+
 #include "reactor-cpp/time.hh"
 
 #include <ctime>
