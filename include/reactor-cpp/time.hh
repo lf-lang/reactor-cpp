@@ -13,7 +13,8 @@
 
 namespace reactor {
 
-using TimePoint = std::chrono::time_point<std::chrono::system_clock>;
+using TimePoint = std::chrono::time_point<std::chrono::system_clock,
+                                          std::chrono::nanoseconds>;
 using Duration = std::chrono::nanoseconds;
 
 inline TimePoint get_physical_time() {
