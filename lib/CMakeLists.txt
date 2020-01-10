@@ -27,11 +27,11 @@ set_target_properties(reactor-cpp PROPERTIES
     VERSION ${PROJECT_VERSION}
     SOVERSION 1)
 
-install(TARGETS reactor-cpp EXPORT ReactorCppConfig
+install(TARGETS reactor-cpp EXPORT reactor-cppConfig
     ARCHIVE  DESTINATION ${CMAKE_INSTALL_LIBDIR}
     LIBRARY  DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME  DESTINATION ${CMAKE_INSTALL_BINDIR})
 
-install(EXPORT ReactorCppConfig DESTINATION share/reactor/cmake)
+install(EXPORT reactor-cppConfig DESTINATION share/reactor-cpp/cmake)
 
-export(TARGETS ${PROJECT_NAME} FILE ReactorCppConfig.cmake)
+export(TARGETS ${PROJECT_NAME} FILE reactor-cppConfig.cmake)
