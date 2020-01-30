@@ -20,7 +20,7 @@ void BasePort::base_bind_to(BasePort* port) {
   validate(!port->has_inward_binding(), "Ports may only be connected once");
   validate(!this->has_dependencies(),
            "Ports with dependencies may not be connected to other ports");
-  validate(!this->has_antidependencies(),
+  validate(!port->has_antidependencies(),
            "Ports with antidependencies may not be connected to other ports");
   validate(this->environment()->phase() == Environment::Phase::Construction,
            "Ports can only be bound during contruction phase!");
