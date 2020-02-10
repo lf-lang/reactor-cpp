@@ -32,6 +32,7 @@ class Environment {
  private:
   const unsigned _num_workers;
   Scheduler _scheduler;
+  const bool _run_forever;
   const bool _fast_fwd_execution;
   std::set<Reactor*> _top_level_reactors;
 
@@ -48,9 +49,12 @@ class Environment {
   TimePoint _start_time;
 
  public:
-  Environment(unsigned num_workers, bool fast_fwd_execution = false)
+  Environment(unsigned num_workers,
+              bool run_forever = false,
+              bool fast_fwd_execution = false)
       : _num_workers(num_workers)
       , _scheduler(this)
+      , _run_forever(run_forever)
       , _fast_fwd_execution(fast_fwd_execution) {}
 
   void register_reactor(Reactor* reactor);
@@ -76,6 +80,7 @@ class Environment {
 
   unsigned num_workers() const { return _num_workers; }
   bool fast_fwd_execution() const { return _fast_fwd_execution; }
+  bool run_forever() const { return _run_forever; }
 };
 
 }  // namespace reactor

@@ -76,13 +76,18 @@ bool Scheduler::next() {
 
     // shutdown if there are no more events in the queue
     if (event_queue.empty() && !_stop) {
-      log::Debug() << "No more events in queue. -> Terminate!";
-      _environment->sync_shutdown();
+      if (_environment->run_forever()) {
+        // wait for a new event
+        cv_schedule.wait(lock, [this]() { return !event_queue.empty(); });
+      } else {
+        log::Debug() << "No more events in queue. -> Terminate!";
+        _environment->sync_shutdown();
 
-      // the shutdown call might schedule shutdown reactions. If non was
-      // scheduled, we simply return
-      if (event_queue.empty()) {
-        return false;
+        // The shutdown call might schedule shutdown reactions. If non was
+        // scheduled, we simply return.
+        if (event_queue.empty()) {
+          return false;
+        }
       }
     }
 
