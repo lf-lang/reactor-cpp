@@ -71,7 +71,8 @@ class Action : public BaseAction {
   void schedule(const ImmutableValuePtr<T>& value_ptr, Dur delay = Dur::zero());
   template <class Dur = Duration>
   void schedule(MutableValuePtr<T>&& value_ptr, Dur delay = Dur::zero()) {
-    schedule(ImmutableValuePtr<T>(value_ptr), delay);
+    schedule(ImmutableValuePtr<T>(std::forward<MutableValuePtr<T>>(value_ptr)),
+             delay);
   }
   template <class Dur = Duration>
   void schedule(const T& value, Dur delay = Dur::zero()) {
