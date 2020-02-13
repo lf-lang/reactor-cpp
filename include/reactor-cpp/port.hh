@@ -78,6 +78,7 @@ class Port : public BasePort {
     set(ImmutableValuePtr<T>(std::forward<MutableValuePtr<T>>(value_ptr)));
   }
   void set(const T& value) { set(make_immutable_value<T>(value)); }
+  void set(T&& value) { set(make_immutable_value<T>(std::forward<T>(value))); }
 
   void startup() override final {}
   void shutdown() override final {}

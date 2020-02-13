@@ -78,6 +78,10 @@ class Action : public BaseAction {
   void schedule(const T& value, Dur delay = Dur::zero()) {
     schedule(make_immutable_value<T>(value), delay);
   }
+  template <class Dur = Duration>
+  void schedule(T&& value, Dur delay = Dur::zero()) {
+    schedule(make_immutable_value<T>(std::forward<T>(value)), delay);
+  }
 
   const ImmutableValuePtr<T>& get() const { return value_ptr; }
   bool is_present() const { return value_ptr != nullptr; }
