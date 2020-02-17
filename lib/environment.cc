@@ -163,6 +163,7 @@ void Environment::calculate_indexes() {
     graph[d.first].insert(d.second);
   }
 
+  export_dependency_graph("/tmp/graph.dot");
   log::Debug() << "Reactions sorted by index:";
   unsigned index = 0;
   while (graph.size() != 0) {
@@ -173,6 +174,13 @@ void Environment::calculate_indexes() {
         kv.first->set_index(index);
         degree_zero.insert(kv.first);
       }
+    }
+
+    if (degree_zero.size() == 0) {
+      export_dependency_graph("/tmp/reactor_dependency_graph.dot");
+      throw reactor::ValidationError(
+          "There is a loop in the dependency graph. Graph was written to "
+          "/tmp/reactor_dependency_graph.dot");
     }
 
     log::Debug dbg;
