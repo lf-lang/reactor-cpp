@@ -16,10 +16,4 @@ std::string ValidationError::build_message(const std::string& msg) {
   return ss.str();
 }
 
-void validate(bool condition, const std::string& message) {
-  if (!condition) {
-    throw ValidationError(message);
-  }
-}
-
 }  // namespace reactor

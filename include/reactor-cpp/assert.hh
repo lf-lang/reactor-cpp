@@ -20,6 +20,12 @@
 #define ASSERT(x) assert(x)
 #endif
 
+#ifdef REACTOR_CPP_VALIDATE
+#define REACTOR_CPP_VALIDATE_ENABLED true
+#else
+#define REACTOR_CPP_VALIDATE_ENABLED false
+#endif
+
 #include <sstream>
 #include <stdexcept>
 #include <string>
@@ -35,6 +41,12 @@ class ValidationError : public std::runtime_error {
       : std::runtime_error(build_message(msg)) {}
 };
 
-void validate(bool condition, const std::string& message);
+void inline validate(bool condition, const std::string& message) {
+  if constexpr (REACTOR_CPP_VALIDATE_ENABLED) {
+    if (!condition) {
+      throw ValidationError(message);
+    }
+  }
+}
 
 }  // namespace reactor

@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.5)
 project(reactor-cpp LANGUAGES CXX VERSION 0.0.1)
 
-# require C++14
-set(CMAKE_CXX_STANDARD 14)
+# require C++17
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
@@ -17,6 +17,13 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
   # Set the possible values of build type for cmake-gui
   set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
 endif()
+
+option(REACTOR_CPP_VALIDATE "Enable runtime validation" ON)
+if (NOT DEFINED REACTOR_CPP_LOG_LEVEL)
+  set(REACTOR_CPP_LOG_LEVEL 3)
+endif()
+
+configure_file(include/reactor-cpp/config.hh.in include/reactor-cpp/config.hh @ONLY)
 
 include(GNUInstallDirs)
 

@@ -12,9 +12,7 @@
 #include <memory>
 #include <mutex>
 
-#ifndef REACTOR_CPP_LOG_LEVEL
-#define REACTOR_CPP_LOG_LEVEL 3
-#endif
+#include "config.hh"
 
 namespace reactor {
 
