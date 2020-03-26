@@ -29,6 +29,7 @@ class Scheduler {
   using EventMap = std::map<BaseAction*, std::function<void(void)>>;
 
  private:
+  const bool using_workers;
   bool terminate{false};
   LogicalTime _logical_time{};
 
@@ -59,8 +60,11 @@ class Scheduler {
 
   std::atomic<bool> _stop{false};
 
+  void dispatch_reactions_to_workers(const std::set<Reaction*>& reactions);
+  void execute_reactions_inline(const std::set<Reaction*>& reactions);
+
  public:
-  Scheduler(Environment* env) : _environment(env) {}
+  Scheduler(Environment* env);
   ~Scheduler();
 
   void schedule(const Tag& tag,

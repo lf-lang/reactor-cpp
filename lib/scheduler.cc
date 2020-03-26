@@ -10,6 +10,7 @@
 
 #include "reactor-cpp/action.hh"
 #include "reactor-cpp/assert.hh"
+#include "reactor-cpp/environment.hh"
 #include "reactor-cpp/logging.hh"
 #include "reactor-cpp/port.hh"
 #include "reactor-cpp/reaction.hh"
@@ -50,9 +51,11 @@ void Scheduler::work(unsigned id) {
 void Scheduler::start() {
   log::Debug() << "Starting the scheduler...";
 
-  // start worker threads
-  for (unsigned i = 0; i < _environment->num_workers(); i++) {
-    worker_threads.emplace_back([this, i]() { this->work(i); });
+  if (using_workers) {
+    // start worker threads
+    for (unsigned i = 0; i < _environment->num_workers(); i++) {
+      worker_threads.emplace_back([this, i]() { this->work(i); });
+    }
   }
 
   while (next()) {
@@ -160,25 +163,13 @@ bool Scheduler::next() {
     log::Debug() << "Process reactions of priority "
                  << reaction_queue.begin()->first;
 
-    // we need to acquire the mutex as workers might be running
-    std::unique_lock<std::mutex> lock(m_reaction_queue);
-    while (!reactions.empty() || !ready_reactions.empty() ||
-           !executing_reactions.empty()) {
-      // if there are reactions in the queue, mark them as ready to execute
-      if (!reactions.empty()) {
-        for (auto r : reactions) {
-          log::Debug() << "Schedule reaction " << r->fqn();
-          ready_reactions.push_back(r);
-        }
-        reactions.clear();
-        // notify workers about ready reactions
-        cv_ready_reactions.notify_all();
-      }
-      log::Debug() << "Waiting for workers ...";
-      cv_done_reactions.wait(lock);
+    if (using_workers) {
+      dispatch_reactions_to_workers(reactions);
+    } else {
+      execute_reactions_inline(reactions);
     }
+    reactions.clear();
     reaction_queue.erase(reaction_queue.begin());
-    lock.unlock();
   }
 
   // cleanup all triggered actions
@@ -194,6 +185,34 @@ bool Scheduler::next() {
 
   return run_again;
 }  // namespace reactor
+
+void Scheduler::dispatch_reactions_to_workers(
+    const std::set<Reaction*>& reactions) {
+  for (auto r : reactions) {
+    log::Debug() << "Schedule reaction " << r->fqn();
+    ready_reactions.push_back(r);
+  }
+  // notify workers about ready reactions
+  cv_ready_reactions.notify_all();
+
+  // we need to acquire the mutex now as workers are running
+  std::unique_lock<std::mutex> lock(m_reaction_queue);
+  while (!ready_reactions.empty() || !executing_reactions.empty()) {
+    log::Debug() << "Waiting for workers ...";
+    cv_done_reactions.wait(lock);
+  }
+  lock.unlock();
+}
+
+void Scheduler::execute_reactions_inline(const std::set<Reaction*>& reactions) {
+  for (auto r : reactions) {
+    log::Debug() << "Execute reaction " << r->fqn();
+    r->trigger();
+  }
+}
+
+Scheduler::Scheduler(Environment* env)
+    : using_workers(env->num_workers() > 1), _environment(env) {}
 
 Scheduler::~Scheduler() {}
 
