@@ -8,7 +8,7 @@
 
 // tell MSCV not to worry about the potential unsafe use of localtime
 #ifdef _MSC_VER
-#pragma warning(disable:4996)
+#pragma warning(disable : 4996)
 #endif
 
 #include "reactor-cpp/time.hh"
@@ -17,6 +17,7 @@
 #include <iomanip>
 
 namespace reactor {
+inline namespace operators {
 
 std::ostream& operator<<(std::ostream& os, TimePoint tp) {
   char buf[20];
@@ -30,5 +31,24 @@ std::ostream& operator<<(std::ostream& os, TimePoint tp) {
 
   return os;
 }
+
+std::ostream& operator<<(std::ostream& os, std::chrono::seconds dur) {
+  os << dur.count() << " secs";
+  return os;
+}
+std::ostream& operator<<(std::ostream& os, std::chrono::milliseconds dur) {
+  os << dur.count() << " msecs";
+  return os;
+}
+std::ostream& operator<<(std::ostream& os, std::chrono::microseconds dur) {
+  os << dur.count() << " usecs";
+  return os;
+}
+std::ostream& operator<<(std::ostream& os, std::chrono::nanoseconds dur) {
+  os << dur.count() << " nsecs";
+  return os;
+}
+
+}  // namespace operators
 
 }  // namespace reactor

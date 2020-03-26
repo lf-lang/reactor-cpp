@@ -21,6 +21,15 @@ inline TimePoint get_physical_time() {
   return std::chrono::system_clock::now();
 }
 
+inline namespace operators {
+
 std::ostream& operator<<(std::ostream& os, TimePoint tp);
+
+std::ostream& operator<<(std::ostream& os, std::chrono::seconds dur);
+std::ostream& operator<<(std::ostream& os, std::chrono::milliseconds dur);
+std::ostream& operator<<(std::ostream& os, std::chrono::microseconds dur);
+std::ostream& operator<<(std::ostream& os, std::chrono::nanoseconds dur);
+
+}  // namespace operators
 
 }  // namespace reactor
