@@ -84,6 +84,7 @@ class Reactor : public ReactorElement {
   TimePoint get_physical_time() const;
   TimePoint get_logical_time() const;
   Duration get_elapsed_logical_time() const;
+  Duration get_elapsed_physical_time() const;
 
   friend ReactorElement;
 };
