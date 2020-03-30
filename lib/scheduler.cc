@@ -61,7 +61,10 @@ void Scheduler::start() {
   while (next()) {
   }
 
-  terminate = true;
+  {
+    std::lock_guard<std::mutex> lg(m_reaction_queue);
+    terminate = true;
+  }
   cv_ready_reactions.notify_all();
 
   // join all worker threads
