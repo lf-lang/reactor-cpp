@@ -188,15 +188,19 @@ bool Scheduler::next() {
 
 void Scheduler::dispatch_reactions_to_workers(
     const std::set<Reaction*>& reactions) {
+  // dispatch all ready reactions
+  std::unique_lock<std::mutex> lock(m_reaction_queue);
   for (auto r : reactions) {
     log::Debug() << "Schedule reaction " << r->fqn();
     ready_reactions.push_back(r);
   }
+  lock.unlock();
+
   // notify workers about ready reactions
   cv_ready_reactions.notify_all();
 
   // we need to acquire the mutex now as workers are running
-  std::unique_lock<std::mutex> lock(m_reaction_queue);
+  lock.lock();
   while (!ready_reactions.empty() || !executing_reactions.empty()) {
     log::Debug() << "Waiting for workers ...";
     cv_done_reactions.wait(lock);
