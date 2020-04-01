@@ -21,6 +21,7 @@ void Action<T>::schedule(const ImmutableValuePtr<T>& value_ptr, Dur delay) {
   auto scheduler = environment()->scheduler();
   auto setup = [value_ptr, this]() { this->value_ptr = std::move(value_ptr); };
   if (is_logical()) {
+    d += this->min_delay;
     auto tag = Tag::from_logical_time(scheduler->logical_time()).delay(d);
     scheduler->schedule(tag, this, setup);
   } else {
@@ -37,6 +38,7 @@ void Action<void>::schedule(Dur delay) {
   auto scheduler = environment()->scheduler();
   auto setup = [this]() { this->present = true; };
   if (is_logical()) {
+    d += this->min_delay;
     auto tag = Tag::from_logical_time(scheduler->logical_time()).delay(d);
     scheduler->schedule(tag, this, setup);
   } else {

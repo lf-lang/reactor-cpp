@@ -19,7 +19,7 @@ class BaseAction : public ReactorElement {
   std::set<Reaction*> _triggers;
   std::set<Reaction*> _schedulers;
 
-  bool _logical;
+  const bool _logical;
 
  protected:
   void register_trigger(Reaction* reaction);
@@ -27,10 +27,16 @@ class BaseAction : public ReactorElement {
 
   virtual void cleanup() = 0;
 
+  const Duration min_delay;
+
  protected:
-  BaseAction(const std::string& name, Reactor* container, bool logical)
+  BaseAction(const std::string& name,
+             Reactor* container,
+             bool logical,
+             Duration min_delay)
       : ReactorElement(name, ReactorElement::Type::Action, container)
-      , _logical(logical) {}
+      , _logical(logical)
+      , min_delay(min_delay) {}
 
  public:
   const auto& triggers() const { return _triggers; }
@@ -51,8 +57,11 @@ class Action : public BaseAction {
   void cleanup() override final { value_ptr = nullptr; }
 
  protected:
-  Action(const std::string& name, Reactor* container, bool logical)
-      : BaseAction(name, container, logical) {}
+  Action(const std::string& name,
+         Reactor* container,
+         bool logical,
+         Duration min_delay)
+      : BaseAction(name, container, logical, min_delay) {}
 
  public:
   void startup() override final {}
@@ -81,8 +90,11 @@ class Action<void> : public BaseAction {
   void cleanup() override final { present = false; }
 
  protected:
-  Action(const std::string& name, Reactor* container, bool logical)
-      : BaseAction(name, container, logical) {}
+  Action(const std::string& name,
+         Reactor* container,
+         bool logical,
+         Duration min_delay)
+      : BaseAction(name, container, logical, min_delay) {}
 
  public:
   void startup() override final {}
@@ -97,14 +109,16 @@ template <class T>
 class PhysicalAction : public Action<T> {
  public:
   PhysicalAction(const std::string& name, Reactor* container)
-      : Action<T>(name, container, false) {}
+      : Action<T>(name, container, false, Duration::zero()) {}
 };
 
 template <class T>
 class LogicalAction : public Action<T> {
  public:
-  LogicalAction(const std::string& name, Reactor* container)
-      : Action<T>(name, container, true) {}
+  LogicalAction(const std::string& name,
+                Reactor* container,
+                Duration min_delay = Duration::zero())
+      : Action<T>(name, container, true, min_delay) {}
 };
 
 class Timer : public BaseAction {
@@ -121,7 +135,9 @@ class Timer : public BaseAction {
         Reactor* container,
         Duration period = Duration::zero(),
         Duration offset = Duration::zero())
-      : BaseAction(name, container, true), _offset(offset), _period(period) {}
+      : BaseAction(name, container, true, Duration::zero())
+      , _offset(offset)
+      , _period(period) {}
 
   void startup() override final;
   void shutdown() override final {}
@@ -139,7 +155,7 @@ class StartupAction : public Timer {
 class ShutdownAction : public BaseAction {
  public:
   ShutdownAction(const std::string& name, Reactor* container)
-      : BaseAction(name, container, true) {}
+      : BaseAction(name, container, true, Duration::zero()) {}
 
   void cleanup() override final {}
   void startup() override final {}
