@@ -75,7 +75,7 @@ class Port : public BasePort {
 
   void set(const ImmutableValuePtr<T>& value_ptr);
   void set(MutableValuePtr<T>&& value_ptr) {
-    set(ImmutableValuePtr<T>(value_ptr));
+    set(ImmutableValuePtr<T>(std::forward<MutableValuePtr<T>>(value_ptr)));
   }
   void set(const T& value) { set(make_immutable_value<T>(value)); }
 
