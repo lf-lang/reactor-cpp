@@ -89,7 +89,7 @@ class ImmutableValuePtr {
   type& operator*() const { return *get(); }
   type* operator->() const { return get(); }
 
-  MutableValuePtr<T> get_mutable_copy() {
+  MutableValuePtr<T> get_mutable_copy() const {
     return MutableValuePtr<T>(new T(*internal_ptr));
   }
 
