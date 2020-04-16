@@ -26,7 +26,7 @@ Port<T>* Port<T>::typed_inward_binding() const {
 
 template <class T>
 void Port<T>::set(const ImmutableValuePtr<T>& value_ptr) {
-  validate(!has_inward_binding(),
+  VALIDATE(!has_inward_binding(),
            "set() may only be called on a ports that do not have an inward "
            "binding!");
   auto scheduler = environment()->scheduler();

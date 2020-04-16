@@ -24,7 +24,7 @@ ReactorElement::ReactorElement(const std::string& name,
   ASSERT(container != nullptr);
   this->_environment = container->environment();
   ASSERT(this->_environment != nullptr);
-  validate(this->_environment->phase() == Environment::Phase::Construction,
+  VALIDATE(this->_environment->phase() == Environment::Phase::Construction,
            "Reactor elements can only be created during construction phase!");
   // We need a reinterpret_cast here as the derived class is not yet created
   // when this constructor is executed. dynamic_cast only works for
@@ -60,9 +60,9 @@ ReactorElement::ReactorElement(const std::string& name,
                                Environment* environment)
     : _name(name), _fqn(name), _container(nullptr), _environment(environment) {
   ASSERT(environment != nullptr);
-  validate(type == Type::Reactor,
+  VALIDATE(type == Type::Reactor,
            "Only reactors can be owned by the environment!");
-  validate(this->_environment->phase() == Environment::Phase::Construction,
+  VALIDATE(this->_environment->phase() == Environment::Phase::Construction,
            "Reactor elements can only be created during construction phase!");
 }
 
@@ -75,14 +75,14 @@ Reactor::Reactor(const std::string& name, Environment* environment)
 
 void Reactor::register_action(BaseAction* action) {
   ASSERT(action != nullptr);
-  validate(this->environment()->phase() == Environment::Phase::Construction,
+  VALIDATE(this->environment()->phase() == Environment::Phase::Construction,
            "Actions can only be registered during construction phase!");
   auto result = _actions.insert(action);
   ASSERT(result.second);
 }
 void Reactor::register_port(BasePort* port) {
   ASSERT(port != nullptr);
-  validate(this->environment()->phase() == Environment::Phase::Construction,
+  VALIDATE(this->environment()->phase() == Environment::Phase::Construction,
            "Ports can only be registered during construction phase!");
   if (port->is_input()) {
     auto result = _inputs.insert(port);
@@ -94,14 +94,14 @@ void Reactor::register_port(BasePort* port) {
 }
 void Reactor::register_reaction(Reaction* reaction) {
   ASSERT(reaction != nullptr);
-  validate(this->environment()->phase() == Environment::Phase::Construction,
+  VALIDATE(this->environment()->phase() == Environment::Phase::Construction,
            "Reactions can only be registered during construction phase!");
   auto result = _reactions.insert(reaction);
   ASSERT(result.second);
 }
 void Reactor::register_reactor(Reactor* reactor) {
   ASSERT(reactor != nullptr);
-  validate(this->environment()->phase() == Environment::Phase::Construction,
+  VALIDATE(this->environment()->phase() == Environment::Phase::Construction,
            "Reactions can only be registered during construction phase!");
   auto result = _reactors.insert(reactor);
   ASSERT(result.second);
