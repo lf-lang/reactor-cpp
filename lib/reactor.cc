@@ -49,30 +49,21 @@ ReactorElement::ReactorElement(const std::string& name,
     default:
       throw std::runtime_error("unexpected type");
   }
+
+  std::stringstream ss;
+  ss << _container->fqn() << '.' << name;
+  _fqn = ss.str();
 }
 
 ReactorElement::ReactorElement(const std::string& name,
                                ReactorElement::Type type,
                                Environment* environment)
-    : _name(name), _container(nullptr), _environment(environment) {
+    : _name(name), _fqn(name), _container(nullptr), _environment(environment) {
   ASSERT(environment != nullptr);
   validate(type == Type::Reactor,
            "Only reactors can be owned by the environment!");
   validate(this->_environment->phase() == Environment::Phase::Construction,
            "Reactor elements can only be created during construction phase!");
-}
-
-std::stringstream& ReactorElement::fqn_detail(std::stringstream& ss) const {
-  if (this->is_top_level())
-    ss << this->_name;
-  else
-    this->_container->fqn_detail(ss) << '.' << this->_name;
-  return ss;
-}
-
-std::string ReactorElement::fqn() const {
-  std::stringstream ss;
-  return this->fqn_detail(ss).str();
 }
 
 Reactor::Reactor(const std::string& name, Reactor* container)

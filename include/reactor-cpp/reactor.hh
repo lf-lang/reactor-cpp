@@ -23,6 +23,7 @@ class ReactorElement {
 
  private:
   const std::string _name;
+  std::string _fqn;
 
   /// The reactor owning this element
   Reactor* const _container;
@@ -43,8 +44,8 @@ class ReactorElement {
   Reactor* container() const { return _container; }
 
   const std::string& name() const { return _name; }
+  const std::string& fqn() const { return _fqn; }
   Environment* environment() const { return _environment; }
-  std::string fqn() const;
 
   bool is_top_level() const { return this->container() == nullptr; }
 
