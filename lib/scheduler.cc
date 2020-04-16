@@ -249,7 +249,11 @@ void Scheduler::set_port(BasePort* p) {
   log::Debug() << "Set port " << p->fqn();
   auto lg = using_workers ? std::unique_lock<std::mutex>(m_event_queue)
                           : std::unique_lock<std::mutex>();
-  set_ports.insert(p);
+  // We do not check here if p is already in the list. This means clean()
+  // could be called multiple times for a single port. However, calling clean()
+  // multiple time is not harmful and more efficient then checking if the
+  // port is already in the list.
+  set_ports.push_back(p);
   // recursively search for triggered reactions
   set_port_helper(p);
 }

@@ -43,7 +43,7 @@ class Scheduler {
   std::mutex m_event_queue;
   std::map<Tag, std::unique_ptr<EventMap>> event_queue;
 
-  std::set<BasePort*> set_ports;
+  std::vector<BasePort*> set_ports;
 
   std::mutex m_reaction_queue;
   std::map<unsigned, std::set<Reaction*>> reaction_queue;
