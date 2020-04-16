@@ -235,7 +235,8 @@ void Scheduler::schedule(const Tag& tag,
                << " with tag [" << tag.time_point() << ", " << tag.micro_step()
                << "]";
   {
-    std::lock_guard<std::mutex> lg(m_event_queue);
+    auto lg = using_workers ? std::unique_lock<std::mutex>(m_event_queue)
+                            : std::unique_lock<std::mutex>();
     if (event_queue.find(tag) == event_queue.end())
       event_queue.emplace(tag, std::make_unique<EventMap>());
 
@@ -246,7 +247,8 @@ void Scheduler::schedule(const Tag& tag,
 
 void Scheduler::set_port(BasePort* p) {
   log::Debug() << "Set port " << p->fqn();
-  std::lock_guard<std::mutex> lg(m_reaction_queue);
+  auto lg = using_workers ? std::unique_lock<std::mutex>(m_event_queue)
+                          : std::unique_lock<std::mutex>();
   set_ports.insert(p);
   // recursively search for triggered reactions
   set_port_helper(p);
