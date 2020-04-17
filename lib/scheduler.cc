@@ -86,7 +86,7 @@ bool Scheduler::next() {
     // shutdown if there are no more events in the queue
     if (event_queue.empty() && !_stop) {
       if (_environment->run_forever()) {
-        // wait for a new event
+        // wait for a new asynchronous event
         cv_schedule.wait(lock, [this]() { return !event_queue.empty(); });
       } else {
         log::Debug() << "No more events in queue. -> Terminate!";
@@ -121,8 +121,8 @@ bool Scheduler::next() {
 
       // synchronize with physical time if not in fast forward mode
       if (!_environment->fast_fwd_execution()) {
-        // wait until the next tag or until a new event is inserted into the
-        // queue
+        // wait until the next tag or until a new event is inserted
+        // asynchronously into the queue
         auto status = cv_schedule.wait_until(lock, t_next.time_point());
         // Start over if the event queue was modified
         if (status == std::cv_status::no_timeout) {
@@ -231,9 +231,9 @@ Scheduler::Scheduler(Environment* env)
 
 Scheduler::~Scheduler() {}
 
-void Scheduler::schedule(const Tag& tag,
-                         BaseAction* action,
-                         std::function<void(void)> setup) {
+void Scheduler::schedule_sync(const Tag& tag,
+                              BaseAction* action,
+                              std::function<void(void)> setup) {
   ASSERT(_logical_time < tag);
   // TODO verify that the action is indeed allowed to be scheduled by the
   // current reaction
@@ -250,6 +250,13 @@ void Scheduler::schedule(const Tag& tag,
 
     (*event_queue[tag])[action] = setup;
   }
+}
+
+void Scheduler::schedule_async(const Tag& tag,
+                               BaseAction* action,
+                               std::function<void(void)> setup) {
+  std::lock_guard<std::mutex> lg(m_schedule);
+  schedule_sync(tag, action, setup);
   cv_schedule.notify_one();
 }
 

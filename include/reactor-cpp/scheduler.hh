@@ -67,9 +67,12 @@ class Scheduler {
   Scheduler(Environment* env);
   ~Scheduler();
 
-  void schedule(const Tag& tag,
-                BaseAction* action,
-                std::function<void(void)> pre_handler);
+  void schedule_sync(const Tag& tag,
+                     BaseAction* action,
+                     std::function<void(void)> pre_handler);
+  void schedule_async(const Tag& tag,
+                      BaseAction* action,
+                      std::function<void(void)> pre_handler);
 
   void lock() { schedule_lock.lock(); }
   void unlock() { schedule_lock.unlock(); }

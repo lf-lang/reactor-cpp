@@ -44,9 +44,9 @@ void BaseAction::register_scheduler(Reaction* reaction) {
 void Timer::startup() {
   Tag t0 = Tag::from_physical_time(environment()->start_time());
   if (_offset != Duration::zero()) {
-    environment()->scheduler()->schedule(t0.delay(_offset), this, nullptr);
+    environment()->scheduler()->schedule_sync(t0.delay(_offset), this, nullptr);
   } else {
-    environment()->scheduler()->schedule(t0, this, nullptr);
+    environment()->scheduler()->schedule_sync(t0, this, nullptr);
   }
 }
 
@@ -55,13 +55,13 @@ void Timer::cleanup() {
   if (_period != Duration::zero()) {
     Tag now = Tag::from_logical_time(environment()->logical_time());
     Tag next = now.delay(_period);
-    environment()->scheduler()->schedule(next, this, nullptr);
+    environment()->scheduler()->schedule_sync(next, this, nullptr);
   }
 }
 
 void ShutdownAction::shutdown() {
   Tag t = Tag::from_logical_time(environment()->logical_time()).delay();
-  environment()->scheduler()->schedule(t, this, nullptr);
+  environment()->scheduler()->schedule_sync(t, this, nullptr);
 }
 
 }  // namespace reactor

@@ -23,10 +23,10 @@ void Action<T>::schedule(const ImmutableValuePtr<T>& value_ptr, Dur delay) {
   if (is_logical()) {
     d += this->min_delay;
     auto tag = Tag::from_logical_time(scheduler->logical_time()).delay(d);
-    scheduler->schedule(tag, this, setup);
+    scheduler->schedule_sync(tag, this, setup);
   } else {
     auto tag = Tag::from_physical_time(get_physical_time() + d);
-    scheduler->schedule(tag, this, setup);
+    scheduler->schedule_async(tag, this, setup);
   }
 }
 
@@ -40,13 +40,11 @@ void Action<void>::schedule(Dur delay) {
   if (is_logical()) {
     d += this->min_delay;
     auto tag = Tag::from_logical_time(scheduler->logical_time()).delay(d);
-    scheduler->schedule(tag, this, setup);
+    scheduler->schedule_sync(tag, this, setup);
   } else {
     // physical action
-    scheduler->lock();
     auto tag = Tag::from_physical_time(get_physical_time() + d);
-    scheduler->schedule(tag, this, setup);
-    scheduler->unlock();
+    scheduler->schedule_async(tag, this, setup);
   }
 }
 
