@@ -46,7 +46,7 @@ class Scheduler {
   std::vector<BasePort*> set_ports;
 
   std::mutex m_reaction_queue;
-  std::vector<std::set<Reaction*>> reaction_queue;
+  std::vector<std::vector<Reaction*>> reaction_queue;
   std::vector<Reaction*> ready_reactions;
   std::set<Reaction*> executing_reactions;
   std::condition_variable cv_ready_reactions;
@@ -60,8 +60,8 @@ class Scheduler {
 
   std::atomic<bool> _stop{false};
 
-  void dispatch_reactions_to_workers(const std::set<Reaction*>& reactions);
-  void execute_reactions_inline(const std::set<Reaction*>& reactions);
+  void dispatch_reactions_to_workers(const std::vector<Reaction*>& reactions);
+  void execute_reactions_inline(const std::vector<Reaction*>& reactions);
 
  public:
   Scheduler(Environment* env);

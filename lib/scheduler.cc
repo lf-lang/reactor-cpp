@@ -158,7 +158,7 @@ bool Scheduler::next() {
       // There is no need to acquire the mutex. At this point the scheduler
       // should be the only thread accessing the reaction queue as none of the
       // workers are running
-      reaction_queue[n->index()].insert(n);
+      reaction_queue[n->index()].push_back(n);
     }
   }
 
@@ -168,6 +168,10 @@ bool Scheduler::next() {
 
     if (!reactions.empty()) {
       log::Debug() << "Process reactions of priority " << i;
+
+      // Make sure that any reaction is only executed once even if it was
+      // triggered multiple times.
+      std::unique(reactions.begin(), reactions.end());
 
       if (using_workers) {
         dispatch_reactions_to_workers(reactions);
@@ -193,7 +197,7 @@ bool Scheduler::next() {
 }  // namespace reactor
 
 void Scheduler::dispatch_reactions_to_workers(
-    const std::set<Reaction*>& reactions) {
+    const std::vector<Reaction*>& reactions) {
   // dispatch all ready reactions
   std::unique_lock<std::mutex> lock(m_reaction_queue);
   for (auto r : reactions) {
@@ -214,7 +218,8 @@ void Scheduler::dispatch_reactions_to_workers(
   lock.unlock();
 }
 
-void Scheduler::execute_reactions_inline(const std::set<Reaction*>& reactions) {
+void Scheduler::execute_reactions_inline(
+    const std::vector<Reaction*>& reactions) {
   for (auto r : reactions) {
     log::Debug() << "Execute reaction " << r->fqn();
     r->trigger();
@@ -269,7 +274,7 @@ void Scheduler::set_port_helper(BasePort* p) {
     }
   } else {
     for (auto n : p->triggers()) {
-      reaction_queue[n->index()].insert(n);
+      reaction_queue[n->index()].push_back(n);
     }
   }
 }
