@@ -173,7 +173,7 @@ bool Scheduler::next() {
       // triggered multiple times.
       std::unique(reactions.begin(), reactions.end());
 
-      if (using_workers) {
+      if (using_workers && reactions.size() > 1) {
         dispatch_reactions_to_workers(reactions);
       } else {
         execute_reactions_inline(reactions);
