@@ -46,7 +46,7 @@ class Scheduler {
   std::vector<BasePort*> set_ports;
 
   std::mutex m_reaction_queue;
-  std::map<unsigned, std::set<Reaction*>> reaction_queue;
+  std::vector<std::set<Reaction*>> reaction_queue;
   std::vector<Reaction*> ready_reactions;
   std::set<Reaction*> executing_reactions;
   std::condition_variable cv_ready_reactions;

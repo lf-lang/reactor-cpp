@@ -51,6 +51,9 @@ void Scheduler::work(unsigned id) {
 void Scheduler::start() {
   log::Debug() << "Starting the scheduler...";
 
+  // initialize the reaction queue
+  reaction_queue.resize(_environment->max_reaction_index() + 1);
+
   if (using_workers) {
     // start worker threads
     for (unsigned i = 0; i < _environment->num_workers(); i++) {
@@ -159,20 +162,20 @@ bool Scheduler::next() {
     }
   }
 
-  // process all reactions in the queue
-  while (!reaction_queue.empty()) {
-    // only process reaction with highest priority
-    auto& reactions = reaction_queue.begin()->second;
-    log::Debug() << "Process reactions of priority "
-                 << reaction_queue.begin()->first;
+  // process all reactions in the queue in order of there index
+  for (unsigned i = 0; i < reaction_queue.size(); i++) {
+    auto& reactions = reaction_queue[i];
 
-    if (using_workers) {
-      dispatch_reactions_to_workers(reactions);
-    } else {
-      execute_reactions_inline(reactions);
+    if (!reactions.empty()) {
+      log::Debug() << "Process reactions of priority " << i;
+
+      if (using_workers) {
+        dispatch_reactions_to_workers(reactions);
+      } else {
+        execute_reactions_inline(reactions);
+      }
+      reactions.clear();
     }
-    reactions.clear();
-    reaction_queue.erase(reaction_queue.begin());
   }
 
   // cleanup all triggered actions

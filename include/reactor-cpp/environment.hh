@@ -45,6 +45,8 @@ class Environment {
 
   TimePoint _start_time;
 
+  unsigned _max_reaction_index;
+
  public:
   Environment(unsigned num_workers,
               bool run_forever = false,
@@ -76,6 +78,8 @@ class Environment {
   unsigned num_workers() const { return _num_workers; }
   bool fast_fwd_execution() const { return _fast_fwd_execution; }
   bool run_forever() const { return _run_forever; }
+
+  unsigned max_reaction_index() const { return _max_reaction_index; }
 };
 
 }  // namespace reactor

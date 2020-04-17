@@ -193,6 +193,8 @@ void Environment::calculate_indexes() {
 
     index++;
   }
+
+  _max_reaction_index = index - 1;
 }
 
 }  // namespace reactor
