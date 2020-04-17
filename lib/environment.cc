@@ -170,7 +170,7 @@ void Environment::calculate_indexes() {
     std::set<Reaction*> degree_zero;
     for (auto& kv : graph) {
       if (kv.second.size() == 0) {
-        indexes[kv.first] = index;
+        kv.first->set_index(index);
         degree_zero.insert(kv.first);
       }
     }

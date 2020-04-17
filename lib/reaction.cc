@@ -139,4 +139,10 @@ void Reaction::set_deadline_impl(Duration dl,
   this->deadline_handler = handler;
 }
 
+void Reaction::set_index(unsigned index) {
+  VALIDATE(this->environment()->phase() == Environment::Phase::Assembly,
+           "Reaction indexes may only be set during assembly phase!");
+  this->_index = index;
+}
+
 }  // namespace reactor

@@ -24,6 +24,7 @@ class Reaction : public ReactorElement {
   std::set<BasePort*> _dependencies;
 
   const int _priority;
+  unsigned _index;
 
   std::function<void(void)> body;
 
@@ -64,6 +65,9 @@ class Reaction : public ReactorElement {
     set_deadline_impl(std::chrono::duration_cast<Duration>(dl), handler);
   }
   bool has_deadline() const { return deadline != Duration::zero(); }
+
+  void set_index(unsigned index);
+  unsigned index() const { return _index; }
 };
 
 }  // namespace reactor

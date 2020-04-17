@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include <map>
 #include <set>
 #include <string>
 #include <vector>
@@ -41,8 +40,6 @@ class Environment {
   std::vector<Dependency> dependencies;
   Phase _phase{Phase::Construction};
 
-  std::map<Reaction*, unsigned> indexes;
-
   void build_dependency_graph(Reactor* reactor);
   void calculate_indexes();
 
@@ -71,8 +68,6 @@ class Environment {
   Phase phase() const { return _phase; }
   const Scheduler* scheduler() const { return &_scheduler; }
   Scheduler* scheduler() { return &_scheduler; }
-
-  unsigned get_index(Reaction* r) const { return indexes.at(r); }
 
   const LogicalTime& logical_time() const { return _scheduler.logical_time(); }
   const TimePoint& start_time() const { return _start_time; }
