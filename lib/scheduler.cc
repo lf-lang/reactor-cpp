@@ -171,7 +171,9 @@ bool Scheduler::next() {
 
       // Make sure that any reaction is only executed once even if it was
       // triggered multiple times.
-      std::unique(reactions.begin(), reactions.end());
+      std::sort(reactions.begin(), reactions.end());
+      reactions.erase(std::unique(reactions.begin(), reactions.end()),
+                      reactions.end());
 
       if (using_workers && reactions.size() > 1) {
         dispatch_reactions_to_workers(reactions);
