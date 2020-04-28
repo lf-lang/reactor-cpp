@@ -13,9 +13,9 @@ set(SOURCE_FILES
 
 add_library(reactor-cpp SHARED ${SOURCE_FILES})
 target_include_directories(reactor-cpp PUBLIC
-  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
-  $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/include/reactor-cpp>
-  $<INSTALL_INTERFACE:include>
+  "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>"
+  "$<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/include/reactor-cpp>"
+  "$<INSTALL_INTERFACE:include>"
   PRIVATE src)
 if(MSVC)
   target_compile_options(reactor-cpp PRIVATE /W4 /WX)
@@ -28,11 +28,11 @@ set_target_properties(reactor-cpp PROPERTIES
     VERSION ${PROJECT_VERSION}
     SOVERSION 1)
 
-install(FILES ${CMAKE_BINARY_DIR}/include/reactor-cpp/config.hh DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/reactor-cpp)
+install(FILES "${CMAKE_BINARY_DIR}/include/reactor-cpp/config.hh" DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/reactor-cpp")
 install(TARGETS reactor-cpp EXPORT reactor-cppConfig
-    ARCHIVE  DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    LIBRARY  DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    RUNTIME  DESTINATION ${CMAKE_INSTALL_BINDIR})
+    ARCHIVE  DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+    LIBRARY  DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+    RUNTIME  DESTINATION "${CMAKE_INSTALL_BINDIR}")
 
 install(EXPORT reactor-cppConfig DESTINATION share/reactor-cpp/cmake)
 
