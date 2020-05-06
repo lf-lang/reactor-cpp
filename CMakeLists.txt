@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.6)
 project(reactor-cpp LANGUAGES CXX VERSION 0.0.1)
 
 # require C++17
@@ -18,9 +18,14 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
   set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
 endif()
 
+option(REACTOR_CPP_TRACE "Enable tracing" OFF)
 option(REACTOR_CPP_VALIDATE "Enable runtime validation" ON)
 if (NOT DEFINED REACTOR_CPP_LOG_LEVEL)
   set(REACTOR_CPP_LOG_LEVEL 3)
+endif()
+
+if(REACTOR_CPP_TRACE)
+  find_package(LTTngUST REQUIRED)
 endif()
 
 configure_file(include/reactor-cpp/config.hh.in include/reactor-cpp/config.hh @ONLY)

@@ -14,6 +14,7 @@
 #include "reactor-cpp/logging.hh"
 #include "reactor-cpp/port.hh"
 #include "reactor-cpp/reaction.hh"
+#include "reactor-cpp/trace.hh"
 
 namespace reactor {
 
@@ -37,7 +38,11 @@ void Scheduler::work(unsigned id) {
     log::Debug() << "Execute reaction " << reaction->fqn();
 
     // do the work
+    tracepoint(reactor_cpp, reaction_execution_starts, id,
+               reaction->fqn().c_str());
     reaction->trigger();
+    tracepoint(reactor_cpp, reaction_execution_finishes, id,
+               reaction->fqn().c_str());
 
     lock.lock();
     executing_reactions.erase(reaction);
@@ -56,7 +61,7 @@ void Scheduler::start() {
 
   if (using_workers) {
     // start worker threads
-    for (unsigned i = 0; i < _environment->num_workers(); i++) {
+    for (unsigned i = 1; i < _environment->num_workers() + 1; i++) {
       worker_threads.emplace_back([this, i]() { this->work(i); });
     }
   }
@@ -224,7 +229,9 @@ void Scheduler::execute_reactions_inline(
     const std::vector<Reaction*>& reactions) {
   for (auto r : reactions) {
     log::Debug() << "Execute reaction " << r->fqn();
+    tracepoint(reactor_cpp, reaction_execution_starts, 0, r->fqn().c_str());
     r->trigger();
+    tracepoint(reactor_cpp, reaction_execution_finishes, 0, r->fqn().c_str());
   }
 }
 
