@@ -17,8 +17,6 @@
 #include "reactor-cpp/port.hh"
 #include "reactor-cpp/reaction.hh"
 
-#include <lttng/tracepoint.h>
-
 namespace reactor {
 
 void Environment::register_reactor(Reactor* reactor) {
