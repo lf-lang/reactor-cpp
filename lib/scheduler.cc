@@ -38,11 +38,9 @@ void Scheduler::work(unsigned id) {
     log::Debug() << "Execute reaction " << reaction->fqn();
 
     // do the work
-    tracepoint(reactor_cpp, reaction_execution_starts, id,
-               reaction->fqn().c_str());
+    tracepoint(reactor_cpp, reaction_execution_starts, id, reaction->fqn());
     reaction->trigger();
-    tracepoint(reactor_cpp, reaction_execution_finishes, id,
-               reaction->fqn().c_str());
+    tracepoint(reactor_cpp, reaction_execution_finishes, id, reaction->fqn());
 
     lock.lock();
     executing_reactions.erase(reaction);
@@ -229,9 +227,9 @@ void Scheduler::execute_reactions_inline(
     const std::vector<Reaction*>& reactions) {
   for (auto r : reactions) {
     log::Debug() << "Execute reaction " << r->fqn();
-    tracepoint(reactor_cpp, reaction_execution_starts, 0, r->fqn().c_str());
+    tracepoint(reactor_cpp, reaction_execution_starts, 0, r->fqn());
     r->trigger();
-    tracepoint(reactor_cpp, reaction_execution_finishes, 0, r->fqn().c_str());
+    tracepoint(reactor_cpp, reaction_execution_finishes, 0, r->fqn());
   }
 }
 
@@ -254,6 +252,10 @@ void Scheduler::schedule_sync(const Tag& tag,
   {
     auto lg = using_workers ? std::unique_lock<std::mutex>(m_event_queue)
                             : std::unique_lock<std::mutex>();
+
+    tracepoint(reactor_cpp, schedule_action, action->container()->fqn(),
+               action->name(), tag);
+
     if (event_queue.find(tag) == event_queue.end())
       event_queue.emplace(tag, std::make_unique<EventMap>());
 

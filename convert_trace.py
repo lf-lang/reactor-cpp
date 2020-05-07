@@ -12,6 +12,22 @@ import json
 import sys
 
 
+pid_registry = {}
+tid_registry = {}
+
+
+def get_ids(process, thread):
+    if process not in pid_registry:
+        pid_registry[process] = len(pid_registry) + 1
+        tid_registry[process] = {}
+    pid = pid_registry[process]
+    tid_reg = tid_registry[process]
+    if thread not in tid_reg:
+        tid_reg[thread] = len(tid_reg)
+    tid = tid_reg[thread]
+    return pid, tid
+
+
 def main():
     # Find the `ctf` plugin (shipped with Babeltrace 2).
     ctf_plugin = bt2.find_plugin('ctf')
@@ -40,17 +56,18 @@ def main():
                 trace_events.append(reaction_execution_starts_to_dict(msg))
             elif (event.name == "reactor_cpp:reaction_execution_finishes"):
                 trace_events.append(reaction_execution_finishes_to_dict(msg))
-
-            # Print event's name.
-            print("%s: %d -> %s" % (event.name,
-                                    event["worker_id"],
-                                    event["reaction_name"]))
+            elif (event.name == "reactor_cpp:schedule_action"):
+                trace_events.append(schedule_action_to_dict(msg))
 
     # add some metadata
     configure_process_name(trace_events, 0, "Execution")
     configure_thread_name(trace_events, 0, 0, "Scheduler")
     for i in range(1, 17):
         configure_thread_name(trace_events, 0, i, "Worker %d" % i)
+    for process, pid in pid_registry.items():
+        configure_process_name(trace_events, pid, process)
+        for thread, tid in tid_registry[process].items():
+            configure_thread_name(trace_events, pid, tid, thread)
 
     data = {
         "traceEvents": trace_events,
@@ -109,6 +126,24 @@ def reaction_execution_finishes_to_dict(msg):
         "ts": get_timestamp_us(msg),
         "pid": 0,
         "tid": int(event["worker_id"]),
+    }
+
+
+def schedule_action_to_dict(msg):
+    event = msg.event
+    pid, tid = get_ids(str(event["reactor_name"]), str(event["action_name"]))
+    return {
+        "name": "schedule",
+        "cat": "Reactors",
+        "ph": "i",
+        "ts": float(event["timestamp_ns"]) / 1000.0,
+        "pid": pid,
+        "tid": tid,
+        "s": "t",
+        "cname": "terrible",
+        "args": {
+            "microstep": int(event["timestamp_microstep"])
+        }
     }
 
 

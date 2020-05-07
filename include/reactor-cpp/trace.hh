@@ -6,7 +6,10 @@
  *   Christian Menard
  */
 
+#include <string>
+
 #include "config.hh"
+#include "logical_time.hh"
 
 #ifdef REACTOR_CPP_TRACE
 
@@ -26,10 +29,10 @@ TRACEPOINT_EVENT(
   reaction_execution_starts,
   TP_ARGS(
     int, worker_id_arg,
-    const char*, reaction_name_arg
+    const std::string&, reaction_name_arg
   ),
   TP_FIELDS(
-    ctf_string(reaction_name, reaction_name_arg)
+    ctf_string(reaction_name, reaction_name_arg.c_str())
     ctf_integer(int, worker_id, worker_id_arg)
   )
 )
@@ -39,11 +42,28 @@ TRACEPOINT_EVENT(
   reaction_execution_finishes,
   TP_ARGS(
     int, worker_id_arg,
-    const char*, reaction_name_arg
+    const std::string&, reaction_name_arg
   ),
   TP_FIELDS(
-    ctf_string(reaction_name, reaction_name_arg)
+    ctf_string(reaction_name, reaction_name_arg.c_str())
     ctf_integer(int, worker_id, worker_id_arg)
+  )
+)
+
+TRACEPOINT_EVENT(
+  reactor_cpp,
+  schedule_action,
+  TP_ARGS(
+    const std::string&, reactor_name_arg,
+    const std::string&, action_name_arg,
+    const reactor::Tag&, tag_arg
+  ),
+  TP_FIELDS(
+    ctf_string(reactor_name, reactor_name_arg.c_str())
+    ctf_string(action_name, action_name_arg.c_str())
+    ctf_integer(unsigned long, timestamp_ns,
+                tag_arg.time_point().time_since_epoch().count())
+    ctf_integer(unsigned, timestamp_microstep, tag_arg.micro_step())
   )
 )
 
