@@ -103,7 +103,7 @@ class Port<void> : public BasePort {
   const std::set<Port<void>*>& typed_outward_bindings() const;
 
   void set();
-  bool is_present() const { return present; }
+  bool is_present() const;
 
   void startup() override final {}
   void shutdown() override final {}

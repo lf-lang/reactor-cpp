@@ -115,4 +115,12 @@ void Port<void>::set() {
   scheduler->set_port(this);
 }
 
+bool Port<void>::is_present() const {
+  if (has_inward_binding()) {
+    return typed_inward_binding()->is_present();
+  } else {
+    return present;
+  }
+}
+
 }  // namespace reactor
