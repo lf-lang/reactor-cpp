@@ -58,6 +58,8 @@ def main():
                 trace_events.append(reaction_execution_finishes_to_dict(msg))
             elif (event.name == "reactor_cpp:schedule_action"):
                 trace_events.append(schedule_action_to_dict(msg))
+            elif (event.name == "reactor_cpp:trigger_reaction"):
+                trace_events.append(trigger_reaction_to_dict(msg))
 
     # add some metadata
     configure_process_name(trace_events, 0, "Execution")
@@ -141,6 +143,24 @@ def schedule_action_to_dict(msg):
         "tid": tid,
         "s": "t",
         "cname": "terrible",
+        "args": {
+            "microstep": int(event["timestamp_microstep"])
+        }
+    }
+
+
+def trigger_reaction_to_dict(msg):
+    event = msg.event
+    pid, tid = get_ids(str(event["reactor_name"]), str(event["reaction_name"]))
+    return {
+        "name": "trigger",
+        "cat": "Reactors",
+        "ph": "i",
+        "ts": float(event["timestamp_ns"]) / 1000.0,
+        "pid": pid,
+        "tid": tid,
+        "s": "t",
+        "cname": "light_memory_dump",
         "args": {
             "microstep": int(event["timestamp_microstep"])
         }

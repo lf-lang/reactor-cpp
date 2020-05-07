@@ -207,6 +207,8 @@ void Scheduler::dispatch_reactions_to_workers(
   std::unique_lock<std::mutex> lock(m_reaction_queue);
   for (auto r : reactions) {
     log::Debug() << "Schedule reaction " << r->fqn();
+    tracepoint(reactor_cpp, trigger_reaction, r->container()->fqn(), r->name(),
+               _logical_time);
     ready_reactions.push_back(r);
   }
   lock.unlock();
@@ -227,6 +229,8 @@ void Scheduler::execute_reactions_inline(
     const std::vector<Reaction*>& reactions) {
   for (auto r : reactions) {
     log::Debug() << "Execute reaction " << r->fqn();
+    tracepoint(reactor_cpp, trigger_reaction, r->container()->fqn(), r->name(),
+               _logical_time);
     tracepoint(reactor_cpp, reaction_execution_starts, 0, r->fqn());
     r->trigger();
     tracepoint(reactor_cpp, reaction_execution_finishes, 0, r->fqn());
