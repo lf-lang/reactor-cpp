@@ -31,4 +31,4 @@ make examples
 
 * **DATE'20:** Christian Menard, Andrés Goens, Marten Lohstroh, Jeronimo Castrillon, [Achieving Determinism in Adaptive AUTOSAR](https://arxiv.org/pdf/1912.01367), Proceedings of the 2020 Design, Automation and Test in Europe Conference (DATE), EDA Consortium, Mar 2020.
 
-Also see the Lingua France [publications](https://github.com/icyphy/lingua-franca/wiki/Publications-and-Presentations).
+Also see the Lingua Franca [publications](https://github.com/icyphy/lingua-franca/wiki/Publications-and-Presentations).
