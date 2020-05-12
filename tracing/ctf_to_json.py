@@ -10,6 +10,7 @@
 import argparse
 import bt2
 import json
+import os
 import sys
 
 
@@ -36,8 +37,26 @@ def main():
     parser.add_argument("ctf", metavar="CTF", type=str,
                         help="Path to the CTF trace")
     parser.add_argument("-o", "--output", metavar="OUT", type=str,
-                        default="trsace.json", help="the output file")
+                        default="trace.json", help="the output file")
     args = parser.parse_args()
+
+    if not os.path.isdir(args.ctf):
+        raise NotADirectoryError(args.ctf)
+
+    ctf_path = None
+    for root, dirs, files in os.walk(args.ctf):
+        for f in files:
+            if f == "metadata":
+                if ctf_path is None:
+                    ctf_path = str(root)
+                else:
+                    raise RuntimeError("%s is not a single trace (contains "
+                                       "more than one metadata file!" %
+                                       args.ctf)
+
+    if ctf_path is None:
+        raise RuntimeError("%s is not a CTF trace (does not contain a metadata"
+                           " file)" % args.ctf)
 
     # Find the `ctf` plugin (shipped with Babeltrace 2).
     ctf_plugin = bt2.find_plugin('ctf')
@@ -50,7 +69,7 @@ def main():
     # parameter set to open a single CTF trace.
     msg_it = bt2.TraceCollectionMessageIterator(bt2.ComponentSpec(fs_cc, {
         # Get the CTF trace path from the first command-line argument.
-        'inputs': [args.ctf],
+        'inputs': [ctf_path],
     }))
 
     # keep a list of events to dump later to JSON
