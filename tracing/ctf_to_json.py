@@ -7,6 +7,7 @@
 #   Christian Menard
 
 
+import argparse
 import bt2
 import json
 import sys
@@ -29,6 +30,15 @@ def get_ids(process, thread):
 
 
 def main():
+    parser = argparse.ArgumentParser(
+        description="Convert a CTF trace to a json trace viewable with google "
+                    "chrome")
+    parser.add_argument("ctf", metavar="CTF", type=str,
+                        help="Path to the CTF trace")
+    parser.add_argument("-o", "--output", metavar="OUT", type=str,
+                        default="trsace.json", help="the output file")
+    args = parser.parse_args()
+
     # Find the `ctf` plugin (shipped with Babeltrace 2).
     ctf_plugin = bt2.find_plugin('ctf')
 
@@ -40,7 +50,7 @@ def main():
     # parameter set to open a single CTF trace.
     msg_it = bt2.TraceCollectionMessageIterator(bt2.ComponentSpec(fs_cc, {
         # Get the CTF trace path from the first command-line argument.
-        'inputs': [sys.argv[1]],
+        'inputs': [args.ctf],
     }))
 
     # keep a list of events to dump later to JSON
@@ -75,7 +85,7 @@ def main():
         "traceEvents": trace_events,
         "displayTimeUnit": "ns",
     }
-    with open('trace.json', 'w') as outfile:
+    with open(args.output, 'w') as outfile:
         json.dump(data, outfile, indent=2)
 
 
