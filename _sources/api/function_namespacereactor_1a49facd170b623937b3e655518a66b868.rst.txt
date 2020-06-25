@@ -1,0 +1,13 @@
+.. _exhale_function_namespacereactor_1a49facd170b623937b3e655518a66b868:
+
+Function get_physical_time
+==========================
+
+- Defined in :ref:`file__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_time.hh`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: get_physical_time()

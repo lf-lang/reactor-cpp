@@ -1,0 +1,13 @@
+.. _exhale_enum_namespacereactor_1a08c8e2d85e5bc706b1af8a87e40eec6d:
+
+Enum PortType
+=============
+
+- Defined in :ref:`file__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_port.hh`
+
+
+Enum Documentation
+------------------
+
+
+.. doxygenenum:: PortType

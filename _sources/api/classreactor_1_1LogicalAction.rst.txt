@@ -1,0 +1,25 @@
+.. _exhale_class_classreactor_1_1LogicalAction:
+
+Template Class LogicalAction
+============================
+
+- Defined in :ref:`file__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_action.hh`
+
+
+Inheritance Relationships
+-------------------------
+
+Base Type
+*********
+
+- ``public reactor::Action< T >`` (:ref:`exhale_class_classreactor_1_1Action`)
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: reactor::LogicalAction
+   :members:
+   :protected-members:
+   :undoc-members:

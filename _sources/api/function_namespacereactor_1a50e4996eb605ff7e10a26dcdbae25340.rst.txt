@@ -1,0 +1,13 @@
+.. _exhale_function_namespacereactor_1a50e4996eb605ff7e10a26dcdbae25340:
+
+Function recursive_assemble
+===========================
+
+- Defined in :ref:`file__home_runner_work_reactor-cpp_reactor-cpp_lib_environment.cc`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: recursive_assemble(Reactor *)

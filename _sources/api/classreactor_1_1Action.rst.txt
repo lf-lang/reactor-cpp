@@ -1,0 +1,32 @@
+.. _exhale_class_classreactor_1_1Action:
+
+Template Class Action
+=====================
+
+- Defined in :ref:`file__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_action.hh`
+
+
+Inheritance Relationships
+-------------------------
+
+Base Type
+*********
+
+- ``public reactor::BaseAction`` (:ref:`exhale_class_classreactor_1_1BaseAction`)
+
+
+Derived Types
+*************
+
+- ``public reactor::LogicalAction< T >`` (:ref:`exhale_class_classreactor_1_1LogicalAction`)
+- ``public reactor::PhysicalAction< T >`` (:ref:`exhale_class_classreactor_1_1PhysicalAction`)
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: reactor::Action
+   :members:
+   :protected-members:
+   :undoc-members:

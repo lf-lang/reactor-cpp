@@ -1,0 +1,13 @@
+.. _exhale_define_trace_8cc_1a71ad37c54f22eb10bdfed4267d53bd79:
+
+Define TRACEPOINT_DEFINE
+========================
+
+- Defined in :ref:`file__home_runner_work_reactor-cpp_reactor-cpp_lib_trace.cc`
+
+
+Define Documentation
+--------------------
+
+
+.. doxygendefine:: TRACEPOINT_DEFINE

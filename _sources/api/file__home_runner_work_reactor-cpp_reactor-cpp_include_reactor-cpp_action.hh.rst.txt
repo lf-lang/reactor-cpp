@@ -1,0 +1,83 @@
+
+.. _file__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_action.hh:
+
+File action.hh
+==============
+
+|exhale_lsh| :ref:`Parent directory <dir__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp>` (``/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/action.hh``)
+----------------------------------------------------------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_action.hh.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``impl/action_impl.hh`` (:ref:`file__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_impl_action_impl.hh`)
+
+- ``logical_time.hh`` (:ref:`file__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_logical_time.hh`)
+
+- ``reactor.hh`` (:ref:`file__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_reactor.hh`)
+
+- ``value_ptr.hh`` (:ref:`file__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_value_ptr.hh`)
+
+
+
+Included By
+-----------
+
+
+- :ref:`file__home_runner_work_reactor-cpp_reactor-cpp_lib_action.cc`
+
+- :ref:`file__home_runner_work_reactor-cpp_reactor-cpp_lib_reaction.cc`
+
+- :ref:`file__home_runner_work_reactor-cpp_reactor-cpp_lib_reactor.cc`
+
+- :ref:`file__home_runner_work_reactor-cpp_reactor-cpp_lib_scheduler.cc`
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_reactor`
+
+
+Classes
+-------
+
+
+- :ref:`exhale_class_classreactor_1_1Action`
+
+- :ref:`exhale_class_classreactor_1_1Action_3_01void_01_4`
+
+- :ref:`exhale_class_classreactor_1_1BaseAction`
+
+- :ref:`exhale_class_classreactor_1_1LogicalAction`
+
+- :ref:`exhale_class_classreactor_1_1PhysicalAction`
+
+- :ref:`exhale_class_classreactor_1_1ShutdownAction`
+
+- :ref:`exhale_class_classreactor_1_1StartupAction`
+
+- :ref:`exhale_class_classreactor_1_1Timer`
+

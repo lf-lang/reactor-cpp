@@ -1,0 +1,34 @@
+.. _exhale_class_classreactor_1_1BaseAction:
+
+Class BaseAction
+================
+
+- Defined in :ref:`file__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_action.hh`
+
+
+Inheritance Relationships
+-------------------------
+
+Base Type
+*********
+
+- ``public reactor::ReactorElement`` (:ref:`exhale_class_classreactor_1_1ReactorElement`)
+
+
+Derived Types
+*************
+
+- ``public reactor::Action< T >`` (:ref:`exhale_class_classreactor_1_1Action`)
+- ``public reactor::Action< void >`` (:ref:`exhale_class_classreactor_1_1Action_3_01void_01_4`)
+- ``public reactor::ShutdownAction`` (:ref:`exhale_class_classreactor_1_1ShutdownAction`)
+- ``public reactor::Timer`` (:ref:`exhale_class_classreactor_1_1Timer`)
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: reactor::BaseAction
+   :members:
+   :protected-members:
+   :undoc-members:

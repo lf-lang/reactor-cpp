@@ -1,0 +1,47 @@
+
+.. _program_listing_file__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_time.hh:
+
+Program Listing for File time.hh
+================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_time.hh>` (``/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/time.hh``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   /*
+    * Copyright (C) 2019 TU Dresden
+    * All rights reserved.
+    *
+    * Authors:
+    *   Christian Menard
+    */
+   
+   #pragma once
+   
+   #include <chrono>
+   #include <iostream>
+   
+   namespace reactor {
+   
+   using TimePoint = std::chrono::time_point<std::chrono::system_clock,
+                                             std::chrono::nanoseconds>;
+   using Duration = std::chrono::nanoseconds;
+   
+   inline TimePoint get_physical_time() {
+     return std::chrono::system_clock::now();
+   }
+   
+   inline namespace operators {
+   
+   std::ostream& operator<<(std::ostream& os, TimePoint tp);
+   
+   std::ostream& operator<<(std::ostream& os, std::chrono::seconds dur);
+   std::ostream& operator<<(std::ostream& os, std::chrono::milliseconds dur);
+   std::ostream& operator<<(std::ostream& os, std::chrono::microseconds dur);
+   std::ostream& operator<<(std::ostream& os, std::chrono::nanoseconds dur);
+   
+   }  // namespace operators
+   
+   }  // namespace reactor

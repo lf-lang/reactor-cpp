@@ -1,0 +1,13 @@
+.. _exhale_variable_namespacereactor_1_1log_1a1985bfad8d1269e6d3d5e119ce846eef:
+
+Variable error_enabled
+======================
+
+- Defined in :ref:`file__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_logging.hh`
+
+
+Variable Documentation
+----------------------
+
+
+.. doxygenvariable:: error_enabled

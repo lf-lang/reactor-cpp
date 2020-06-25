@@ -1,0 +1,13 @@
+.. _exhale_typedef_namespacereactor_1aaea1189d617982457b74127ba74a7340:
+
+Typedef mstep_t
+===============
+
+- Defined in :ref:`file__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_logical_time.hh`
+
+
+Typedef Documentation
+---------------------
+
+
+.. doxygentypedef:: mstep_t

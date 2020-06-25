@@ -1,0 +1,30 @@
+
+.. _program_listing_file__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_reactor-cpp.hh:
+
+Program Listing for File reactor-cpp.hh
+=======================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_reactor-cpp.hh>` (``/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/reactor-cpp.hh``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   /*
+    * Copyright (C) 2019 TU Dresden
+    * All rights reserved.
+    *
+    * Authors:
+    *   Christian Menard
+    */
+   
+   #pragma once
+   
+   // include everything that is needed to use reactor-cpp
+   #include "action.hh"
+   #include "environment.hh"
+   #include "logical_time.hh"
+   #include "port.hh"
+   #include "reaction.hh"
+   #include "reactor.hh"
+   #include "time.hh"

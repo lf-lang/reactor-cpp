@@ -1,0 +1,13 @@
+.. _exhale_function_namespacereactor_1a632f1427effbba727fcb9f5aa38d6e03:
+
+Function operator<(const LogicalTime&, const Tag&)
+==================================================
+
+- Defined in :ref:`file__home_runner_work_reactor-cpp_reactor-cpp_lib_logical_time.cc`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: operator<(const LogicalTime&, const Tag&)

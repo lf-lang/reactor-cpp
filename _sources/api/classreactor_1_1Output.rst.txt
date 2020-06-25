@@ -1,0 +1,25 @@
+.. _exhale_class_classreactor_1_1Output:
+
+Template Class Output
+=====================
+
+- Defined in :ref:`file__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_port.hh`
+
+
+Inheritance Relationships
+-------------------------
+
+Base Type
+*********
+
+- ``public reactor::Port< T >`` (:ref:`exhale_class_classreactor_1_1Port`)
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: reactor::Output
+   :members:
+   :protected-members:
+   :undoc-members:

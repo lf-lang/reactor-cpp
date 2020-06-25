@@ -1,0 +1,50 @@
+
+.. _file__home_runner_work_reactor-cpp_reactor-cpp_lib_action.cc:
+
+File action.cc
+==============
+
+|exhale_lsh| :ref:`Parent directory <dir__home_runner_work_reactor-cpp_reactor-cpp_lib>` (``/home/runner/work/reactor-cpp/reactor-cpp/lib``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``/home/runner/work/reactor-cpp/reactor-cpp/lib/action.cc``)
+------------------------------------------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file__home_runner_work_reactor-cpp_reactor-cpp_lib_action.cc.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``reactor-cpp/action.hh`` (:ref:`file__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_action.hh`)
+
+- ``reactor-cpp/assert.hh`` (:ref:`file__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_assert.hh`)
+
+- ``reactor-cpp/environment.hh`` (:ref:`file__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_environment.hh`)
+
+- ``reactor-cpp/reaction.hh`` (:ref:`file__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_reaction.hh`)
+
+
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_reactor`
+

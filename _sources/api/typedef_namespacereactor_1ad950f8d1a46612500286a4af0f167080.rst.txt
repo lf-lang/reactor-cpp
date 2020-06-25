@@ -1,0 +1,13 @@
+.. _exhale_typedef_namespacereactor_1ad950f8d1a46612500286a4af0f167080:
+
+Typedef TimePoint
+=================
+
+- Defined in :ref:`file__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_time.hh`
+
+
+Typedef Documentation
+---------------------
+
+
+.. doxygentypedef:: TimePoint

@@ -1,0 +1,13 @@
+.. _exhale_variable_namespacereactor_1_1log_1a3eb2fa07d2ccd17506a05aa3f2f14b2d:
+
+Variable info_enabled
+=====================
+
+- Defined in :ref:`file__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_logging.hh`
+
+
+Variable Documentation
+----------------------
+
+
+.. doxygenvariable:: info_enabled

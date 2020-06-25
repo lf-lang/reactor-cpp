@@ -1,0 +1,13 @@
+.. _exhale_typedef_namespacereactor_1aa8375b807a80703545664096c5b5b779:
+
+Typedef Duration
+================
+
+- Defined in :ref:`file__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_time.hh`
+
+
+Typedef Documentation
+---------------------
+
+
+.. doxygentypedef:: Duration

@@ -1,6 +1,0 @@
-var searchData=
-[
-  ['calculate_5findexes',['calculate_indexes',['../classreactor_1_1Environment.html#a8b832858f8c20d36ffc8331ef9f9ac14',1,'reactor::Environment']]],
-  ['cleanup',['cleanup',['../classreactor_1_1BaseAction.html#a7e4ad7157e653054c7afa22b78e46923',1,'reactor::BaseAction::cleanup()'],['../classreactor_1_1Action.html#a4ae275c1b030d5e8111469cc0ca5e09d',1,'reactor::Action::cleanup()'],['../classreactor_1_1Action_3_01void_01_4.html#aa0306b1c370b15a324bac607e5f82f20',1,'reactor::Action&lt; void &gt;::cleanup()'],['../classreactor_1_1Timer.html#ab01356b0c99de6a3bd9f46bfd0ce1c7b',1,'reactor::Timer::cleanup()'],['../classreactor_1_1ShutdownAction.html#acbea47c7b7efb26cd10d6ac8c781901a',1,'reactor::ShutdownAction::cleanup()'],['../classreactor_1_1BasePort.html#afe81e6747077349da4c420a873783579',1,'reactor::BasePort::cleanup()'],['../classreactor_1_1Port.html#a05fdfca6fac003412700103e04ee66fd',1,'reactor::Port::cleanup()'],['../classreactor_1_1Port_3_01void_01_4.html#aedf8266554cde75e236451d8c512e4c8',1,'reactor::Port&lt; void &gt;::cleanup()']]],
-  ['container',['container',['../classreactor_1_1ReactorElement.html#a25bf298de879a82eefc1ba426be05812',1,'reactor::ReactorElement']]]
-];

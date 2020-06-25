@@ -1,0 +1,31 @@
+.. _exhale_class_classreactor_1_1BasePort:
+
+Class BasePort
+==============
+
+- Defined in :ref:`file__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_port.hh`
+
+
+Inheritance Relationships
+-------------------------
+
+Base Type
+*********
+
+- ``public reactor::ReactorElement`` (:ref:`exhale_class_classreactor_1_1ReactorElement`)
+
+
+Derived Type
+************
+
+- ``public reactor::Port< void >`` (:ref:`exhale_class_classreactor_1_1Port_3_01void_01_4`)
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: reactor::BasePort
+   :members:
+   :protected-members:
+   :undoc-members:

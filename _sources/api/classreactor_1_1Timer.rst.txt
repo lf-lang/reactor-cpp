@@ -1,0 +1,31 @@
+.. _exhale_class_classreactor_1_1Timer:
+
+Class Timer
+===========
+
+- Defined in :ref:`file__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_action.hh`
+
+
+Inheritance Relationships
+-------------------------
+
+Base Type
+*********
+
+- ``public reactor::BaseAction`` (:ref:`exhale_class_classreactor_1_1BaseAction`)
+
+
+Derived Type
+************
+
+- ``public reactor::StartupAction`` (:ref:`exhale_class_classreactor_1_1StartupAction`)
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: reactor::Timer
+   :members:
+   :protected-members:
+   :undoc-members:

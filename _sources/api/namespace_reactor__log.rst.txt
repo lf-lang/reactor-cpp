@@ -1,0 +1,45 @@
+
+.. _namespace_reactor__log:
+
+Namespace reactor::log
+======================
+
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+
+
+
+
+Classes
+-------
+
+
+- :ref:`exhale_struct_structreactor_1_1log_1_1Debug`
+
+- :ref:`exhale_struct_structreactor_1_1log_1_1Error`
+
+- :ref:`exhale_struct_structreactor_1_1log_1_1Info`
+
+- :ref:`exhale_struct_structreactor_1_1log_1_1Warn`
+
+- :ref:`exhale_class_classreactor_1_1log_1_1BaseLogger`
+
+- :ref:`exhale_class_classreactor_1_1log_1_1BaseLogger_3_01false_01_4`
+
+- :ref:`exhale_class_classreactor_1_1log_1_1BaseLogger_3_01true_01_4`
+
+
+Variables
+---------
+
+
+- :ref:`exhale_variable_namespacereactor_1_1log_1a1391126b1838b59126c9e9d1158a7f55`
+
+- :ref:`exhale_variable_namespacereactor_1_1log_1a1985bfad8d1269e6d3d5e119ce846eef`
+
+- :ref:`exhale_variable_namespacereactor_1_1log_1a3eb2fa07d2ccd17506a05aa3f2f14b2d`
+
+- :ref:`exhale_variable_namespacereactor_1_1log_1a88a5f4b17305527201bcb473d079d49d`

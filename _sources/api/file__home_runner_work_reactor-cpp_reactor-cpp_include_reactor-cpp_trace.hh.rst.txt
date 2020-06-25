@@ -1,0 +1,56 @@
+
+.. _file__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_trace.hh:
+
+File trace.hh
+=============
+
+|exhale_lsh| :ref:`Parent directory <dir__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp>` (``/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/trace.hh``)
+---------------------------------------------------------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_trace.hh.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``config.hh``
+
+- ``logical_time.hh`` (:ref:`file__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_logical_time.hh`)
+
+- ``string``
+
+
+
+Included By
+-----------
+
+
+- :ref:`file__home_runner_work_reactor-cpp_reactor-cpp_lib_scheduler.cc`
+
+- :ref:`file__home_runner_work_reactor-cpp_reactor-cpp_lib_trace.cc`
+
+
+
+
+Defines
+-------
+
+
+- :ref:`exhale_define_trace_8hh_1aeae0efb071b08e657d36788eee20c1a7`
+

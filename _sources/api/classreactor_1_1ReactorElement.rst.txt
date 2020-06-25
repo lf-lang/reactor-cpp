@@ -1,0 +1,28 @@
+.. _exhale_class_classreactor_1_1ReactorElement:
+
+Class ReactorElement
+====================
+
+- Defined in :ref:`file__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_reactor.hh`
+
+
+Inheritance Relationships
+-------------------------
+
+Derived Types
+*************
+
+- ``public reactor::BaseAction`` (:ref:`exhale_class_classreactor_1_1BaseAction`)
+- ``public reactor::BasePort`` (:ref:`exhale_class_classreactor_1_1BasePort`)
+- ``public reactor::Reaction`` (:ref:`exhale_class_classreactor_1_1Reaction`)
+- ``public reactor::Reactor`` (:ref:`exhale_class_classreactor_1_1Reactor`)
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: reactor::ReactorElement
+   :members:
+   :protected-members:
+   :undoc-members:

@@ -1,0 +1,25 @@
+.. _exhale_struct_structreactor_1_1log_1_1Debug:
+
+Struct Debug
+============
+
+- Defined in :ref:`file__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_logging.hh`
+
+
+Inheritance Relationships
+-------------------------
+
+Base Type
+*********
+
+- ``public reactor::log::BaseLogger< debug_enabled >`` (:ref:`exhale_class_classreactor_1_1log_1_1BaseLogger`)
+
+
+Struct Documentation
+--------------------
+
+
+.. doxygenstruct:: reactor::log::Debug
+   :members:
+   :protected-members:
+   :undoc-members:

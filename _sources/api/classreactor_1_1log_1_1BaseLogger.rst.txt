@@ -1,0 +1,16 @@
+.. _exhale_class_classreactor_1_1log_1_1BaseLogger:
+
+Template Class BaseLogger
+=========================
+
+- Defined in :ref:`file__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_logging.hh`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: reactor::log::BaseLogger
+   :members:
+   :protected-members:
+   :undoc-members:

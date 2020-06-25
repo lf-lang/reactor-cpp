@@ -1,0 +1,13 @@
+.. _exhale_function_namespacereactor_1a8757688a143832a418a763d3621b1c4d:
+
+Template Function make_immutable_value
+======================================
+
+- Defined in :ref:`file__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_value_ptr.hh`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: make_immutable_value(Args&&...)

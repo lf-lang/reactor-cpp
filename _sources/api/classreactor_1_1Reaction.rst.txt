@@ -1,0 +1,25 @@
+.. _exhale_class_classreactor_1_1Reaction:
+
+Class Reaction
+==============
+
+- Defined in :ref:`file__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_reaction.hh`
+
+
+Inheritance Relationships
+-------------------------
+
+Base Type
+*********
+
+- ``public reactor::ReactorElement`` (:ref:`exhale_class_classreactor_1_1ReactorElement`)
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: reactor::Reaction
+   :members:
+   :protected-members:
+   :undoc-members:
