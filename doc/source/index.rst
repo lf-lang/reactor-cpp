@@ -18,3 +18,10 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
+
+Docs
+====
+
+.. doxygenindex::
+   :project: reactor-cpp
+   :path: ../doxygen/xml
