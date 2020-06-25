@@ -1,0 +1,37 @@
+name: github pages
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install doxygen
+        run: sudo apt-get install doxygen
+
+      - name: Install sphinx and plugins
+        run: sudo pip3 install sphinx breathe exhale sphinx-rtd-theme
+
+      - name: run doxygen
+        run: doxygen reactor-cpp.doxyfile
+        working-directory: doc
+
+      - name: run sphinx
+        run: make html
+        working-directory: doc
+
+      - name: ls doc/doxygen
+        run: ls -la doc
+
+      - name: ls doc/doxygen
+        run: ls -la doc/doxygen
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./doc/build/html
