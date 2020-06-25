@@ -8,7 +8,8 @@ Welcome to reactor-cpp's documentation!
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+
+   api/library_root
 
 
 
@@ -19,9 +20,3 @@ Indices and tables
 * :ref:`modindex`
 * :ref:`search`
 
-Docs
-====
-
-.. doxygenindex::
-   :project: reactor-cpp
-   :path: ../doxygen/xml

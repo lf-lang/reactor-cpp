@@ -29,6 +29,7 @@ author = 'Christian Menard'
 # ones.
 extensions = [
     "breathe",
+    "exhale",
     "sphinx_rtd_theme",
 ]
 
@@ -56,3 +57,20 @@ html_static_path = ['_static']
 # Breathe Configuration
 breathe_projects = {"reactor-cpp": "../doxygen/xml"}
 breathe_default_project = "reactor-cpp"
+
+# Exhale Configuration
+exhale_args = {
+    # These arguments are required
+    "containmentFolder":     "./api",
+    "rootFileName":          "library_root.rst",
+    "rootFileTitle":         "Library API",
+    "doxygenStripFromPath":  "..",
+    # Suggested optional arguments
+    "createTreeView":        True,
+}
+
+# Tell sphinx what the primary language being documented is.
+primary_domain = 'cpp'
+
+# Tell sphinx what the pygments highlight language should be.
+highlight_language = 'cpp'
