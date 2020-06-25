@@ -14,7 +14,7 @@ jobs:
         run: sudo apt-get install doxygen
 
       - name: Install sphinx and plugins
-        run: sudo pip3 install sphinx breathe exhale sphinx-rtd-theme
+        run: sudo pip3 install -r doc/requirements.txt
 
       - name: run doxygen
         run: doxygen reactor-cpp.doxyfile
