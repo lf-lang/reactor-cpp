@@ -74,3 +74,13 @@ primary_domain = 'cpp'
 
 # Tell sphinx what the pygments highlight language should be.
 highlight_language = 'cpp'
+
+# configure theme
+html_theme_options = {
+    # Toc options
+    'collapse_navigation': False,
+    'sticky_navigation': True,
+    'navigation_depth': 4,
+    'includehidden': True,
+    'titles_only': False
+}
