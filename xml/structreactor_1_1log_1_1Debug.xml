@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.13">
+  <compounddef id="structreactor_1_1log_1_1Debug" kind="struct" language="C++" prot="public">
+    <compoundname>reactor::log::Debug</compoundname>
+    <basecompoundref refid="classreactor_1_1log_1_1BaseLogger" prot="public" virt="non-virtual">reactor::log::BaseLogger&lt; debug_enabled &gt;</basecompoundref>
+    <includes refid="logging_8hh" local="no">logging.hh</includes>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="structreactor_1_1log_1_1Debug_1a7675a74aaae5b2c062dfd88840b7c1ac" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>reactor::log::Debug::Debug</definition>
+        <argsstring>()</argsstring>
+        <name>Debug</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/logging.hh" line="70" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/logging.hh" bodystart="70" bodyend="70"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="56">
+        <label>reactor::log::BaseLogger&lt; debug_enabled &gt;</label>
+        <link refid="classreactor_1_1log_1_1BaseLogger"/>
+      </node>
+      <node id="55">
+        <label>reactor::log::Debug</label>
+        <link refid="structreactor_1_1log_1_1Debug"/>
+        <childnode refid="56" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="58">
+        <label>reactor::log::BaseLogger&lt; debug_enabled &gt;</label>
+        <link refid="classreactor_1_1log_1_1BaseLogger"/>
+      </node>
+      <node id="57">
+        <label>reactor::log::Debug</label>
+        <link refid="structreactor_1_1log_1_1Debug"/>
+        <childnode refid="58" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/logging.hh" line="69" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/logging.hh" bodystart="69" bodyend="71"/>
+    <listofallmembers>
+      <member refid="structreactor_1_1log_1_1Debug_1a7675a74aaae5b2c062dfd88840b7c1ac" prot="public" virt="non-virtual"><scope>reactor::log::Debug</scope><name>Debug</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,162 @@
+\hypertarget{classreactor_1_1BaseAction}{}\section{reactor\+:\+:Base\+Action Class Reference}
+\label{classreactor_1_1BaseAction}\index{reactor\+::\+Base\+Action@{reactor\+::\+Base\+Action}}
+
+
+{\ttfamily \#include $<$action.\+hh$>$}
+
+Inheritance diagram for reactor\+:\+:Base\+Action\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.461539cm]{classreactor_1_1BaseAction}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+const auto \& \hyperlink{classreactor_1_1BaseAction_a330820b1a4bbe1b18d5b30773a690818}{triggers} () const
+\item 
+const auto \& \hyperlink{classreactor_1_1BaseAction_ac480015d4e2e2309fa7f9b2e2a7a59ab}{schedulers} () const
+\item 
+bool \hyperlink{classreactor_1_1BaseAction_abff8e7a40679e9f0d6d31eb795530279}{is\+\_\+logical} () const
+\item 
+bool \hyperlink{classreactor_1_1BaseAction_ae088220a837f00686793dd0a50629dc0}{is\+\_\+physical} () const
+\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{classreactor_1_1BaseAction_a8ee41c1fd582f54518b6ca06b95a54ad}{register\+\_\+trigger} (\hyperlink{classreactor_1_1Reaction}{Reaction} $\ast$reaction)
+\item 
+void \hyperlink{classreactor_1_1BaseAction_a5cde20240a08d79c6c826d97f9a7f916}{register\+\_\+scheduler} (\hyperlink{classreactor_1_1Reaction}{Reaction} $\ast$reaction)
+\item 
+virtual void \hyperlink{classreactor_1_1BaseAction_a7e4ad7157e653054c7afa22b78e46923}{cleanup} ()=0
+\item 
+\hyperlink{classreactor_1_1BaseAction_a94dadf5eacb10e4e1d7bc99e53ac8599}{Base\+Action} (const std\+::string \&\hyperlink{classreactor_1_1ReactorElement_a99579f61dbaf5d5d98aebfe26eb8bf77}{name}, \hyperlink{classreactor_1_1Reactor}{Reactor} $\ast$\hyperlink{classreactor_1_1ReactorElement_a25bf298de879a82eefc1ba426be05812}{container}, bool logical, \hyperlink{namespacereactor_aa8375b807a80703545664096c5b5b779}{Duration} \hyperlink{classreactor_1_1BaseAction_a98201db474f34cb9e38151a6960128f0}{min\+\_\+delay})
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+const \hyperlink{namespacereactor_aa8375b807a80703545664096c5b5b779}{Duration} \hyperlink{classreactor_1_1BaseAction_a98201db474f34cb9e38151a6960128f0}{min\+\_\+delay}
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::set$<$ \hyperlink{classreactor_1_1Reaction}{Reaction} $\ast$ $>$ \hyperlink{classreactor_1_1BaseAction_a90990090bd60f27c66b0cc7ddbc03b6e}{\+\_\+triggers}
+\item 
+std\+::set$<$ \hyperlink{classreactor_1_1Reaction}{Reaction} $\ast$ $>$ \hyperlink{classreactor_1_1BaseAction_a90459f877f25a143d9ad8c2fec8a402c}{\+\_\+schedulers}
+\item 
+const bool \hyperlink{classreactor_1_1BaseAction_adfef875bcf82270932d2a8648ea78796}{\+\_\+logical}
+\end{DoxyCompactItemize}
+\subsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{classreactor_1_1BaseAction_a5f86463029cca47f8aa15ff8cd5b9e51}{Reaction}
+\item 
+class \hyperlink{classreactor_1_1BaseAction_afb88c77ea5daaefa6c8fa6bc5b9aa5c1}{Scheduler}
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classreactor_1_1BaseAction_a94dadf5eacb10e4e1d7bc99e53ac8599}\label{classreactor_1_1BaseAction_a94dadf5eacb10e4e1d7bc99e53ac8599}} 
+\index{reactor\+::\+Base\+Action@{reactor\+::\+Base\+Action}!Base\+Action@{Base\+Action}}
+\index{Base\+Action@{Base\+Action}!reactor\+::\+Base\+Action@{reactor\+::\+Base\+Action}}
+\subsubsection{\texorpdfstring{Base\+Action()}{BaseAction()}}
+{\footnotesize\ttfamily reactor\+::\+Base\+Action\+::\+Base\+Action (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name,  }\item[{\hyperlink{classreactor_1_1Reactor}{Reactor} $\ast$}]{container,  }\item[{bool}]{logical,  }\item[{\hyperlink{namespacereactor_aa8375b807a80703545664096c5b5b779}{Duration}}]{min\+\_\+delay }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}}
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classreactor_1_1BaseAction_a7e4ad7157e653054c7afa22b78e46923}\label{classreactor_1_1BaseAction_a7e4ad7157e653054c7afa22b78e46923}} 
+\index{reactor\+::\+Base\+Action@{reactor\+::\+Base\+Action}!cleanup@{cleanup}}
+\index{cleanup@{cleanup}!reactor\+::\+Base\+Action@{reactor\+::\+Base\+Action}}
+\subsubsection{\texorpdfstring{cleanup()}{cleanup()}}
+{\footnotesize\ttfamily virtual void reactor\+::\+Base\+Action\+::cleanup (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [pure virtual]}}
+
+
+
+Implemented in \hyperlink{classreactor_1_1ShutdownAction_acbea47c7b7efb26cd10d6ac8c781901a}{reactor\+::\+Shutdown\+Action}, \hyperlink{classreactor_1_1Timer_ab01356b0c99de6a3bd9f46bfd0ce1c7b}{reactor\+::\+Timer}, \hyperlink{classreactor_1_1Action_3_01void_01_4_aa0306b1c370b15a324bac607e5f82f20}{reactor\+::\+Action$<$ void $>$}, and \hyperlink{classreactor_1_1Action_a4ae275c1b030d5e8111469cc0ca5e09d}{reactor\+::\+Action$<$ T $>$}.
+
+\mbox{\Hypertarget{classreactor_1_1BaseAction_abff8e7a40679e9f0d6d31eb795530279}\label{classreactor_1_1BaseAction_abff8e7a40679e9f0d6d31eb795530279}} 
+\index{reactor\+::\+Base\+Action@{reactor\+::\+Base\+Action}!is\+\_\+logical@{is\+\_\+logical}}
+\index{is\+\_\+logical@{is\+\_\+logical}!reactor\+::\+Base\+Action@{reactor\+::\+Base\+Action}}
+\subsubsection{\texorpdfstring{is\+\_\+logical()}{is\_logical()}}
+{\footnotesize\ttfamily bool reactor\+::\+Base\+Action\+::is\+\_\+logical (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{classreactor_1_1BaseAction_ae088220a837f00686793dd0a50629dc0}\label{classreactor_1_1BaseAction_ae088220a837f00686793dd0a50629dc0}} 
+\index{reactor\+::\+Base\+Action@{reactor\+::\+Base\+Action}!is\+\_\+physical@{is\+\_\+physical}}
+\index{is\+\_\+physical@{is\+\_\+physical}!reactor\+::\+Base\+Action@{reactor\+::\+Base\+Action}}
+\subsubsection{\texorpdfstring{is\+\_\+physical()}{is\_physical()}}
+{\footnotesize\ttfamily bool reactor\+::\+Base\+Action\+::is\+\_\+physical (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{classreactor_1_1BaseAction_a5cde20240a08d79c6c826d97f9a7f916}\label{classreactor_1_1BaseAction_a5cde20240a08d79c6c826d97f9a7f916}} 
+\index{reactor\+::\+Base\+Action@{reactor\+::\+Base\+Action}!register\+\_\+scheduler@{register\+\_\+scheduler}}
+\index{register\+\_\+scheduler@{register\+\_\+scheduler}!reactor\+::\+Base\+Action@{reactor\+::\+Base\+Action}}
+\subsubsection{\texorpdfstring{register\+\_\+scheduler()}{register\_scheduler()}}
+{\footnotesize\ttfamily void reactor\+::\+Base\+Action\+::register\+\_\+scheduler (\begin{DoxyParamCaption}\item[{\hyperlink{classreactor_1_1Reaction}{Reaction} $\ast$}]{reaction }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{classreactor_1_1BaseAction_a8ee41c1fd582f54518b6ca06b95a54ad}\label{classreactor_1_1BaseAction_a8ee41c1fd582f54518b6ca06b95a54ad}} 
+\index{reactor\+::\+Base\+Action@{reactor\+::\+Base\+Action}!register\+\_\+trigger@{register\+\_\+trigger}}
+\index{register\+\_\+trigger@{register\+\_\+trigger}!reactor\+::\+Base\+Action@{reactor\+::\+Base\+Action}}
+\subsubsection{\texorpdfstring{register\+\_\+trigger()}{register\_trigger()}}
+{\footnotesize\ttfamily void reactor\+::\+Base\+Action\+::register\+\_\+trigger (\begin{DoxyParamCaption}\item[{\hyperlink{classreactor_1_1Reaction}{Reaction} $\ast$}]{reaction }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{classreactor_1_1BaseAction_ac480015d4e2e2309fa7f9b2e2a7a59ab}\label{classreactor_1_1BaseAction_ac480015d4e2e2309fa7f9b2e2a7a59ab}} 
+\index{reactor\+::\+Base\+Action@{reactor\+::\+Base\+Action}!schedulers@{schedulers}}
+\index{schedulers@{schedulers}!reactor\+::\+Base\+Action@{reactor\+::\+Base\+Action}}
+\subsubsection{\texorpdfstring{schedulers()}{schedulers()}}
+{\footnotesize\ttfamily const auto\& reactor\+::\+Base\+Action\+::schedulers (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{classreactor_1_1BaseAction_a330820b1a4bbe1b18d5b30773a690818}\label{classreactor_1_1BaseAction_a330820b1a4bbe1b18d5b30773a690818}} 
+\index{reactor\+::\+Base\+Action@{reactor\+::\+Base\+Action}!triggers@{triggers}}
+\index{triggers@{triggers}!reactor\+::\+Base\+Action@{reactor\+::\+Base\+Action}}
+\subsubsection{\texorpdfstring{triggers()}{triggers()}}
+{\footnotesize\ttfamily const auto\& reactor\+::\+Base\+Action\+::triggers (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\subsection{Friends And Related Function Documentation}
+\mbox{\Hypertarget{classreactor_1_1BaseAction_a5f86463029cca47f8aa15ff8cd5b9e51}\label{classreactor_1_1BaseAction_a5f86463029cca47f8aa15ff8cd5b9e51}} 
+\index{reactor\+::\+Base\+Action@{reactor\+::\+Base\+Action}!Reaction@{Reaction}}
+\index{Reaction@{Reaction}!reactor\+::\+Base\+Action@{reactor\+::\+Base\+Action}}
+\subsubsection{\texorpdfstring{Reaction}{Reaction}}
+{\footnotesize\ttfamily friend class \hyperlink{classreactor_1_1Reaction}{Reaction}\hspace{0.3cm}{\ttfamily [friend]}}
+
+\mbox{\Hypertarget{classreactor_1_1BaseAction_afb88c77ea5daaefa6c8fa6bc5b9aa5c1}\label{classreactor_1_1BaseAction_afb88c77ea5daaefa6c8fa6bc5b9aa5c1}} 
+\index{reactor\+::\+Base\+Action@{reactor\+::\+Base\+Action}!Scheduler@{Scheduler}}
+\index{Scheduler@{Scheduler}!reactor\+::\+Base\+Action@{reactor\+::\+Base\+Action}}
+\subsubsection{\texorpdfstring{Scheduler}{Scheduler}}
+{\footnotesize\ttfamily friend class \hyperlink{classreactor_1_1Scheduler}{Scheduler}\hspace{0.3cm}{\ttfamily [friend]}}
+
+
+
+\subsection{Member Data Documentation}
+\mbox{\Hypertarget{classreactor_1_1BaseAction_adfef875bcf82270932d2a8648ea78796}\label{classreactor_1_1BaseAction_adfef875bcf82270932d2a8648ea78796}} 
+\index{reactor\+::\+Base\+Action@{reactor\+::\+Base\+Action}!\+\_\+logical@{\+\_\+logical}}
+\index{\+\_\+logical@{\+\_\+logical}!reactor\+::\+Base\+Action@{reactor\+::\+Base\+Action}}
+\subsubsection{\texorpdfstring{\+\_\+logical}{\_logical}}
+{\footnotesize\ttfamily const bool reactor\+::\+Base\+Action\+::\+\_\+logical\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classreactor_1_1BaseAction_a90459f877f25a143d9ad8c2fec8a402c}\label{classreactor_1_1BaseAction_a90459f877f25a143d9ad8c2fec8a402c}} 
+\index{reactor\+::\+Base\+Action@{reactor\+::\+Base\+Action}!\+\_\+schedulers@{\+\_\+schedulers}}
+\index{\+\_\+schedulers@{\+\_\+schedulers}!reactor\+::\+Base\+Action@{reactor\+::\+Base\+Action}}
+\subsubsection{\texorpdfstring{\+\_\+schedulers}{\_schedulers}}
+{\footnotesize\ttfamily std\+::set$<$\hyperlink{classreactor_1_1Reaction}{Reaction}$\ast$$>$ reactor\+::\+Base\+Action\+::\+\_\+schedulers\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classreactor_1_1BaseAction_a90990090bd60f27c66b0cc7ddbc03b6e}\label{classreactor_1_1BaseAction_a90990090bd60f27c66b0cc7ddbc03b6e}} 
+\index{reactor\+::\+Base\+Action@{reactor\+::\+Base\+Action}!\+\_\+triggers@{\+\_\+triggers}}
+\index{\+\_\+triggers@{\+\_\+triggers}!reactor\+::\+Base\+Action@{reactor\+::\+Base\+Action}}
+\subsubsection{\texorpdfstring{\+\_\+triggers}{\_triggers}}
+{\footnotesize\ttfamily std\+::set$<$\hyperlink{classreactor_1_1Reaction}{Reaction}$\ast$$>$ reactor\+::\+Base\+Action\+::\+\_\+triggers\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classreactor_1_1BaseAction_a98201db474f34cb9e38151a6960128f0}\label{classreactor_1_1BaseAction_a98201db474f34cb9e38151a6960128f0}} 
+\index{reactor\+::\+Base\+Action@{reactor\+::\+Base\+Action}!min\+\_\+delay@{min\+\_\+delay}}
+\index{min\+\_\+delay@{min\+\_\+delay}!reactor\+::\+Base\+Action@{reactor\+::\+Base\+Action}}
+\subsubsection{\texorpdfstring{min\+\_\+delay}{min\_delay}}
+{\footnotesize\ttfamily const \hyperlink{namespacereactor_aa8375b807a80703545664096c5b5b779}{Duration} reactor\+::\+Base\+Action\+::min\+\_\+delay\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/home/runner/work/reactor-\/cpp/reactor-\/cpp/include/reactor-\/cpp/\hyperlink{action_8hh}{action.\+hh}\item 
+/home/runner/work/reactor-\/cpp/reactor-\/cpp/lib/\hyperlink{action_8cc}{action.\+cc}\end{DoxyCompactItemize}

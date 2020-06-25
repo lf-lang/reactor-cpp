@@ -1,0 +1,166 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.13">
+  <compounddef id="classreactor_1_1Input" kind="class" language="C++" prot="public">
+    <compoundname>reactor::Input</compoundname>
+    <basecompoundref refid="classreactor_1_1Port" prot="public" virt="non-virtual">reactor::Port&lt; T &gt;</basecompoundref>
+    <includes refid="port_8hh" local="no">port.hh</includes>
+    <templateparamlist>
+      <param>
+        <type>class T</type>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classreactor_1_1Input_1a1c035f6840e363d515d92a4a20cd3b6a" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>reactor::Input&lt; T &gt;::Input</definition>
+        <argsstring>(const std::string &amp;name, Reactor *container)</argsstring>
+        <name>Input</name>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>name</declname>
+        </param>
+        <param>
+          <type><ref refid="classreactor_1_1Reactor" kindref="compound">Reactor</ref> *</type>
+          <declname>container</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/port.hh" line="115" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/port.hh" bodystart="115" bodyend="116"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="74">
+        <label>reactor::Port&lt; T &gt;</label>
+        <link refid="classreactor_1_1Port"/>
+        <childnode refid="75" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="75">
+        <label>reactor::BasePort</label>
+        <link refid="classreactor_1_1BasePort"/>
+        <childnode refid="76" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="76">
+        <label>reactor::ReactorElement</label>
+        <link refid="classreactor_1_1ReactorElement"/>
+      </node>
+      <node id="73">
+        <label>reactor::Input&lt; T &gt;</label>
+        <link refid="classreactor_1_1Input"/>
+        <childnode refid="74" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="78">
+        <label>reactor::Port&lt; T &gt;</label>
+        <link refid="classreactor_1_1Port"/>
+        <childnode refid="79" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="79">
+        <label>reactor::BasePort</label>
+        <link refid="classreactor_1_1BasePort"/>
+        <childnode refid="80" relation="public-inheritance">
+        </childnode>
+        <childnode refid="79" relation="usage">
+          <edgelabel>_inward_binding</edgelabel>
+        </childnode>
+      </node>
+      <node id="80">
+        <label>reactor::ReactorElement</label>
+        <link refid="classreactor_1_1ReactorElement"/>
+        <childnode refid="81" relation="usage">
+          <edgelabel>_container</edgelabel>
+        </childnode>
+        <childnode refid="82" relation="usage">
+          <edgelabel>_environment</edgelabel>
+        </childnode>
+      </node>
+      <node id="82">
+        <label>reactor::Environment</label>
+        <link refid="classreactor_1_1Environment"/>
+        <childnode refid="83" relation="usage">
+          <edgelabel>_scheduler</edgelabel>
+        </childnode>
+      </node>
+      <node id="84">
+        <label>reactor::LogicalTime</label>
+        <link refid="classreactor_1_1LogicalTime"/>
+      </node>
+      <node id="77">
+        <label>reactor::Input&lt; T &gt;</label>
+        <link refid="classreactor_1_1Input"/>
+        <childnode refid="78" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="81">
+        <label>reactor::Reactor</label>
+        <link refid="classreactor_1_1Reactor"/>
+        <childnode refid="80" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="83">
+        <label>reactor::Scheduler</label>
+        <link refid="classreactor_1_1Scheduler"/>
+        <childnode refid="84" relation="usage">
+          <edgelabel>_logical_time</edgelabel>
+        </childnode>
+        <childnode refid="82" relation="usage">
+          <edgelabel>_environment</edgelabel>
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/port.hh" line="113" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/port.hh" bodystart="113" bodyend="117"/>
+    <listofallmembers>
+      <member refid="classreactor_1_1BasePort_1a9158ab37ab600ea2b8a39749ca9404c4" prot="public" virt="non-virtual"><scope>reactor::Input</scope><name>antidependencies</name></member>
+      <member refid="classreactor_1_1BasePort_1a58886ca9004547c85b06e7803d0530b1" prot="protected" virt="non-virtual"><scope>reactor::Input</scope><name>base_bind_to</name></member>
+      <member refid="classreactor_1_1BasePort_1abf23bbb8fdd982044fca7d253ca1d851" prot="protected" virt="non-virtual"><scope>reactor::Input</scope><name>BasePort</name></member>
+      <member refid="classreactor_1_1Port_1a71e1c6fe14a7a6566bc5d5342fa9d16d" prot="public" virt="non-virtual"><scope>reactor::Input</scope><name>bind_to</name></member>
+      <member refid="classreactor_1_1ReactorElement_1a25bf298de879a82eefc1ba426be05812" prot="public" virt="non-virtual"><scope>reactor::Input</scope><name>container</name></member>
+      <member refid="classreactor_1_1BasePort_1aab124dee21981b289b55c2e2c8e3922d" prot="public" virt="non-virtual"><scope>reactor::Input</scope><name>dependencies</name></member>
+      <member refid="classreactor_1_1ReactorElement_1a895b09f977450723c59b67b41e643db8" prot="public" virt="non-virtual"><scope>reactor::Input</scope><name>environment</name></member>
+      <member refid="classreactor_1_1ReactorElement_1af57b89113cd189208ea95668ad5bd141" prot="public" virt="non-virtual"><scope>reactor::Input</scope><name>fqn</name></member>
+      <member refid="classreactor_1_1Port_1aac7650bcd4a119063858a0dddb5d58aa" prot="public" virt="non-virtual"><scope>reactor::Input</scope><name>get</name></member>
+      <member refid="classreactor_1_1BasePort_1a0c046ef79ccf68f8a68f788df774aed3" prot="public" virt="non-virtual"><scope>reactor::Input</scope><name>has_antidependencies</name></member>
+      <member refid="classreactor_1_1BasePort_1a687c0460c4823d90d150c6a363e256a9" prot="public" virt="non-virtual"><scope>reactor::Input</scope><name>has_dependencies</name></member>
+      <member refid="classreactor_1_1BasePort_1a8d8a93a2d15683d29ec7a4ec483db01a" prot="public" virt="non-virtual"><scope>reactor::Input</scope><name>has_inward_binding</name></member>
+      <member refid="classreactor_1_1BasePort_1a397f8bbc24835a01bfad591abb85bcb4" prot="public" virt="non-virtual"><scope>reactor::Input</scope><name>has_outward_bindings</name></member>
+      <member refid="classreactor_1_1Input_1a1c035f6840e363d515d92a4a20cd3b6a" prot="public" virt="non-virtual"><scope>reactor::Input</scope><name>Input</name></member>
+      <member refid="classreactor_1_1BasePort_1af4a42f14f878509c00bb16d0c5b2c201" prot="public" virt="non-virtual"><scope>reactor::Input</scope><name>inward_binding</name></member>
+      <member refid="classreactor_1_1BasePort_1ad488760a5ed50b9bbf137d4e52c053f7" prot="public" virt="non-virtual"><scope>reactor::Input</scope><name>is_input</name></member>
+      <member refid="classreactor_1_1BasePort_1ad5ebded21426bfcf02359b1ab3fdf7d8" prot="public" virt="non-virtual"><scope>reactor::Input</scope><name>is_output</name></member>
+      <member refid="classreactor_1_1Port_1ab4ab58fa62258a9e79b061ecd3f55946" prot="public" virt="non-virtual"><scope>reactor::Input</scope><name>is_present</name></member>
+      <member refid="classreactor_1_1ReactorElement_1a29c516a59fd1ccc43fa0023c550b6964" prot="public" virt="non-virtual"><scope>reactor::Input</scope><name>is_top_level</name></member>
+      <member refid="classreactor_1_1ReactorElement_1a99579f61dbaf5d5d98aebfe26eb8bf77" prot="public" virt="non-virtual"><scope>reactor::Input</scope><name>name</name></member>
+      <member refid="classreactor_1_1BasePort_1aaf404379c3908577b7fc7e394d5c972c" prot="public" virt="non-virtual"><scope>reactor::Input</scope><name>outward_bindings</name></member>
+      <member refid="classreactor_1_1Port_1a5cd32eff95f2606d94adc482bf6944af" prot="public" virt="non-virtual"><scope>reactor::Input</scope><name>Port</name></member>
+      <member refid="classreactor_1_1ReactorElement_1aebc8c1cabcadca08400284fdb05ce746" prot="public" virt="non-virtual"><scope>reactor::Input</scope><name>ReactorElement</name></member>
+      <member refid="classreactor_1_1ReactorElement_1ac5f85a8322de3fad7191a8f749b507fd" prot="public" virt="non-virtual"><scope>reactor::Input</scope><name>ReactorElement</name></member>
+      <member refid="classreactor_1_1ReactorElement_1aa975574e21f5f7a4bb761f04ed57dfa4" prot="public" virt="non-virtual"><scope>reactor::Input</scope><name>ReactorElement</name></member>
+      <member refid="classreactor_1_1ReactorElement_1a2ba6e1e309233db7cfc124563f9f8f9f" prot="public" virt="non-virtual"><scope>reactor::Input</scope><name>ReactorElement</name></member>
+      <member refid="classreactor_1_1BasePort_1a1a9831f2c5dfb36c1c0987ab7dcdd608" prot="protected" virt="non-virtual"><scope>reactor::Input</scope><name>register_antidependency</name></member>
+      <member refid="classreactor_1_1BasePort_1a781809b23cbb205087867bddbd077e17" prot="protected" virt="non-virtual"><scope>reactor::Input</scope><name>register_dependency</name></member>
+      <member refid="classreactor_1_1Port_1ac3d03f90b425a8656911ed3acf462a4d" prot="public" virt="non-virtual"><scope>reactor::Input</scope><name>set</name></member>
+      <member refid="classreactor_1_1Port_1a041b16e47f5b67305ec215513ea92b23" prot="public" virt="non-virtual"><scope>reactor::Input</scope><name>set</name></member>
+      <member refid="classreactor_1_1Port_1ac75bc82e495f182037d5f7273fc75491" prot="public" virt="non-virtual"><scope>reactor::Input</scope><name>set</name></member>
+      <member refid="classreactor_1_1Port_1a9f742e8839c5061c21f890c1ca5fca6b" prot="public" virt="non-virtual"><scope>reactor::Input</scope><name>set</name></member>
+      <member refid="classreactor_1_1Port_1a3d440102c643fd98d17b4cf8714c910d" prot="public" virt="virtual"><scope>reactor::Input</scope><name>shutdown</name></member>
+      <member refid="classreactor_1_1Port_1ae182b2b10c53f2a21c424437dfc2b40e" prot="public" virt="virtual"><scope>reactor::Input</scope><name>startup</name></member>
+      <member refid="classreactor_1_1BasePort_1a71208c7024e39242b1012091daf7b7ed" prot="public" virt="non-virtual"><scope>reactor::Input</scope><name>triggers</name></member>
+      <member refid="classreactor_1_1ReactorElement_1a9291659e2893372cfea42ffccfd487b2" prot="public" virt="non-virtual"><scope>reactor::Input</scope><name>Type</name></member>
+      <member refid="classreactor_1_1Port_1a22d0ef9cd82989e03a669aeccf8e694a" prot="public" virt="non-virtual"><scope>reactor::Input</scope><name>typed_inward_binding</name></member>
+      <member refid="classreactor_1_1Port_1a4d3f681f3f3e0ef75988c3790eb24a17" prot="public" virt="non-virtual"><scope>reactor::Input</scope><name>typed_outward_bindings</name></member>
+      <member refid="classreactor_1_1ReactorElement_1ac9075040ad83b1945f75f3065c0405fa" prot="public" virt="virtual"><scope>reactor::Input</scope><name>~ReactorElement</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

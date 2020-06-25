@@ -1,0 +1,292 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.13">
+  <compounddef id="scheduler_8hh" kind="file" language="C++">
+    <compoundname>scheduler.hh</compoundname>
+    <includes local="no">condition_variable</includes>
+    <includes local="no">functional</includes>
+    <includes local="no">future</includes>
+    <includes local="no">map</includes>
+    <includes local="no">mutex</includes>
+    <includes local="no">set</includes>
+    <includes local="no">thread</includes>
+    <includes local="no">vector</includes>
+    <includes refid="fwd_8hh" local="yes">fwd.hh</includes>
+    <includes refid="logical__time_8hh" local="yes">logical_time.hh</includes>
+    <includedby refid="scheduler_8cc" local="yes">/home/runner/work/reactor-cpp/reactor-cpp/lib/scheduler.cc</includedby>
+    <includedby refid="environment_8hh" local="yes">/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/environment.hh</includedby>
+    <incdepgraph>
+      <node id="294">
+        <label>functional</label>
+      </node>
+      <node id="296">
+        <label>map</label>
+      </node>
+      <node id="301">
+        <label>fwd.hh</label>
+        <link refid="fwd_8hh"/>
+      </node>
+      <node id="293">
+        <label>condition_variable</label>
+      </node>
+      <node id="302">
+        <label>logical_time.hh</label>
+        <link refid="logical__time_8hh"/>
+        <childnode refid="303" relation="include">
+        </childnode>
+      </node>
+      <node id="295">
+        <label>future</label>
+      </node>
+      <node id="300">
+        <label>vector</label>
+      </node>
+      <node id="292">
+        <label>/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/scheduler.hh</label>
+        <link refid="scheduler_8hh"/>
+        <childnode refid="293" relation="include">
+        </childnode>
+        <childnode refid="294" relation="include">
+        </childnode>
+        <childnode refid="295" relation="include">
+        </childnode>
+        <childnode refid="296" relation="include">
+        </childnode>
+        <childnode refid="297" relation="include">
+        </childnode>
+        <childnode refid="298" relation="include">
+        </childnode>
+        <childnode refid="299" relation="include">
+        </childnode>
+        <childnode refid="300" relation="include">
+        </childnode>
+        <childnode refid="301" relation="include">
+        </childnode>
+        <childnode refid="302" relation="include">
+        </childnode>
+      </node>
+      <node id="305">
+        <label>iostream</label>
+      </node>
+      <node id="303">
+        <label>time.hh</label>
+        <link refid="time_8hh"/>
+        <childnode refid="304" relation="include">
+        </childnode>
+        <childnode refid="305" relation="include">
+        </childnode>
+      </node>
+      <node id="297">
+        <label>mutex</label>
+      </node>
+      <node id="304">
+        <label>chrono</label>
+      </node>
+      <node id="299">
+        <label>thread</label>
+      </node>
+      <node id="298">
+        <label>set</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="313">
+        <label>/home/runner/work/reactor-cpp/reactor-cpp/lib/reactor.cc</label>
+        <link refid="reactor_8cc"/>
+      </node>
+      <node id="316">
+        <label>/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/reactor-cpp.hh</label>
+        <link refid="reactor-cpp_8hh"/>
+      </node>
+      <node id="309">
+        <label>/home/runner/work/reactor-cpp/reactor-cpp/lib/action.cc</label>
+        <link refid="action_8cc"/>
+      </node>
+      <node id="318">
+        <label>/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/port.hh</label>
+        <link refid="port_8hh"/>
+        <childnode refid="310" relation="include">
+        </childnode>
+        <childnode refid="311" relation="include">
+        </childnode>
+        <childnode refid="312" relation="include">
+        </childnode>
+        <childnode refid="313" relation="include">
+        </childnode>
+        <childnode refid="307" relation="include">
+        </childnode>
+        <childnode refid="316" relation="include">
+        </childnode>
+      </node>
+      <node id="314">
+        <label>/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/impl/action_impl.hh</label>
+        <link refid="action__impl_8hh"/>
+        <childnode refid="315" relation="include">
+        </childnode>
+      </node>
+      <node id="311">
+        <label>/home/runner/work/reactor-cpp/reactor-cpp/lib/port.cc</label>
+        <link refid="port_8cc"/>
+      </node>
+      <node id="312">
+        <label>/home/runner/work/reactor-cpp/reactor-cpp/lib/reaction.cc</label>
+        <link refid="reaction_8cc"/>
+      </node>
+      <node id="310">
+        <label>/home/runner/work/reactor-cpp/reactor-cpp/lib/environment.cc</label>
+        <link refid="environment_8cc"/>
+      </node>
+      <node id="306">
+        <label>/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/scheduler.hh</label>
+        <link refid="scheduler_8hh"/>
+        <childnode refid="307" relation="include">
+        </childnode>
+        <childnode refid="308" relation="include">
+        </childnode>
+      </node>
+      <node id="307">
+        <label>/home/runner/work/reactor-cpp/reactor-cpp/lib/scheduler.cc</label>
+        <link refid="scheduler_8cc"/>
+      </node>
+      <node id="317">
+        <label>/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/impl/port_impl.hh</label>
+        <link refid="port__impl_8hh"/>
+        <childnode refid="318" relation="include">
+        </childnode>
+      </node>
+      <node id="315">
+        <label>/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/action.hh</label>
+        <link refid="action_8hh"/>
+        <childnode refid="309" relation="include">
+        </childnode>
+        <childnode refid="312" relation="include">
+        </childnode>
+        <childnode refid="313" relation="include">
+        </childnode>
+        <childnode refid="307" relation="include">
+        </childnode>
+        <childnode refid="316" relation="include">
+        </childnode>
+      </node>
+      <node id="308">
+        <label>/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/environment.hh</label>
+        <link refid="environment_8hh"/>
+        <childnode refid="309" relation="include">
+        </childnode>
+        <childnode refid="310" relation="include">
+        </childnode>
+        <childnode refid="311" relation="include">
+        </childnode>
+        <childnode refid="312" relation="include">
+        </childnode>
+        <childnode refid="313" relation="include">
+        </childnode>
+        <childnode refid="307" relation="include">
+        </childnode>
+        <childnode refid="314" relation="include">
+        </childnode>
+        <childnode refid="317" relation="include">
+        </childnode>
+        <childnode refid="316" relation="include">
+        </childnode>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="classreactor_1_1Scheduler" prot="public">reactor::Scheduler</innerclass>
+    <innernamespace refid="namespacereactor">reactor</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">/*</highlight></codeline>
+<codeline lineno="2"><highlight class="comment"><sp/>*<sp/>Copyright<sp/>(C)<sp/>2019<sp/>TU<sp/>Dresden</highlight></codeline>
+<codeline lineno="3"><highlight class="comment"><sp/>*<sp/>All<sp/>rights<sp/>reserved.</highlight></codeline>
+<codeline lineno="4"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="5"><highlight class="comment"><sp/>*<sp/>Authors:</highlight></codeline>
+<codeline lineno="6"><highlight class="comment"><sp/>*<sp/><sp/><sp/>Christian<sp/>Menard</highlight></codeline>
+<codeline lineno="7"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="preprocessor">#pragma<sp/>once</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;condition_variable&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;functional&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;future&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;map&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;mutex&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;set&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;thread&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;vector&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="fwd_8hh" kindref="compound">fwd.hh</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="logical__time_8hh" kindref="compound">logical_time.hh</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespacereactor" kindref="compound">reactor</ref><sp/>{</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight></codeline>
+<codeline lineno="25" refid="classreactor_1_1Scheduler" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="classreactor_1_1Scheduler" kindref="compound">Scheduler</ref><sp/>{</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="27" refid="classreactor_1_1Scheduler_1a5a4a25635fcb20f268876a0bf70eb68e" refkind="member"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">using</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Scheduler_1a5a4a25635fcb20f268876a0bf70eb68e" kindref="member">WorkItem</ref><sp/>=<sp/>std::packaged_task&lt;void(void)&gt;;</highlight></codeline>
+<codeline lineno="28" refid="classreactor_1_1Scheduler_1a4a4934dc58f294069b8c64435cdfe564" refkind="member"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">using</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Scheduler_1a4a4934dc58f294069b8c64435cdfe564" kindref="member">WorkPtr</ref><sp/>=<sp/>std::unique_ptr&lt;WorkItem&gt;;</highlight></codeline>
+<codeline lineno="29" refid="classreactor_1_1Scheduler_1aa32e06a71b7406a238616cc5d7b55610" refkind="member"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">using</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Scheduler_1aa32e06a71b7406a238616cc5d7b55610" kindref="member">EventMap</ref><sp/>=<sp/>std::map&lt;BaseAction*,<sp/>std::function&lt;void(void)&gt;&gt;;</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/></highlight><highlight class="keyword">private</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="32" refid="classreactor_1_1Scheduler_1ac4b787be81d8b6d7a72ce987d24a2261" refkind="member"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Scheduler_1ac4b787be81d8b6d7a72ce987d24a2261" kindref="member">using_workers</ref>;</highlight></codeline>
+<codeline lineno="33" refid="classreactor_1_1Scheduler_1a25e5b848efc680452eef58a0fc0b773c" refkind="member"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Scheduler_1a25e5b848efc680452eef58a0fc0b773c" kindref="member">terminate</ref>{</highlight><highlight class="keyword">false</highlight><highlight class="normal">};</highlight></codeline>
+<codeline lineno="34" refid="classreactor_1_1Scheduler_1a68b0b490d08d5db7890c337d4250ad1c" refkind="member"><highlight class="normal"><sp/><sp/><ref refid="classreactor_1_1LogicalTime" kindref="compound">LogicalTime</ref><sp/><ref refid="classreactor_1_1Scheduler_1a68b0b490d08d5db7890c337d4250ad1c" kindref="member">_logical_time</ref>{};</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"></highlight></codeline>
+<codeline lineno="36" refid="classreactor_1_1Scheduler_1a7c9c2365d7b10cedb335c81d14610149" refkind="member"><highlight class="normal"><sp/><sp/><ref refid="classreactor_1_1Environment" kindref="compound">Environment</ref>*<sp/><ref refid="classreactor_1_1Scheduler_1a7c9c2365d7b10cedb335c81d14610149" kindref="member">_environment</ref>;</highlight></codeline>
+<codeline lineno="37" refid="classreactor_1_1Scheduler_1aad3a17b14df9166b175a3d5baf5afd14" refkind="member"><highlight class="normal"><sp/><sp/>std::vector&lt;std::thread&gt;<sp/><ref refid="classreactor_1_1Scheduler_1aad3a17b14df9166b175a3d5baf5afd14" kindref="member">worker_threads</ref>;</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight></codeline>
+<codeline lineno="39" refid="classreactor_1_1Scheduler_1adbf93f069a826ffe49c8d890c5af8ff3" refkind="member"><highlight class="normal"><sp/><sp/>std::mutex<sp/><ref refid="classreactor_1_1Scheduler_1adbf93f069a826ffe49c8d890c5af8ff3" kindref="member">m_schedule</ref>;</highlight></codeline>
+<codeline lineno="40" refid="classreactor_1_1Scheduler_1a338d396352878baec7c8ecd2e1e7b202" refkind="member"><highlight class="normal"><sp/><sp/>std::unique_lock&lt;std::mutex&gt;<sp/><ref refid="classreactor_1_1Scheduler_1a338d396352878baec7c8ecd2e1e7b202" kindref="member">schedule_lock</ref>{<ref refid="classreactor_1_1Scheduler_1adbf93f069a826ffe49c8d890c5af8ff3" kindref="member">m_schedule</ref>,<sp/>std::defer_lock};</highlight></codeline>
+<codeline lineno="41" refid="classreactor_1_1Scheduler_1a75e7baf3e6f17cedca2f23690af7b61d" refkind="member"><highlight class="normal"><sp/><sp/>std::condition_variable<sp/><ref refid="classreactor_1_1Scheduler_1a75e7baf3e6f17cedca2f23690af7b61d" kindref="member">cv_schedule</ref>;</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"></highlight></codeline>
+<codeline lineno="43" refid="classreactor_1_1Scheduler_1a2ff891940d9bc4af41858e1c31ec2922" refkind="member"><highlight class="normal"><sp/><sp/>std::mutex<sp/><ref refid="classreactor_1_1Scheduler_1a2ff891940d9bc4af41858e1c31ec2922" kindref="member">m_event_queue</ref>;</highlight></codeline>
+<codeline lineno="44" refid="classreactor_1_1Scheduler_1aad84798ec7af707837594ed335532829" refkind="member"><highlight class="normal"><sp/><sp/>std::map&lt;Tag,<sp/>std::unique_ptr&lt;EventMap&gt;&gt;<sp/><ref refid="classreactor_1_1Scheduler_1aad84798ec7af707837594ed335532829" kindref="member">event_queue</ref>;</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"></highlight></codeline>
+<codeline lineno="46" refid="classreactor_1_1Scheduler_1a19bbe962eab2b7a6c4a25312e4479739" refkind="member"><highlight class="normal"><sp/><sp/>std::vector&lt;BasePort*&gt;<sp/><ref refid="classreactor_1_1Scheduler_1a19bbe962eab2b7a6c4a25312e4479739" kindref="member">set_ports</ref>;</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"></highlight></codeline>
+<codeline lineno="48" refid="classreactor_1_1Scheduler_1a3f06ec50b64251aeca469a137b3fdf9b" refkind="member"><highlight class="normal"><sp/><sp/>std::mutex<sp/><ref refid="classreactor_1_1Scheduler_1a3f06ec50b64251aeca469a137b3fdf9b" kindref="member">m_reaction_queue</ref>;</highlight></codeline>
+<codeline lineno="49" refid="classreactor_1_1Scheduler_1a65b74e5e2d64189fe30010140a2f8dad" refkind="member"><highlight class="normal"><sp/><sp/>std::vector&lt;std::vector&lt;Reaction*&gt;&gt;<sp/><ref refid="classreactor_1_1Scheduler_1a65b74e5e2d64189fe30010140a2f8dad" kindref="member">reaction_queue</ref>;</highlight></codeline>
+<codeline lineno="50" refid="classreactor_1_1Scheduler_1a03e5a171cbb041f02fd10fedf7f2f7de" refkind="member"><highlight class="normal"><sp/><sp/>std::vector&lt;Reaction*&gt;<sp/><ref refid="classreactor_1_1Scheduler_1a03e5a171cbb041f02fd10fedf7f2f7de" kindref="member">ready_reactions</ref>;</highlight></codeline>
+<codeline lineno="51" refid="classreactor_1_1Scheduler_1a606c5c5af3e45a75b7304fdfd0283e14" refkind="member"><highlight class="normal"><sp/><sp/>std::set&lt;Reaction*&gt;<sp/><ref refid="classreactor_1_1Scheduler_1a606c5c5af3e45a75b7304fdfd0283e14" kindref="member">executing_reactions</ref>;</highlight></codeline>
+<codeline lineno="52" refid="classreactor_1_1Scheduler_1ae0b036e6af4ebf47f619bf6ac4b7120d" refkind="member"><highlight class="normal"><sp/><sp/>std::condition_variable<sp/><ref refid="classreactor_1_1Scheduler_1ae0b036e6af4ebf47f619bf6ac4b7120d" kindref="member">cv_ready_reactions</ref>;</highlight></codeline>
+<codeline lineno="53" refid="classreactor_1_1Scheduler_1a5ce0b7fa5a71eaf46b1d423c1ff90557" refkind="member"><highlight class="normal"><sp/><sp/>std::condition_variable<sp/><ref refid="classreactor_1_1Scheduler_1a5ce0b7fa5a71eaf46b1d423c1ff90557" kindref="member">cv_done_reactions</ref>;</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"></highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Scheduler_1a0ba1d794dc627f7927e5c0457f612960" kindref="member">work</ref>(</highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">id</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"></highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Scheduler_1ad1c1bbd55c9933b9e5886d378419185c" kindref="member">next</ref>();</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"></highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Scheduler_1a09d04a0906b272908481b48ef12fc3f3" kindref="member">set_port_helper</ref>(<ref refid="classreactor_1_1BasePort" kindref="compound">BasePort</ref>*<sp/>p);</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"></highlight></codeline>
+<codeline lineno="61" refid="classreactor_1_1Scheduler_1a77d3790a2a37875efc1980ba55824561" refkind="member"><highlight class="normal"><sp/><sp/>std::atomic&lt;bool&gt;<sp/><ref refid="classreactor_1_1Scheduler_1a77d3790a2a37875efc1980ba55824561" kindref="member">_stop</ref>{</highlight><highlight class="keyword">false</highlight><highlight class="normal">};</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"></highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Scheduler_1a726e2f27cb5fc21f9b276a20e7f47192" kindref="member">dispatch_reactions_to_workers</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::vector&lt;Reaction*&gt;&amp;<sp/>reactions);</highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Scheduler_1a776074d94dcd54cc093c295b3359d5eb" kindref="member">execute_reactions_inline</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::vector&lt;Reaction*&gt;&amp;<sp/>reactions);</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"></highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><ref refid="classreactor_1_1Scheduler_1a58fbbd0e02d4fc8ef0bcf9330d010c2e" kindref="member">Scheduler</ref>(<ref refid="classreactor_1_1Environment" kindref="compound">Environment</ref>*<sp/>env);</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><ref refid="classreactor_1_1Scheduler_1ad6f0cfcd7f07fa81392ab62f172fbd68" kindref="member">~Scheduler</ref>();</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"></highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Scheduler_1ab77f16103f0eb0631886805bc94f231c" kindref="member">schedule_sync</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Tag" kindref="compound">Tag</ref>&amp;<sp/>tag,</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classreactor_1_1BaseAction" kindref="compound">BaseAction</ref>*<sp/>action,</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::function&lt;</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">)&gt;<sp/>pre_handler);</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Scheduler_1a1ca117318ce71ab3c63b7b8160d413af" kindref="member">schedule_async</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Tag" kindref="compound">Tag</ref>&amp;<sp/>tag,</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classreactor_1_1BaseAction" kindref="compound">BaseAction</ref>*<sp/>action,</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::function&lt;</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">)&gt;<sp/>pre_handler);</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"></highlight></codeline>
+<codeline lineno="77" refid="classreactor_1_1Scheduler_1a970ac74510f7cce25fd7e9994b11dad6" refkind="member"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Scheduler_1a970ac74510f7cce25fd7e9994b11dad6" kindref="member">lock</ref>()<sp/>{<sp/><ref refid="classreactor_1_1Scheduler_1a338d396352878baec7c8ecd2e1e7b202" kindref="member">schedule_lock</ref>.lock();<sp/>}</highlight></codeline>
+<codeline lineno="78" refid="classreactor_1_1Scheduler_1a8787186c85529782cf95fd58050f3af2" refkind="member"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Scheduler_1a8787186c85529782cf95fd58050f3af2" kindref="member">unlock</ref>()<sp/>{<sp/><ref refid="classreactor_1_1Scheduler_1a338d396352878baec7c8ecd2e1e7b202" kindref="member">schedule_lock</ref>.unlock();<sp/>}</highlight></codeline>
+<codeline lineno="79"><highlight class="normal"></highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Scheduler_1a344df614ab8590273a2682eed1d7aa12" kindref="member">set_port</ref>(<ref refid="classreactor_1_1BasePort" kindref="compound">BasePort</ref>*);</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"></highlight></codeline>
+<codeline lineno="82" refid="classreactor_1_1Scheduler_1a347fccd0368f7d36b8b9a13fec647f03" refkind="member"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1LogicalTime" kindref="compound">LogicalTime</ref>&amp;<sp/><ref refid="classreactor_1_1Scheduler_1a347fccd0368f7d36b8b9a13fec647f03" kindref="member">logical_time</ref>()</highlight><highlight class="keyword"><sp/>const<sp/></highlight><highlight class="normal">{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Scheduler_1a68b0b490d08d5db7890c337d4250ad1c" kindref="member">_logical_time</ref>;<sp/>}</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"></highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Scheduler_1a2366bac3be216dbba49e110a69250ece" kindref="member">start</ref>();</highlight></codeline>
+<codeline lineno="85"><highlight class="normal"></highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Scheduler_1a0ef1f93067b868fcf0c26031b7567054" kindref="member">stop</ref>();</highlight></codeline>
+<codeline lineno="87"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"></highlight></codeline>
+<codeline lineno="89"><highlight class="normal">}<sp/><sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>reactor</highlight><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/scheduler.hh"/>
+  </compounddef>
+</doxygen>

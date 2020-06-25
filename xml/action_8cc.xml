@@ -1,0 +1,267 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.13">
+  <compounddef id="action_8cc" kind="file" language="C++">
+    <compoundname>action.cc</compoundname>
+    <includes refid="action_8hh" local="yes">reactor-cpp/action.hh</includes>
+    <includes refid="assert_8hh" local="yes">reactor-cpp/assert.hh</includes>
+    <includes refid="environment_8hh" local="yes">reactor-cpp/environment.hh</includes>
+    <includes refid="reaction_8hh" local="yes">reactor-cpp/reaction.hh</includes>
+    <incdepgraph>
+      <node id="388">
+        <label>functional</label>
+      </node>
+      <node id="382">
+        <label>cassert</label>
+      </node>
+      <node id="383">
+        <label>stdexcept</label>
+      </node>
+      <node id="366">
+        <label>/home/runner/work/reactor-cpp/reactor-cpp/lib/action.cc</label>
+        <link refid="action_8cc"/>
+        <childnode refid="367" relation="include">
+        </childnode>
+        <childnode refid="381" relation="include">
+        </childnode>
+        <childnode refid="384" relation="include">
+        </childnode>
+        <childnode refid="393" relation="include">
+        </childnode>
+      </node>
+      <node id="375">
+        <label>string</label>
+      </node>
+      <node id="390">
+        <label>map</label>
+      </node>
+      <node id="381">
+        <label>../assert.hh</label>
+        <link refid="assert_8hh"/>
+        <childnode refid="382" relation="include">
+        </childnode>
+        <childnode refid="374" relation="include">
+        </childnode>
+        <childnode refid="383" relation="include">
+        </childnode>
+        <childnode refid="375" relation="include">
+        </childnode>
+      </node>
+      <node id="376">
+        <label>fwd.hh</label>
+        <link refid="fwd_8hh"/>
+      </node>
+      <node id="393">
+        <label>reactor-cpp/reaction.hh</label>
+        <link refid="reaction_8hh"/>
+        <childnode refid="388" relation="include">
+        </childnode>
+        <childnode refid="373" relation="include">
+        </childnode>
+        <childnode refid="372" relation="include">
+        </childnode>
+      </node>
+      <node id="380">
+        <label>impl/action_impl.hh</label>
+        <link refid="action__impl_8hh"/>
+        <childnode refid="381" relation="include">
+        </childnode>
+        <childnode refid="384" relation="include">
+        </childnode>
+      </node>
+      <node id="387">
+        <label>condition_variable</label>
+      </node>
+      <node id="368">
+        <label>logical_time.hh</label>
+        <link refid="logical__time_8hh"/>
+        <childnode refid="369" relation="include">
+        </childnode>
+      </node>
+      <node id="389">
+        <label>future</label>
+      </node>
+      <node id="385">
+        <label>vector</label>
+      </node>
+      <node id="377">
+        <label>value_ptr.hh</label>
+        <link refid="value__ptr_8hh"/>
+        <childnode refid="378" relation="include">
+        </childnode>
+        <childnode refid="379" relation="include">
+        </childnode>
+      </node>
+      <node id="374">
+        <label>sstream</label>
+      </node>
+      <node id="386">
+        <label>scheduler.hh</label>
+        <link refid="scheduler_8hh"/>
+        <childnode refid="387" relation="include">
+        </childnode>
+        <childnode refid="388" relation="include">
+        </childnode>
+        <childnode refid="389" relation="include">
+        </childnode>
+        <childnode refid="390" relation="include">
+        </childnode>
+        <childnode refid="391" relation="include">
+        </childnode>
+        <childnode refid="373" relation="include">
+        </childnode>
+        <childnode refid="392" relation="include">
+        </childnode>
+        <childnode refid="385" relation="include">
+        </childnode>
+        <childnode refid="376" relation="include">
+        </childnode>
+        <childnode refid="368" relation="include">
+        </childnode>
+      </node>
+      <node id="371">
+        <label>iostream</label>
+      </node>
+      <node id="369">
+        <label>time.hh</label>
+        <link refid="time_8hh"/>
+        <childnode refid="370" relation="include">
+        </childnode>
+        <childnode refid="371" relation="include">
+        </childnode>
+      </node>
+      <node id="391">
+        <label>mutex</label>
+      </node>
+      <node id="370">
+        <label>chrono</label>
+      </node>
+      <node id="392">
+        <label>thread</label>
+      </node>
+      <node id="372">
+        <label>reactor.hh</label>
+        <link refid="reactor_8hh"/>
+        <childnode refid="373" relation="include">
+        </childnode>
+        <childnode refid="374" relation="include">
+        </childnode>
+        <childnode refid="375" relation="include">
+        </childnode>
+        <childnode refid="376" relation="include">
+        </childnode>
+        <childnode refid="369" relation="include">
+        </childnode>
+      </node>
+      <node id="379">
+        <label>type_traits</label>
+      </node>
+      <node id="373">
+        <label>set</label>
+      </node>
+      <node id="384">
+        <label>../environment.hh</label>
+        <link refid="environment_8hh"/>
+        <childnode refid="373" relation="include">
+        </childnode>
+        <childnode refid="375" relation="include">
+        </childnode>
+        <childnode refid="385" relation="include">
+        </childnode>
+        <childnode refid="372" relation="include">
+        </childnode>
+        <childnode refid="386" relation="include">
+        </childnode>
+      </node>
+      <node id="367">
+        <label>reactor-cpp/action.hh</label>
+        <link refid="action_8hh"/>
+        <childnode refid="368" relation="include">
+        </childnode>
+        <childnode refid="372" relation="include">
+        </childnode>
+        <childnode refid="377" relation="include">
+        </childnode>
+        <childnode refid="380" relation="include">
+        </childnode>
+      </node>
+      <node id="378">
+        <label>memory</label>
+      </node>
+    </incdepgraph>
+    <innernamespace refid="namespacereactor">reactor</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">/*</highlight></codeline>
+<codeline lineno="2"><highlight class="comment"><sp/>*<sp/>Copyright<sp/>(C)<sp/>2019<sp/>TU<sp/>Dresden</highlight></codeline>
+<codeline lineno="3"><highlight class="comment"><sp/>*<sp/>All<sp/>rights<sp/>reserved.</highlight></codeline>
+<codeline lineno="4"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="5"><highlight class="comment"><sp/>*<sp/>Authors:</highlight></codeline>
+<codeline lineno="6"><highlight class="comment"><sp/>*<sp/><sp/><sp/>Christian<sp/>Menard</highlight></codeline>
+<codeline lineno="7"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="action_8hh" kindref="compound">reactor-cpp/action.hh</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="assert_8hh" kindref="compound">reactor-cpp/assert.hh</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="environment_8hh" kindref="compound">reactor-cpp/environment.hh</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="reaction_8hh" kindref="compound">reactor-cpp/reaction.hh</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight></codeline>
+<codeline lineno="15" refid="namespacereactor" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespacereactor" kindref="compound">reactor</ref><sp/>{</highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1BaseAction_1a8ee41c1fd582f54518b6ca06b95a54ad" kindref="member">BaseAction::register_trigger</ref>(<ref refid="classreactor_1_1Reaction" kindref="compound">Reaction</ref>*<sp/>reaction)<sp/>{</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"><sp/><sp/><ref refid="assert_8hh_1aca68c0d4ac8df0838e209fb5300f7be3" kindref="member">ASSERT</ref>(reaction<sp/>!=<sp/></highlight><highlight class="keyword">nullptr</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"><sp/><sp/><ref refid="assert_8hh_1aca68c0d4ac8df0838e209fb5300f7be3" kindref="member">ASSERT</ref>(this-&gt;<ref refid="classreactor_1_1ReactorElement_1a895b09f977450723c59b67b41e643db8" kindref="member">environment</ref>()<sp/>==<sp/>reaction-&gt;<ref refid="classreactor_1_1ReactorElement_1a895b09f977450723c59b67b41e643db8" kindref="member">environment</ref>());</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"><sp/><sp/><ref refid="assert_8hh_1aa8944c5f0d4c2f0c3643c36ab4967a17" kindref="member">VALIDATE</ref>(this-&gt;<ref refid="classreactor_1_1ReactorElement_1a895b09f977450723c59b67b41e643db8" kindref="member">environment</ref>()-&gt;phase()<sp/>==<sp/><ref refid="classreactor_1_1Environment_1a2f0bcf10490e174246fc14b456fb0755ad75c45e11c8aeb13494dba59a388a164" kindref="member">Environment::Phase::Assembly</ref>,</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;Triggers<sp/>may<sp/>only<sp/>be<sp/>registered<sp/>during<sp/>assembly<sp/>phase!&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"><sp/><sp/><ref refid="assert_8hh_1aa8944c5f0d4c2f0c3643c36ab4967a17" kindref="member">VALIDATE</ref>(this-&gt;<ref refid="classreactor_1_1ReactorElement_1a25bf298de879a82eefc1ba426be05812" kindref="member">container</ref>()<sp/>==<sp/>reaction-&gt;<ref refid="classreactor_1_1ReactorElement_1a25bf298de879a82eefc1ba426be05812" kindref="member">container</ref>(),</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;Action<sp/>triggers<sp/>must<sp/>belong<sp/>to<sp/>the<sp/>same<sp/>reactor<sp/>as<sp/>the<sp/>triggered<sp/>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;reaction&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>r<sp/>=<sp/><ref refid="classreactor_1_1BaseAction_1a90990090bd60f27c66b0cc7ddbc03b6e" kindref="member">_triggers</ref>.insert(reaction);</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><ref refid="assert_8hh_1aca68c0d4ac8df0838e209fb5300f7be3" kindref="member">ASSERT</ref>(r.second);</highlight></codeline>
+<codeline lineno="27"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1BaseAction_1a5cde20240a08d79c6c826d97f9a7f916" kindref="member">BaseAction::register_scheduler</ref>(<ref refid="classreactor_1_1Reaction" kindref="compound">Reaction</ref>*<sp/>reaction)<sp/>{</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><ref refid="assert_8hh_1aca68c0d4ac8df0838e209fb5300f7be3" kindref="member">ASSERT</ref>(reaction<sp/>!=<sp/></highlight><highlight class="keyword">nullptr</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><ref refid="assert_8hh_1aca68c0d4ac8df0838e209fb5300f7be3" kindref="member">ASSERT</ref>(this-&gt;<ref refid="classreactor_1_1ReactorElement_1a895b09f977450723c59b67b41e643db8" kindref="member">environment</ref>()<sp/>==<sp/>reaction-&gt;<ref refid="classreactor_1_1ReactorElement_1a895b09f977450723c59b67b41e643db8" kindref="member">environment</ref>());</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><ref refid="assert_8hh_1aa8944c5f0d4c2f0c3643c36ab4967a17" kindref="member">VALIDATE</ref>(<ref refid="classreactor_1_1BaseAction_1abff8e7a40679e9f0d6d31eb795530279" kindref="member">is_logical</ref>(),<sp/></highlight><highlight class="stringliteral">&quot;only<sp/>logical<sp/>action<sp/>can<sp/>be<sp/>scheduled<sp/>by<sp/>a<sp/>reaction!&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><ref refid="assert_8hh_1aa8944c5f0d4c2f0c3643c36ab4967a17" kindref="member">VALIDATE</ref>(</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>this-&gt;<ref refid="classreactor_1_1ReactorElement_1a895b09f977450723c59b67b41e643db8" kindref="member">environment</ref>()-&gt;phase()<sp/>==<sp/><ref refid="classreactor_1_1Environment_1a2f0bcf10490e174246fc14b456fb0755ad75c45e11c8aeb13494dba59a388a164" kindref="member">Environment::Phase::Assembly</ref>,</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;Schedulers<sp/>for<sp/>actions<sp/>may<sp/>only<sp/>be<sp/>registered<sp/>during<sp/>assembly<sp/>phase!&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>the<sp/>reaction<sp/>must<sp/>belong<sp/>to<sp/>the<sp/>same<sp/>reactor<sp/>as<sp/>this<sp/>action</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><ref refid="assert_8hh_1aa8944c5f0d4c2f0c3643c36ab4967a17" kindref="member">VALIDATE</ref>(this-&gt;<ref refid="classreactor_1_1ReactorElement_1a25bf298de879a82eefc1ba426be05812" kindref="member">container</ref>()<sp/>==<sp/>reaction-&gt;<ref refid="classreactor_1_1ReactorElement_1a25bf298de879a82eefc1ba426be05812" kindref="member">container</ref>(),</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;Scheduable<sp/>actions<sp/>must<sp/>belong<sp/>to<sp/>the<sp/>same<sp/>reactor<sp/>as<sp/>the<sp/>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;triggered<sp/>reaction&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>r<sp/>=<sp/><ref refid="classreactor_1_1BaseAction_1a90459f877f25a143d9ad8c2fec8a402c" kindref="member">_schedulers</ref>.insert(reaction);</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><ref refid="assert_8hh_1aca68c0d4ac8df0838e209fb5300f7be3" kindref="member">ASSERT</ref>(r.second);</highlight></codeline>
+<codeline lineno="42"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"></highlight></codeline>
+<codeline lineno="44"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Timer_1af820c0879317afb9b98ddc890ac96271" kindref="member">Timer::startup</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><ref refid="classreactor_1_1Tag" kindref="compound">Tag</ref><sp/>t0<sp/>=<sp/><ref refid="classreactor_1_1Tag_1ad0577aba35a17c5aac3dec8629977ae1" kindref="member">Tag::from_physical_time</ref>(<ref refid="classreactor_1_1ReactorElement_1a895b09f977450723c59b67b41e643db8" kindref="member">environment</ref>()-&gt;start_time());</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(_offset<sp/>!=<sp/>Duration::zero())<sp/>{</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="classreactor_1_1ReactorElement_1a895b09f977450723c59b67b41e643db8" kindref="member">environment</ref>()-&gt;<ref refid="classreactor_1_1Environment_1a2a4cf2150b314a18db041e8a06086904" kindref="member">scheduler</ref>()-&gt;<ref refid="classreactor_1_1Scheduler_1ab77f16103f0eb0631886805bc94f231c" kindref="member">schedule_sync</ref>(t0.<ref refid="classreactor_1_1Tag_1af4cf8dfbcef78f120e71562084e67168" kindref="member">delay</ref>(_offset),<sp/></highlight><highlight class="keyword">this</highlight><highlight class="normal">,<sp/></highlight><highlight class="keyword">nullptr</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="classreactor_1_1ReactorElement_1a895b09f977450723c59b67b41e643db8" kindref="member">environment</ref>()-&gt;<ref refid="classreactor_1_1Environment_1a2a4cf2150b314a18db041e8a06086904" kindref="member">scheduler</ref>()-&gt;<ref refid="classreactor_1_1Scheduler_1ab77f16103f0eb0631886805bc94f231c" kindref="member">schedule_sync</ref>(t0,<sp/></highlight><highlight class="keyword">this</highlight><highlight class="normal">,<sp/></highlight><highlight class="keyword">nullptr</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="51"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"></highlight></codeline>
+<codeline lineno="53"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Timer_1ab01356b0c99de6a3bd9f46bfd0ce1c7b" kindref="member">Timer::cleanup</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>schedule<sp/>the<sp/>timer<sp/>again</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(_period<sp/>!=<sp/>Duration::zero())<sp/>{</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="classreactor_1_1Tag" kindref="compound">Tag</ref><sp/>now<sp/>=<sp/><ref refid="classreactor_1_1Tag_1a99d7fef2a7b8f865e8d69d45ea9cf17f" kindref="member">Tag::from_logical_time</ref>(<ref refid="classreactor_1_1ReactorElement_1a895b09f977450723c59b67b41e643db8" kindref="member">environment</ref>()-&gt;logical_time());</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="classreactor_1_1Tag" kindref="compound">Tag</ref><sp/>next<sp/>=<sp/>now.<ref refid="classreactor_1_1Tag_1af4cf8dfbcef78f120e71562084e67168" kindref="member">delay</ref>(_period);</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="classreactor_1_1ReactorElement_1a895b09f977450723c59b67b41e643db8" kindref="member">environment</ref>()-&gt;<ref refid="classreactor_1_1Environment_1a2a4cf2150b314a18db041e8a06086904" kindref="member">scheduler</ref>()-&gt;<ref refid="classreactor_1_1Scheduler_1ab77f16103f0eb0631886805bc94f231c" kindref="member">schedule_sync</ref>(next,<sp/></highlight><highlight class="keyword">this</highlight><highlight class="normal">,<sp/></highlight><highlight class="keyword">nullptr</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="60"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"></highlight></codeline>
+<codeline lineno="62"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1ShutdownAction_1a8950ffd9b67f4800b75a95af92c4fd2a" kindref="member">ShutdownAction::shutdown</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/><ref refid="classreactor_1_1Tag" kindref="compound">Tag</ref><sp/>t<sp/>=<sp/><ref refid="classreactor_1_1Tag_1a99d7fef2a7b8f865e8d69d45ea9cf17f" kindref="member">Tag::from_logical_time</ref>(<ref refid="classreactor_1_1ReactorElement_1a895b09f977450723c59b67b41e643db8" kindref="member">environment</ref>()-&gt;logical_time()).<ref refid="classreactor_1_1Tag_1af4cf8dfbcef78f120e71562084e67168" kindref="member">delay</ref>();</highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><ref refid="classreactor_1_1ReactorElement_1a895b09f977450723c59b67b41e643db8" kindref="member">environment</ref>()-&gt;<ref refid="classreactor_1_1Environment_1a2a4cf2150b314a18db041e8a06086904" kindref="member">scheduler</ref>()-&gt;<ref refid="classreactor_1_1Scheduler_1ab77f16103f0eb0631886805bc94f231c" kindref="member">schedule_sync</ref>(t,<sp/></highlight><highlight class="keyword">this</highlight><highlight class="normal">,<sp/></highlight><highlight class="keyword">nullptr</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="65"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"></highlight></codeline>
+<codeline lineno="67"><highlight class="normal">}<sp/><sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>reactor</highlight><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="/home/runner/work/reactor-cpp/reactor-cpp/lib/action.cc"/>
+  </compounddef>
+</doxygen>

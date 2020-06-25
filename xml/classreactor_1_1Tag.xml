@@ -1,0 +1,220 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.13">
+  <compounddef id="classreactor_1_1Tag" kind="class" language="C++" prot="public">
+    <compoundname>reactor::Tag</compoundname>
+    <includes refid="logical__time_8hh" local="no">logical_time.hh</includes>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classreactor_1_1Tag_1a24a75e25cfaac63128d8f925ee95c4d9" prot="private" static="no" mutable="no">
+        <type>const <ref refid="namespacereactor_1ad950f8d1a46612500286a4af0f167080" kindref="member">TimePoint</ref></type>
+        <definition>const TimePoint reactor::Tag::_time_point</definition>
+        <argsstring></argsstring>
+        <name>_time_point</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/logical_time.hh" line="21" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/logical_time.hh" bodystart="21" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classreactor_1_1Tag_1a7660e5c962c9916a04abe97fad3226ab" prot="private" static="no" mutable="no">
+        <type>const <ref refid="namespacereactor_1aaea1189d617982457b74127ba74a7340" kindref="member">mstep_t</ref></type>
+        <definition>const mstep_t reactor::Tag::_micro_step</definition>
+        <argsstring></argsstring>
+        <name>_micro_step</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/logical_time.hh" line="22" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/logical_time.hh" bodystart="22" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="classreactor_1_1Tag_1ae9912e50f1398a241205e8fae7ad9cea" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>reactor::Tag::Tag</definition>
+        <argsstring>(const TimePoint &amp;time_point, const mstep_t &amp;micro_step)</argsstring>
+        <name>Tag</name>
+        <param>
+          <type>const <ref refid="namespacereactor_1ad950f8d1a46612500286a4af0f167080" kindref="member">TimePoint</ref> &amp;</type>
+          <declname>time_point</declname>
+        </param>
+        <param>
+          <type>const <ref refid="namespacereactor_1aaea1189d617982457b74127ba74a7340" kindref="member">mstep_t</ref> &amp;</type>
+          <declname>micro_step</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/logical_time.hh" line="24" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/logical_time.hh" bodystart="24" bodyend="25"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classreactor_1_1Tag_1a25458048eeb77969069faee12894f6d4" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>reactor::Tag::Tag</definition>
+        <argsstring>()=delete</argsstring>
+        <name>Tag</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/logical_time.hh" line="29" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classreactor_1_1Tag_1ae0776e16fba93c8836ab0d1651ffd309" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="classreactor_1_1Tag" kindref="compound">Tag</ref> &amp;</type>
+        <definition>Tag&amp; reactor::Tag::operator=</definition>
+        <argsstring>(const Tag &amp;)=delete</argsstring>
+        <name>operator=</name>
+        <param>
+          <type>const <ref refid="classreactor_1_1Tag" kindref="compound">Tag</ref> &amp;</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/logical_time.hh" line="30" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classreactor_1_1Tag_1aa810576d4b247523df94a623e36acbb3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>reactor::Tag::Tag</definition>
+        <argsstring>(Tag &amp;&amp;)=default</argsstring>
+        <name>Tag</name>
+        <param>
+          <type><ref refid="classreactor_1_1Tag" kindref="compound">Tag</ref> &amp;&amp;</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/logical_time.hh" line="31" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classreactor_1_1Tag_1a83b08304268878143b98f83b0e6400ba" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>reactor::Tag::Tag</definition>
+        <argsstring>(const Tag &amp;)=default</argsstring>
+        <name>Tag</name>
+        <param>
+          <type>const <ref refid="classreactor_1_1Tag" kindref="compound">Tag</ref> &amp;</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/logical_time.hh" line="32" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classreactor_1_1Tag_1a25ec5662af4fc8c9b34cf5cc0d70b569" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>const <ref refid="namespacereactor_1ad950f8d1a46612500286a4af0f167080" kindref="member">TimePoint</ref> &amp;</type>
+        <definition>const TimePoint&amp; reactor::Tag::time_point</definition>
+        <argsstring>() const</argsstring>
+        <name>time_point</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/logical_time.hh" line="34" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/logical_time.hh" bodystart="34" bodyend="34"/>
+      </memberdef>
+      <memberdef kind="function" id="classreactor_1_1Tag_1a8cfdeeb03c2e48a684e1bc517505c087" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>const <ref refid="namespacereactor_1aaea1189d617982457b74127ba74a7340" kindref="member">mstep_t</ref> &amp;</type>
+        <definition>const mstep_t&amp; reactor::Tag::micro_step</definition>
+        <argsstring>() const</argsstring>
+        <name>micro_step</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/logical_time.hh" line="35" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/logical_time.hh" bodystart="35" bodyend="35"/>
+      </memberdef>
+      <memberdef kind="function" id="classreactor_1_1Tag_1af4cf8dfbcef78f120e71562084e67168" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="classreactor_1_1Tag" kindref="compound">Tag</ref></type>
+        <definition>Tag reactor::Tag::delay</definition>
+        <argsstring>(Duration offset=Duration::zero()) const</argsstring>
+        <name>delay</name>
+        <param>
+          <type><ref refid="namespacereactor_1aa8375b807a80703545664096c5b5b779" kindref="member">Duration</ref></type>
+          <declname>offset</declname>
+          <defval>Duration::zero()</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/logical_time.hh" line="40" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/lib/logical_time.cc" bodystart="32" bodyend="38"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="classreactor_1_1Tag_1ad0577aba35a17c5aac3dec8629977ae1" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="classreactor_1_1Tag" kindref="compound">Tag</ref></type>
+        <definition>Tag reactor::Tag::from_physical_time</definition>
+        <argsstring>(TimePoint time_point)</argsstring>
+        <name>from_physical_time</name>
+        <param>
+          <type><ref refid="namespacereactor_1ad950f8d1a46612500286a4af0f167080" kindref="member">TimePoint</ref></type>
+          <declname>time_point</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/logical_time.hh" line="37" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/lib/logical_time.cc" bodystart="26" bodyend="26"/>
+      </memberdef>
+      <memberdef kind="function" id="classreactor_1_1Tag_1a99d7fef2a7b8f865e8d69d45ea9cf17f" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="classreactor_1_1Tag" kindref="compound">Tag</ref></type>
+        <definition>Tag reactor::Tag::from_logical_time</definition>
+        <argsstring>(const LogicalTime &amp;lt)</argsstring>
+        <name>from_logical_time</name>
+        <param>
+          <type>const <ref refid="classreactor_1_1LogicalTime" kindref="compound">LogicalTime</ref> &amp;</type>
+          <declname>lt</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/logical_time.hh" line="38" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/lib/logical_time.cc" bodystart="28" bodyend="30"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/logical_time.hh" line="19" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/logical_time.hh" bodystart="19" bodyend="41"/>
+    <listofallmembers>
+      <member refid="classreactor_1_1Tag_1a7660e5c962c9916a04abe97fad3226ab" prot="private" virt="non-virtual"><scope>reactor::Tag</scope><name>_micro_step</name></member>
+      <member refid="classreactor_1_1Tag_1a24a75e25cfaac63128d8f925ee95c4d9" prot="private" virt="non-virtual"><scope>reactor::Tag</scope><name>_time_point</name></member>
+      <member refid="classreactor_1_1Tag_1af4cf8dfbcef78f120e71562084e67168" prot="public" virt="non-virtual"><scope>reactor::Tag</scope><name>delay</name></member>
+      <member refid="classreactor_1_1Tag_1a99d7fef2a7b8f865e8d69d45ea9cf17f" prot="public" virt="non-virtual"><scope>reactor::Tag</scope><name>from_logical_time</name></member>
+      <member refid="classreactor_1_1Tag_1ad0577aba35a17c5aac3dec8629977ae1" prot="public" virt="non-virtual"><scope>reactor::Tag</scope><name>from_physical_time</name></member>
+      <member refid="classreactor_1_1Tag_1a8cfdeeb03c2e48a684e1bc517505c087" prot="public" virt="non-virtual"><scope>reactor::Tag</scope><name>micro_step</name></member>
+      <member refid="classreactor_1_1Tag_1ae0776e16fba93c8836ab0d1651ffd309" prot="public" virt="non-virtual"><scope>reactor::Tag</scope><name>operator=</name></member>
+      <member refid="classreactor_1_1Tag_1ae9912e50f1398a241205e8fae7ad9cea" prot="private" virt="non-virtual"><scope>reactor::Tag</scope><name>Tag</name></member>
+      <member refid="classreactor_1_1Tag_1a25458048eeb77969069faee12894f6d4" prot="public" virt="non-virtual"><scope>reactor::Tag</scope><name>Tag</name></member>
+      <member refid="classreactor_1_1Tag_1aa810576d4b247523df94a623e36acbb3" prot="public" virt="non-virtual"><scope>reactor::Tag</scope><name>Tag</name></member>
+      <member refid="classreactor_1_1Tag_1a83b08304268878143b98f83b0e6400ba" prot="public" virt="non-virtual"><scope>reactor::Tag</scope><name>Tag</name></member>
+      <member refid="classreactor_1_1Tag_1a25ec5662af4fc8c9b34cf5cc0d70b569" prot="public" virt="non-virtual"><scope>reactor::Tag</scope><name>time_point</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

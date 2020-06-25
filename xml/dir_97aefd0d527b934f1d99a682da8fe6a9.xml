@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.13">
+  <compounddef id="dir_97aefd0d527b934f1d99a682da8fe6a9" kind="dir">
+    <compoundname>/home/runner/work/reactor-cpp/reactor-cpp/lib</compoundname>
+    <innerfile refid="action_8cc">action.cc</innerfile>
+    <innerfile refid="assert_8cc">assert.cc</innerfile>
+    <innerfile refid="environment_8cc">environment.cc</innerfile>
+    <innerfile refid="logging_8cc">logging.cc</innerfile>
+    <innerfile refid="logical__time_8cc">logical_time.cc</innerfile>
+    <innerfile refid="port_8cc">port.cc</innerfile>
+    <innerfile refid="reaction_8cc">reaction.cc</innerfile>
+    <innerfile refid="reactor_8cc">reactor.cc</innerfile>
+    <innerfile refid="scheduler_8cc">scheduler.cc</innerfile>
+    <innerfile refid="time_8cc">time.cc</innerfile>
+    <innerfile refid="trace_8cc">trace.cc</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/runner/work/reactor-cpp/reactor-cpp/lib/"/>
+  </compounddef>
+</doxygen>

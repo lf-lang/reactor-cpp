@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.13">
+  <compounddef id="structreactor_1_1log_1_1Error" kind="struct" language="C++" prot="public">
+    <compoundname>reactor::log::Error</compoundname>
+    <basecompoundref refid="classreactor_1_1log_1_1BaseLogger" prot="public" virt="non-virtual">reactor::log::BaseLogger&lt; error_enabled &gt;</basecompoundref>
+    <includes refid="logging_8hh" local="no">logging.hh</includes>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="structreactor_1_1log_1_1Error_1adf478efdd9543d086e970afd9d63de04" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>reactor::log::Error::Error</definition>
+        <argsstring>()</argsstring>
+        <name>Error</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/logging.hh" line="82" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/logging.hh" bodystart="82" bodyend="82"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="63">
+        <label>reactor::log::Error</label>
+        <link refid="structreactor_1_1log_1_1Error"/>
+        <childnode refid="64" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="64">
+        <label>reactor::log::BaseLogger&lt; error_enabled &gt;</label>
+        <link refid="classreactor_1_1log_1_1BaseLogger"/>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="65">
+        <label>reactor::log::Error</label>
+        <link refid="structreactor_1_1log_1_1Error"/>
+        <childnode refid="66" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="66">
+        <label>reactor::log::BaseLogger&lt; error_enabled &gt;</label>
+        <link refid="classreactor_1_1log_1_1BaseLogger"/>
+      </node>
+    </collaborationgraph>
+    <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/logging.hh" line="81" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/logging.hh" bodystart="81" bodyend="83"/>
+    <listofallmembers>
+      <member refid="structreactor_1_1log_1_1Error_1adf478efdd9543d086e970afd9d63de04" prot="public" virt="non-virtual"><scope>reactor::log::Error</scope><name>Error</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

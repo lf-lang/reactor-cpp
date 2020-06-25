@@ -1,0 +1,469 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.13">
+  <compounddef id="classreactor_1_1Reactor" kind="class" language="C++" prot="public" abstract="yes">
+    <compoundname>reactor::Reactor</compoundname>
+    <basecompoundref refid="classreactor_1_1ReactorElement" prot="public" virt="non-virtual">reactor::ReactorElement</basecompoundref>
+    <includes refid="reactor_8hh" local="no">reactor.hh</includes>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classreactor_1_1Reactor_1a08956f27d0316095058663a1e234854c" prot="private" static="no" mutable="no">
+        <type>std::set&lt; <ref refid="classreactor_1_1BaseAction" kindref="compound">BaseAction</ref> * &gt;</type>
+        <definition>std::set&lt;BaseAction*&gt; reactor::Reactor::_actions</definition>
+        <argsstring></argsstring>
+        <name>_actions</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/reactor.hh" line="58" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/reactor.hh" bodystart="58" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classreactor_1_1Reactor_1a58b3ea8a7be4ff65de173fc8df01c8b1" prot="private" static="no" mutable="no">
+        <type>std::set&lt; <ref refid="classreactor_1_1BasePort" kindref="compound">BasePort</ref> * &gt;</type>
+        <definition>std::set&lt;BasePort*&gt; reactor::Reactor::_inputs</definition>
+        <argsstring></argsstring>
+        <name>_inputs</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/reactor.hh" line="59" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/reactor.hh" bodystart="59" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classreactor_1_1Reactor_1a925d1c0f776a963e9aac01084bdaedc2" prot="private" static="no" mutable="no">
+        <type>std::set&lt; <ref refid="classreactor_1_1BasePort" kindref="compound">BasePort</ref> * &gt;</type>
+        <definition>std::set&lt;BasePort*&gt; reactor::Reactor::_outputs</definition>
+        <argsstring></argsstring>
+        <name>_outputs</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/reactor.hh" line="60" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/reactor.hh" bodystart="60" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classreactor_1_1Reactor_1a894dedef16b5d6e927eecc223b0748ba" prot="private" static="no" mutable="no">
+        <type>std::set&lt; <ref refid="classreactor_1_1Reaction" kindref="compound">Reaction</ref> * &gt;</type>
+        <definition>std::set&lt;Reaction*&gt; reactor::Reactor::_reactions</definition>
+        <argsstring></argsstring>
+        <name>_reactions</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/reactor.hh" line="61" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/reactor.hh" bodystart="61" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classreactor_1_1Reactor_1aac609122effff608df6b5f3e5a1dc05b" prot="private" static="no" mutable="no">
+        <type>std::set&lt; <ref refid="classreactor_1_1Reactor" kindref="compound">Reactor</ref> * &gt;</type>
+        <definition>std::set&lt;Reactor*&gt; reactor::Reactor::_reactors</definition>
+        <argsstring></argsstring>
+        <name>_reactors</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/reactor.hh" line="62" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/reactor.hh" bodystart="62" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="classreactor_1_1Reactor_1abd595c37f2e89b0bd53db2c0f18b1ad7" prot="public" static="no" mutable="no">
+        <type>friend</type>
+        <definition>friend reactor::Reactor::ReactorElement</definition>
+        <argsstring></argsstring>
+        <name>ReactorElement</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/reactor.hh" line="90" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/reactor.hh" bodystart="90" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="classreactor_1_1Reactor_1af03410009a1cac736179774282212219" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void reactor::Reactor::register_action</definition>
+        <argsstring>(BaseAction *action)</argsstring>
+        <name>register_action</name>
+        <param>
+          <type><ref refid="classreactor_1_1BaseAction" kindref="compound">BaseAction</ref> *</type>
+          <declname>action</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/reactor.hh" line="64" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/lib/reactor.cc" bodystart="76" bodyend="82"/>
+      </memberdef>
+      <memberdef kind="function" id="classreactor_1_1Reactor_1a026ca6574effbb38c4769c10efaef06d" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void reactor::Reactor::register_port</definition>
+        <argsstring>(BasePort *port)</argsstring>
+        <name>register_port</name>
+        <param>
+          <type><ref refid="classreactor_1_1BasePort" kindref="compound">BasePort</ref> *</type>
+          <declname>port</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/reactor.hh" line="65" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/lib/reactor.cc" bodystart="83" bodyend="94"/>
+      </memberdef>
+      <memberdef kind="function" id="classreactor_1_1Reactor_1a728acca5f61851ae9252df17e4b5e0ad" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void reactor::Reactor::register_reaction</definition>
+        <argsstring>(Reaction *reaction)</argsstring>
+        <name>register_reaction</name>
+        <param>
+          <type><ref refid="classreactor_1_1Reaction" kindref="compound">Reaction</ref> *</type>
+          <declname>reaction</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/reactor.hh" line="66" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/lib/reactor.cc" bodystart="95" bodyend="101"/>
+      </memberdef>
+      <memberdef kind="function" id="classreactor_1_1Reactor_1a120b7977b590c87b94066ff87c233650" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void reactor::Reactor::register_reactor</definition>
+        <argsstring>(Reactor *reactor)</argsstring>
+        <name>register_reactor</name>
+        <param>
+          <type><ref refid="classreactor_1_1Reactor" kindref="compound">Reactor</ref> *</type>
+          <declname>reactor</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/reactor.hh" line="67" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/lib/reactor.cc" bodystart="102" bodyend="108"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classreactor_1_1Reactor_1a277765a261141f60ea6e8565533eb71c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>reactor::Reactor::Reactor</definition>
+        <argsstring>(const std::string &amp;name, Reactor *container)</argsstring>
+        <name>Reactor</name>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>name</declname>
+        </param>
+        <param>
+          <type><ref refid="classreactor_1_1Reactor" kindref="compound">Reactor</ref> *</type>
+          <declname>container</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/reactor.hh" line="70" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/lib/reactor.cc" bodystart="69" bodyend="70"/>
+      </memberdef>
+      <memberdef kind="function" id="classreactor_1_1Reactor_1af00ec5a8d0efcca675fc06d474181371" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>reactor::Reactor::Reactor</definition>
+        <argsstring>(const std::string &amp;name, Environment *environment)</argsstring>
+        <name>Reactor</name>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>name</declname>
+        </param>
+        <param>
+          <type><ref refid="classreactor_1_1Environment" kindref="compound">Environment</ref> *</type>
+          <declname>environment</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/reactor.hh" line="71" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/lib/reactor.cc" bodystart="71" bodyend="74"/>
+      </memberdef>
+      <memberdef kind="function" id="classreactor_1_1Reactor_1a71a86bb46592e350cf173db091be6d50" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type></type>
+        <definition>virtual reactor::Reactor::~Reactor</definition>
+        <argsstring>()</argsstring>
+        <name>~Reactor</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/reactor.hh" line="72" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/reactor.hh" bodystart="72" bodyend="72"/>
+      </memberdef>
+      <memberdef kind="function" id="classreactor_1_1Reactor_1a6d4a4847eaf1da2ee81d1bf43ace739f" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>const auto &amp;</type>
+        <definition>const auto&amp; reactor::Reactor::actions</definition>
+        <argsstring>() const</argsstring>
+        <name>actions</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/reactor.hh" line="74" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/reactor.hh" bodystart="74" bodyend="74"/>
+      </memberdef>
+      <memberdef kind="function" id="classreactor_1_1Reactor_1a9907a15d57a068a9785f1f5e74d0802a" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>const auto &amp;</type>
+        <definition>const auto&amp; reactor::Reactor::inputs</definition>
+        <argsstring>() const</argsstring>
+        <name>inputs</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/reactor.hh" line="75" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/reactor.hh" bodystart="75" bodyend="75"/>
+      </memberdef>
+      <memberdef kind="function" id="classreactor_1_1Reactor_1a6ee91ecde81bbffbb04773f1ae9b97dd" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>const auto &amp;</type>
+        <definition>const auto&amp; reactor::Reactor::outputs</definition>
+        <argsstring>() const</argsstring>
+        <name>outputs</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/reactor.hh" line="76" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/reactor.hh" bodystart="76" bodyend="76"/>
+      </memberdef>
+      <memberdef kind="function" id="classreactor_1_1Reactor_1a8667762f07039e52bfa7925a2a0fefc4" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>const auto &amp;</type>
+        <definition>const auto&amp; reactor::Reactor::reactions</definition>
+        <argsstring>() const</argsstring>
+        <name>reactions</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/reactor.hh" line="77" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/reactor.hh" bodystart="77" bodyend="77"/>
+      </memberdef>
+      <memberdef kind="function" id="classreactor_1_1Reactor_1ac69d7467dc9ec3db24a0c71e249d7eba" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>const auto &amp;</type>
+        <definition>const auto&amp; reactor::Reactor::reactors</definition>
+        <argsstring>() const</argsstring>
+        <name>reactors</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/reactor.hh" line="78" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/reactor.hh" bodystart="78" bodyend="78"/>
+      </memberdef>
+      <memberdef kind="function" id="classreactor_1_1Reactor_1ad254458867114f09a72e1e285ffc03d2" prot="public" static="no" const="no" explicit="no" inline="no" final="yes" virt="virtual">
+        <type>void</type>
+        <definition>void reactor::Reactor::startup</definition>
+        <argsstring>() override final</argsstring>
+        <name>startup</name>
+        <reimplements refid="classreactor_1_1ReactorElement_1a8cb574cb20ff963903ad905fb0a157e3">startup</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/reactor.hh" line="80" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/lib/reactor.cc" bodystart="110" bodyend="124"/>
+      </memberdef>
+      <memberdef kind="function" id="classreactor_1_1Reactor_1ac65caf31e633bd76c45c794072afb56e" prot="public" static="no" const="no" explicit="no" inline="no" final="yes" virt="virtual">
+        <type>void</type>
+        <definition>void reactor::Reactor::shutdown</definition>
+        <argsstring>() override final</argsstring>
+        <name>shutdown</name>
+        <reimplements refid="classreactor_1_1ReactorElement_1a8fce084bef582156979ebba56737e907">shutdown</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/reactor.hh" line="81" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/lib/reactor.cc" bodystart="126" bodyend="140"/>
+      </memberdef>
+      <memberdef kind="function" id="classreactor_1_1Reactor_1ac9d30ad0bc15043f154a59a4a390ab9f" prot="public" static="no" const="no" explicit="no" inline="no" virt="pure-virtual">
+        <type>void</type>
+        <definition>virtual void reactor::Reactor::assemble</definition>
+        <argsstring>()=0</argsstring>
+        <name>assemble</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/reactor.hh" line="83" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classreactor_1_1Reactor_1abfdf519fd67c4fc13debc60dbc68bec3" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="namespacereactor_1ad950f8d1a46612500286a4af0f167080" kindref="member">TimePoint</ref></type>
+        <definition>TimePoint reactor::Reactor::get_physical_time</definition>
+        <argsstring>() const</argsstring>
+        <name>get_physical_time</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/reactor.hh" line="85" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/lib/reactor.cc" bodystart="142" bodyend="144"/>
+      </memberdef>
+      <memberdef kind="function" id="classreactor_1_1Reactor_1ae3b8bb1187b16901c8a140090579e6c9" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="namespacereactor_1ad950f8d1a46612500286a4af0f167080" kindref="member">TimePoint</ref></type>
+        <definition>TimePoint reactor::Reactor::get_logical_time</definition>
+        <argsstring>() const</argsstring>
+        <name>get_logical_time</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/reactor.hh" line="86" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/lib/reactor.cc" bodystart="146" bodyend="148"/>
+      </memberdef>
+      <memberdef kind="function" id="classreactor_1_1Reactor_1a4983e0e04f14212630b0a7da1f463239" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="namespacereactor_1aa8375b807a80703545664096c5b5b779" kindref="member">Duration</ref></type>
+        <definition>Duration reactor::Reactor::get_elapsed_logical_time</definition>
+        <argsstring>() const</argsstring>
+        <name>get_elapsed_logical_time</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/reactor.hh" line="87" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/lib/reactor.cc" bodystart="150" bodyend="152"/>
+      </memberdef>
+      <memberdef kind="function" id="classreactor_1_1Reactor_1a206bd63d5ad7c2c39a89d9220f0acbbc" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="namespacereactor_1aa8375b807a80703545664096c5b5b779" kindref="member">Duration</ref></type>
+        <definition>Duration reactor::Reactor::get_elapsed_physical_time</definition>
+        <argsstring>() const</argsstring>
+        <name>get_elapsed_physical_time</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/reactor.hh" line="88" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/lib/reactor.cc" bodystart="154" bodyend="156"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="156">
+        <label>reactor::ReactorElement</label>
+        <link refid="classreactor_1_1ReactorElement"/>
+      </node>
+      <node id="155">
+        <label>reactor::Reactor</label>
+        <link refid="classreactor_1_1Reactor"/>
+        <childnode refid="156" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="158">
+        <label>reactor::ReactorElement</label>
+        <link refid="classreactor_1_1ReactorElement"/>
+        <childnode refid="157" relation="usage">
+          <edgelabel>_container</edgelabel>
+        </childnode>
+        <childnode refid="159" relation="usage">
+          <edgelabel>_environment</edgelabel>
+        </childnode>
+      </node>
+      <node id="159">
+        <label>reactor::Environment</label>
+        <link refid="classreactor_1_1Environment"/>
+        <childnode refid="160" relation="usage">
+          <edgelabel>_scheduler</edgelabel>
+        </childnode>
+      </node>
+      <node id="161">
+        <label>reactor::LogicalTime</label>
+        <link refid="classreactor_1_1LogicalTime"/>
+      </node>
+      <node id="157">
+        <label>reactor::Reactor</label>
+        <link refid="classreactor_1_1Reactor"/>
+        <childnode refid="158" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="160">
+        <label>reactor::Scheduler</label>
+        <link refid="classreactor_1_1Scheduler"/>
+        <childnode refid="161" relation="usage">
+          <edgelabel>_logical_time</edgelabel>
+        </childnode>
+        <childnode refid="159" relation="usage">
+          <edgelabel>_environment</edgelabel>
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/reactor.hh" line="56" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/reactor.hh" bodystart="56" bodyend="91"/>
+    <listofallmembers>
+      <member refid="classreactor_1_1Reactor_1a08956f27d0316095058663a1e234854c" prot="private" virt="non-virtual"><scope>reactor::Reactor</scope><name>_actions</name></member>
+      <member refid="classreactor_1_1Reactor_1a58b3ea8a7be4ff65de173fc8df01c8b1" prot="private" virt="non-virtual"><scope>reactor::Reactor</scope><name>_inputs</name></member>
+      <member refid="classreactor_1_1Reactor_1a925d1c0f776a963e9aac01084bdaedc2" prot="private" virt="non-virtual"><scope>reactor::Reactor</scope><name>_outputs</name></member>
+      <member refid="classreactor_1_1Reactor_1a894dedef16b5d6e927eecc223b0748ba" prot="private" virt="non-virtual"><scope>reactor::Reactor</scope><name>_reactions</name></member>
+      <member refid="classreactor_1_1Reactor_1aac609122effff608df6b5f3e5a1dc05b" prot="private" virt="non-virtual"><scope>reactor::Reactor</scope><name>_reactors</name></member>
+      <member refid="classreactor_1_1Reactor_1a6d4a4847eaf1da2ee81d1bf43ace739f" prot="public" virt="non-virtual"><scope>reactor::Reactor</scope><name>actions</name></member>
+      <member refid="classreactor_1_1Reactor_1ac9d30ad0bc15043f154a59a4a390ab9f" prot="public" virt="pure-virtual"><scope>reactor::Reactor</scope><name>assemble</name></member>
+      <member refid="classreactor_1_1ReactorElement_1a25bf298de879a82eefc1ba426be05812" prot="public" virt="non-virtual"><scope>reactor::Reactor</scope><name>container</name></member>
+      <member refid="classreactor_1_1ReactorElement_1a895b09f977450723c59b67b41e643db8" prot="public" virt="non-virtual"><scope>reactor::Reactor</scope><name>environment</name></member>
+      <member refid="classreactor_1_1ReactorElement_1af57b89113cd189208ea95668ad5bd141" prot="public" virt="non-virtual"><scope>reactor::Reactor</scope><name>fqn</name></member>
+      <member refid="classreactor_1_1Reactor_1a4983e0e04f14212630b0a7da1f463239" prot="public" virt="non-virtual"><scope>reactor::Reactor</scope><name>get_elapsed_logical_time</name></member>
+      <member refid="classreactor_1_1Reactor_1a206bd63d5ad7c2c39a89d9220f0acbbc" prot="public" virt="non-virtual"><scope>reactor::Reactor</scope><name>get_elapsed_physical_time</name></member>
+      <member refid="classreactor_1_1Reactor_1ae3b8bb1187b16901c8a140090579e6c9" prot="public" virt="non-virtual"><scope>reactor::Reactor</scope><name>get_logical_time</name></member>
+      <member refid="classreactor_1_1Reactor_1abfdf519fd67c4fc13debc60dbc68bec3" prot="public" virt="non-virtual"><scope>reactor::Reactor</scope><name>get_physical_time</name></member>
+      <member refid="classreactor_1_1Reactor_1a9907a15d57a068a9785f1f5e74d0802a" prot="public" virt="non-virtual"><scope>reactor::Reactor</scope><name>inputs</name></member>
+      <member refid="classreactor_1_1ReactorElement_1a29c516a59fd1ccc43fa0023c550b6964" prot="public" virt="non-virtual"><scope>reactor::Reactor</scope><name>is_top_level</name></member>
+      <member refid="classreactor_1_1ReactorElement_1a99579f61dbaf5d5d98aebfe26eb8bf77" prot="public" virt="non-virtual"><scope>reactor::Reactor</scope><name>name</name></member>
+      <member refid="classreactor_1_1Reactor_1a6ee91ecde81bbffbb04773f1ae9b97dd" prot="public" virt="non-virtual"><scope>reactor::Reactor</scope><name>outputs</name></member>
+      <member refid="classreactor_1_1Reactor_1a8667762f07039e52bfa7925a2a0fefc4" prot="public" virt="non-virtual"><scope>reactor::Reactor</scope><name>reactions</name></member>
+      <member refid="classreactor_1_1Reactor_1a277765a261141f60ea6e8565533eb71c" prot="public" virt="non-virtual"><scope>reactor::Reactor</scope><name>Reactor</name></member>
+      <member refid="classreactor_1_1Reactor_1af00ec5a8d0efcca675fc06d474181371" prot="public" virt="non-virtual"><scope>reactor::Reactor</scope><name>Reactor</name></member>
+      <member refid="classreactor_1_1Reactor_1abd595c37f2e89b0bd53db2c0f18b1ad7" prot="public" virt="non-virtual"><scope>reactor::Reactor</scope><name>ReactorElement</name></member>
+      <member refid="classreactor_1_1ReactorElement_1aebc8c1cabcadca08400284fdb05ce746" prot="public" virt="non-virtual" ambiguityscope="reactor::ReactorElement::"><scope>reactor::Reactor</scope><name>ReactorElement</name></member>
+      <member refid="classreactor_1_1ReactorElement_1ac5f85a8322de3fad7191a8f749b507fd" prot="public" virt="non-virtual" ambiguityscope="reactor::ReactorElement::"><scope>reactor::Reactor</scope><name>ReactorElement</name></member>
+      <member refid="classreactor_1_1ReactorElement_1aa975574e21f5f7a4bb761f04ed57dfa4" prot="public" virt="non-virtual" ambiguityscope="reactor::ReactorElement::"><scope>reactor::Reactor</scope><name>ReactorElement</name></member>
+      <member refid="classreactor_1_1ReactorElement_1a2ba6e1e309233db7cfc124563f9f8f9f" prot="public" virt="non-virtual" ambiguityscope="reactor::ReactorElement::"><scope>reactor::Reactor</scope><name>ReactorElement</name></member>
+      <member refid="classreactor_1_1Reactor_1ac69d7467dc9ec3db24a0c71e249d7eba" prot="public" virt="non-virtual"><scope>reactor::Reactor</scope><name>reactors</name></member>
+      <member refid="classreactor_1_1Reactor_1af03410009a1cac736179774282212219" prot="private" virt="non-virtual"><scope>reactor::Reactor</scope><name>register_action</name></member>
+      <member refid="classreactor_1_1Reactor_1a026ca6574effbb38c4769c10efaef06d" prot="private" virt="non-virtual"><scope>reactor::Reactor</scope><name>register_port</name></member>
+      <member refid="classreactor_1_1Reactor_1a728acca5f61851ae9252df17e4b5e0ad" prot="private" virt="non-virtual"><scope>reactor::Reactor</scope><name>register_reaction</name></member>
+      <member refid="classreactor_1_1Reactor_1a120b7977b590c87b94066ff87c233650" prot="private" virt="non-virtual"><scope>reactor::Reactor</scope><name>register_reactor</name></member>
+      <member refid="classreactor_1_1Reactor_1ac65caf31e633bd76c45c794072afb56e" prot="public" virt="virtual"><scope>reactor::Reactor</scope><name>shutdown</name></member>
+      <member refid="classreactor_1_1Reactor_1ad254458867114f09a72e1e285ffc03d2" prot="public" virt="virtual"><scope>reactor::Reactor</scope><name>startup</name></member>
+      <member refid="classreactor_1_1ReactorElement_1a9291659e2893372cfea42ffccfd487b2" prot="public" virt="non-virtual"><scope>reactor::Reactor</scope><name>Type</name></member>
+      <member refid="classreactor_1_1Reactor_1a71a86bb46592e350cf173db091be6d50" prot="public" virt="virtual"><scope>reactor::Reactor</scope><name>~Reactor</name></member>
+      <member refid="classreactor_1_1ReactorElement_1ac9075040ad83b1945f75f3065c0405fa" prot="public" virt="virtual"><scope>reactor::Reactor</scope><name>~ReactorElement</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

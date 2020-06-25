@@ -1,0 +1,402 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.13">
+  <compounddef id="reactor_8cc" kind="file" language="C++">
+    <compoundname>reactor.cc</compoundname>
+    <includes refid="reactor_8hh" local="yes">reactor-cpp/reactor.hh</includes>
+    <includes refid="action_8hh" local="yes">reactor-cpp/action.hh</includes>
+    <includes refid="assert_8hh" local="yes">reactor-cpp/assert.hh</includes>
+    <includes refid="environment_8hh" local="yes">reactor-cpp/environment.hh</includes>
+    <includes refid="logging_8hh" local="yes">reactor-cpp/logging.hh</includes>
+    <includes refid="port_8hh" local="yes">reactor-cpp/port.hh</includes>
+    <includes refid="reaction_8hh" local="yes">reactor-cpp/reaction.hh</includes>
+    <incdepgraph>
+      <node id="535">
+        <label>functional</label>
+      </node>
+      <node id="513">
+        <label>/home/runner/work/reactor-cpp/reactor-cpp/lib/reactor.cc</label>
+        <link refid="reactor_8cc"/>
+        <childnode refid="514" relation="include">
+        </childnode>
+        <childnode refid="522" relation="include">
+        </childnode>
+        <childnode refid="528" relation="include">
+        </childnode>
+        <childnode refid="531" relation="include">
+        </childnode>
+        <childnode refid="540" relation="include">
+        </childnode>
+        <childnode refid="542" relation="include">
+        </childnode>
+        <childnode refid="544" relation="include">
+        </childnode>
+      </node>
+      <node id="540">
+        <label>reactor-cpp/logging.hh</label>
+        <link refid="logging_8hh"/>
+        <childnode refid="521" relation="include">
+        </childnode>
+        <childnode refid="525" relation="include">
+        </childnode>
+        <childnode refid="538" relation="include">
+        </childnode>
+        <childnode refid="541" relation="include">
+        </childnode>
+      </node>
+      <node id="529">
+        <label>cassert</label>
+      </node>
+      <node id="530">
+        <label>stdexcept</label>
+      </node>
+      <node id="517">
+        <label>string</label>
+      </node>
+      <node id="542">
+        <label>reactor-cpp/port.hh</label>
+        <link refid="port_8hh"/>
+        <childnode refid="515" relation="include">
+        </childnode>
+        <childnode refid="514" relation="include">
+        </childnode>
+        <childnode refid="524" relation="include">
+        </childnode>
+        <childnode refid="543" relation="include">
+        </childnode>
+      </node>
+      <node id="537">
+        <label>map</label>
+      </node>
+      <node id="528">
+        <label>../assert.hh</label>
+        <link refid="assert_8hh"/>
+        <childnode refid="529" relation="include">
+        </childnode>
+        <childnode refid="516" relation="include">
+        </childnode>
+        <childnode refid="530" relation="include">
+        </childnode>
+        <childnode refid="517" relation="include">
+        </childnode>
+      </node>
+      <node id="518">
+        <label>fwd.hh</label>
+        <link refid="fwd_8hh"/>
+      </node>
+      <node id="544">
+        <label>reactor-cpp/reaction.hh</label>
+        <link refid="reaction_8hh"/>
+        <childnode refid="535" relation="include">
+        </childnode>
+        <childnode refid="515" relation="include">
+        </childnode>
+        <childnode refid="514" relation="include">
+        </childnode>
+      </node>
+      <node id="527">
+        <label>impl/action_impl.hh</label>
+        <link refid="action__impl_8hh"/>
+        <childnode refid="528" relation="include">
+        </childnode>
+        <childnode refid="531" relation="include">
+        </childnode>
+      </node>
+      <node id="534">
+        <label>condition_variable</label>
+      </node>
+      <node id="523">
+        <label>logical_time.hh</label>
+        <link refid="logical__time_8hh"/>
+        <childnode refid="519" relation="include">
+        </childnode>
+      </node>
+      <node id="536">
+        <label>future</label>
+      </node>
+      <node id="532">
+        <label>vector</label>
+      </node>
+      <node id="524">
+        <label>value_ptr.hh</label>
+        <link refid="value__ptr_8hh"/>
+        <childnode refid="525" relation="include">
+        </childnode>
+        <childnode refid="526" relation="include">
+        </childnode>
+      </node>
+      <node id="516">
+        <label>sstream</label>
+      </node>
+      <node id="533">
+        <label>scheduler.hh</label>
+        <link refid="scheduler_8hh"/>
+        <childnode refid="534" relation="include">
+        </childnode>
+        <childnode refid="535" relation="include">
+        </childnode>
+        <childnode refid="536" relation="include">
+        </childnode>
+        <childnode refid="537" relation="include">
+        </childnode>
+        <childnode refid="538" relation="include">
+        </childnode>
+        <childnode refid="515" relation="include">
+        </childnode>
+        <childnode refid="539" relation="include">
+        </childnode>
+        <childnode refid="532" relation="include">
+        </childnode>
+        <childnode refid="518" relation="include">
+        </childnode>
+        <childnode refid="523" relation="include">
+        </childnode>
+      </node>
+      <node id="521">
+        <label>iostream</label>
+      </node>
+      <node id="519">
+        <label>time.hh</label>
+        <link refid="time_8hh"/>
+        <childnode refid="520" relation="include">
+        </childnode>
+        <childnode refid="521" relation="include">
+        </childnode>
+      </node>
+      <node id="538">
+        <label>mutex</label>
+      </node>
+      <node id="520">
+        <label>chrono</label>
+      </node>
+      <node id="541">
+        <label>config.hh</label>
+      </node>
+      <node id="539">
+        <label>thread</label>
+      </node>
+      <node id="514">
+        <label>reactor-cpp/reactor.hh</label>
+        <link refid="reactor_8hh"/>
+        <childnode refid="515" relation="include">
+        </childnode>
+        <childnode refid="516" relation="include">
+        </childnode>
+        <childnode refid="517" relation="include">
+        </childnode>
+        <childnode refid="518" relation="include">
+        </childnode>
+        <childnode refid="519" relation="include">
+        </childnode>
+      </node>
+      <node id="526">
+        <label>type_traits</label>
+      </node>
+      <node id="515">
+        <label>set</label>
+      </node>
+      <node id="543">
+        <label>impl/port_impl.hh</label>
+        <link refid="port__impl_8hh"/>
+        <childnode refid="528" relation="include">
+        </childnode>
+        <childnode refid="531" relation="include">
+        </childnode>
+      </node>
+      <node id="531">
+        <label>../environment.hh</label>
+        <link refid="environment_8hh"/>
+        <childnode refid="515" relation="include">
+        </childnode>
+        <childnode refid="517" relation="include">
+        </childnode>
+        <childnode refid="532" relation="include">
+        </childnode>
+        <childnode refid="514" relation="include">
+        </childnode>
+        <childnode refid="533" relation="include">
+        </childnode>
+      </node>
+      <node id="522">
+        <label>reactor-cpp/action.hh</label>
+        <link refid="action_8hh"/>
+        <childnode refid="523" relation="include">
+        </childnode>
+        <childnode refid="514" relation="include">
+        </childnode>
+        <childnode refid="524" relation="include">
+        </childnode>
+        <childnode refid="527" relation="include">
+        </childnode>
+      </node>
+      <node id="525">
+        <label>memory</label>
+      </node>
+    </incdepgraph>
+    <innernamespace refid="namespacereactor">reactor</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">/*</highlight></codeline>
+<codeline lineno="2"><highlight class="comment"><sp/>*<sp/>Copyright<sp/>(C)<sp/>2019<sp/>TU<sp/>Dresden</highlight></codeline>
+<codeline lineno="3"><highlight class="comment"><sp/>*<sp/>All<sp/>rights<sp/>reserved.</highlight></codeline>
+<codeline lineno="4"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="5"><highlight class="comment"><sp/>*<sp/>Authors:</highlight></codeline>
+<codeline lineno="6"><highlight class="comment"><sp/>*<sp/><sp/><sp/>Christian<sp/>Menard</highlight></codeline>
+<codeline lineno="7"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="reactor_8hh" kindref="compound">reactor-cpp/reactor.hh</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="action_8hh" kindref="compound">reactor-cpp/action.hh</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="assert_8hh" kindref="compound">reactor-cpp/assert.hh</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="environment_8hh" kindref="compound">reactor-cpp/environment.hh</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="logging_8hh" kindref="compound">reactor-cpp/logging.hh</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="port_8hh" kindref="compound">reactor-cpp/port.hh</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="reaction_8hh" kindref="compound">reactor-cpp/reaction.hh</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespacereactor" kindref="compound">reactor</ref><sp/>{</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"><ref refid="classreactor_1_1ReactorElement_1aebc8c1cabcadca08400284fdb05ce746" kindref="member">ReactorElement::ReactorElement</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string&amp;<sp/>name,</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classreactor_1_1ReactorElement_1a9291659e2893372cfea42ffccfd487b2" kindref="member">ReactorElement::Type</ref><sp/>type,</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Reactor*<sp/>container)</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/>:<sp/>_name(name),<sp/>_container(container)<sp/>{</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><ref refid="assert_8hh_1aca68c0d4ac8df0838e209fb5300f7be3" kindref="member">ASSERT</ref>(container<sp/>!=<sp/></highlight><highlight class="keyword">nullptr</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/>this-&gt;_environment<sp/>=<sp/>container-&gt;environment();</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><ref refid="assert_8hh_1aca68c0d4ac8df0838e209fb5300f7be3" kindref="member">ASSERT</ref>(this-&gt;_environment<sp/>!=<sp/></highlight><highlight class="keyword">nullptr</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><ref refid="assert_8hh_1aa8944c5f0d4c2f0c3643c36ab4967a17" kindref="member">VALIDATE</ref>(this-&gt;_environment-&gt;phase()<sp/>==<sp/><ref refid="classreactor_1_1Environment_1a2f0bcf10490e174246fc14b456fb0755a2a0d30cb1153031c3dfc239c6e0407ea" kindref="member">Environment::Phase::Construction</ref>,</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;Reactor<sp/>elements<sp/>can<sp/>only<sp/>be<sp/>created<sp/>during<sp/>construction<sp/>phase!&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>We<sp/>need<sp/>a<sp/>reinterpret_cast<sp/>here<sp/>as<sp/>the<sp/>derived<sp/>class<sp/>is<sp/>not<sp/>yet<sp/>created</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>when<sp/>this<sp/>constructor<sp/>is<sp/>executed.<sp/>dynamic_cast<sp/>only<sp/>works<sp/>for</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>completely<sp/>constructed<sp/>objects.<sp/>Technically,<sp/>the<sp/>casts<sp/>here<sp/>return</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>invalid<sp/>pointers<sp/>as<sp/>the<sp/>objects<sp/>they<sp/>point<sp/>to<sp/>do<sp/>not<sp/>yet</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>exists.<sp/>However,<sp/>we<sp/>are<sp/>good<sp/>as<sp/>long<sp/>as<sp/>we<sp/>only<sp/>store<sp/>the<sp/>pointer<sp/>and<sp/>do</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>not<sp/>dereference<sp/>it<sp/>before<sp/>construction<sp/>is<sp/>completeted.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>It<sp/>works,<sp/>but<sp/>maybe<sp/>there<sp/>is<sp/>some<sp/>nicer<sp/>way<sp/>of<sp/>doing<sp/>this...</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">switch</highlight><highlight class="normal"><sp/>(type)<sp/>{</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/>Type::Action:</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>container-&gt;register_action(reinterpret_cast&lt;BaseAction*&gt;(</highlight><highlight class="keyword">this</highlight><highlight class="normal">));</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/>Type::Port:</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>container-&gt;register_port(reinterpret_cast&lt;BasePort*&gt;(</highlight><highlight class="keyword">this</highlight><highlight class="normal">));</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/>Type::Reaction:</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>container-&gt;register_reaction(reinterpret_cast&lt;Reaction*&gt;(</highlight><highlight class="keyword">this</highlight><highlight class="normal">));</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/>Type::Reactor:</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>container-&gt;register_reactor(reinterpret_cast&lt;Reactor*&gt;(</highlight><highlight class="keyword">this</highlight><highlight class="normal">));</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">default</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">throw</highlight><highlight class="normal"><sp/>std::runtime_error(</highlight><highlight class="stringliteral">&quot;unexpected<sp/>type&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"></highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/>std::stringstream<sp/>ss;</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/>ss<sp/>&lt;&lt;<sp/>_container-&gt;fqn()<sp/>&lt;&lt;<sp/></highlight><highlight class="charliteral">&apos;.&apos;</highlight><highlight class="normal"><sp/>&lt;&lt;<sp/>name;</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/>_fqn<sp/>=<sp/>ss.str();</highlight></codeline>
+<codeline lineno="56"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"></highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><ref refid="classreactor_1_1ReactorElement_1aebc8c1cabcadca08400284fdb05ce746" kindref="member">ReactorElement::ReactorElement</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string&amp;<sp/>name,</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classreactor_1_1ReactorElement_1a9291659e2893372cfea42ffccfd487b2" kindref="member">ReactorElement::Type</ref><sp/>type,</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Environment*<sp/>environment)</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/>:<sp/>_name(name),<sp/>_fqn(name),<sp/>_container(nullptr),<sp/>_environment(environment)<sp/>{</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><ref refid="assert_8hh_1aca68c0d4ac8df0838e209fb5300f7be3" kindref="member">ASSERT</ref>(environment<sp/>!=<sp/></highlight><highlight class="keyword">nullptr</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/><ref refid="assert_8hh_1aa8944c5f0d4c2f0c3643c36ab4967a17" kindref="member">VALIDATE</ref>(type<sp/>==<sp/>Type::Reactor,</highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;Only<sp/>reactors<sp/>can<sp/>be<sp/>owned<sp/>by<sp/>the<sp/>environment!&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><ref refid="assert_8hh_1aa8944c5f0d4c2f0c3643c36ab4967a17" kindref="member">VALIDATE</ref>(this-&gt;_environment-&gt;phase()<sp/>==<sp/><ref refid="classreactor_1_1Environment_1a2f0bcf10490e174246fc14b456fb0755a2a0d30cb1153031c3dfc239c6e0407ea" kindref="member">Environment::Phase::Construction</ref>,</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;Reactor<sp/>elements<sp/>can<sp/>only<sp/>be<sp/>created<sp/>during<sp/>construction<sp/>phase!&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="67"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"></highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><ref refid="classreactor_1_1Reactor_1a277765a261141f60ea6e8565533eb71c" kindref="member">Reactor::Reactor</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string&amp;<sp/>name,<sp/>Reactor*<sp/>container)</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/>:<sp/>ReactorElement(name,<sp/>ReactorElement::Type::Reactor,<sp/>container)<sp/>{}</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><ref refid="classreactor_1_1Reactor_1a277765a261141f60ea6e8565533eb71c" kindref="member">Reactor::Reactor</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string&amp;<sp/>name,<sp/>Environment*<sp/>environment)</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/>:<sp/>ReactorElement(name,<sp/>ReactorElement::Type::Reactor,<sp/>environment)<sp/>{</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/>environment-&gt;register_reactor(</highlight><highlight class="keyword">this</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="74"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"></highlight></codeline>
+<codeline lineno="76"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Reactor_1af03410009a1cac736179774282212219" kindref="member">Reactor::register_action</ref>(BaseAction*<sp/>action)<sp/>{</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><ref refid="assert_8hh_1aca68c0d4ac8df0838e209fb5300f7be3" kindref="member">ASSERT</ref>(action<sp/>!=<sp/></highlight><highlight class="keyword">nullptr</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/><ref refid="assert_8hh_1aa8944c5f0d4c2f0c3643c36ab4967a17" kindref="member">VALIDATE</ref>(this-&gt;environment()-&gt;phase()<sp/>==<sp/><ref refid="classreactor_1_1Environment_1a2f0bcf10490e174246fc14b456fb0755a2a0d30cb1153031c3dfc239c6e0407ea" kindref="member">Environment::Phase::Construction</ref>,</highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;Actions<sp/>can<sp/>only<sp/>be<sp/>registered<sp/>during<sp/>construction<sp/>phase!&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>result<sp/>=<sp/>_actions.insert(action);</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><ref refid="assert_8hh_1aca68c0d4ac8df0838e209fb5300f7be3" kindref="member">ASSERT</ref>(result.second);</highlight></codeline>
+<codeline lineno="82"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Reactor_1a026ca6574effbb38c4769c10efaef06d" kindref="member">Reactor::register_port</ref>(BasePort*<sp/>port)<sp/>{</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/><ref refid="assert_8hh_1aca68c0d4ac8df0838e209fb5300f7be3" kindref="member">ASSERT</ref>(port<sp/>!=<sp/></highlight><highlight class="keyword">nullptr</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><ref refid="assert_8hh_1aa8944c5f0d4c2f0c3643c36ab4967a17" kindref="member">VALIDATE</ref>(this-&gt;environment()-&gt;phase()<sp/>==<sp/><ref refid="classreactor_1_1Environment_1a2f0bcf10490e174246fc14b456fb0755a2a0d30cb1153031c3dfc239c6e0407ea" kindref="member">Environment::Phase::Construction</ref>,</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;Ports<sp/>can<sp/>only<sp/>be<sp/>registered<sp/>during<sp/>construction<sp/>phase!&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(port-&gt;is_input())<sp/>{</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>result<sp/>=<sp/>_inputs.insert(port);</highlight></codeline>
+<codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assert_8hh_1aca68c0d4ac8df0838e209fb5300f7be3" kindref="member">ASSERT</ref>(result.second);</highlight></codeline>
+<codeline lineno="90"><highlight class="normal"><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>result<sp/>=<sp/>_outputs.insert(port);</highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assert_8hh_1aca68c0d4ac8df0838e209fb5300f7be3" kindref="member">ASSERT</ref>(result.second);</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="94"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Reactor_1a728acca5f61851ae9252df17e4b5e0ad" kindref="member">Reactor::register_reaction</ref>(Reaction*<sp/>reaction)<sp/>{</highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><sp/><sp/><ref refid="assert_8hh_1aca68c0d4ac8df0838e209fb5300f7be3" kindref="member">ASSERT</ref>(reaction<sp/>!=<sp/></highlight><highlight class="keyword">nullptr</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="97"><highlight class="normal"><sp/><sp/><ref refid="assert_8hh_1aa8944c5f0d4c2f0c3643c36ab4967a17" kindref="member">VALIDATE</ref>(this-&gt;environment()-&gt;phase()<sp/>==<sp/><ref refid="classreactor_1_1Environment_1a2f0bcf10490e174246fc14b456fb0755a2a0d30cb1153031c3dfc239c6e0407ea" kindref="member">Environment::Phase::Construction</ref>,</highlight></codeline>
+<codeline lineno="98"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;Reactions<sp/>can<sp/>only<sp/>be<sp/>registered<sp/>during<sp/>construction<sp/>phase!&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="99"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>result<sp/>=<sp/>_reactions.insert(reaction);</highlight></codeline>
+<codeline lineno="100"><highlight class="normal"><sp/><sp/><ref refid="assert_8hh_1aca68c0d4ac8df0838e209fb5300f7be3" kindref="member">ASSERT</ref>(result.second);</highlight></codeline>
+<codeline lineno="101"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="102"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Reactor_1a120b7977b590c87b94066ff87c233650" kindref="member">Reactor::register_reactor</ref>(Reactor*<sp/><ref refid="namespacereactor" kindref="compound">reactor</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="103"><highlight class="normal"><sp/><sp/><ref refid="assert_8hh_1aca68c0d4ac8df0838e209fb5300f7be3" kindref="member">ASSERT</ref>(reactor<sp/>!=<sp/></highlight><highlight class="keyword">nullptr</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="104"><highlight class="normal"><sp/><sp/><ref refid="assert_8hh_1aa8944c5f0d4c2f0c3643c36ab4967a17" kindref="member">VALIDATE</ref>(this-&gt;environment()-&gt;phase()<sp/>==<sp/><ref refid="classreactor_1_1Environment_1a2f0bcf10490e174246fc14b456fb0755a2a0d30cb1153031c3dfc239c6e0407ea" kindref="member">Environment::Phase::Construction</ref>,</highlight></codeline>
+<codeline lineno="105"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;Reactions<sp/>can<sp/>only<sp/>be<sp/>registered<sp/>during<sp/>construction<sp/>phase!&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="106"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>result<sp/>=<sp/>_reactors.insert(reactor);</highlight></codeline>
+<codeline lineno="107"><highlight class="normal"><sp/><sp/><ref refid="assert_8hh_1aca68c0d4ac8df0838e209fb5300f7be3" kindref="member">ASSERT</ref>(result.second);</highlight></codeline>
+<codeline lineno="108"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="109"><highlight class="normal"></highlight></codeline>
+<codeline lineno="110"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Reactor_1ad254458867114f09a72e1e285ffc03d2" kindref="member">Reactor::startup</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="111"><highlight class="normal"><sp/><sp/><ref refid="assert_8hh_1aca68c0d4ac8df0838e209fb5300f7be3" kindref="member">ASSERT</ref>(environment()-&gt;phase()<sp/>==<sp/><ref refid="classreactor_1_1Environment_1a2f0bcf10490e174246fc14b456fb0755a13e685964c2548aa748f7ea263bad4e5" kindref="member">Environment::Phase::Startup</ref>);</highlight></codeline>
+<codeline lineno="112"><highlight class="normal"><sp/><sp/>log::Debug()<sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;Starting<sp/>up<sp/>reactor<sp/>&quot;</highlight><highlight class="normal"><sp/>&lt;&lt;<sp/>fqn();</highlight></codeline>
+<codeline lineno="113"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>call<sp/>startup<sp/>on<sp/>all<sp/>contained<sp/>objects</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="114"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>x<sp/>:<sp/>_actions)</highlight></codeline>
+<codeline lineno="115"><highlight class="normal"><sp/><sp/><sp/><sp/>x-&gt;startup();</highlight></codeline>
+<codeline lineno="116"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>x<sp/>:<sp/>_inputs)</highlight></codeline>
+<codeline lineno="117"><highlight class="normal"><sp/><sp/><sp/><sp/>x-&gt;startup();</highlight></codeline>
+<codeline lineno="118"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>x<sp/>:<sp/>_outputs)</highlight></codeline>
+<codeline lineno="119"><highlight class="normal"><sp/><sp/><sp/><sp/>x-&gt;startup();</highlight></codeline>
+<codeline lineno="120"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>x<sp/>:<sp/>_reactions)</highlight></codeline>
+<codeline lineno="121"><highlight class="normal"><sp/><sp/><sp/><sp/>x-&gt;startup();</highlight></codeline>
+<codeline lineno="122"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>x<sp/>:<sp/>_reactors)</highlight></codeline>
+<codeline lineno="123"><highlight class="normal"><sp/><sp/><sp/><sp/>x-&gt;startup();</highlight></codeline>
+<codeline lineno="124"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="125"><highlight class="normal"></highlight></codeline>
+<codeline lineno="126"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Reactor_1ac65caf31e633bd76c45c794072afb56e" kindref="member">Reactor::shutdown</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="127"><highlight class="normal"><sp/><sp/><ref refid="assert_8hh_1aca68c0d4ac8df0838e209fb5300f7be3" kindref="member">ASSERT</ref>(environment()-&gt;phase()<sp/>==<sp/><ref refid="classreactor_1_1Environment_1a2f0bcf10490e174246fc14b456fb0755a1a4ebb180ba59b067782515ffee6e975" kindref="member">Environment::Phase::Shutdown</ref>);</highlight></codeline>
+<codeline lineno="128"><highlight class="normal"><sp/><sp/>log::Debug()<sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;Terminating<sp/>reactor<sp/>&quot;</highlight><highlight class="normal"><sp/>&lt;&lt;<sp/>fqn();</highlight></codeline>
+<codeline lineno="129"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>call<sp/>shutdown<sp/>on<sp/>all<sp/>contained<sp/>objects</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="130"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>x<sp/>:<sp/>_actions)</highlight></codeline>
+<codeline lineno="131"><highlight class="normal"><sp/><sp/><sp/><sp/>x-&gt;shutdown();</highlight></codeline>
+<codeline lineno="132"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>x<sp/>:<sp/>_inputs)</highlight></codeline>
+<codeline lineno="133"><highlight class="normal"><sp/><sp/><sp/><sp/>x-&gt;shutdown();</highlight></codeline>
+<codeline lineno="134"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>x<sp/>:<sp/>_outputs)</highlight></codeline>
+<codeline lineno="135"><highlight class="normal"><sp/><sp/><sp/><sp/>x-&gt;shutdown();</highlight></codeline>
+<codeline lineno="136"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>x<sp/>:<sp/>_reactions)</highlight></codeline>
+<codeline lineno="137"><highlight class="normal"><sp/><sp/><sp/><sp/>x-&gt;shutdown();</highlight></codeline>
+<codeline lineno="138"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>x<sp/>:<sp/>_reactors)</highlight></codeline>
+<codeline lineno="139"><highlight class="normal"><sp/><sp/><sp/><sp/>x-&gt;shutdown();</highlight></codeline>
+<codeline lineno="140"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="141"><highlight class="normal"></highlight></codeline>
+<codeline lineno="142"><highlight class="normal"><ref refid="namespacereactor_1ad950f8d1a46612500286a4af0f167080" kindref="member">TimePoint</ref><sp/><ref refid="classreactor_1_1Reactor_1abfdf519fd67c4fc13debc60dbc68bec3" kindref="member">Reactor::get_physical_time</ref>()</highlight><highlight class="keyword"><sp/>const<sp/></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="143"><highlight class="normal"><sp/><sp/><ref refid="namespacereactor_1a49facd170b623937b3e655518a66b868" kindref="member">return ::reactor::get_physical_time</ref>();</highlight></codeline>
+<codeline lineno="144"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="145"><highlight class="normal"></highlight></codeline>
+<codeline lineno="146"><highlight class="normal"><ref refid="namespacereactor_1ad950f8d1a46612500286a4af0f167080" kindref="member">TimePoint</ref><sp/><ref refid="classreactor_1_1Reactor_1ae3b8bb1187b16901c8a140090579e6c9" kindref="member">Reactor::get_logical_time</ref>()</highlight><highlight class="keyword"><sp/>const<sp/></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="147"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>environment()-&gt;scheduler()-&gt;logical_time().time_point();</highlight></codeline>
+<codeline lineno="148"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="149"><highlight class="normal"></highlight></codeline>
+<codeline lineno="150"><highlight class="normal"><ref refid="namespacereactor_1aa8375b807a80703545664096c5b5b779" kindref="member">Duration</ref><sp/><ref refid="classreactor_1_1Reactor_1a4983e0e04f14212630b0a7da1f463239" kindref="member">Reactor::get_elapsed_logical_time</ref>()</highlight><highlight class="keyword"><sp/>const<sp/></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="151"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>get_logical_time()<sp/>-<sp/>environment()-&gt;start_time();</highlight></codeline>
+<codeline lineno="152"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="153"><highlight class="normal"></highlight></codeline>
+<codeline lineno="154"><highlight class="normal"><ref refid="namespacereactor_1aa8375b807a80703545664096c5b5b779" kindref="member">Duration</ref><sp/><ref refid="classreactor_1_1Reactor_1a206bd63d5ad7c2c39a89d9220f0acbbc" kindref="member">Reactor::get_elapsed_physical_time</ref>()</highlight><highlight class="keyword"><sp/>const<sp/></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="155"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="namespacereactor_1a49facd170b623937b3e655518a66b868" kindref="member">get_physical_time</ref>()<sp/>-<sp/>environment()-&gt;start_time();</highlight></codeline>
+<codeline lineno="156"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="157"><highlight class="normal"></highlight></codeline>
+<codeline lineno="158"><highlight class="normal">}<sp/><sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>reactor</highlight><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="/home/runner/work/reactor-cpp/reactor-cpp/lib/reactor.cc"/>
+  </compounddef>
+</doxygen>

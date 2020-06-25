@@ -1,0 +1,33 @@
+\hypertarget{time_8hh}{}\section{/home/runner/work/reactor-\/cpp/reactor-\/cpp/include/reactor-\/cpp/time.hh File Reference}
+\label{time_8hh}\index{/home/runner/work/reactor-\/cpp/reactor-\/cpp/include/reactor-\/cpp/time.\+hh@{/home/runner/work/reactor-\/cpp/reactor-\/cpp/include/reactor-\/cpp/time.\+hh}}
+{\ttfamily \#include $<$chrono$>$}\newline
+{\ttfamily \#include $<$iostream$>$}\newline
+\subsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+ \hyperlink{namespacereactor}{reactor}
+\item 
+ \hyperlink{namespacereactor_1_1operators}{reactor\+::operators}
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+using \hyperlink{namespacereactor_ad950f8d1a46612500286a4af0f167080}{reactor\+::\+Time\+Point} = std\+::chrono\+::time\+\_\+point$<$ std\+::chrono\+::system\+\_\+clock, std\+::chrono\+::nanoseconds $>$
+\item 
+using \hyperlink{namespacereactor_aa8375b807a80703545664096c5b5b779}{reactor\+::\+Duration} = std\+::chrono\+::nanoseconds
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+Time\+Point \hyperlink{namespacereactor_a49facd170b623937b3e655518a66b868}{reactor\+::get\+\_\+physical\+\_\+time} ()
+\item 
+std\+::ostream \& \hyperlink{namespacereactor_1_1operators_a8ea55f33a5ed641face930e457c1f997}{reactor\+::operators\+::operator$<$$<$} (std\+::ostream \&os, Time\+Point tp)
+\item 
+std\+::ostream \& \hyperlink{namespacereactor_1_1operators_aac16dca80170efe903081b2b41cfda47}{reactor\+::operators\+::operator$<$$<$} (std\+::ostream \&os, std\+::chrono\+::seconds dur)
+\item 
+std\+::ostream \& \hyperlink{namespacereactor_1_1operators_a7bc089730a721df6047cd010af2501d2}{reactor\+::operators\+::operator$<$$<$} (std\+::ostream \&os, std\+::chrono\+::milliseconds dur)
+\item 
+std\+::ostream \& \hyperlink{namespacereactor_1_1operators_a279ac480746dbb8a6dcd71179df68032}{reactor\+::operators\+::operator$<$$<$} (std\+::ostream \&os, std\+::chrono\+::microseconds dur)
+\item 
+std\+::ostream \& \hyperlink{namespacereactor_1_1operators_ac12faa5aad6eda9a53865201264ea257}{reactor\+::operators\+::operator$<$$<$} (std\+::ostream \&os, std\+::chrono\+::nanoseconds dur)
+\end{DoxyCompactItemize}

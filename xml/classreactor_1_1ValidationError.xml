@@ -1,0 +1,77 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.13">
+  <compounddef id="classreactor_1_1ValidationError" kind="class" language="C++" prot="public">
+    <compoundname>reactor::ValidationError</compoundname>
+    <basecompoundref prot="public" virt="non-virtual">runtime_error</basecompoundref>
+    <includes refid="assert_8hh" local="no">assert.hh</includes>
+      <sectiondef kind="private-static-func">
+      <memberdef kind="function" id="classreactor_1_1ValidationError_1a5651bea57b5c6ba5e7571172baec633c" prot="private" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>std::string</type>
+        <definition>std::string reactor::ValidationError::build_message</definition>
+        <argsstring>(const std::string &amp;msg)</argsstring>
+        <name>build_message</name>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>msg</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/assert.hh" line="31" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/lib/assert.cc" bodystart="13" bodyend="17"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classreactor_1_1ValidationError_1a6693659e3b5f0846757304ac38a17deb" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>reactor::ValidationError::ValidationError</definition>
+        <argsstring>(const std::string &amp;msg)</argsstring>
+        <name>ValidationError</name>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>msg</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/assert.hh" line="34" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/assert.hh" bodystart="34" bodyend="35"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="223">
+        <label>std::runtime_error</label>
+      </node>
+      <node id="222">
+        <label>reactor::ValidationError</label>
+        <link refid="classreactor_1_1ValidationError"/>
+        <childnode refid="223" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="225">
+        <label>std::runtime_error</label>
+      </node>
+      <node id="224">
+        <label>reactor::ValidationError</label>
+        <link refid="classreactor_1_1ValidationError"/>
+        <childnode refid="225" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/assert.hh" line="29" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/assert.hh" bodystart="29" bodyend="36"/>
+    <listofallmembers>
+      <member refid="classreactor_1_1ValidationError_1a5651bea57b5c6ba5e7571172baec633c" prot="private" virt="non-virtual"><scope>reactor::ValidationError</scope><name>build_message</name></member>
+      <member refid="classreactor_1_1ValidationError_1a6693659e3b5f0846757304ac38a17deb" prot="public" virt="non-virtual"><scope>reactor::ValidationError</scope><name>ValidationError</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

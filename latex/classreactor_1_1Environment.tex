@@ -1,0 +1,332 @@
+\hypertarget{classreactor_1_1Environment}{}\section{reactor\+:\+:Environment Class Reference}
+\label{classreactor_1_1Environment}\index{reactor\+::\+Environment@{reactor\+::\+Environment}}
+
+
+{\ttfamily \#include $<$environment.\+hh$>$}
+
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{classreactor_1_1Environment_a2f0bcf10490e174246fc14b456fb0755}{Phase} \{ \newline
+\hyperlink{classreactor_1_1Environment_a2f0bcf10490e174246fc14b456fb0755a2a0d30cb1153031c3dfc239c6e0407ea}{Phase\+::\+Construction}, 
+\hyperlink{classreactor_1_1Environment_a2f0bcf10490e174246fc14b456fb0755ad75c45e11c8aeb13494dba59a388a164}{Phase\+::\+Assembly}, 
+\hyperlink{classreactor_1_1Environment_a2f0bcf10490e174246fc14b456fb0755a13e685964c2548aa748f7ea263bad4e5}{Phase\+::\+Startup}, 
+\hyperlink{classreactor_1_1Environment_a2f0bcf10490e174246fc14b456fb0755a8f44785c8c19412c5b6611db30984514}{Phase\+::\+Execution}, 
+\newline
+\hyperlink{classreactor_1_1Environment_a2f0bcf10490e174246fc14b456fb0755a1a4ebb180ba59b067782515ffee6e975}{Phase\+::\+Shutdown}, 
+\hyperlink{classreactor_1_1Environment_a2f0bcf10490e174246fc14b456fb0755a7629cb3f7fc48e33116e336bdfd141fd}{Phase\+::\+Deconstruction}
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classreactor_1_1Environment_add3e14bfed87d544bac849fced7f30f8}{Environment} (unsigned \hyperlink{classreactor_1_1Environment_a3348b53c1d45a315920832d7505f9057}{num\+\_\+workers}, bool \hyperlink{classreactor_1_1Environment_a7a83a769b141d23297912e7588eb4495}{run\+\_\+forever}=false, bool \hyperlink{classreactor_1_1Environment_a4f6e899d401fc1238143de9d725c247d}{fast\+\_\+fwd\+\_\+execution}=false)
+\item 
+void \hyperlink{classreactor_1_1Environment_afa74eb3e5dd5a7a4b1629f9dd63a168f}{register\+\_\+reactor} (\hyperlink{classreactor_1_1Reactor}{Reactor} $\ast$reactor)
+\item 
+const auto \& \hyperlink{classreactor_1_1Environment_a89de40b92defdcde2e090a6f244c1eab}{top\+\_\+level\+\_\+reactors} () const
+\item 
+void \hyperlink{classreactor_1_1Environment_afd2ce93dd4fae7a1c6c93a8a274bf618}{assemble} ()
+\item 
+std\+::thread \hyperlink{classreactor_1_1Environment_a978f39f3609ed3889db10961505a61d9}{startup} ()
+\item 
+void \hyperlink{classreactor_1_1Environment_a7bc165b2d7a3a6bc6c4573c26170dc50}{sync\+\_\+shutdown} ()
+\item 
+void \hyperlink{classreactor_1_1Environment_a78cc13dcc68f71867e967da1c7cca001}{async\+\_\+shutdown} ()
+\item 
+void \hyperlink{classreactor_1_1Environment_a5f80b554cf21643375ad1202c8aea85c}{export\+\_\+dependency\+\_\+graph} (const std\+::string \&path)
+\item 
+\hyperlink{classreactor_1_1Environment_a2f0bcf10490e174246fc14b456fb0755}{Phase} \hyperlink{classreactor_1_1Environment_ab0cc703268b97b54e0a9e0927f0738d4}{phase} () const
+\item 
+const \hyperlink{classreactor_1_1Scheduler}{Scheduler} $\ast$ \hyperlink{classreactor_1_1Environment_a2a4cf2150b314a18db041e8a06086904}{scheduler} () const
+\item 
+\hyperlink{classreactor_1_1Scheduler}{Scheduler} $\ast$ \hyperlink{classreactor_1_1Environment_a4ac32b7f7f9a420bb689d7f5c5ce48da}{scheduler} ()
+\item 
+const \hyperlink{classreactor_1_1LogicalTime}{Logical\+Time} \& \hyperlink{classreactor_1_1Environment_a09aa23da721fffd3bb0b62f879d167b0}{logical\+\_\+time} () const
+\item 
+const \hyperlink{namespacereactor_ad950f8d1a46612500286a4af0f167080}{Time\+Point} \& \hyperlink{classreactor_1_1Environment_af7643c6bf796bd083ff4976af19e8838}{start\+\_\+time} () const
+\item 
+\hyperlink{namespacereactor_ad950f8d1a46612500286a4af0f167080}{Time\+Point} \hyperlink{classreactor_1_1Environment_aaf28ead7b6e2a273f000f71524d81a11}{physical\+\_\+time} () const
+\item 
+unsigned \hyperlink{classreactor_1_1Environment_a3348b53c1d45a315920832d7505f9057}{num\+\_\+workers} () const
+\item 
+bool \hyperlink{classreactor_1_1Environment_a4f6e899d401fc1238143de9d725c247d}{fast\+\_\+fwd\+\_\+execution} () const
+\item 
+bool \hyperlink{classreactor_1_1Environment_a7a83a769b141d23297912e7588eb4495}{run\+\_\+forever} () const
+\item 
+unsigned \hyperlink{classreactor_1_1Environment_a2d50de0d09d5aa56a9876441233590f0}{max\+\_\+reaction\+\_\+index} () const
+\end{DoxyCompactItemize}
+\subsection*{Private Types}
+\begin{DoxyCompactItemize}
+\item 
+using \hyperlink{classreactor_1_1Environment_aefeb24b3f7a321c7dc8309cac1ed176d}{Dependency} = std\+::pair$<$ \hyperlink{classreactor_1_1Reaction}{Reaction} $\ast$, \hyperlink{classreactor_1_1Reaction}{Reaction} $\ast$ $>$
+\end{DoxyCompactItemize}
+\subsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{classreactor_1_1Environment_a25e3210c41ddd193223c63adc454358a}{build\+\_\+dependency\+\_\+graph} (\hyperlink{classreactor_1_1Reactor}{Reactor} $\ast$reactor)
+\item 
+void \hyperlink{classreactor_1_1Environment_a8b832858f8c20d36ffc8331ef9f9ac14}{calculate\+\_\+indexes} ()
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+const unsigned \hyperlink{classreactor_1_1Environment_a01fac164f06a9f97bb2ee5b0b6d4a368}{\+\_\+num\+\_\+workers}
+\item 
+\hyperlink{classreactor_1_1Scheduler}{Scheduler} \hyperlink{classreactor_1_1Environment_ae07319eb6bc85a9c00ac324db4891217}{\+\_\+scheduler}
+\item 
+const bool \hyperlink{classreactor_1_1Environment_ad842507a720c670f9a51dbee020ed08b}{\+\_\+run\+\_\+forever}
+\item 
+const bool \hyperlink{classreactor_1_1Environment_ad49bd4d74a5fdf2132a4ca9933135b99}{\+\_\+fast\+\_\+fwd\+\_\+execution}
+\item 
+std\+::set$<$ \hyperlink{classreactor_1_1Reactor}{Reactor} $\ast$ $>$ \hyperlink{classreactor_1_1Environment_a15707bfeefc0200d2956e3b52c8270db}{\+\_\+top\+\_\+level\+\_\+reactors}
+\item 
+std\+::set$<$ \hyperlink{classreactor_1_1Reaction}{Reaction} $\ast$ $>$ \hyperlink{classreactor_1_1Environment_abaca5b55047bbf45f4280eeeb8cd38c4}{reactions}
+\item 
+std\+::vector$<$ \hyperlink{classreactor_1_1Environment_aefeb24b3f7a321c7dc8309cac1ed176d}{Dependency} $>$ \hyperlink{classreactor_1_1Environment_ac67e4fbe9d7365e4570fc9667c003f41}{dependencies}
+\item 
+\hyperlink{classreactor_1_1Environment_a2f0bcf10490e174246fc14b456fb0755}{Phase} \hyperlink{classreactor_1_1Environment_a15d6118f5ae312ad7665418969cc831a}{\+\_\+phase} \{\hyperlink{classreactor_1_1Environment_a2f0bcf10490e174246fc14b456fb0755a2a0d30cb1153031c3dfc239c6e0407ea}{Phase\+::\+Construction}\}
+\item 
+\hyperlink{namespacereactor_ad950f8d1a46612500286a4af0f167080}{Time\+Point} \hyperlink{classreactor_1_1Environment_adcc50c30d8fb1ad1dca3033e6819e3b8}{\+\_\+start\+\_\+time}
+\item 
+unsigned \hyperlink{classreactor_1_1Environment_aaacf54f45077c2c90e2c2ba628f088e8}{\+\_\+max\+\_\+reaction\+\_\+index}
+\end{DoxyCompactItemize}
+
+
+\subsection{Member Typedef Documentation}
+\mbox{\Hypertarget{classreactor_1_1Environment_aefeb24b3f7a321c7dc8309cac1ed176d}\label{classreactor_1_1Environment_aefeb24b3f7a321c7dc8309cac1ed176d}} 
+\index{reactor\+::\+Environment@{reactor\+::\+Environment}!Dependency@{Dependency}}
+\index{Dependency@{Dependency}!reactor\+::\+Environment@{reactor\+::\+Environment}}
+\subsubsection{\texorpdfstring{Dependency}{Dependency}}
+{\footnotesize\ttfamily using \hyperlink{classreactor_1_1Environment_aefeb24b3f7a321c7dc8309cac1ed176d}{reactor\+::\+Environment\+::\+Dependency} =  std\+::pair$<$\hyperlink{classreactor_1_1Reaction}{Reaction}$\ast$, \hyperlink{classreactor_1_1Reaction}{Reaction}$\ast$$>$\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+\subsection{Member Enumeration Documentation}
+\mbox{\Hypertarget{classreactor_1_1Environment_a2f0bcf10490e174246fc14b456fb0755}\label{classreactor_1_1Environment_a2f0bcf10490e174246fc14b456fb0755}} 
+\index{reactor\+::\+Environment@{reactor\+::\+Environment}!Phase@{Phase}}
+\index{Phase@{Phase}!reactor\+::\+Environment@{reactor\+::\+Environment}}
+\subsubsection{\texorpdfstring{Phase}{Phase}}
+{\footnotesize\ttfamily enum \hyperlink{classreactor_1_1Environment_a2f0bcf10490e174246fc14b456fb0755}{reactor\+::\+Environment\+::\+Phase}\hspace{0.3cm}{\ttfamily [strong]}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Construction@{Construction}!reactor\+::\+Environment@{reactor\+::\+Environment}}\index{reactor\+::\+Environment@{reactor\+::\+Environment}!Construction@{Construction}}}\mbox{\Hypertarget{classreactor_1_1Environment_a2f0bcf10490e174246fc14b456fb0755a2a0d30cb1153031c3dfc239c6e0407ea}\label{classreactor_1_1Environment_a2f0bcf10490e174246fc14b456fb0755a2a0d30cb1153031c3dfc239c6e0407ea}} 
+Construction&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Assembly@{Assembly}!reactor\+::\+Environment@{reactor\+::\+Environment}}\index{reactor\+::\+Environment@{reactor\+::\+Environment}!Assembly@{Assembly}}}\mbox{\Hypertarget{classreactor_1_1Environment_a2f0bcf10490e174246fc14b456fb0755ad75c45e11c8aeb13494dba59a388a164}\label{classreactor_1_1Environment_a2f0bcf10490e174246fc14b456fb0755ad75c45e11c8aeb13494dba59a388a164}} 
+Assembly&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Startup@{Startup}!reactor\+::\+Environment@{reactor\+::\+Environment}}\index{reactor\+::\+Environment@{reactor\+::\+Environment}!Startup@{Startup}}}\mbox{\Hypertarget{classreactor_1_1Environment_a2f0bcf10490e174246fc14b456fb0755a13e685964c2548aa748f7ea263bad4e5}\label{classreactor_1_1Environment_a2f0bcf10490e174246fc14b456fb0755a13e685964c2548aa748f7ea263bad4e5}} 
+Startup&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Execution@{Execution}!reactor\+::\+Environment@{reactor\+::\+Environment}}\index{reactor\+::\+Environment@{reactor\+::\+Environment}!Execution@{Execution}}}\mbox{\Hypertarget{classreactor_1_1Environment_a2f0bcf10490e174246fc14b456fb0755a8f44785c8c19412c5b6611db30984514}\label{classreactor_1_1Environment_a2f0bcf10490e174246fc14b456fb0755a8f44785c8c19412c5b6611db30984514}} 
+Execution&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Shutdown@{Shutdown}!reactor\+::\+Environment@{reactor\+::\+Environment}}\index{reactor\+::\+Environment@{reactor\+::\+Environment}!Shutdown@{Shutdown}}}\mbox{\Hypertarget{classreactor_1_1Environment_a2f0bcf10490e174246fc14b456fb0755a1a4ebb180ba59b067782515ffee6e975}\label{classreactor_1_1Environment_a2f0bcf10490e174246fc14b456fb0755a1a4ebb180ba59b067782515ffee6e975}} 
+Shutdown&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Deconstruction@{Deconstruction}!reactor\+::\+Environment@{reactor\+::\+Environment}}\index{reactor\+::\+Environment@{reactor\+::\+Environment}!Deconstruction@{Deconstruction}}}\mbox{\Hypertarget{classreactor_1_1Environment_a2f0bcf10490e174246fc14b456fb0755a7629cb3f7fc48e33116e336bdfd141fd}\label{classreactor_1_1Environment_a2f0bcf10490e174246fc14b456fb0755a7629cb3f7fc48e33116e336bdfd141fd}} 
+Deconstruction&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classreactor_1_1Environment_add3e14bfed87d544bac849fced7f30f8}\label{classreactor_1_1Environment_add3e14bfed87d544bac849fced7f30f8}} 
+\index{reactor\+::\+Environment@{reactor\+::\+Environment}!Environment@{Environment}}
+\index{Environment@{Environment}!reactor\+::\+Environment@{reactor\+::\+Environment}}
+\subsubsection{\texorpdfstring{Environment()}{Environment()}}
+{\footnotesize\ttfamily reactor\+::\+Environment\+::\+Environment (\begin{DoxyParamCaption}\item[{unsigned}]{num\+\_\+workers,  }\item[{bool}]{run\+\_\+forever = {\ttfamily false},  }\item[{bool}]{fast\+\_\+fwd\+\_\+execution = {\ttfamily false} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classreactor_1_1Environment_afd2ce93dd4fae7a1c6c93a8a274bf618}\label{classreactor_1_1Environment_afd2ce93dd4fae7a1c6c93a8a274bf618}} 
+\index{reactor\+::\+Environment@{reactor\+::\+Environment}!assemble@{assemble}}
+\index{assemble@{assemble}!reactor\+::\+Environment@{reactor\+::\+Environment}}
+\subsubsection{\texorpdfstring{assemble()}{assemble()}}
+{\footnotesize\ttfamily void reactor\+::\+Environment\+::assemble (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classreactor_1_1Environment_a78cc13dcc68f71867e967da1c7cca001}\label{classreactor_1_1Environment_a78cc13dcc68f71867e967da1c7cca001}} 
+\index{reactor\+::\+Environment@{reactor\+::\+Environment}!async\+\_\+shutdown@{async\+\_\+shutdown}}
+\index{async\+\_\+shutdown@{async\+\_\+shutdown}!reactor\+::\+Environment@{reactor\+::\+Environment}}
+\subsubsection{\texorpdfstring{async\+\_\+shutdown()}{async\_shutdown()}}
+{\footnotesize\ttfamily void reactor\+::\+Environment\+::async\+\_\+shutdown (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classreactor_1_1Environment_a25e3210c41ddd193223c63adc454358a}\label{classreactor_1_1Environment_a25e3210c41ddd193223c63adc454358a}} 
+\index{reactor\+::\+Environment@{reactor\+::\+Environment}!build\+\_\+dependency\+\_\+graph@{build\+\_\+dependency\+\_\+graph}}
+\index{build\+\_\+dependency\+\_\+graph@{build\+\_\+dependency\+\_\+graph}!reactor\+::\+Environment@{reactor\+::\+Environment}}
+\subsubsection{\texorpdfstring{build\+\_\+dependency\+\_\+graph()}{build\_dependency\_graph()}}
+{\footnotesize\ttfamily void reactor\+::\+Environment\+::build\+\_\+dependency\+\_\+graph (\begin{DoxyParamCaption}\item[{\hyperlink{classreactor_1_1Reactor}{Reactor} $\ast$}]{reactor }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classreactor_1_1Environment_a8b832858f8c20d36ffc8331ef9f9ac14}\label{classreactor_1_1Environment_a8b832858f8c20d36ffc8331ef9f9ac14}} 
+\index{reactor\+::\+Environment@{reactor\+::\+Environment}!calculate\+\_\+indexes@{calculate\+\_\+indexes}}
+\index{calculate\+\_\+indexes@{calculate\+\_\+indexes}!reactor\+::\+Environment@{reactor\+::\+Environment}}
+\subsubsection{\texorpdfstring{calculate\+\_\+indexes()}{calculate\_indexes()}}
+{\footnotesize\ttfamily void reactor\+::\+Environment\+::calculate\+\_\+indexes (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classreactor_1_1Environment_a5f80b554cf21643375ad1202c8aea85c}\label{classreactor_1_1Environment_a5f80b554cf21643375ad1202c8aea85c}} 
+\index{reactor\+::\+Environment@{reactor\+::\+Environment}!export\+\_\+dependency\+\_\+graph@{export\+\_\+dependency\+\_\+graph}}
+\index{export\+\_\+dependency\+\_\+graph@{export\+\_\+dependency\+\_\+graph}!reactor\+::\+Environment@{reactor\+::\+Environment}}
+\subsubsection{\texorpdfstring{export\+\_\+dependency\+\_\+graph()}{export\_dependency\_graph()}}
+{\footnotesize\ttfamily void reactor\+::\+Environment\+::export\+\_\+dependency\+\_\+graph (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{path }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classreactor_1_1Environment_a4f6e899d401fc1238143de9d725c247d}\label{classreactor_1_1Environment_a4f6e899d401fc1238143de9d725c247d}} 
+\index{reactor\+::\+Environment@{reactor\+::\+Environment}!fast\+\_\+fwd\+\_\+execution@{fast\+\_\+fwd\+\_\+execution}}
+\index{fast\+\_\+fwd\+\_\+execution@{fast\+\_\+fwd\+\_\+execution}!reactor\+::\+Environment@{reactor\+::\+Environment}}
+\subsubsection{\texorpdfstring{fast\+\_\+fwd\+\_\+execution()}{fast\_fwd\_execution()}}
+{\footnotesize\ttfamily bool reactor\+::\+Environment\+::fast\+\_\+fwd\+\_\+execution (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{classreactor_1_1Environment_a09aa23da721fffd3bb0b62f879d167b0}\label{classreactor_1_1Environment_a09aa23da721fffd3bb0b62f879d167b0}} 
+\index{reactor\+::\+Environment@{reactor\+::\+Environment}!logical\+\_\+time@{logical\+\_\+time}}
+\index{logical\+\_\+time@{logical\+\_\+time}!reactor\+::\+Environment@{reactor\+::\+Environment}}
+\subsubsection{\texorpdfstring{logical\+\_\+time()}{logical\_time()}}
+{\footnotesize\ttfamily const \hyperlink{classreactor_1_1LogicalTime}{Logical\+Time}\& reactor\+::\+Environment\+::logical\+\_\+time (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{classreactor_1_1Environment_a2d50de0d09d5aa56a9876441233590f0}\label{classreactor_1_1Environment_a2d50de0d09d5aa56a9876441233590f0}} 
+\index{reactor\+::\+Environment@{reactor\+::\+Environment}!max\+\_\+reaction\+\_\+index@{max\+\_\+reaction\+\_\+index}}
+\index{max\+\_\+reaction\+\_\+index@{max\+\_\+reaction\+\_\+index}!reactor\+::\+Environment@{reactor\+::\+Environment}}
+\subsubsection{\texorpdfstring{max\+\_\+reaction\+\_\+index()}{max\_reaction\_index()}}
+{\footnotesize\ttfamily unsigned reactor\+::\+Environment\+::max\+\_\+reaction\+\_\+index (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{classreactor_1_1Environment_a3348b53c1d45a315920832d7505f9057}\label{classreactor_1_1Environment_a3348b53c1d45a315920832d7505f9057}} 
+\index{reactor\+::\+Environment@{reactor\+::\+Environment}!num\+\_\+workers@{num\+\_\+workers}}
+\index{num\+\_\+workers@{num\+\_\+workers}!reactor\+::\+Environment@{reactor\+::\+Environment}}
+\subsubsection{\texorpdfstring{num\+\_\+workers()}{num\_workers()}}
+{\footnotesize\ttfamily unsigned reactor\+::\+Environment\+::num\+\_\+workers (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{classreactor_1_1Environment_ab0cc703268b97b54e0a9e0927f0738d4}\label{classreactor_1_1Environment_ab0cc703268b97b54e0a9e0927f0738d4}} 
+\index{reactor\+::\+Environment@{reactor\+::\+Environment}!phase@{phase}}
+\index{phase@{phase}!reactor\+::\+Environment@{reactor\+::\+Environment}}
+\subsubsection{\texorpdfstring{phase()}{phase()}}
+{\footnotesize\ttfamily \hyperlink{classreactor_1_1Environment_a2f0bcf10490e174246fc14b456fb0755}{Phase} reactor\+::\+Environment\+::phase (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{classreactor_1_1Environment_aaf28ead7b6e2a273f000f71524d81a11}\label{classreactor_1_1Environment_aaf28ead7b6e2a273f000f71524d81a11}} 
+\index{reactor\+::\+Environment@{reactor\+::\+Environment}!physical\+\_\+time@{physical\+\_\+time}}
+\index{physical\+\_\+time@{physical\+\_\+time}!reactor\+::\+Environment@{reactor\+::\+Environment}}
+\subsubsection{\texorpdfstring{physical\+\_\+time()}{physical\_time()}}
+{\footnotesize\ttfamily \hyperlink{namespacereactor_ad950f8d1a46612500286a4af0f167080}{Time\+Point} reactor\+::\+Environment\+::physical\+\_\+time (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{classreactor_1_1Environment_afa74eb3e5dd5a7a4b1629f9dd63a168f}\label{classreactor_1_1Environment_afa74eb3e5dd5a7a4b1629f9dd63a168f}} 
+\index{reactor\+::\+Environment@{reactor\+::\+Environment}!register\+\_\+reactor@{register\+\_\+reactor}}
+\index{register\+\_\+reactor@{register\+\_\+reactor}!reactor\+::\+Environment@{reactor\+::\+Environment}}
+\subsubsection{\texorpdfstring{register\+\_\+reactor()}{register\_reactor()}}
+{\footnotesize\ttfamily void reactor\+::\+Environment\+::register\+\_\+reactor (\begin{DoxyParamCaption}\item[{\hyperlink{classreactor_1_1Reactor}{Reactor} $\ast$}]{reactor }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classreactor_1_1Environment_a7a83a769b141d23297912e7588eb4495}\label{classreactor_1_1Environment_a7a83a769b141d23297912e7588eb4495}} 
+\index{reactor\+::\+Environment@{reactor\+::\+Environment}!run\+\_\+forever@{run\+\_\+forever}}
+\index{run\+\_\+forever@{run\+\_\+forever}!reactor\+::\+Environment@{reactor\+::\+Environment}}
+\subsubsection{\texorpdfstring{run\+\_\+forever()}{run\_forever()}}
+{\footnotesize\ttfamily bool reactor\+::\+Environment\+::run\+\_\+forever (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{classreactor_1_1Environment_a2a4cf2150b314a18db041e8a06086904}\label{classreactor_1_1Environment_a2a4cf2150b314a18db041e8a06086904}} 
+\index{reactor\+::\+Environment@{reactor\+::\+Environment}!scheduler@{scheduler}}
+\index{scheduler@{scheduler}!reactor\+::\+Environment@{reactor\+::\+Environment}}
+\subsubsection{\texorpdfstring{scheduler()}{scheduler()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily const \hyperlink{classreactor_1_1Scheduler}{Scheduler}$\ast$ reactor\+::\+Environment\+::scheduler (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{classreactor_1_1Environment_a4ac32b7f7f9a420bb689d7f5c5ce48da}\label{classreactor_1_1Environment_a4ac32b7f7f9a420bb689d7f5c5ce48da}} 
+\index{reactor\+::\+Environment@{reactor\+::\+Environment}!scheduler@{scheduler}}
+\index{scheduler@{scheduler}!reactor\+::\+Environment@{reactor\+::\+Environment}}
+\subsubsection{\texorpdfstring{scheduler()}{scheduler()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \hyperlink{classreactor_1_1Scheduler}{Scheduler}$\ast$ reactor\+::\+Environment\+::scheduler (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{classreactor_1_1Environment_af7643c6bf796bd083ff4976af19e8838}\label{classreactor_1_1Environment_af7643c6bf796bd083ff4976af19e8838}} 
+\index{reactor\+::\+Environment@{reactor\+::\+Environment}!start\+\_\+time@{start\+\_\+time}}
+\index{start\+\_\+time@{start\+\_\+time}!reactor\+::\+Environment@{reactor\+::\+Environment}}
+\subsubsection{\texorpdfstring{start\+\_\+time()}{start\_time()}}
+{\footnotesize\ttfamily const \hyperlink{namespacereactor_ad950f8d1a46612500286a4af0f167080}{Time\+Point}\& reactor\+::\+Environment\+::start\+\_\+time (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{classreactor_1_1Environment_a978f39f3609ed3889db10961505a61d9}\label{classreactor_1_1Environment_a978f39f3609ed3889db10961505a61d9}} 
+\index{reactor\+::\+Environment@{reactor\+::\+Environment}!startup@{startup}}
+\index{startup@{startup}!reactor\+::\+Environment@{reactor\+::\+Environment}}
+\subsubsection{\texorpdfstring{startup()}{startup()}}
+{\footnotesize\ttfamily std\+::thread reactor\+::\+Environment\+::startup (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classreactor_1_1Environment_a7bc165b2d7a3a6bc6c4573c26170dc50}\label{classreactor_1_1Environment_a7bc165b2d7a3a6bc6c4573c26170dc50}} 
+\index{reactor\+::\+Environment@{reactor\+::\+Environment}!sync\+\_\+shutdown@{sync\+\_\+shutdown}}
+\index{sync\+\_\+shutdown@{sync\+\_\+shutdown}!reactor\+::\+Environment@{reactor\+::\+Environment}}
+\subsubsection{\texorpdfstring{sync\+\_\+shutdown()}{sync\_shutdown()}}
+{\footnotesize\ttfamily void reactor\+::\+Environment\+::sync\+\_\+shutdown (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classreactor_1_1Environment_a89de40b92defdcde2e090a6f244c1eab}\label{classreactor_1_1Environment_a89de40b92defdcde2e090a6f244c1eab}} 
+\index{reactor\+::\+Environment@{reactor\+::\+Environment}!top\+\_\+level\+\_\+reactors@{top\+\_\+level\+\_\+reactors}}
+\index{top\+\_\+level\+\_\+reactors@{top\+\_\+level\+\_\+reactors}!reactor\+::\+Environment@{reactor\+::\+Environment}}
+\subsubsection{\texorpdfstring{top\+\_\+level\+\_\+reactors()}{top\_level\_reactors()}}
+{\footnotesize\ttfamily const auto\& reactor\+::\+Environment\+::top\+\_\+level\+\_\+reactors (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\subsection{Member Data Documentation}
+\mbox{\Hypertarget{classreactor_1_1Environment_ad49bd4d74a5fdf2132a4ca9933135b99}\label{classreactor_1_1Environment_ad49bd4d74a5fdf2132a4ca9933135b99}} 
+\index{reactor\+::\+Environment@{reactor\+::\+Environment}!\+\_\+fast\+\_\+fwd\+\_\+execution@{\+\_\+fast\+\_\+fwd\+\_\+execution}}
+\index{\+\_\+fast\+\_\+fwd\+\_\+execution@{\+\_\+fast\+\_\+fwd\+\_\+execution}!reactor\+::\+Environment@{reactor\+::\+Environment}}
+\subsubsection{\texorpdfstring{\+\_\+fast\+\_\+fwd\+\_\+execution}{\_fast\_fwd\_execution}}
+{\footnotesize\ttfamily const bool reactor\+::\+Environment\+::\+\_\+fast\+\_\+fwd\+\_\+execution\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classreactor_1_1Environment_aaacf54f45077c2c90e2c2ba628f088e8}\label{classreactor_1_1Environment_aaacf54f45077c2c90e2c2ba628f088e8}} 
+\index{reactor\+::\+Environment@{reactor\+::\+Environment}!\+\_\+max\+\_\+reaction\+\_\+index@{\+\_\+max\+\_\+reaction\+\_\+index}}
+\index{\+\_\+max\+\_\+reaction\+\_\+index@{\+\_\+max\+\_\+reaction\+\_\+index}!reactor\+::\+Environment@{reactor\+::\+Environment}}
+\subsubsection{\texorpdfstring{\+\_\+max\+\_\+reaction\+\_\+index}{\_max\_reaction\_index}}
+{\footnotesize\ttfamily unsigned reactor\+::\+Environment\+::\+\_\+max\+\_\+reaction\+\_\+index\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classreactor_1_1Environment_a01fac164f06a9f97bb2ee5b0b6d4a368}\label{classreactor_1_1Environment_a01fac164f06a9f97bb2ee5b0b6d4a368}} 
+\index{reactor\+::\+Environment@{reactor\+::\+Environment}!\+\_\+num\+\_\+workers@{\+\_\+num\+\_\+workers}}
+\index{\+\_\+num\+\_\+workers@{\+\_\+num\+\_\+workers}!reactor\+::\+Environment@{reactor\+::\+Environment}}
+\subsubsection{\texorpdfstring{\+\_\+num\+\_\+workers}{\_num\_workers}}
+{\footnotesize\ttfamily const unsigned reactor\+::\+Environment\+::\+\_\+num\+\_\+workers\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classreactor_1_1Environment_a15d6118f5ae312ad7665418969cc831a}\label{classreactor_1_1Environment_a15d6118f5ae312ad7665418969cc831a}} 
+\index{reactor\+::\+Environment@{reactor\+::\+Environment}!\+\_\+phase@{\+\_\+phase}}
+\index{\+\_\+phase@{\+\_\+phase}!reactor\+::\+Environment@{reactor\+::\+Environment}}
+\subsubsection{\texorpdfstring{\+\_\+phase}{\_phase}}
+{\footnotesize\ttfamily \hyperlink{classreactor_1_1Environment_a2f0bcf10490e174246fc14b456fb0755}{Phase} reactor\+::\+Environment\+::\+\_\+phase \{\hyperlink{classreactor_1_1Environment_a2f0bcf10490e174246fc14b456fb0755a2a0d30cb1153031c3dfc239c6e0407ea}{Phase\+::\+Construction}\}\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classreactor_1_1Environment_ad842507a720c670f9a51dbee020ed08b}\label{classreactor_1_1Environment_ad842507a720c670f9a51dbee020ed08b}} 
+\index{reactor\+::\+Environment@{reactor\+::\+Environment}!\+\_\+run\+\_\+forever@{\+\_\+run\+\_\+forever}}
+\index{\+\_\+run\+\_\+forever@{\+\_\+run\+\_\+forever}!reactor\+::\+Environment@{reactor\+::\+Environment}}
+\subsubsection{\texorpdfstring{\+\_\+run\+\_\+forever}{\_run\_forever}}
+{\footnotesize\ttfamily const bool reactor\+::\+Environment\+::\+\_\+run\+\_\+forever\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classreactor_1_1Environment_ae07319eb6bc85a9c00ac324db4891217}\label{classreactor_1_1Environment_ae07319eb6bc85a9c00ac324db4891217}} 
+\index{reactor\+::\+Environment@{reactor\+::\+Environment}!\+\_\+scheduler@{\+\_\+scheduler}}
+\index{\+\_\+scheduler@{\+\_\+scheduler}!reactor\+::\+Environment@{reactor\+::\+Environment}}
+\subsubsection{\texorpdfstring{\+\_\+scheduler}{\_scheduler}}
+{\footnotesize\ttfamily \hyperlink{classreactor_1_1Scheduler}{Scheduler} reactor\+::\+Environment\+::\+\_\+scheduler\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classreactor_1_1Environment_adcc50c30d8fb1ad1dca3033e6819e3b8}\label{classreactor_1_1Environment_adcc50c30d8fb1ad1dca3033e6819e3b8}} 
+\index{reactor\+::\+Environment@{reactor\+::\+Environment}!\+\_\+start\+\_\+time@{\+\_\+start\+\_\+time}}
+\index{\+\_\+start\+\_\+time@{\+\_\+start\+\_\+time}!reactor\+::\+Environment@{reactor\+::\+Environment}}
+\subsubsection{\texorpdfstring{\+\_\+start\+\_\+time}{\_start\_time}}
+{\footnotesize\ttfamily \hyperlink{namespacereactor_ad950f8d1a46612500286a4af0f167080}{Time\+Point} reactor\+::\+Environment\+::\+\_\+start\+\_\+time\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classreactor_1_1Environment_a15707bfeefc0200d2956e3b52c8270db}\label{classreactor_1_1Environment_a15707bfeefc0200d2956e3b52c8270db}} 
+\index{reactor\+::\+Environment@{reactor\+::\+Environment}!\+\_\+top\+\_\+level\+\_\+reactors@{\+\_\+top\+\_\+level\+\_\+reactors}}
+\index{\+\_\+top\+\_\+level\+\_\+reactors@{\+\_\+top\+\_\+level\+\_\+reactors}!reactor\+::\+Environment@{reactor\+::\+Environment}}
+\subsubsection{\texorpdfstring{\+\_\+top\+\_\+level\+\_\+reactors}{\_top\_level\_reactors}}
+{\footnotesize\ttfamily std\+::set$<$\hyperlink{classreactor_1_1Reactor}{Reactor}$\ast$$>$ reactor\+::\+Environment\+::\+\_\+top\+\_\+level\+\_\+reactors\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classreactor_1_1Environment_ac67e4fbe9d7365e4570fc9667c003f41}\label{classreactor_1_1Environment_ac67e4fbe9d7365e4570fc9667c003f41}} 
+\index{reactor\+::\+Environment@{reactor\+::\+Environment}!dependencies@{dependencies}}
+\index{dependencies@{dependencies}!reactor\+::\+Environment@{reactor\+::\+Environment}}
+\subsubsection{\texorpdfstring{dependencies}{dependencies}}
+{\footnotesize\ttfamily std\+::vector$<$\hyperlink{classreactor_1_1Environment_aefeb24b3f7a321c7dc8309cac1ed176d}{Dependency}$>$ reactor\+::\+Environment\+::dependencies\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classreactor_1_1Environment_abaca5b55047bbf45f4280eeeb8cd38c4}\label{classreactor_1_1Environment_abaca5b55047bbf45f4280eeeb8cd38c4}} 
+\index{reactor\+::\+Environment@{reactor\+::\+Environment}!reactions@{reactions}}
+\index{reactions@{reactions}!reactor\+::\+Environment@{reactor\+::\+Environment}}
+\subsubsection{\texorpdfstring{reactions}{reactions}}
+{\footnotesize\ttfamily std\+::set$<$\hyperlink{classreactor_1_1Reaction}{Reaction}$\ast$$>$ reactor\+::\+Environment\+::reactions\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/home/runner/work/reactor-\/cpp/reactor-\/cpp/include/reactor-\/cpp/\hyperlink{environment_8hh}{environment.\+hh}\item 
+/home/runner/work/reactor-\/cpp/reactor-\/cpp/lib/\hyperlink{environment_8cc}{environment.\+cc}\end{DoxyCompactItemize}

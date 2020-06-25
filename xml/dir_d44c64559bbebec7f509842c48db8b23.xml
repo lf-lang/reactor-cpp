@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.13">
+  <compounddef id="dir_d44c64559bbebec7f509842c48db8b23" kind="dir">
+    <compoundname>/home/runner/work/reactor-cpp/reactor-cpp/include</compoundname>
+    <innerdir refid="dir_47edf775acbd37a536d1331ecf977a7e">/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp</innerdir>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/"/>
+  </compounddef>
+</doxygen>

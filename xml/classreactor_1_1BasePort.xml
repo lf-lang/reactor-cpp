@@ -1,0 +1,489 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.13">
+  <compounddef id="classreactor_1_1BasePort" kind="class" language="C++" prot="public" abstract="yes">
+    <compoundname>reactor::BasePort</compoundname>
+    <basecompoundref refid="classreactor_1_1ReactorElement" prot="public" virt="non-virtual">reactor::ReactorElement</basecompoundref>
+    <derivedcompoundref refid="classreactor_1_1Port" prot="public" virt="non-virtual">reactor::Port&lt; T &gt;</derivedcompoundref>
+    <derivedcompoundref refid="classreactor_1_1Port_3_01void_01_4" prot="public" virt="non-virtual">reactor::Port&lt; void &gt;</derivedcompoundref>
+    <includes refid="port_8hh" local="no">port.hh</includes>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classreactor_1_1BasePort_1a2a457c372d11a3d959a91f27139a4938" prot="private" static="no" mutable="no">
+        <type><ref refid="classreactor_1_1BasePort" kindref="compound">BasePort</ref> *</type>
+        <definition>BasePort* reactor::BasePort::_inward_binding</definition>
+        <argsstring></argsstring>
+        <name>_inward_binding</name>
+        <initializer>= nullptr</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/port.hh" line="22" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/port.hh" bodystart="22" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classreactor_1_1BasePort_1ada6d7c004f6529f49428030dfec9b52d" prot="private" static="no" mutable="no">
+        <type>std::set&lt; <ref refid="classreactor_1_1BasePort" kindref="compound">BasePort</ref> * &gt;</type>
+        <definition>std::set&lt;BasePort*&gt; reactor::BasePort::_outward_bindings</definition>
+        <argsstring></argsstring>
+        <name>_outward_bindings</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/port.hh" line="23" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/port.hh" bodystart="23" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classreactor_1_1BasePort_1a9af5e0d55ee1a425b2c5975ab1ca871e" prot="private" static="no" mutable="no">
+        <type>const <ref refid="namespacereactor_1a08c8e2d85e5bc706b1af8a87e40eec6d" kindref="member">PortType</ref></type>
+        <definition>const PortType reactor::BasePort::type</definition>
+        <argsstring></argsstring>
+        <name>type</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/port.hh" line="24" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/port.hh" bodystart="24" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classreactor_1_1BasePort_1ab6c05497d78f1462ea0969e3feb59137" prot="private" static="no" mutable="no">
+        <type>std::set&lt; <ref refid="classreactor_1_1Reaction" kindref="compound">Reaction</ref> * &gt;</type>
+        <definition>std::set&lt;Reaction*&gt; reactor::BasePort::_dependencies</definition>
+        <argsstring></argsstring>
+        <name>_dependencies</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/port.hh" line="26" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/port.hh" bodystart="26" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classreactor_1_1BasePort_1a26cdf0eb1d25ebdcdbd576c78f56bf38" prot="private" static="no" mutable="no">
+        <type>std::set&lt; <ref refid="classreactor_1_1Reaction" kindref="compound">Reaction</ref> * &gt;</type>
+        <definition>std::set&lt;Reaction*&gt; reactor::BasePort::_triggers</definition>
+        <argsstring></argsstring>
+        <name>_triggers</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/port.hh" line="27" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/port.hh" bodystart="27" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classreactor_1_1BasePort_1ae323964a96ecb4e0d952d7632736464b" prot="private" static="no" mutable="no">
+        <type>std::set&lt; <ref refid="classreactor_1_1Reaction" kindref="compound">Reaction</ref> * &gt;</type>
+        <definition>std::set&lt;Reaction*&gt; reactor::BasePort::_antidependencies</definition>
+        <argsstring></argsstring>
+        <name>_antidependencies</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/port.hh" line="28" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/port.hh" bodystart="28" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="friend">
+      <memberdef kind="friend" id="classreactor_1_1BasePort_1a5f86463029cca47f8aa15ff8cd5b9e51" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>friend class</type>
+        <definition>friend class Reaction</definition>
+        <argsstring></argsstring>
+        <name>Reaction</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/port.hh" line="57" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/port.hh" bodystart="57" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="friend" id="classreactor_1_1BasePort_1afb88c77ea5daaefa6c8fa6bc5b9aa5c1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>friend class</type>
+        <definition>friend class Scheduler</definition>
+        <argsstring></argsstring>
+        <name>Scheduler</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/port.hh" line="58" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/port.hh" bodystart="58" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="protected-func">
+      <memberdef kind="function" id="classreactor_1_1BasePort_1abf23bbb8fdd982044fca7d253ca1d851" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>reactor::BasePort::BasePort</definition>
+        <argsstring>(const std::string &amp;name, PortType type, Reactor *container)</argsstring>
+        <name>BasePort</name>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>name</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacereactor_1a08c8e2d85e5bc706b1af8a87e40eec6d" kindref="member">PortType</ref></type>
+          <declname>type</declname>
+        </param>
+        <param>
+          <type><ref refid="classreactor_1_1Reactor" kindref="compound">Reactor</ref> *</type>
+          <declname>container</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/port.hh" line="31" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/port.hh" bodystart="31" bodyend="33"/>
+      </memberdef>
+      <memberdef kind="function" id="classreactor_1_1BasePort_1a58886ca9004547c85b06e7803d0530b1" prot="protected" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void reactor::BasePort::base_bind_to</definition>
+        <argsstring>(BasePort *port)</argsstring>
+        <name>base_bind_to</name>
+        <param>
+          <type><ref refid="classreactor_1_1BasePort" kindref="compound">BasePort</ref> *</type>
+          <declname>port</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/port.hh" line="35" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/lib/port.cc" bodystart="17" bodyend="52"/>
+      </memberdef>
+      <memberdef kind="function" id="classreactor_1_1BasePort_1a781809b23cbb205087867bddbd077e17" prot="protected" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void reactor::BasePort::register_dependency</definition>
+        <argsstring>(Reaction *reaction, bool is_trigger)</argsstring>
+        <name>register_dependency</name>
+        <param>
+          <type><ref refid="classreactor_1_1Reaction" kindref="compound">Reaction</ref> *</type>
+          <declname>reaction</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>is_trigger</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/port.hh" line="36" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/lib/port.cc" bodystart="54" bodyend="77"/>
+      </memberdef>
+      <memberdef kind="function" id="classreactor_1_1BasePort_1a1a9831f2c5dfb36c1c0987ab7dcdd608" prot="protected" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void reactor::BasePort::register_antidependency</definition>
+        <argsstring>(Reaction *reaction)</argsstring>
+        <name>register_antidependency</name>
+        <param>
+          <type><ref refid="classreactor_1_1Reaction" kindref="compound">Reaction</ref> *</type>
+          <declname>reaction</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/port.hh" line="37" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/lib/port.cc" bodystart="79" bodyend="99"/>
+      </memberdef>
+      <memberdef kind="function" id="classreactor_1_1BasePort_1afe81e6747077349da4c420a873783579" prot="protected" static="no" const="no" explicit="no" inline="no" virt="pure-virtual">
+        <type>void</type>
+        <definition>virtual void reactor::BasePort::cleanup</definition>
+        <argsstring>()=0</argsstring>
+        <name>cleanup</name>
+        <reimplementedby refid="classreactor_1_1Port_1a05fdfca6fac003412700103e04ee66fd">cleanup</reimplementedby>
+        <reimplementedby refid="classreactor_1_1Port_3_01void_01_4_1aedf8266554cde75e236451d8c512e4c8">cleanup</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/port.hh" line="39" column="1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classreactor_1_1BasePort_1ad488760a5ed50b9bbf137d4e52c053f7" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool reactor::BasePort::is_input</definition>
+        <argsstring>() const</argsstring>
+        <name>is_input</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/port.hh" line="42" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/port.hh" bodystart="42" bodyend="42"/>
+      </memberdef>
+      <memberdef kind="function" id="classreactor_1_1BasePort_1ad5ebded21426bfcf02359b1ab3fdf7d8" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool reactor::BasePort::is_output</definition>
+        <argsstring>() const</argsstring>
+        <name>is_output</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/port.hh" line="43" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/port.hh" bodystart="43" bodyend="43"/>
+      </memberdef>
+      <memberdef kind="function" id="classreactor_1_1BasePort_1a8d8a93a2d15683d29ec7a4ec483db01a" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool reactor::BasePort::has_inward_binding</definition>
+        <argsstring>() const</argsstring>
+        <name>has_inward_binding</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/port.hh" line="45" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/port.hh" bodystart="45" bodyend="45"/>
+      </memberdef>
+      <memberdef kind="function" id="classreactor_1_1BasePort_1a397f8bbc24835a01bfad591abb85bcb4" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool reactor::BasePort::has_outward_bindings</definition>
+        <argsstring>() const</argsstring>
+        <name>has_outward_bindings</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/port.hh" line="46" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/port.hh" bodystart="46" bodyend="46"/>
+      </memberdef>
+      <memberdef kind="function" id="classreactor_1_1BasePort_1a687c0460c4823d90d150c6a363e256a9" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool reactor::BasePort::has_dependencies</definition>
+        <argsstring>() const</argsstring>
+        <name>has_dependencies</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/port.hh" line="47" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/port.hh" bodystart="47" bodyend="47"/>
+      </memberdef>
+      <memberdef kind="function" id="classreactor_1_1BasePort_1a0c046ef79ccf68f8a68f788df774aed3" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool reactor::BasePort::has_antidependencies</definition>
+        <argsstring>() const</argsstring>
+        <name>has_antidependencies</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/port.hh" line="48" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/port.hh" bodystart="48" bodyend="48"/>
+      </memberdef>
+      <memberdef kind="function" id="classreactor_1_1BasePort_1af4a42f14f878509c00bb16d0c5b2c201" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="classreactor_1_1BasePort" kindref="compound">BasePort</ref> *</type>
+        <definition>BasePort* reactor::BasePort::inward_binding</definition>
+        <argsstring>() const</argsstring>
+        <name>inward_binding</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/port.hh" line="50" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/port.hh" bodystart="50" bodyend="50"/>
+      </memberdef>
+      <memberdef kind="function" id="classreactor_1_1BasePort_1aaf404379c3908577b7fc7e394d5c972c" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>const auto &amp;</type>
+        <definition>const auto&amp; reactor::BasePort::outward_bindings</definition>
+        <argsstring>() const</argsstring>
+        <name>outward_bindings</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/port.hh" line="51" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/port.hh" bodystart="51" bodyend="51"/>
+      </memberdef>
+      <memberdef kind="function" id="classreactor_1_1BasePort_1a71208c7024e39242b1012091daf7b7ed" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>const auto &amp;</type>
+        <definition>const auto&amp; reactor::BasePort::triggers</definition>
+        <argsstring>() const</argsstring>
+        <name>triggers</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/port.hh" line="53" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/port.hh" bodystart="53" bodyend="53"/>
+      </memberdef>
+      <memberdef kind="function" id="classreactor_1_1BasePort_1aab124dee21981b289b55c2e2c8e3922d" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>const auto &amp;</type>
+        <definition>const auto&amp; reactor::BasePort::dependencies</definition>
+        <argsstring>() const</argsstring>
+        <name>dependencies</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/port.hh" line="54" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/port.hh" bodystart="54" bodyend="54"/>
+      </memberdef>
+      <memberdef kind="function" id="classreactor_1_1BasePort_1a9158ab37ab600ea2b8a39749ca9404c4" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>const auto &amp;</type>
+        <definition>const auto&amp; reactor::BasePort::antidependencies</definition>
+        <argsstring>() const</argsstring>
+        <name>antidependencies</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/port.hh" line="55" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/port.hh" bodystart="55" bodyend="55"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="45">
+        <label>reactor::Port&lt; T &gt;</label>
+        <link refid="classreactor_1_1Port"/>
+        <childnode refid="43" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="43">
+        <label>reactor::BasePort</label>
+        <link refid="classreactor_1_1BasePort"/>
+        <childnode refid="44" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="48">
+        <label>reactor::Port&lt; void &gt;</label>
+        <link refid="classreactor_1_1Port_3_01void_01_4"/>
+        <childnode refid="43" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="44">
+        <label>reactor::ReactorElement</label>
+        <link refid="classreactor_1_1ReactorElement"/>
+      </node>
+      <node id="46">
+        <label>reactor::Input&lt; T &gt;</label>
+        <link refid="classreactor_1_1Input"/>
+        <childnode refid="45" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="47">
+        <label>reactor::Output&lt; T &gt;</label>
+        <link refid="classreactor_1_1Output"/>
+        <childnode refid="45" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="49">
+        <label>reactor::BasePort</label>
+        <link refid="classreactor_1_1BasePort"/>
+        <childnode refid="50" relation="public-inheritance">
+        </childnode>
+        <childnode refid="49" relation="usage">
+          <edgelabel>_inward_binding</edgelabel>
+        </childnode>
+      </node>
+      <node id="50">
+        <label>reactor::ReactorElement</label>
+        <link refid="classreactor_1_1ReactorElement"/>
+        <childnode refid="51" relation="usage">
+          <edgelabel>_container</edgelabel>
+        </childnode>
+        <childnode refid="52" relation="usage">
+          <edgelabel>_environment</edgelabel>
+        </childnode>
+      </node>
+      <node id="52">
+        <label>reactor::Environment</label>
+        <link refid="classreactor_1_1Environment"/>
+        <childnode refid="53" relation="usage">
+          <edgelabel>_scheduler</edgelabel>
+        </childnode>
+      </node>
+      <node id="54">
+        <label>reactor::LogicalTime</label>
+        <link refid="classreactor_1_1LogicalTime"/>
+      </node>
+      <node id="51">
+        <label>reactor::Reactor</label>
+        <link refid="classreactor_1_1Reactor"/>
+        <childnode refid="50" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="53">
+        <label>reactor::Scheduler</label>
+        <link refid="classreactor_1_1Scheduler"/>
+        <childnode refid="54" relation="usage">
+          <edgelabel>_logical_time</edgelabel>
+        </childnode>
+        <childnode refid="52" relation="usage">
+          <edgelabel>_environment</edgelabel>
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/port.hh" line="20" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/port.hh" bodystart="20" bodyend="59"/>
+    <listofallmembers>
+      <member refid="classreactor_1_1BasePort_1ae323964a96ecb4e0d952d7632736464b" prot="private" virt="non-virtual"><scope>reactor::BasePort</scope><name>_antidependencies</name></member>
+      <member refid="classreactor_1_1BasePort_1ab6c05497d78f1462ea0969e3feb59137" prot="private" virt="non-virtual"><scope>reactor::BasePort</scope><name>_dependencies</name></member>
+      <member refid="classreactor_1_1BasePort_1a2a457c372d11a3d959a91f27139a4938" prot="private" virt="non-virtual"><scope>reactor::BasePort</scope><name>_inward_binding</name></member>
+      <member refid="classreactor_1_1BasePort_1ada6d7c004f6529f49428030dfec9b52d" prot="private" virt="non-virtual"><scope>reactor::BasePort</scope><name>_outward_bindings</name></member>
+      <member refid="classreactor_1_1BasePort_1a26cdf0eb1d25ebdcdbd576c78f56bf38" prot="private" virt="non-virtual"><scope>reactor::BasePort</scope><name>_triggers</name></member>
+      <member refid="classreactor_1_1BasePort_1a9158ab37ab600ea2b8a39749ca9404c4" prot="public" virt="non-virtual"><scope>reactor::BasePort</scope><name>antidependencies</name></member>
+      <member refid="classreactor_1_1BasePort_1a58886ca9004547c85b06e7803d0530b1" prot="protected" virt="non-virtual"><scope>reactor::BasePort</scope><name>base_bind_to</name></member>
+      <member refid="classreactor_1_1BasePort_1abf23bbb8fdd982044fca7d253ca1d851" prot="protected" virt="non-virtual"><scope>reactor::BasePort</scope><name>BasePort</name></member>
+      <member refid="classreactor_1_1BasePort_1afe81e6747077349da4c420a873783579" prot="protected" virt="pure-virtual"><scope>reactor::BasePort</scope><name>cleanup</name></member>
+      <member refid="classreactor_1_1ReactorElement_1a25bf298de879a82eefc1ba426be05812" prot="public" virt="non-virtual"><scope>reactor::BasePort</scope><name>container</name></member>
+      <member refid="classreactor_1_1BasePort_1aab124dee21981b289b55c2e2c8e3922d" prot="public" virt="non-virtual"><scope>reactor::BasePort</scope><name>dependencies</name></member>
+      <member refid="classreactor_1_1ReactorElement_1a895b09f977450723c59b67b41e643db8" prot="public" virt="non-virtual"><scope>reactor::BasePort</scope><name>environment</name></member>
+      <member refid="classreactor_1_1ReactorElement_1af57b89113cd189208ea95668ad5bd141" prot="public" virt="non-virtual"><scope>reactor::BasePort</scope><name>fqn</name></member>
+      <member refid="classreactor_1_1BasePort_1a0c046ef79ccf68f8a68f788df774aed3" prot="public" virt="non-virtual"><scope>reactor::BasePort</scope><name>has_antidependencies</name></member>
+      <member refid="classreactor_1_1BasePort_1a687c0460c4823d90d150c6a363e256a9" prot="public" virt="non-virtual"><scope>reactor::BasePort</scope><name>has_dependencies</name></member>
+      <member refid="classreactor_1_1BasePort_1a8d8a93a2d15683d29ec7a4ec483db01a" prot="public" virt="non-virtual"><scope>reactor::BasePort</scope><name>has_inward_binding</name></member>
+      <member refid="classreactor_1_1BasePort_1a397f8bbc24835a01bfad591abb85bcb4" prot="public" virt="non-virtual"><scope>reactor::BasePort</scope><name>has_outward_bindings</name></member>
+      <member refid="classreactor_1_1BasePort_1af4a42f14f878509c00bb16d0c5b2c201" prot="public" virt="non-virtual"><scope>reactor::BasePort</scope><name>inward_binding</name></member>
+      <member refid="classreactor_1_1BasePort_1ad488760a5ed50b9bbf137d4e52c053f7" prot="public" virt="non-virtual"><scope>reactor::BasePort</scope><name>is_input</name></member>
+      <member refid="classreactor_1_1BasePort_1ad5ebded21426bfcf02359b1ab3fdf7d8" prot="public" virt="non-virtual"><scope>reactor::BasePort</scope><name>is_output</name></member>
+      <member refid="classreactor_1_1ReactorElement_1a29c516a59fd1ccc43fa0023c550b6964" prot="public" virt="non-virtual"><scope>reactor::BasePort</scope><name>is_top_level</name></member>
+      <member refid="classreactor_1_1ReactorElement_1a99579f61dbaf5d5d98aebfe26eb8bf77" prot="public" virt="non-virtual"><scope>reactor::BasePort</scope><name>name</name></member>
+      <member refid="classreactor_1_1BasePort_1aaf404379c3908577b7fc7e394d5c972c" prot="public" virt="non-virtual"><scope>reactor::BasePort</scope><name>outward_bindings</name></member>
+      <member refid="classreactor_1_1BasePort_1a5f86463029cca47f8aa15ff8cd5b9e51" prot="public" virt="non-virtual"><scope>reactor::BasePort</scope><name>Reaction</name></member>
+      <member refid="classreactor_1_1ReactorElement_1aebc8c1cabcadca08400284fdb05ce746" prot="public" virt="non-virtual"><scope>reactor::BasePort</scope><name>ReactorElement</name></member>
+      <member refid="classreactor_1_1ReactorElement_1ac5f85a8322de3fad7191a8f749b507fd" prot="public" virt="non-virtual"><scope>reactor::BasePort</scope><name>ReactorElement</name></member>
+      <member refid="classreactor_1_1ReactorElement_1aa975574e21f5f7a4bb761f04ed57dfa4" prot="public" virt="non-virtual"><scope>reactor::BasePort</scope><name>ReactorElement</name></member>
+      <member refid="classreactor_1_1ReactorElement_1a2ba6e1e309233db7cfc124563f9f8f9f" prot="public" virt="non-virtual"><scope>reactor::BasePort</scope><name>ReactorElement</name></member>
+      <member refid="classreactor_1_1BasePort_1a1a9831f2c5dfb36c1c0987ab7dcdd608" prot="protected" virt="non-virtual"><scope>reactor::BasePort</scope><name>register_antidependency</name></member>
+      <member refid="classreactor_1_1BasePort_1a781809b23cbb205087867bddbd077e17" prot="protected" virt="non-virtual"><scope>reactor::BasePort</scope><name>register_dependency</name></member>
+      <member refid="classreactor_1_1BasePort_1afb88c77ea5daaefa6c8fa6bc5b9aa5c1" prot="public" virt="non-virtual"><scope>reactor::BasePort</scope><name>Scheduler</name></member>
+      <member refid="classreactor_1_1ReactorElement_1a8fce084bef582156979ebba56737e907" prot="public" virt="pure-virtual"><scope>reactor::BasePort</scope><name>shutdown</name></member>
+      <member refid="classreactor_1_1ReactorElement_1a8cb574cb20ff963903ad905fb0a157e3" prot="public" virt="pure-virtual"><scope>reactor::BasePort</scope><name>startup</name></member>
+      <member refid="classreactor_1_1BasePort_1a71208c7024e39242b1012091daf7b7ed" prot="public" virt="non-virtual"><scope>reactor::BasePort</scope><name>triggers</name></member>
+      <member refid="classreactor_1_1ReactorElement_1a9291659e2893372cfea42ffccfd487b2" prot="public" virt="non-virtual"><scope>reactor::BasePort</scope><name>Type</name></member>
+      <member refid="classreactor_1_1BasePort_1a9af5e0d55ee1a425b2c5975ab1ca871e" prot="private" virt="non-virtual"><scope>reactor::BasePort</scope><name>type</name></member>
+      <member refid="classreactor_1_1ReactorElement_1ac9075040ad83b1945f75f3065c0405fa" prot="public" virt="virtual"><scope>reactor::BasePort</scope><name>~ReactorElement</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,265 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.13">
+  <compounddef id="logical__time_8hh" kind="file" language="C++">
+    <compoundname>logical_time.hh</compoundname>
+    <includes refid="time_8hh" local="yes">time.hh</includes>
+    <includedby refid="logical__time_8cc" local="yes">/home/runner/work/reactor-cpp/reactor-cpp/lib/logical_time.cc</includedby>
+    <includedby refid="action_8hh" local="yes">/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/action.hh</includedby>
+    <includedby refid="scheduler_8hh" local="yes">/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/scheduler.hh</includedby>
+    <includedby refid="reactor-cpp_8hh" local="yes">/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/reactor-cpp.hh</includedby>
+    <includedby refid="trace_8hh" local="yes">/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/trace.hh</includedby>
+    <incdepgraph>
+      <node id="167">
+        <label>/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/logical_time.hh</label>
+        <link refid="logical__time_8hh"/>
+        <childnode refid="168" relation="include">
+        </childnode>
+      </node>
+      <node id="170">
+        <label>iostream</label>
+      </node>
+      <node id="168">
+        <label>time.hh</label>
+        <link refid="time_8hh"/>
+        <childnode refid="169" relation="include">
+        </childnode>
+        <childnode refid="170" relation="include">
+        </childnode>
+      </node>
+      <node id="169">
+        <label>chrono</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="176">
+        <label>/home/runner/work/reactor-cpp/reactor-cpp/lib/reactor.cc</label>
+        <link refid="reactor_8cc"/>
+      </node>
+      <node id="178">
+        <label>/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/reactor-cpp.hh</label>
+        <link refid="reactor-cpp_8hh"/>
+      </node>
+      <node id="187">
+        <label>/home/runner/work/reactor-cpp/reactor-cpp/lib/trace.cc</label>
+        <link refid="trace_8cc"/>
+      </node>
+      <node id="186">
+        <label>/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/trace.hh</label>
+        <link refid="trace_8hh"/>
+        <childnode refid="177" relation="include">
+        </childnode>
+        <childnode refid="187" relation="include">
+        </childnode>
+      </node>
+      <node id="174">
+        <label>/home/runner/work/reactor-cpp/reactor-cpp/lib/action.cc</label>
+        <link refid="action_8cc"/>
+      </node>
+      <node id="172">
+        <label>/home/runner/work/reactor-cpp/reactor-cpp/lib/logical_time.cc</label>
+        <link refid="logical__time_8cc"/>
+      </node>
+      <node id="185">
+        <label>/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/port.hh</label>
+        <link refid="port_8hh"/>
+        <childnode refid="181" relation="include">
+        </childnode>
+        <childnode refid="182" relation="include">
+        </childnode>
+        <childnode refid="175" relation="include">
+        </childnode>
+        <childnode refid="176" relation="include">
+        </childnode>
+        <childnode refid="177" relation="include">
+        </childnode>
+        <childnode refid="178" relation="include">
+        </childnode>
+      </node>
+      <node id="183">
+        <label>/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/impl/action_impl.hh</label>
+        <link refid="action__impl_8hh"/>
+        <childnode refid="173" relation="include">
+        </childnode>
+      </node>
+      <node id="182">
+        <label>/home/runner/work/reactor-cpp/reactor-cpp/lib/port.cc</label>
+        <link refid="port_8cc"/>
+      </node>
+      <node id="171">
+        <label>/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/logical_time.hh</label>
+        <link refid="logical__time_8hh"/>
+        <childnode refid="172" relation="include">
+        </childnode>
+        <childnode refid="173" relation="include">
+        </childnode>
+        <childnode refid="179" relation="include">
+        </childnode>
+        <childnode refid="178" relation="include">
+        </childnode>
+        <childnode refid="186" relation="include">
+        </childnode>
+      </node>
+      <node id="175">
+        <label>/home/runner/work/reactor-cpp/reactor-cpp/lib/reaction.cc</label>
+        <link refid="reaction_8cc"/>
+      </node>
+      <node id="181">
+        <label>/home/runner/work/reactor-cpp/reactor-cpp/lib/environment.cc</label>
+        <link refid="environment_8cc"/>
+      </node>
+      <node id="179">
+        <label>/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/scheduler.hh</label>
+        <link refid="scheduler_8hh"/>
+        <childnode refid="177" relation="include">
+        </childnode>
+        <childnode refid="180" relation="include">
+        </childnode>
+      </node>
+      <node id="177">
+        <label>/home/runner/work/reactor-cpp/reactor-cpp/lib/scheduler.cc</label>
+        <link refid="scheduler_8cc"/>
+      </node>
+      <node id="184">
+        <label>/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/impl/port_impl.hh</label>
+        <link refid="port__impl_8hh"/>
+        <childnode refid="185" relation="include">
+        </childnode>
+      </node>
+      <node id="180">
+        <label>/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/environment.hh</label>
+        <link refid="environment_8hh"/>
+        <childnode refid="174" relation="include">
+        </childnode>
+        <childnode refid="181" relation="include">
+        </childnode>
+        <childnode refid="182" relation="include">
+        </childnode>
+        <childnode refid="175" relation="include">
+        </childnode>
+        <childnode refid="176" relation="include">
+        </childnode>
+        <childnode refid="177" relation="include">
+        </childnode>
+        <childnode refid="183" relation="include">
+        </childnode>
+        <childnode refid="184" relation="include">
+        </childnode>
+        <childnode refid="178" relation="include">
+        </childnode>
+      </node>
+      <node id="173">
+        <label>/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/action.hh</label>
+        <link refid="action_8hh"/>
+        <childnode refid="174" relation="include">
+        </childnode>
+        <childnode refid="175" relation="include">
+        </childnode>
+        <childnode refid="176" relation="include">
+        </childnode>
+        <childnode refid="177" relation="include">
+        </childnode>
+        <childnode refid="178" relation="include">
+        </childnode>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="classreactor_1_1Tag" prot="public">reactor::Tag</innerclass>
+    <innerclass refid="classreactor_1_1LogicalTime" prot="public">reactor::LogicalTime</innerclass>
+    <innernamespace refid="namespacereactor">reactor</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">/*</highlight></codeline>
+<codeline lineno="2"><highlight class="comment"><sp/>*<sp/>Copyright<sp/>(C)<sp/>2019<sp/>TU<sp/>Dresden</highlight></codeline>
+<codeline lineno="3"><highlight class="comment"><sp/>*<sp/>All<sp/>rights<sp/>reserved.</highlight></codeline>
+<codeline lineno="4"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="5"><highlight class="comment"><sp/>*<sp/>Authors:</highlight></codeline>
+<codeline lineno="6"><highlight class="comment"><sp/>*<sp/><sp/><sp/>Christian<sp/>Menard</highlight></codeline>
+<codeline lineno="7"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="preprocessor">#pragma<sp/>once</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="time_8hh" kindref="compound">time.hh</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespacereactor" kindref="compound">reactor</ref><sp/>{</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight></codeline>
+<codeline lineno="15" refid="namespacereactor_1aaea1189d617982457b74127ba74a7340" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">using</highlight><highlight class="normal"><sp/><ref refid="namespacereactor_1aaea1189d617982457b74127ba74a7340" kindref="member">mstep_t</ref><sp/>=<sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/>long;<sp/><sp/></highlight><highlight class="comment">//<sp/>at<sp/>least<sp/>32<sp/>bit</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="classreactor_1_1LogicalTime" kindref="compound">LogicalTime</ref>;</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight></codeline>
+<codeline lineno="19" refid="classreactor_1_1Tag" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="classreactor_1_1Tag" kindref="compound">Tag</ref><sp/>{</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"><sp/></highlight><highlight class="keyword">private</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="21" refid="classreactor_1_1Tag_1a24a75e25cfaac63128d8f925ee95c4d9" refkind="member"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="namespacereactor_1ad950f8d1a46612500286a4af0f167080" kindref="member">TimePoint</ref><sp/><ref refid="classreactor_1_1Tag_1a24a75e25cfaac63128d8f925ee95c4d9" kindref="member">_time_point</ref>;</highlight></codeline>
+<codeline lineno="22" refid="classreactor_1_1Tag_1a7660e5c962c9916a04abe97fad3226ab" refkind="member"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="namespacereactor_1aaea1189d617982457b74127ba74a7340" kindref="member">mstep_t</ref><sp/><ref refid="classreactor_1_1Tag_1a7660e5c962c9916a04abe97fad3226ab" kindref="member">_micro_step</ref>;</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight></codeline>
+<codeline lineno="24" refid="classreactor_1_1Tag_1ae9912e50f1398a241205e8fae7ad9cea" refkind="member"><highlight class="normal"><sp/><sp/><ref refid="classreactor_1_1Tag_1ae9912e50f1398a241205e8fae7ad9cea" kindref="member">Tag</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="namespacereactor_1ad950f8d1a46612500286a4af0f167080" kindref="member">TimePoint</ref>&amp;<sp/><ref refid="classreactor_1_1Tag_1a25ec5662af4fc8c9b34cf5cc0d70b569" kindref="member">time_point</ref>,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="namespacereactor_1aaea1189d617982457b74127ba74a7340" kindref="member">mstep_t</ref>&amp;<sp/><ref refid="classreactor_1_1Tag_1a8cfdeeb03c2e48a684e1bc517505c087" kindref="member">micro_step</ref>)</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>:<sp/>_time_point{time_point},<sp/>_micro_step{<ref refid="classreactor_1_1Tag_1a8cfdeeb03c2e48a684e1bc517505c087" kindref="member">micro_step</ref>}<sp/>{}</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>no<sp/>default<sp/>constructor,<sp/>not<sp/>assignable,<sp/>but<sp/>movable<sp/>and<sp/>copyable</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><ref refid="classreactor_1_1Tag_1a25458048eeb77969069faee12894f6d4" kindref="member">Tag</ref>()<sp/>=<sp/></highlight><highlight class="keyword">delete</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><ref refid="classreactor_1_1Tag" kindref="compound">Tag</ref>&amp;<sp/><ref refid="classreactor_1_1Tag_1ae0776e16fba93c8836ab0d1651ffd309" kindref="member">operator=</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Tag" kindref="compound">Tag</ref>&amp;)<sp/>=<sp/></highlight><highlight class="keyword">delete</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><ref refid="classreactor_1_1Tag_1a25458048eeb77969069faee12894f6d4" kindref="member">Tag</ref>(<ref refid="classreactor_1_1Tag" kindref="compound">Tag</ref>&amp;&amp;)<sp/>=<sp/></highlight><highlight class="keywordflow">default</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><ref refid="classreactor_1_1Tag_1a25458048eeb77969069faee12894f6d4" kindref="member">Tag</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Tag" kindref="compound">Tag</ref>&amp;)<sp/>=<sp/></highlight><highlight class="keywordflow">default</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"></highlight></codeline>
+<codeline lineno="34" refid="classreactor_1_1Tag_1a25ec5662af4fc8c9b34cf5cc0d70b569" refkind="member"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="namespacereactor_1ad950f8d1a46612500286a4af0f167080" kindref="member">TimePoint</ref>&amp;<sp/><ref refid="classreactor_1_1Tag_1a25ec5662af4fc8c9b34cf5cc0d70b569" kindref="member">time_point</ref>()</highlight><highlight class="keyword"><sp/>const<sp/></highlight><highlight class="normal">{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Tag_1a24a75e25cfaac63128d8f925ee95c4d9" kindref="member">_time_point</ref>;<sp/>}</highlight></codeline>
+<codeline lineno="35" refid="classreactor_1_1Tag_1a8cfdeeb03c2e48a684e1bc517505c087" refkind="member"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="namespacereactor_1aaea1189d617982457b74127ba74a7340" kindref="member">mstep_t</ref>&amp;<sp/><ref refid="classreactor_1_1Tag_1a8cfdeeb03c2e48a684e1bc517505c087" kindref="member">micro_step</ref>()</highlight><highlight class="keyword"><sp/>const<sp/></highlight><highlight class="normal">{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Tag_1a7660e5c962c9916a04abe97fad3226ab" kindref="member">_micro_step</ref>;<sp/>}</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"></highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Tag" kindref="compound">Tag</ref><sp/><ref refid="classreactor_1_1Tag_1ad0577aba35a17c5aac3dec8629977ae1" kindref="member">from_physical_time</ref>(<ref refid="namespacereactor_1ad950f8d1a46612500286a4af0f167080" kindref="member">TimePoint</ref><sp/><ref refid="classreactor_1_1Tag_1a25ec5662af4fc8c9b34cf5cc0d70b569" kindref="member">time_point</ref>);</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Tag" kindref="compound">Tag</ref><sp/><ref refid="classreactor_1_1Tag_1a99d7fef2a7b8f865e8d69d45ea9cf17f" kindref="member">from_logical_time</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1LogicalTime" kindref="compound">LogicalTime</ref>&amp;<sp/>lt);</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"></highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><ref refid="classreactor_1_1Tag" kindref="compound">Tag</ref><sp/><ref refid="classreactor_1_1Tag_1af4cf8dfbcef78f120e71562084e67168" kindref="member">delay</ref>(<ref refid="namespacereactor_1aa8375b807a80703545664096c5b5b779" kindref="member">Duration</ref><sp/>offset<sp/>=<sp/>Duration::zero())<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="41"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"></highlight></codeline>
+<codeline lineno="43"><highlight class="normal"></highlight><highlight class="comment">//<sp/>define<sp/>all<sp/>the<sp/>comparison<sp/>operators</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="44"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="namespacereactor_1a0c98d4882f478da43c2c1a169a1fedd2" kindref="member">operator==</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Tag" kindref="compound">Tag</ref>&amp;<sp/>lhs,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Tag" kindref="compound">Tag</ref>&amp;<sp/>rhs);</highlight></codeline>
+<codeline lineno="45" refid="namespacereactor_1a550a07297e731136c8d7570395c5128d" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/><ref refid="namespacereactor_1a550a07297e731136c8d7570395c5128d" kindref="member">operator!=</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Tag" kindref="compound">Tag</ref>&amp;<sp/>lhs,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Tag" kindref="compound">Tag</ref>&amp;<sp/>rhs)<sp/>{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>!(lhs<sp/>==<sp/>rhs);<sp/>}</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="namespacereactor_1a92dbf562adb06209a1f5632d5e2a0155" kindref="member">operator&lt;</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Tag" kindref="compound">Tag</ref>&amp;<sp/>lhs,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Tag" kindref="compound">Tag</ref>&amp;<sp/>rhs);</highlight></codeline>
+<codeline lineno="47" refid="namespacereactor_1a2e90ae0e79dfde9f7fbeb54d66a1e3a8" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/><ref refid="namespacereactor_1ae9b630f4a987aba9a98c138dd23e87b5" kindref="member">operator&gt;</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Tag" kindref="compound">Tag</ref>&amp;<sp/>lhs,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Tag" kindref="compound">Tag</ref>&amp;<sp/>rhs)<sp/>{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>rhs<sp/>&lt;<sp/>lhs;<sp/>}</highlight></codeline>
+<codeline lineno="48" refid="namespacereactor_1adb763d87ec4b89428e75916a5150da36" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/><ref refid="namespacereactor_1adb763d87ec4b89428e75916a5150da36" kindref="member">operator&lt;=</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Tag" kindref="compound">Tag</ref>&amp;<sp/>lhs,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Tag" kindref="compound">Tag</ref>&amp;<sp/>rhs)<sp/>{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>!(lhs<sp/>&gt;<sp/>rhs);<sp/>}</highlight></codeline>
+<codeline lineno="49" refid="namespacereactor_1a33339cac3268e44879ed753a397aec99" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/><ref refid="namespacereactor_1a33339cac3268e44879ed753a397aec99" kindref="member">operator&gt;=</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Tag" kindref="compound">Tag</ref>&amp;<sp/>lhs,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Tag" kindref="compound">Tag</ref>&amp;<sp/>rhs)<sp/>{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>!(lhs<sp/>&lt;<sp/>rhs);<sp/>}</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"></highlight></codeline>
+<codeline lineno="51" refid="classreactor_1_1LogicalTime" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="classreactor_1_1LogicalTime" kindref="compound">LogicalTime</ref><sp/>{</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/></highlight><highlight class="keyword">private</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="53" refid="classreactor_1_1LogicalTime_1a00ea2389e8dd656986c559690343d963" refkind="member"><highlight class="normal"><sp/><sp/><ref refid="namespacereactor_1ad950f8d1a46612500286a4af0f167080" kindref="member">TimePoint</ref><sp/><ref refid="classreactor_1_1Tag_1a24a75e25cfaac63128d8f925ee95c4d9" kindref="member">_time_point</ref>{};</highlight></codeline>
+<codeline lineno="54" refid="classreactor_1_1LogicalTime_1a54b9d7e8cd2af3523b92efbbac1969e9" refkind="member"><highlight class="normal"><sp/><sp/><ref refid="namespacereactor_1aaea1189d617982457b74127ba74a7340" kindref="member">mstep_t</ref><sp/><ref refid="classreactor_1_1Tag_1a7660e5c962c9916a04abe97fad3226ab" kindref="member">_micro_step</ref>{0};</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"></highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>advance_to(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Tag" kindref="compound">Tag</ref>&amp;<sp/>tag);</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"></highlight></codeline>
+<codeline lineno="59" refid="classreactor_1_1LogicalTime_1a94567626de1241161edfb41c34d6b09e" refkind="member"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="namespacereactor_1ad950f8d1a46612500286a4af0f167080" kindref="member">TimePoint</ref>&amp;<sp/><ref refid="classreactor_1_1LogicalTime_1a94567626de1241161edfb41c34d6b09e" kindref="member">time_point</ref>()</highlight><highlight class="keyword"><sp/>const<sp/></highlight><highlight class="normal">{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Tag_1a24a75e25cfaac63128d8f925ee95c4d9" kindref="member">_time_point</ref>;<sp/>}</highlight></codeline>
+<codeline lineno="60" refid="classreactor_1_1LogicalTime_1a59d2ded3742c8bcec0d9af22a45bd133" refkind="member"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="namespacereactor_1aaea1189d617982457b74127ba74a7340" kindref="member">mstep_t</ref>&amp;<sp/><ref refid="classreactor_1_1LogicalTime_1a59d2ded3742c8bcec0d9af22a45bd133" kindref="member">micro_step</ref>()</highlight><highlight class="keyword"><sp/>const<sp/></highlight><highlight class="normal">{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Tag_1a7660e5c962c9916a04abe97fad3226ab" kindref="member">_micro_step</ref>;<sp/>}</highlight></codeline>
+<codeline lineno="61"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"></highlight></codeline>
+<codeline lineno="63"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="namespacereactor_1a0c98d4882f478da43c2c1a169a1fedd2" kindref="member">operator==</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1LogicalTime" kindref="compound">LogicalTime</ref>&amp;<sp/>lt,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Tag" kindref="compound">Tag</ref>&amp;<sp/>t);</highlight></codeline>
+<codeline lineno="64" refid="namespacereactor_1a127aac66cd5fa1913c6756d46be9d817" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/><ref refid="namespacereactor_1a550a07297e731136c8d7570395c5128d" kindref="member">operator!=</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1LogicalTime" kindref="compound">LogicalTime</ref>&amp;<sp/>lt,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Tag" kindref="compound">Tag</ref>&amp;<sp/>t)<sp/>{</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>!(lt<sp/>==<sp/>t);</highlight></codeline>
+<codeline lineno="66"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="namespacereactor_1a92dbf562adb06209a1f5632d5e2a0155" kindref="member">operator&lt;</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1LogicalTime" kindref="compound">LogicalTime</ref>&amp;<sp/>lt,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Tag" kindref="compound">Tag</ref>&amp;<sp/>t);</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="namespacereactor_1ae9b630f4a987aba9a98c138dd23e87b5" kindref="member">operator&gt;</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1LogicalTime" kindref="compound">LogicalTime</ref>&amp;<sp/>lt,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Tag" kindref="compound">Tag</ref>&amp;<sp/>t);</highlight></codeline>
+<codeline lineno="69" refid="namespacereactor_1a601c2be55dc826bea9a245045613ccc5" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/><ref refid="namespacereactor_1adb763d87ec4b89428e75916a5150da36" kindref="member">operator&lt;=</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1LogicalTime" kindref="compound">LogicalTime</ref>&amp;<sp/>lt,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Tag" kindref="compound">Tag</ref>&amp;<sp/>t)<sp/>{</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>!(lt<sp/>&gt;<sp/>t);</highlight></codeline>
+<codeline lineno="71"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="72" refid="namespacereactor_1aba36ee73a806348027f3a8468faa0dc4" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/><ref refid="namespacereactor_1a33339cac3268e44879ed753a397aec99" kindref="member">operator&gt;=</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1LogicalTime" kindref="compound">LogicalTime</ref>&amp;<sp/>lt,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Tag" kindref="compound">Tag</ref>&amp;<sp/>t)<sp/>{</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>!(lt<sp/>&lt;<sp/>t);</highlight></codeline>
+<codeline lineno="74"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"></highlight></codeline>
+<codeline lineno="76" refid="namespacereactor_1a97c015047b9fb102d5b41e244da88917" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/><ref refid="namespacereactor_1a0c98d4882f478da43c2c1a169a1fedd2" kindref="member">operator==</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Tag" kindref="compound">Tag</ref>&amp;<sp/>t,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1LogicalTime" kindref="compound">LogicalTime</ref>&amp;<sp/>lt)<sp/>{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>lt<sp/>==<sp/>t;<sp/>}</highlight></codeline>
+<codeline lineno="77" refid="namespacereactor_1a084a8581290e7446f44cc2ca94c47fdf" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/><ref refid="namespacereactor_1a550a07297e731136c8d7570395c5128d" kindref="member">operator!=</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Tag" kindref="compound">Tag</ref>&amp;<sp/>t,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1LogicalTime" kindref="compound">LogicalTime</ref>&amp;<sp/>lt)<sp/>{</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>!(lt<sp/>==<sp/>t);</highlight></codeline>
+<codeline lineno="79"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="80" refid="namespacereactor_1acd3c1262138ace0007602d65740bc806" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/><ref refid="namespacereactor_1a92dbf562adb06209a1f5632d5e2a0155" kindref="member">operator&lt;</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Tag" kindref="compound">Tag</ref>&amp;<sp/>t,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1LogicalTime" kindref="compound">LogicalTime</ref>&amp;<sp/>lt)<sp/>{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>lt<sp/>&gt;<sp/>t;<sp/>}</highlight></codeline>
+<codeline lineno="81" refid="namespacereactor_1ac9d3f8609a66fbbc8a4d375da18a14e2" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/><ref refid="namespacereactor_1ae9b630f4a987aba9a98c138dd23e87b5" kindref="member">operator&gt;</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Tag" kindref="compound">Tag</ref>&amp;<sp/>t,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1LogicalTime" kindref="compound">LogicalTime</ref>&amp;<sp/>lt)<sp/>{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>lt<sp/>&lt;<sp/>t;<sp/>}</highlight></codeline>
+<codeline lineno="82" refid="namespacereactor_1a187a8a69a9cd1edb808e7c92a7a944a0" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/><ref refid="namespacereactor_1adb763d87ec4b89428e75916a5150da36" kindref="member">operator&lt;=</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Tag" kindref="compound">Tag</ref>&amp;<sp/>t,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1LogicalTime" kindref="compound">LogicalTime</ref>&amp;<sp/>lt)<sp/>{</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>!(t<sp/>&gt;<sp/>lt);</highlight></codeline>
+<codeline lineno="84"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="85" refid="namespacereactor_1adb34cd1dff4f0af83c099efae8c2f0cc" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/><ref refid="namespacereactor_1a33339cac3268e44879ed753a397aec99" kindref="member">operator&gt;=</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Tag" kindref="compound">Tag</ref>&amp;<sp/>t,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1LogicalTime" kindref="compound">LogicalTime</ref>&amp;<sp/>lt)<sp/>{</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>!(t<sp/>&lt;<sp/>lt);</highlight></codeline>
+<codeline lineno="87"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"></highlight></codeline>
+<codeline lineno="89"><highlight class="normal">}<sp/><sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>reactor</highlight><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/logical_time.hh"/>
+  </compounddef>
+</doxygen>

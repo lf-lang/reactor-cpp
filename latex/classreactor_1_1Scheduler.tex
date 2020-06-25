@@ -1,0 +1,324 @@
+\hypertarget{classreactor_1_1Scheduler}{}\section{reactor\+:\+:Scheduler Class Reference}
+\label{classreactor_1_1Scheduler}\index{reactor\+::\+Scheduler@{reactor\+::\+Scheduler}}
+
+
+{\ttfamily \#include $<$scheduler.\+hh$>$}
+
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+using \hyperlink{classreactor_1_1Scheduler_a5a4a25635fcb20f268876a0bf70eb68e}{Work\+Item} = std\+::packaged\+\_\+task$<$ void(void)$>$
+\item 
+using \hyperlink{classreactor_1_1Scheduler_a4a4934dc58f294069b8c64435cdfe564}{Work\+Ptr} = std\+::unique\+\_\+ptr$<$ \hyperlink{classreactor_1_1Scheduler_a5a4a25635fcb20f268876a0bf70eb68e}{Work\+Item} $>$
+\item 
+using \hyperlink{classreactor_1_1Scheduler_aa32e06a71b7406a238616cc5d7b55610}{Event\+Map} = std\+::map$<$ \hyperlink{classreactor_1_1BaseAction}{Base\+Action} $\ast$, std\+::function$<$ void(void)$>$ $>$
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classreactor_1_1Scheduler_a58fbbd0e02d4fc8ef0bcf9330d010c2e}{Scheduler} (\hyperlink{classreactor_1_1Environment}{Environment} $\ast$env)
+\item 
+\hyperlink{classreactor_1_1Scheduler_ad6f0cfcd7f07fa81392ab62f172fbd68}{$\sim$\+Scheduler} ()
+\item 
+void \hyperlink{classreactor_1_1Scheduler_ab77f16103f0eb0631886805bc94f231c}{schedule\+\_\+sync} (const \hyperlink{classreactor_1_1Tag}{Tag} \&tag, \hyperlink{classreactor_1_1BaseAction}{Base\+Action} $\ast$action, std\+::function$<$ void(void)$>$ pre\+\_\+handler)
+\item 
+void \hyperlink{classreactor_1_1Scheduler_a1ca117318ce71ab3c63b7b8160d413af}{schedule\+\_\+async} (const \hyperlink{classreactor_1_1Tag}{Tag} \&tag, \hyperlink{classreactor_1_1BaseAction}{Base\+Action} $\ast$action, std\+::function$<$ void(void)$>$ pre\+\_\+handler)
+\item 
+void \hyperlink{classreactor_1_1Scheduler_a970ac74510f7cce25fd7e9994b11dad6}{lock} ()
+\item 
+void \hyperlink{classreactor_1_1Scheduler_a8787186c85529782cf95fd58050f3af2}{unlock} ()
+\item 
+void \hyperlink{classreactor_1_1Scheduler_a344df614ab8590273a2682eed1d7aa12}{set\+\_\+port} (\hyperlink{classreactor_1_1BasePort}{Base\+Port} $\ast$)
+\item 
+const \hyperlink{classreactor_1_1LogicalTime}{Logical\+Time} \& \hyperlink{classreactor_1_1Scheduler_a347fccd0368f7d36b8b9a13fec647f03}{logical\+\_\+time} () const
+\item 
+void \hyperlink{classreactor_1_1Scheduler_a2366bac3be216dbba49e110a69250ece}{start} ()
+\item 
+void \hyperlink{classreactor_1_1Scheduler_a0ef1f93067b868fcf0c26031b7567054}{stop} ()
+\end{DoxyCompactItemize}
+\subsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{classreactor_1_1Scheduler_a0ba1d794dc627f7927e5c0457f612960}{work} (unsigned id)
+\item 
+bool \hyperlink{classreactor_1_1Scheduler_ad1c1bbd55c9933b9e5886d378419185c}{next} ()
+\item 
+void \hyperlink{classreactor_1_1Scheduler_a09d04a0906b272908481b48ef12fc3f3}{set\+\_\+port\+\_\+helper} (\hyperlink{classreactor_1_1BasePort}{Base\+Port} $\ast$p)
+\item 
+void \hyperlink{classreactor_1_1Scheduler_a726e2f27cb5fc21f9b276a20e7f47192}{dispatch\+\_\+reactions\+\_\+to\+\_\+workers} (const std\+::vector$<$ \hyperlink{classreactor_1_1Reaction}{Reaction} $\ast$$>$ \&reactions)
+\item 
+void \hyperlink{classreactor_1_1Scheduler_a776074d94dcd54cc093c295b3359d5eb}{execute\+\_\+reactions\+\_\+inline} (const std\+::vector$<$ \hyperlink{classreactor_1_1Reaction}{Reaction} $\ast$$>$ \&reactions)
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+const bool \hyperlink{classreactor_1_1Scheduler_ac4b787be81d8b6d7a72ce987d24a2261}{using\+\_\+workers}
+\item 
+bool \hyperlink{classreactor_1_1Scheduler_a25e5b848efc680452eef58a0fc0b773c}{terminate} \{false\}
+\item 
+\hyperlink{classreactor_1_1LogicalTime}{Logical\+Time} \hyperlink{classreactor_1_1Scheduler_a68b0b490d08d5db7890c337d4250ad1c}{\+\_\+logical\+\_\+time} \{\}
+\item 
+\hyperlink{classreactor_1_1Environment}{Environment} $\ast$ \hyperlink{classreactor_1_1Scheduler_a7c9c2365d7b10cedb335c81d14610149}{\+\_\+environment}
+\item 
+std\+::vector$<$ std\+::thread $>$ \hyperlink{classreactor_1_1Scheduler_aad3a17b14df9166b175a3d5baf5afd14}{worker\+\_\+threads}
+\item 
+std\+::mutex \hyperlink{classreactor_1_1Scheduler_adbf93f069a826ffe49c8d890c5af8ff3}{m\+\_\+schedule}
+\item 
+std\+::unique\+\_\+lock$<$ std\+::mutex $>$ \hyperlink{classreactor_1_1Scheduler_a338d396352878baec7c8ecd2e1e7b202}{schedule\+\_\+lock} \{\hyperlink{classreactor_1_1Scheduler_adbf93f069a826ffe49c8d890c5af8ff3}{m\+\_\+schedule}, std\+::defer\+\_\+lock\}
+\item 
+std\+::condition\+\_\+variable \hyperlink{classreactor_1_1Scheduler_a75e7baf3e6f17cedca2f23690af7b61d}{cv\+\_\+schedule}
+\item 
+std\+::mutex \hyperlink{classreactor_1_1Scheduler_a2ff891940d9bc4af41858e1c31ec2922}{m\+\_\+event\+\_\+queue}
+\item 
+std\+::map$<$ \hyperlink{classreactor_1_1Tag}{Tag}, std\+::unique\+\_\+ptr$<$ \hyperlink{classreactor_1_1Scheduler_aa32e06a71b7406a238616cc5d7b55610}{Event\+Map} $>$ $>$ \hyperlink{classreactor_1_1Scheduler_aad84798ec7af707837594ed335532829}{event\+\_\+queue}
+\item 
+std\+::vector$<$ \hyperlink{classreactor_1_1BasePort}{Base\+Port} $\ast$ $>$ \hyperlink{classreactor_1_1Scheduler_a19bbe962eab2b7a6c4a25312e4479739}{set\+\_\+ports}
+\item 
+std\+::mutex \hyperlink{classreactor_1_1Scheduler_a3f06ec50b64251aeca469a137b3fdf9b}{m\+\_\+reaction\+\_\+queue}
+\item 
+std\+::vector$<$ std\+::vector$<$ \hyperlink{classreactor_1_1Reaction}{Reaction} $\ast$ $>$ $>$ \hyperlink{classreactor_1_1Scheduler_a65b74e5e2d64189fe30010140a2f8dad}{reaction\+\_\+queue}
+\item 
+std\+::vector$<$ \hyperlink{classreactor_1_1Reaction}{Reaction} $\ast$ $>$ \hyperlink{classreactor_1_1Scheduler_a03e5a171cbb041f02fd10fedf7f2f7de}{ready\+\_\+reactions}
+\item 
+std\+::set$<$ \hyperlink{classreactor_1_1Reaction}{Reaction} $\ast$ $>$ \hyperlink{classreactor_1_1Scheduler_a606c5c5af3e45a75b7304fdfd0283e14}{executing\+\_\+reactions}
+\item 
+std\+::condition\+\_\+variable \hyperlink{classreactor_1_1Scheduler_ae0b036e6af4ebf47f619bf6ac4b7120d}{cv\+\_\+ready\+\_\+reactions}
+\item 
+std\+::condition\+\_\+variable \hyperlink{classreactor_1_1Scheduler_a5ce0b7fa5a71eaf46b1d423c1ff90557}{cv\+\_\+done\+\_\+reactions}
+\item 
+std\+::atomic$<$ bool $>$ \hyperlink{classreactor_1_1Scheduler_a77d3790a2a37875efc1980ba55824561}{\+\_\+stop} \{false\}
+\end{DoxyCompactItemize}
+
+
+\subsection{Member Typedef Documentation}
+\mbox{\Hypertarget{classreactor_1_1Scheduler_aa32e06a71b7406a238616cc5d7b55610}\label{classreactor_1_1Scheduler_aa32e06a71b7406a238616cc5d7b55610}} 
+\index{reactor\+::\+Scheduler@{reactor\+::\+Scheduler}!Event\+Map@{Event\+Map}}
+\index{Event\+Map@{Event\+Map}!reactor\+::\+Scheduler@{reactor\+::\+Scheduler}}
+\subsubsection{\texorpdfstring{Event\+Map}{EventMap}}
+{\footnotesize\ttfamily using \hyperlink{classreactor_1_1Scheduler_aa32e06a71b7406a238616cc5d7b55610}{reactor\+::\+Scheduler\+::\+Event\+Map} =  std\+::map$<$\hyperlink{classreactor_1_1BaseAction}{Base\+Action}$\ast$, std\+::function$<$void(void)$>$ $>$}
+
+\mbox{\Hypertarget{classreactor_1_1Scheduler_a5a4a25635fcb20f268876a0bf70eb68e}\label{classreactor_1_1Scheduler_a5a4a25635fcb20f268876a0bf70eb68e}} 
+\index{reactor\+::\+Scheduler@{reactor\+::\+Scheduler}!Work\+Item@{Work\+Item}}
+\index{Work\+Item@{Work\+Item}!reactor\+::\+Scheduler@{reactor\+::\+Scheduler}}
+\subsubsection{\texorpdfstring{Work\+Item}{WorkItem}}
+{\footnotesize\ttfamily using \hyperlink{classreactor_1_1Scheduler_a5a4a25635fcb20f268876a0bf70eb68e}{reactor\+::\+Scheduler\+::\+Work\+Item} =  std\+::packaged\+\_\+task$<$void(void)$>$}
+
+\mbox{\Hypertarget{classreactor_1_1Scheduler_a4a4934dc58f294069b8c64435cdfe564}\label{classreactor_1_1Scheduler_a4a4934dc58f294069b8c64435cdfe564}} 
+\index{reactor\+::\+Scheduler@{reactor\+::\+Scheduler}!Work\+Ptr@{Work\+Ptr}}
+\index{Work\+Ptr@{Work\+Ptr}!reactor\+::\+Scheduler@{reactor\+::\+Scheduler}}
+\subsubsection{\texorpdfstring{Work\+Ptr}{WorkPtr}}
+{\footnotesize\ttfamily using \hyperlink{classreactor_1_1Scheduler_a4a4934dc58f294069b8c64435cdfe564}{reactor\+::\+Scheduler\+::\+Work\+Ptr} =  std\+::unique\+\_\+ptr$<$\hyperlink{classreactor_1_1Scheduler_a5a4a25635fcb20f268876a0bf70eb68e}{Work\+Item}$>$}
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classreactor_1_1Scheduler_a58fbbd0e02d4fc8ef0bcf9330d010c2e}\label{classreactor_1_1Scheduler_a58fbbd0e02d4fc8ef0bcf9330d010c2e}} 
+\index{reactor\+::\+Scheduler@{reactor\+::\+Scheduler}!Scheduler@{Scheduler}}
+\index{Scheduler@{Scheduler}!reactor\+::\+Scheduler@{reactor\+::\+Scheduler}}
+\subsubsection{\texorpdfstring{Scheduler()}{Scheduler()}}
+{\footnotesize\ttfamily reactor\+::\+Scheduler\+::\+Scheduler (\begin{DoxyParamCaption}\item[{\hyperlink{classreactor_1_1Environment}{Environment} $\ast$}]{env }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classreactor_1_1Scheduler_ad6f0cfcd7f07fa81392ab62f172fbd68}\label{classreactor_1_1Scheduler_ad6f0cfcd7f07fa81392ab62f172fbd68}} 
+\index{reactor\+::\+Scheduler@{reactor\+::\+Scheduler}!````~Scheduler@{$\sim$\+Scheduler}}
+\index{````~Scheduler@{$\sim$\+Scheduler}!reactor\+::\+Scheduler@{reactor\+::\+Scheduler}}
+\subsubsection{\texorpdfstring{$\sim$\+Scheduler()}{~Scheduler()}}
+{\footnotesize\ttfamily reactor\+::\+Scheduler\+::$\sim$\+Scheduler (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classreactor_1_1Scheduler_a726e2f27cb5fc21f9b276a20e7f47192}\label{classreactor_1_1Scheduler_a726e2f27cb5fc21f9b276a20e7f47192}} 
+\index{reactor\+::\+Scheduler@{reactor\+::\+Scheduler}!dispatch\+\_\+reactions\+\_\+to\+\_\+workers@{dispatch\+\_\+reactions\+\_\+to\+\_\+workers}}
+\index{dispatch\+\_\+reactions\+\_\+to\+\_\+workers@{dispatch\+\_\+reactions\+\_\+to\+\_\+workers}!reactor\+::\+Scheduler@{reactor\+::\+Scheduler}}
+\subsubsection{\texorpdfstring{dispatch\+\_\+reactions\+\_\+to\+\_\+workers()}{dispatch\_reactions\_to\_workers()}}
+{\footnotesize\ttfamily void reactor\+::\+Scheduler\+::dispatch\+\_\+reactions\+\_\+to\+\_\+workers (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ \hyperlink{classreactor_1_1Reaction}{Reaction} $\ast$$>$ \&}]{reactions }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classreactor_1_1Scheduler_a776074d94dcd54cc093c295b3359d5eb}\label{classreactor_1_1Scheduler_a776074d94dcd54cc093c295b3359d5eb}} 
+\index{reactor\+::\+Scheduler@{reactor\+::\+Scheduler}!execute\+\_\+reactions\+\_\+inline@{execute\+\_\+reactions\+\_\+inline}}
+\index{execute\+\_\+reactions\+\_\+inline@{execute\+\_\+reactions\+\_\+inline}!reactor\+::\+Scheduler@{reactor\+::\+Scheduler}}
+\subsubsection{\texorpdfstring{execute\+\_\+reactions\+\_\+inline()}{execute\_reactions\_inline()}}
+{\footnotesize\ttfamily void reactor\+::\+Scheduler\+::execute\+\_\+reactions\+\_\+inline (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ \hyperlink{classreactor_1_1Reaction}{Reaction} $\ast$$>$ \&}]{reactions }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classreactor_1_1Scheduler_a970ac74510f7cce25fd7e9994b11dad6}\label{classreactor_1_1Scheduler_a970ac74510f7cce25fd7e9994b11dad6}} 
+\index{reactor\+::\+Scheduler@{reactor\+::\+Scheduler}!lock@{lock}}
+\index{lock@{lock}!reactor\+::\+Scheduler@{reactor\+::\+Scheduler}}
+\subsubsection{\texorpdfstring{lock()}{lock()}}
+{\footnotesize\ttfamily void reactor\+::\+Scheduler\+::lock (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{classreactor_1_1Scheduler_a347fccd0368f7d36b8b9a13fec647f03}\label{classreactor_1_1Scheduler_a347fccd0368f7d36b8b9a13fec647f03}} 
+\index{reactor\+::\+Scheduler@{reactor\+::\+Scheduler}!logical\+\_\+time@{logical\+\_\+time}}
+\index{logical\+\_\+time@{logical\+\_\+time}!reactor\+::\+Scheduler@{reactor\+::\+Scheduler}}
+\subsubsection{\texorpdfstring{logical\+\_\+time()}{logical\_time()}}
+{\footnotesize\ttfamily const \hyperlink{classreactor_1_1LogicalTime}{Logical\+Time}\& reactor\+::\+Scheduler\+::logical\+\_\+time (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{classreactor_1_1Scheduler_ad1c1bbd55c9933b9e5886d378419185c}\label{classreactor_1_1Scheduler_ad1c1bbd55c9933b9e5886d378419185c}} 
+\index{reactor\+::\+Scheduler@{reactor\+::\+Scheduler}!next@{next}}
+\index{next@{next}!reactor\+::\+Scheduler@{reactor\+::\+Scheduler}}
+\subsubsection{\texorpdfstring{next()}{next()}}
+{\footnotesize\ttfamily bool reactor\+::\+Scheduler\+::next (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classreactor_1_1Scheduler_a1ca117318ce71ab3c63b7b8160d413af}\label{classreactor_1_1Scheduler_a1ca117318ce71ab3c63b7b8160d413af}} 
+\index{reactor\+::\+Scheduler@{reactor\+::\+Scheduler}!schedule\+\_\+async@{schedule\+\_\+async}}
+\index{schedule\+\_\+async@{schedule\+\_\+async}!reactor\+::\+Scheduler@{reactor\+::\+Scheduler}}
+\subsubsection{\texorpdfstring{schedule\+\_\+async()}{schedule\_async()}}
+{\footnotesize\ttfamily void reactor\+::\+Scheduler\+::schedule\+\_\+async (\begin{DoxyParamCaption}\item[{const \hyperlink{classreactor_1_1Tag}{Tag} \&}]{tag,  }\item[{\hyperlink{classreactor_1_1BaseAction}{Base\+Action} $\ast$}]{action,  }\item[{std\+::function$<$ void(void)$>$}]{pre\+\_\+handler }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classreactor_1_1Scheduler_ab77f16103f0eb0631886805bc94f231c}\label{classreactor_1_1Scheduler_ab77f16103f0eb0631886805bc94f231c}} 
+\index{reactor\+::\+Scheduler@{reactor\+::\+Scheduler}!schedule\+\_\+sync@{schedule\+\_\+sync}}
+\index{schedule\+\_\+sync@{schedule\+\_\+sync}!reactor\+::\+Scheduler@{reactor\+::\+Scheduler}}
+\subsubsection{\texorpdfstring{schedule\+\_\+sync()}{schedule\_sync()}}
+{\footnotesize\ttfamily void reactor\+::\+Scheduler\+::schedule\+\_\+sync (\begin{DoxyParamCaption}\item[{const \hyperlink{classreactor_1_1Tag}{Tag} \&}]{tag,  }\item[{\hyperlink{classreactor_1_1BaseAction}{Base\+Action} $\ast$}]{action,  }\item[{std\+::function$<$ void(void)$>$}]{pre\+\_\+handler }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classreactor_1_1Scheduler_a344df614ab8590273a2682eed1d7aa12}\label{classreactor_1_1Scheduler_a344df614ab8590273a2682eed1d7aa12}} 
+\index{reactor\+::\+Scheduler@{reactor\+::\+Scheduler}!set\+\_\+port@{set\+\_\+port}}
+\index{set\+\_\+port@{set\+\_\+port}!reactor\+::\+Scheduler@{reactor\+::\+Scheduler}}
+\subsubsection{\texorpdfstring{set\+\_\+port()}{set\_port()}}
+{\footnotesize\ttfamily void reactor\+::\+Scheduler\+::set\+\_\+port (\begin{DoxyParamCaption}\item[{\hyperlink{classreactor_1_1BasePort}{Base\+Port} $\ast$}]{p }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classreactor_1_1Scheduler_a09d04a0906b272908481b48ef12fc3f3}\label{classreactor_1_1Scheduler_a09d04a0906b272908481b48ef12fc3f3}} 
+\index{reactor\+::\+Scheduler@{reactor\+::\+Scheduler}!set\+\_\+port\+\_\+helper@{set\+\_\+port\+\_\+helper}}
+\index{set\+\_\+port\+\_\+helper@{set\+\_\+port\+\_\+helper}!reactor\+::\+Scheduler@{reactor\+::\+Scheduler}}
+\subsubsection{\texorpdfstring{set\+\_\+port\+\_\+helper()}{set\_port\_helper()}}
+{\footnotesize\ttfamily void reactor\+::\+Scheduler\+::set\+\_\+port\+\_\+helper (\begin{DoxyParamCaption}\item[{\hyperlink{classreactor_1_1BasePort}{Base\+Port} $\ast$}]{p }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classreactor_1_1Scheduler_a2366bac3be216dbba49e110a69250ece}\label{classreactor_1_1Scheduler_a2366bac3be216dbba49e110a69250ece}} 
+\index{reactor\+::\+Scheduler@{reactor\+::\+Scheduler}!start@{start}}
+\index{start@{start}!reactor\+::\+Scheduler@{reactor\+::\+Scheduler}}
+\subsubsection{\texorpdfstring{start()}{start()}}
+{\footnotesize\ttfamily void reactor\+::\+Scheduler\+::start (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classreactor_1_1Scheduler_a0ef1f93067b868fcf0c26031b7567054}\label{classreactor_1_1Scheduler_a0ef1f93067b868fcf0c26031b7567054}} 
+\index{reactor\+::\+Scheduler@{reactor\+::\+Scheduler}!stop@{stop}}
+\index{stop@{stop}!reactor\+::\+Scheduler@{reactor\+::\+Scheduler}}
+\subsubsection{\texorpdfstring{stop()}{stop()}}
+{\footnotesize\ttfamily void reactor\+::\+Scheduler\+::stop (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classreactor_1_1Scheduler_a8787186c85529782cf95fd58050f3af2}\label{classreactor_1_1Scheduler_a8787186c85529782cf95fd58050f3af2}} 
+\index{reactor\+::\+Scheduler@{reactor\+::\+Scheduler}!unlock@{unlock}}
+\index{unlock@{unlock}!reactor\+::\+Scheduler@{reactor\+::\+Scheduler}}
+\subsubsection{\texorpdfstring{unlock()}{unlock()}}
+{\footnotesize\ttfamily void reactor\+::\+Scheduler\+::unlock (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{classreactor_1_1Scheduler_a0ba1d794dc627f7927e5c0457f612960}\label{classreactor_1_1Scheduler_a0ba1d794dc627f7927e5c0457f612960}} 
+\index{reactor\+::\+Scheduler@{reactor\+::\+Scheduler}!work@{work}}
+\index{work@{work}!reactor\+::\+Scheduler@{reactor\+::\+Scheduler}}
+\subsubsection{\texorpdfstring{work()}{work()}}
+{\footnotesize\ttfamily void reactor\+::\+Scheduler\+::work (\begin{DoxyParamCaption}\item[{unsigned}]{id }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+\subsection{Member Data Documentation}
+\mbox{\Hypertarget{classreactor_1_1Scheduler_a7c9c2365d7b10cedb335c81d14610149}\label{classreactor_1_1Scheduler_a7c9c2365d7b10cedb335c81d14610149}} 
+\index{reactor\+::\+Scheduler@{reactor\+::\+Scheduler}!\+\_\+environment@{\+\_\+environment}}
+\index{\+\_\+environment@{\+\_\+environment}!reactor\+::\+Scheduler@{reactor\+::\+Scheduler}}
+\subsubsection{\texorpdfstring{\+\_\+environment}{\_environment}}
+{\footnotesize\ttfamily \hyperlink{classreactor_1_1Environment}{Environment}$\ast$ reactor\+::\+Scheduler\+::\+\_\+environment\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classreactor_1_1Scheduler_a68b0b490d08d5db7890c337d4250ad1c}\label{classreactor_1_1Scheduler_a68b0b490d08d5db7890c337d4250ad1c}} 
+\index{reactor\+::\+Scheduler@{reactor\+::\+Scheduler}!\+\_\+logical\+\_\+time@{\+\_\+logical\+\_\+time}}
+\index{\+\_\+logical\+\_\+time@{\+\_\+logical\+\_\+time}!reactor\+::\+Scheduler@{reactor\+::\+Scheduler}}
+\subsubsection{\texorpdfstring{\+\_\+logical\+\_\+time}{\_logical\_time}}
+{\footnotesize\ttfamily \hyperlink{classreactor_1_1LogicalTime}{Logical\+Time} reactor\+::\+Scheduler\+::\+\_\+logical\+\_\+time \{\}\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classreactor_1_1Scheduler_a77d3790a2a37875efc1980ba55824561}\label{classreactor_1_1Scheduler_a77d3790a2a37875efc1980ba55824561}} 
+\index{reactor\+::\+Scheduler@{reactor\+::\+Scheduler}!\+\_\+stop@{\+\_\+stop}}
+\index{\+\_\+stop@{\+\_\+stop}!reactor\+::\+Scheduler@{reactor\+::\+Scheduler}}
+\subsubsection{\texorpdfstring{\+\_\+stop}{\_stop}}
+{\footnotesize\ttfamily std\+::atomic$<$bool$>$ reactor\+::\+Scheduler\+::\+\_\+stop \{false\}\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classreactor_1_1Scheduler_a5ce0b7fa5a71eaf46b1d423c1ff90557}\label{classreactor_1_1Scheduler_a5ce0b7fa5a71eaf46b1d423c1ff90557}} 
+\index{reactor\+::\+Scheduler@{reactor\+::\+Scheduler}!cv\+\_\+done\+\_\+reactions@{cv\+\_\+done\+\_\+reactions}}
+\index{cv\+\_\+done\+\_\+reactions@{cv\+\_\+done\+\_\+reactions}!reactor\+::\+Scheduler@{reactor\+::\+Scheduler}}
+\subsubsection{\texorpdfstring{cv\+\_\+done\+\_\+reactions}{cv\_done\_reactions}}
+{\footnotesize\ttfamily std\+::condition\+\_\+variable reactor\+::\+Scheduler\+::cv\+\_\+done\+\_\+reactions\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classreactor_1_1Scheduler_ae0b036e6af4ebf47f619bf6ac4b7120d}\label{classreactor_1_1Scheduler_ae0b036e6af4ebf47f619bf6ac4b7120d}} 
+\index{reactor\+::\+Scheduler@{reactor\+::\+Scheduler}!cv\+\_\+ready\+\_\+reactions@{cv\+\_\+ready\+\_\+reactions}}
+\index{cv\+\_\+ready\+\_\+reactions@{cv\+\_\+ready\+\_\+reactions}!reactor\+::\+Scheduler@{reactor\+::\+Scheduler}}
+\subsubsection{\texorpdfstring{cv\+\_\+ready\+\_\+reactions}{cv\_ready\_reactions}}
+{\footnotesize\ttfamily std\+::condition\+\_\+variable reactor\+::\+Scheduler\+::cv\+\_\+ready\+\_\+reactions\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classreactor_1_1Scheduler_a75e7baf3e6f17cedca2f23690af7b61d}\label{classreactor_1_1Scheduler_a75e7baf3e6f17cedca2f23690af7b61d}} 
+\index{reactor\+::\+Scheduler@{reactor\+::\+Scheduler}!cv\+\_\+schedule@{cv\+\_\+schedule}}
+\index{cv\+\_\+schedule@{cv\+\_\+schedule}!reactor\+::\+Scheduler@{reactor\+::\+Scheduler}}
+\subsubsection{\texorpdfstring{cv\+\_\+schedule}{cv\_schedule}}
+{\footnotesize\ttfamily std\+::condition\+\_\+variable reactor\+::\+Scheduler\+::cv\+\_\+schedule\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classreactor_1_1Scheduler_aad84798ec7af707837594ed335532829}\label{classreactor_1_1Scheduler_aad84798ec7af707837594ed335532829}} 
+\index{reactor\+::\+Scheduler@{reactor\+::\+Scheduler}!event\+\_\+queue@{event\+\_\+queue}}
+\index{event\+\_\+queue@{event\+\_\+queue}!reactor\+::\+Scheduler@{reactor\+::\+Scheduler}}
+\subsubsection{\texorpdfstring{event\+\_\+queue}{event\_queue}}
+{\footnotesize\ttfamily std\+::map$<$\hyperlink{classreactor_1_1Tag}{Tag}, std\+::unique\+\_\+ptr$<$\hyperlink{classreactor_1_1Scheduler_aa32e06a71b7406a238616cc5d7b55610}{Event\+Map}$>$ $>$ reactor\+::\+Scheduler\+::event\+\_\+queue\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classreactor_1_1Scheduler_a606c5c5af3e45a75b7304fdfd0283e14}\label{classreactor_1_1Scheduler_a606c5c5af3e45a75b7304fdfd0283e14}} 
+\index{reactor\+::\+Scheduler@{reactor\+::\+Scheduler}!executing\+\_\+reactions@{executing\+\_\+reactions}}
+\index{executing\+\_\+reactions@{executing\+\_\+reactions}!reactor\+::\+Scheduler@{reactor\+::\+Scheduler}}
+\subsubsection{\texorpdfstring{executing\+\_\+reactions}{executing\_reactions}}
+{\footnotesize\ttfamily std\+::set$<$\hyperlink{classreactor_1_1Reaction}{Reaction}$\ast$$>$ reactor\+::\+Scheduler\+::executing\+\_\+reactions\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classreactor_1_1Scheduler_a2ff891940d9bc4af41858e1c31ec2922}\label{classreactor_1_1Scheduler_a2ff891940d9bc4af41858e1c31ec2922}} 
+\index{reactor\+::\+Scheduler@{reactor\+::\+Scheduler}!m\+\_\+event\+\_\+queue@{m\+\_\+event\+\_\+queue}}
+\index{m\+\_\+event\+\_\+queue@{m\+\_\+event\+\_\+queue}!reactor\+::\+Scheduler@{reactor\+::\+Scheduler}}
+\subsubsection{\texorpdfstring{m\+\_\+event\+\_\+queue}{m\_event\_queue}}
+{\footnotesize\ttfamily std\+::mutex reactor\+::\+Scheduler\+::m\+\_\+event\+\_\+queue\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classreactor_1_1Scheduler_a3f06ec50b64251aeca469a137b3fdf9b}\label{classreactor_1_1Scheduler_a3f06ec50b64251aeca469a137b3fdf9b}} 
+\index{reactor\+::\+Scheduler@{reactor\+::\+Scheduler}!m\+\_\+reaction\+\_\+queue@{m\+\_\+reaction\+\_\+queue}}
+\index{m\+\_\+reaction\+\_\+queue@{m\+\_\+reaction\+\_\+queue}!reactor\+::\+Scheduler@{reactor\+::\+Scheduler}}
+\subsubsection{\texorpdfstring{m\+\_\+reaction\+\_\+queue}{m\_reaction\_queue}}
+{\footnotesize\ttfamily std\+::mutex reactor\+::\+Scheduler\+::m\+\_\+reaction\+\_\+queue\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classreactor_1_1Scheduler_adbf93f069a826ffe49c8d890c5af8ff3}\label{classreactor_1_1Scheduler_adbf93f069a826ffe49c8d890c5af8ff3}} 
+\index{reactor\+::\+Scheduler@{reactor\+::\+Scheduler}!m\+\_\+schedule@{m\+\_\+schedule}}
+\index{m\+\_\+schedule@{m\+\_\+schedule}!reactor\+::\+Scheduler@{reactor\+::\+Scheduler}}
+\subsubsection{\texorpdfstring{m\+\_\+schedule}{m\_schedule}}
+{\footnotesize\ttfamily std\+::mutex reactor\+::\+Scheduler\+::m\+\_\+schedule\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classreactor_1_1Scheduler_a65b74e5e2d64189fe30010140a2f8dad}\label{classreactor_1_1Scheduler_a65b74e5e2d64189fe30010140a2f8dad}} 
+\index{reactor\+::\+Scheduler@{reactor\+::\+Scheduler}!reaction\+\_\+queue@{reaction\+\_\+queue}}
+\index{reaction\+\_\+queue@{reaction\+\_\+queue}!reactor\+::\+Scheduler@{reactor\+::\+Scheduler}}
+\subsubsection{\texorpdfstring{reaction\+\_\+queue}{reaction\_queue}}
+{\footnotesize\ttfamily std\+::vector$<$std\+::vector$<$\hyperlink{classreactor_1_1Reaction}{Reaction}$\ast$$>$ $>$ reactor\+::\+Scheduler\+::reaction\+\_\+queue\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classreactor_1_1Scheduler_a03e5a171cbb041f02fd10fedf7f2f7de}\label{classreactor_1_1Scheduler_a03e5a171cbb041f02fd10fedf7f2f7de}} 
+\index{reactor\+::\+Scheduler@{reactor\+::\+Scheduler}!ready\+\_\+reactions@{ready\+\_\+reactions}}
+\index{ready\+\_\+reactions@{ready\+\_\+reactions}!reactor\+::\+Scheduler@{reactor\+::\+Scheduler}}
+\subsubsection{\texorpdfstring{ready\+\_\+reactions}{ready\_reactions}}
+{\footnotesize\ttfamily std\+::vector$<$\hyperlink{classreactor_1_1Reaction}{Reaction}$\ast$$>$ reactor\+::\+Scheduler\+::ready\+\_\+reactions\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classreactor_1_1Scheduler_a338d396352878baec7c8ecd2e1e7b202}\label{classreactor_1_1Scheduler_a338d396352878baec7c8ecd2e1e7b202}} 
+\index{reactor\+::\+Scheduler@{reactor\+::\+Scheduler}!schedule\+\_\+lock@{schedule\+\_\+lock}}
+\index{schedule\+\_\+lock@{schedule\+\_\+lock}!reactor\+::\+Scheduler@{reactor\+::\+Scheduler}}
+\subsubsection{\texorpdfstring{schedule\+\_\+lock}{schedule\_lock}}
+{\footnotesize\ttfamily std\+::unique\+\_\+lock$<$std\+::mutex$>$ reactor\+::\+Scheduler\+::schedule\+\_\+lock \{\hyperlink{classreactor_1_1Scheduler_adbf93f069a826ffe49c8d890c5af8ff3}{m\+\_\+schedule}, std\+::defer\+\_\+lock\}\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classreactor_1_1Scheduler_a19bbe962eab2b7a6c4a25312e4479739}\label{classreactor_1_1Scheduler_a19bbe962eab2b7a6c4a25312e4479739}} 
+\index{reactor\+::\+Scheduler@{reactor\+::\+Scheduler}!set\+\_\+ports@{set\+\_\+ports}}
+\index{set\+\_\+ports@{set\+\_\+ports}!reactor\+::\+Scheduler@{reactor\+::\+Scheduler}}
+\subsubsection{\texorpdfstring{set\+\_\+ports}{set\_ports}}
+{\footnotesize\ttfamily std\+::vector$<$\hyperlink{classreactor_1_1BasePort}{Base\+Port}$\ast$$>$ reactor\+::\+Scheduler\+::set\+\_\+ports\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classreactor_1_1Scheduler_a25e5b848efc680452eef58a0fc0b773c}\label{classreactor_1_1Scheduler_a25e5b848efc680452eef58a0fc0b773c}} 
+\index{reactor\+::\+Scheduler@{reactor\+::\+Scheduler}!terminate@{terminate}}
+\index{terminate@{terminate}!reactor\+::\+Scheduler@{reactor\+::\+Scheduler}}
+\subsubsection{\texorpdfstring{terminate}{terminate}}
+{\footnotesize\ttfamily bool reactor\+::\+Scheduler\+::terminate \{false\}\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classreactor_1_1Scheduler_ac4b787be81d8b6d7a72ce987d24a2261}\label{classreactor_1_1Scheduler_ac4b787be81d8b6d7a72ce987d24a2261}} 
+\index{reactor\+::\+Scheduler@{reactor\+::\+Scheduler}!using\+\_\+workers@{using\+\_\+workers}}
+\index{using\+\_\+workers@{using\+\_\+workers}!reactor\+::\+Scheduler@{reactor\+::\+Scheduler}}
+\subsubsection{\texorpdfstring{using\+\_\+workers}{using\_workers}}
+{\footnotesize\ttfamily const bool reactor\+::\+Scheduler\+::using\+\_\+workers\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classreactor_1_1Scheduler_aad3a17b14df9166b175a3d5baf5afd14}\label{classreactor_1_1Scheduler_aad3a17b14df9166b175a3d5baf5afd14}} 
+\index{reactor\+::\+Scheduler@{reactor\+::\+Scheduler}!worker\+\_\+threads@{worker\+\_\+threads}}
+\index{worker\+\_\+threads@{worker\+\_\+threads}!reactor\+::\+Scheduler@{reactor\+::\+Scheduler}}
+\subsubsection{\texorpdfstring{worker\+\_\+threads}{worker\_threads}}
+{\footnotesize\ttfamily std\+::vector$<$std\+::thread$>$ reactor\+::\+Scheduler\+::worker\+\_\+threads\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/home/runner/work/reactor-\/cpp/reactor-\/cpp/include/reactor-\/cpp/\hyperlink{scheduler_8hh}{scheduler.\+hh}\item 
+/home/runner/work/reactor-\/cpp/reactor-\/cpp/lib/\hyperlink{scheduler_8cc}{scheduler.\+cc}\end{DoxyCompactItemize}

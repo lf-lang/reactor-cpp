@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.13">
+  <compounddef id="dir_17eceb085056eb32f26f5a98b029e4f9" kind="dir">
+    <compoundname>/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/impl</compoundname>
+    <innerfile refid="action__impl_8hh">action_impl.hh</innerfile>
+    <innerfile refid="port__impl_8hh">port_impl.hh</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/impl/"/>
+  </compounddef>
+</doxygen>

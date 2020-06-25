@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.13">
+  <compounddef id="dir_47edf775acbd37a536d1331ecf977a7e" kind="dir">
+    <compoundname>/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp</compoundname>
+    <innerdir refid="dir_17eceb085056eb32f26f5a98b029e4f9">/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/impl</innerdir>
+    <innerfile refid="action_8hh">action.hh</innerfile>
+    <innerfile refid="assert_8hh">assert.hh</innerfile>
+    <innerfile refid="environment_8hh">environment.hh</innerfile>
+    <innerfile refid="fwd_8hh">fwd.hh</innerfile>
+    <innerfile refid="logging_8hh">logging.hh</innerfile>
+    <innerfile refid="logical__time_8hh">logical_time.hh</innerfile>
+    <innerfile refid="port_8hh">port.hh</innerfile>
+    <innerfile refid="reaction_8hh">reaction.hh</innerfile>
+    <innerfile refid="reactor-cpp_8hh">reactor-cpp.hh</innerfile>
+    <innerfile refid="reactor_8hh">reactor.hh</innerfile>
+    <innerfile refid="scheduler_8hh">scheduler.hh</innerfile>
+    <innerfile refid="time_8hh">time.hh</innerfile>
+    <innerfile refid="trace_8hh">trace.hh</innerfile>
+    <innerfile refid="value__ptr_8hh">value_ptr.hh</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/"/>
+  </compounddef>
+</doxygen>

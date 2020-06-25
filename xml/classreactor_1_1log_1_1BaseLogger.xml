@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.13">
+  <compounddef id="classreactor_1_1log_1_1BaseLogger" kind="class" language="C++" prot="public">
+    <compoundname>reactor::log::BaseLogger</compoundname>
+    <includes refid="logging_8hh" local="no">logging.hh</includes>
+    <templateparamlist>
+      <param>
+        <type>bool</type>
+        <declname>enabled</declname>
+        <defname>enabled</defname>
+      </param>
+    </templateparamlist>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/logging.hh" line="22" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/logging.hh" bodystart="22" bodyend="22"/>
+    <listofallmembers>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

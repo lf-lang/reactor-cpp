@@ -1,0 +1,441 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.13">
+  <compounddef id="environment_8cc" kind="file" language="C++">
+    <compoundname>environment.cc</compoundname>
+    <includes refid="environment_8hh" local="yes">reactor-cpp/environment.hh</includes>
+    <includes local="no">algorithm</includes>
+    <includes local="no">fstream</includes>
+    <includes local="no">map</includes>
+    <includes refid="assert_8hh" local="yes">reactor-cpp/assert.hh</includes>
+    <includes refid="logging_8hh" local="yes">reactor-cpp/logging.hh</includes>
+    <includes refid="port_8hh" local="yes">reactor-cpp/port.hh</includes>
+    <includes refid="reaction_8hh" local="yes">reactor-cpp/reaction.hh</includes>
+    <incdepgraph>
+      <node id="415">
+        <label>functional</label>
+      </node>
+      <node id="426">
+        <label>reactor-cpp/logging.hh</label>
+        <link refid="logging_8hh"/>
+        <childnode refid="412" relation="include">
+        </childnode>
+        <childnode refid="427" relation="include">
+        </childnode>
+        <childnode refid="418" relation="include">
+        </childnode>
+        <childnode refid="428" relation="include">
+        </childnode>
+      </node>
+      <node id="424">
+        <label>cassert</label>
+      </node>
+      <node id="425">
+        <label>stdexcept</label>
+      </node>
+      <node id="405">
+        <label>string</label>
+      </node>
+      <node id="429">
+        <label>reactor-cpp/port.hh</label>
+        <link refid="port_8hh"/>
+        <childnode refid="404" relation="include">
+        </childnode>
+        <childnode refid="407" relation="include">
+        </childnode>
+        <childnode refid="430" relation="include">
+        </childnode>
+        <childnode refid="432" relation="include">
+        </childnode>
+      </node>
+      <node id="417">
+        <label>map</label>
+      </node>
+      <node id="423">
+        <label>reactor-cpp/assert.hh</label>
+        <link refid="assert_8hh"/>
+        <childnode refid="424" relation="include">
+        </childnode>
+        <childnode refid="408" relation="include">
+        </childnode>
+        <childnode refid="425" relation="include">
+        </childnode>
+        <childnode refid="405" relation="include">
+        </childnode>
+      </node>
+      <node id="409">
+        <label>fwd.hh</label>
+        <link refid="fwd_8hh"/>
+      </node>
+      <node id="422">
+        <label>fstream</label>
+      </node>
+      <node id="433">
+        <label>reactor-cpp/reaction.hh</label>
+        <link refid="reaction_8hh"/>
+        <childnode refid="415" relation="include">
+        </childnode>
+        <childnode refid="404" relation="include">
+        </childnode>
+        <childnode refid="407" relation="include">
+        </childnode>
+      </node>
+      <node id="414">
+        <label>condition_variable</label>
+      </node>
+      <node id="420">
+        <label>logical_time.hh</label>
+        <link refid="logical__time_8hh"/>
+        <childnode refid="410" relation="include">
+        </childnode>
+      </node>
+      <node id="416">
+        <label>future</label>
+      </node>
+      <node id="406">
+        <label>vector</label>
+      </node>
+      <node id="430">
+        <label>value_ptr.hh</label>
+        <link refid="value__ptr_8hh"/>
+        <childnode refid="427" relation="include">
+        </childnode>
+        <childnode refid="431" relation="include">
+        </childnode>
+      </node>
+      <node id="402">
+        <label>/home/runner/work/reactor-cpp/reactor-cpp/lib/environment.cc</label>
+        <link refid="environment_8cc"/>
+        <childnode refid="403" relation="include">
+        </childnode>
+        <childnode refid="421" relation="include">
+        </childnode>
+        <childnode refid="422" relation="include">
+        </childnode>
+        <childnode refid="417" relation="include">
+        </childnode>
+        <childnode refid="423" relation="include">
+        </childnode>
+        <childnode refid="426" relation="include">
+        </childnode>
+        <childnode refid="429" relation="include">
+        </childnode>
+        <childnode refid="433" relation="include">
+        </childnode>
+      </node>
+      <node id="408">
+        <label>sstream</label>
+      </node>
+      <node id="413">
+        <label>scheduler.hh</label>
+        <link refid="scheduler_8hh"/>
+        <childnode refid="414" relation="include">
+        </childnode>
+        <childnode refid="415" relation="include">
+        </childnode>
+        <childnode refid="416" relation="include">
+        </childnode>
+        <childnode refid="417" relation="include">
+        </childnode>
+        <childnode refid="418" relation="include">
+        </childnode>
+        <childnode refid="404" relation="include">
+        </childnode>
+        <childnode refid="419" relation="include">
+        </childnode>
+        <childnode refid="406" relation="include">
+        </childnode>
+        <childnode refid="409" relation="include">
+        </childnode>
+        <childnode refid="420" relation="include">
+        </childnode>
+      </node>
+      <node id="412">
+        <label>iostream</label>
+      </node>
+      <node id="410">
+        <label>time.hh</label>
+        <link refid="time_8hh"/>
+        <childnode refid="411" relation="include">
+        </childnode>
+        <childnode refid="412" relation="include">
+        </childnode>
+      </node>
+      <node id="418">
+        <label>mutex</label>
+      </node>
+      <node id="411">
+        <label>chrono</label>
+      </node>
+      <node id="428">
+        <label>config.hh</label>
+      </node>
+      <node id="419">
+        <label>thread</label>
+      </node>
+      <node id="407">
+        <label>reactor.hh</label>
+        <link refid="reactor_8hh"/>
+        <childnode refid="404" relation="include">
+        </childnode>
+        <childnode refid="408" relation="include">
+        </childnode>
+        <childnode refid="405" relation="include">
+        </childnode>
+        <childnode refid="409" relation="include">
+        </childnode>
+        <childnode refid="410" relation="include">
+        </childnode>
+      </node>
+      <node id="431">
+        <label>type_traits</label>
+      </node>
+      <node id="404">
+        <label>set</label>
+      </node>
+      <node id="432">
+        <label>impl/port_impl.hh</label>
+        <link refid="port__impl_8hh"/>
+        <childnode refid="423" relation="include">
+        </childnode>
+        <childnode refid="403" relation="include">
+        </childnode>
+      </node>
+      <node id="403">
+        <label>reactor-cpp/environment.hh</label>
+        <link refid="environment_8hh"/>
+        <childnode refid="404" relation="include">
+        </childnode>
+        <childnode refid="405" relation="include">
+        </childnode>
+        <childnode refid="406" relation="include">
+        </childnode>
+        <childnode refid="407" relation="include">
+        </childnode>
+        <childnode refid="413" relation="include">
+        </childnode>
+      </node>
+      <node id="421">
+        <label>algorithm</label>
+      </node>
+      <node id="427">
+        <label>memory</label>
+      </node>
+    </incdepgraph>
+    <innernamespace refid="namespacereactor">reactor</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">/*</highlight></codeline>
+<codeline lineno="2"><highlight class="comment"><sp/>*<sp/>Copyright<sp/>(C)<sp/>2019<sp/>TU<sp/>Dresden</highlight></codeline>
+<codeline lineno="3"><highlight class="comment"><sp/>*<sp/>All<sp/>rights<sp/>reserved.</highlight></codeline>
+<codeline lineno="4"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="5"><highlight class="comment"><sp/>*<sp/>Authors:</highlight></codeline>
+<codeline lineno="6"><highlight class="comment"><sp/>*<sp/><sp/><sp/>Christian<sp/>Menard</highlight></codeline>
+<codeline lineno="7"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="environment_8hh" kindref="compound">reactor-cpp/environment.hh</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;algorithm&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;fstream&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;map&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="assert_8hh" kindref="compound">reactor-cpp/assert.hh</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="logging_8hh" kindref="compound">reactor-cpp/logging.hh</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="port_8hh" kindref="compound">reactor-cpp/port.hh</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="reaction_8hh" kindref="compound">reactor-cpp/reaction.hh</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespacereactor" kindref="compound">reactor</ref><sp/>{</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Environment_1afa74eb3e5dd5a7a4b1629f9dd63a168f" kindref="member">Environment::register_reactor</ref>(Reactor*<sp/><ref refid="namespacereactor" kindref="compound">reactor</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><ref refid="assert_8hh_1aca68c0d4ac8df0838e209fb5300f7be3" kindref="member">ASSERT</ref>(reactor<sp/>!=<sp/></highlight><highlight class="keyword">nullptr</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><ref refid="assert_8hh_1aa8944c5f0d4c2f0c3643c36ab4967a17" kindref="member">VALIDATE</ref>(this-&gt;<ref refid="classreactor_1_1Environment_1ab0cc703268b97b54e0a9e0927f0738d4" kindref="member">phase</ref>()<sp/>==<sp/><ref refid="classreactor_1_1Environment_1a2f0bcf10490e174246fc14b456fb0755a2a0d30cb1153031c3dfc239c6e0407ea" kindref="member">Phase::Construction</ref>,</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;Reactors<sp/>may<sp/>only<sp/>be<sp/>registered<sp/>during<sp/>construction<sp/>phase!&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><ref refid="assert_8hh_1aa8944c5f0d4c2f0c3643c36ab4967a17" kindref="member">VALIDATE</ref>(reactor-&gt;is_top_level(),</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;The<sp/>environment<sp/>may<sp/>only<sp/>contain<sp/>top<sp/>level<sp/>reactors!&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>r<sp/>=<sp/><ref refid="classreactor_1_1Environment_1a15707bfeefc0200d2956e3b52c8270db" kindref="member">_top_level_reactors</ref>.insert(reactor);</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><ref refid="assert_8hh_1aca68c0d4ac8df0838e209fb5300f7be3" kindref="member">ASSERT</ref>(r.second);</highlight></codeline>
+<codeline lineno="30"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="namespacereactor_1a50e4996eb605ff7e10a26dcdbae25340" kindref="member">recursive_assemble</ref>(Reactor*<sp/>container)<sp/>{</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/>container-&gt;assemble();</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>r<sp/>:<sp/>container-&gt;reactors())<sp/>{</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="namespacereactor_1a50e4996eb605ff7e10a26dcdbae25340" kindref="member">recursive_assemble</ref>(r);</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="37"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight></codeline>
+<codeline lineno="39"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Environment_1afd2ce93dd4fae7a1c6c93a8a274bf618" kindref="member">Environment::assemble</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><ref refid="assert_8hh_1aa8944c5f0d4c2f0c3643c36ab4967a17" kindref="member">VALIDATE</ref>(this-&gt;<ref refid="classreactor_1_1Environment_1ab0cc703268b97b54e0a9e0927f0738d4" kindref="member">phase</ref>()<sp/>==<sp/><ref refid="classreactor_1_1Environment_1a2f0bcf10490e174246fc14b456fb0755a2a0d30cb1153031c3dfc239c6e0407ea" kindref="member">Phase::Construction</ref>,</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;assemble()<sp/>may<sp/>only<sp/>be<sp/>called<sp/>during<sp/>construction<sp/>phase!&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><ref refid="classreactor_1_1Environment_1a15d6118f5ae312ad7665418969cc831a" kindref="member">_phase</ref><sp/>=<sp/><ref refid="classreactor_1_1Environment_1a2f0bcf10490e174246fc14b456fb0755ad75c45e11c8aeb13494dba59a388a164" kindref="member">Phase::Assembly</ref>;</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>r<sp/>:<sp/><ref refid="classreactor_1_1Environment_1a15707bfeefc0200d2956e3b52c8270db" kindref="member">_top_level_reactors</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="namespacereactor_1a50e4996eb605ff7e10a26dcdbae25340" kindref="member">recursive_assemble</ref>(r);</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="46"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"></highlight></codeline>
+<codeline lineno="48"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Environment_1a25e3210c41ddd193223c63adc454358a" kindref="member">Environment::build_dependency_graph</ref>(Reactor*<sp/>reactor)<sp/>{</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>obtain<sp/>dependencies<sp/>from<sp/>each<sp/>contained<sp/>reactor</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>r<sp/>:<sp/>reactor-&gt;reactors())<sp/>{</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="classreactor_1_1Environment_1a25e3210c41ddd193223c63adc454358a" kindref="member">build_dependency_graph</ref>(r);</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>get<sp/>reactions<sp/>from<sp/>this<sp/>reactor;<sp/>also<sp/>order<sp/>reactions<sp/>by<sp/>their<sp/>priority</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/>std::map&lt;int,<sp/>Reaction*&gt;<sp/>priority_map;</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>r<sp/>:<sp/>reactor-&gt;reactions())<sp/>{</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="classreactor_1_1Environment_1abaca5b55047bbf45f4280eeeb8cd38c4" kindref="member">reactions</ref>.insert(r);</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>result<sp/>=<sp/>priority_map.emplace(r-&gt;priority(),<sp/>r);</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="assert_8hh_1aa8944c5f0d4c2f0c3643c36ab4967a17" kindref="member">VALIDATE</ref>(result.second,</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;priorities<sp/>must<sp/>be<sp/>unique<sp/>for<sp/>all<sp/>reactions<sp/>of<sp/>the<sp/>same<sp/>reactor&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"></highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>connect<sp/>all<sp/>reactions<sp/>this<sp/>reaction<sp/>depends<sp/>on</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>r<sp/>:<sp/>reactor-&gt;reactions())<sp/>{</highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>d<sp/>:<sp/>r-&gt;dependencies())<sp/>{</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>source<sp/>=<sp/>d;</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal"><sp/>(source-&gt;has_inward_binding())<sp/>{</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>source<sp/>=<sp/>source-&gt;inward_binding();</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>ad<sp/>:<sp/>source-&gt;antidependencies())<sp/>{</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classreactor_1_1Environment_1ac67e4fbe9d7365e4570fc9667c003f41" kindref="member">dependencies</ref>.push_back(std::make_pair(r,<sp/>ad));</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"></highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>connect<sp/>reactions<sp/>by<sp/>priority</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(priority_map.size()<sp/>&gt;<sp/>1)<sp/>{</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>it<sp/>=<sp/>priority_map.begin();</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>next<sp/>=<sp/>std::next(it);</highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal"><sp/>(next<sp/>!=<sp/>priority_map.end())<sp/>{</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classreactor_1_1Environment_1ac67e4fbe9d7365e4570fc9667c003f41" kindref="member">dependencies</ref>.push_back(std::make_pair(next-&gt;second,<sp/>it-&gt;second));</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>it++;</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>next<sp/>=<sp/>std::next(it);</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="85"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"></highlight></codeline>
+<codeline lineno="87"><highlight class="normal">std::thread<sp/><ref refid="classreactor_1_1Environment_1a978f39f3609ed3889db10961505a61d9" kindref="member">Environment::startup</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"><sp/><sp/><ref refid="assert_8hh_1aa8944c5f0d4c2f0c3643c36ab4967a17" kindref="member">VALIDATE</ref>(this-&gt;<ref refid="classreactor_1_1Environment_1ab0cc703268b97b54e0a9e0927f0738d4" kindref="member">phase</ref>()<sp/>==<sp/><ref refid="classreactor_1_1Environment_1a2f0bcf10490e174246fc14b456fb0755ad75c45e11c8aeb13494dba59a388a164" kindref="member">Phase::Assembly</ref>,</highlight></codeline>
+<codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;startup()<sp/>may<sp/>only<sp/>be<sp/>called<sp/>during<sp/>assembly<sp/>phase!&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="90"><highlight class="normal"></highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>build<sp/>the<sp/>dependency<sp/>graph</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>r<sp/>:<sp/><ref refid="classreactor_1_1Environment_1a15707bfeefc0200d2956e3b52c8270db" kindref="member">_top_level_reactors</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="classreactor_1_1Environment_1a25e3210c41ddd193223c63adc454358a" kindref="member">build_dependency_graph</ref>(r);</highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"><sp/><sp/><ref refid="classreactor_1_1Environment_1a8b832858f8c20d36ffc8331ef9f9ac14" kindref="member">calculate_indexes</ref>();</highlight></codeline>
+<codeline lineno="96"><highlight class="normal"></highlight></codeline>
+<codeline lineno="97"><highlight class="normal"><sp/><sp/>log::Info()<sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;Starting<sp/>the<sp/>execution&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="98"><highlight class="normal"><sp/><sp/><ref refid="classreactor_1_1Environment_1a15d6118f5ae312ad7665418969cc831a" kindref="member">_phase</ref><sp/>=<sp/><ref refid="classreactor_1_1Environment_1a2f0bcf10490e174246fc14b456fb0755a13e685964c2548aa748f7ea263bad4e5" kindref="member">Phase::Startup</ref>;</highlight></codeline>
+<codeline lineno="99"><highlight class="normal"></highlight></codeline>
+<codeline lineno="100"><highlight class="normal"><sp/><sp/><ref refid="classreactor_1_1Environment_1adcc50c30d8fb1ad1dca3033e6819e3b8" kindref="member">_start_time</ref><sp/>=<sp/><ref refid="namespacereactor_1a49facd170b623937b3e655518a66b868" kindref="member">get_physical_time</ref>();</highlight></codeline>
+<codeline lineno="101"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>startupialize<sp/>all<sp/>reactors</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="102"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>r<sp/>:<sp/>_top_level_reactors)<sp/>{</highlight></codeline>
+<codeline lineno="103"><highlight class="normal"><sp/><sp/><sp/><sp/>r-&gt;startup();</highlight></codeline>
+<codeline lineno="104"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="105"><highlight class="normal"></highlight></codeline>
+<codeline lineno="106"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>start<sp/>processing<sp/>events</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="107"><highlight class="normal"><sp/><sp/><ref refid="classreactor_1_1Environment_1a15d6118f5ae312ad7665418969cc831a" kindref="member">_phase</ref><sp/>=<sp/><ref refid="classreactor_1_1Environment_1a2f0bcf10490e174246fc14b456fb0755a8f44785c8c19412c5b6611db30984514" kindref="member">Phase::Execution</ref>;</highlight></codeline>
+<codeline lineno="108"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>std::thread([</highlight><highlight class="keyword">this</highlight><highlight class="normal">]()<sp/>{<sp/>this-&gt;<ref refid="classreactor_1_1Environment_1ae07319eb6bc85a9c00ac324db4891217" kindref="member">_scheduler</ref>.<ref refid="classreactor_1_1Scheduler_1a2366bac3be216dbba49e110a69250ece" kindref="member">start</ref>();<sp/>});</highlight></codeline>
+<codeline lineno="109"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="110"><highlight class="normal"></highlight></codeline>
+<codeline lineno="111"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Environment_1a7bc165b2d7a3a6bc6c4573c26170dc50" kindref="member">Environment::sync_shutdown</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="112"><highlight class="normal"><sp/><sp/><ref refid="assert_8hh_1aa8944c5f0d4c2f0c3643c36ab4967a17" kindref="member">VALIDATE</ref>(this-&gt;<ref refid="classreactor_1_1Environment_1ab0cc703268b97b54e0a9e0927f0738d4" kindref="member">phase</ref>()<sp/>==<sp/><ref refid="classreactor_1_1Environment_1a2f0bcf10490e174246fc14b456fb0755a8f44785c8c19412c5b6611db30984514" kindref="member">Phase::Execution</ref>,</highlight></codeline>
+<codeline lineno="113"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;sync_shutdown()<sp/>may<sp/>only<sp/>be<sp/>called<sp/>during<sp/>execution<sp/>phase!&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="114"><highlight class="normal"><sp/><sp/><ref refid="classreactor_1_1Environment_1a15d6118f5ae312ad7665418969cc831a" kindref="member">_phase</ref><sp/>=<sp/><ref refid="classreactor_1_1Environment_1a2f0bcf10490e174246fc14b456fb0755a1a4ebb180ba59b067782515ffee6e975" kindref="member">Phase::Shutdown</ref>;</highlight></codeline>
+<codeline lineno="115"><highlight class="normal"></highlight></codeline>
+<codeline lineno="116"><highlight class="normal"><sp/><sp/>log::Info()<sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;Terminating<sp/>the<sp/>execution&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="117"><highlight class="normal"></highlight></codeline>
+<codeline lineno="118"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>r<sp/>:<sp/>_top_level_reactors)<sp/>{</highlight></codeline>
+<codeline lineno="119"><highlight class="normal"><sp/><sp/><sp/><sp/>r-&gt;shutdown();</highlight></codeline>
+<codeline lineno="120"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="121"><highlight class="normal"></highlight></codeline>
+<codeline lineno="122"><highlight class="normal"><sp/><sp/><ref refid="classreactor_1_1Environment_1a15d6118f5ae312ad7665418969cc831a" kindref="member">_phase</ref><sp/>=<sp/><ref refid="classreactor_1_1Environment_1a2f0bcf10490e174246fc14b456fb0755a7629cb3f7fc48e33116e336bdfd141fd" kindref="member">Phase::Deconstruction</ref>;</highlight></codeline>
+<codeline lineno="123"><highlight class="normal"></highlight></codeline>
+<codeline lineno="124"><highlight class="normal"><sp/><sp/><ref refid="classreactor_1_1Environment_1ae07319eb6bc85a9c00ac324db4891217" kindref="member">_scheduler</ref>.<ref refid="classreactor_1_1Scheduler_1a0ef1f93067b868fcf0c26031b7567054" kindref="member">stop</ref>();</highlight></codeline>
+<codeline lineno="125"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="126"><highlight class="normal"></highlight></codeline>
+<codeline lineno="127"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Environment_1a78cc13dcc68f71867e967da1c7cca001" kindref="member">Environment::async_shutdown</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="128"><highlight class="normal"><sp/><sp/><ref refid="classreactor_1_1Environment_1ae07319eb6bc85a9c00ac324db4891217" kindref="member">_scheduler</ref>.<ref refid="classreactor_1_1Scheduler_1a970ac74510f7cce25fd7e9994b11dad6" kindref="member">lock</ref>();</highlight></codeline>
+<codeline lineno="129"><highlight class="normal"><sp/><sp/><ref refid="classreactor_1_1Environment_1a7bc165b2d7a3a6bc6c4573c26170dc50" kindref="member">sync_shutdown</ref>();</highlight></codeline>
+<codeline lineno="130"><highlight class="normal"><sp/><sp/><ref refid="classreactor_1_1Environment_1ae07319eb6bc85a9c00ac324db4891217" kindref="member">_scheduler</ref>.<ref refid="classreactor_1_1Scheduler_1a8787186c85529782cf95fd58050f3af2" kindref="member">unlock</ref>();</highlight></codeline>
+<codeline lineno="131"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="132"><highlight class="normal"></highlight></codeline>
+<codeline lineno="133"><highlight class="normal">std::string<sp/><ref refid="namespacereactor_1a3acae8d24d419d39f72ca08bccf13c94" kindref="member">dot_name</ref>(ReactorElement*<sp/>r)<sp/>{</highlight></codeline>
+<codeline lineno="134"><highlight class="normal"><sp/><sp/>std::string<sp/>fqn<sp/>=<sp/>r-&gt;fqn();</highlight></codeline>
+<codeline lineno="135"><highlight class="normal"><sp/><sp/>std::replace(fqn.begin(),<sp/>fqn.end(),<sp/></highlight><highlight class="charliteral">&apos;.&apos;</highlight><highlight class="normal">,<sp/></highlight><highlight class="charliteral">&apos;_&apos;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="136"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>fqn;</highlight></codeline>
+<codeline lineno="137"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="138"><highlight class="normal"></highlight></codeline>
+<codeline lineno="139"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Environment_1a5f80b554cf21643375ad1202c8aea85c" kindref="member">Environment::export_dependency_graph</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string&amp;<sp/>path)<sp/>{</highlight></codeline>
+<codeline lineno="140"><highlight class="normal"><sp/><sp/>std::ofstream<sp/>dot;</highlight></codeline>
+<codeline lineno="141"><highlight class="normal"><sp/><sp/>dot.open(path);</highlight></codeline>
+<codeline lineno="142"><highlight class="normal"></highlight></codeline>
+<codeline lineno="143"><highlight class="normal"><sp/><sp/>dot<sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;digraph<sp/>{\n&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="144"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>r<sp/>:<sp/><ref refid="classreactor_1_1Environment_1abaca5b55047bbf45f4280eeeb8cd38c4" kindref="member">reactions</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="145"><highlight class="normal"><sp/><sp/><sp/><sp/>dot<sp/>&lt;&lt;<sp/><ref refid="namespacereactor_1a3acae8d24d419d39f72ca08bccf13c94" kindref="member">dot_name</ref>(r)<sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;<sp/>[label=\&quot;&quot;</highlight><highlight class="normal"><sp/>&lt;&lt;<sp/>r-&gt;fqn()<sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;\&quot;];&quot;</highlight><highlight class="normal"><sp/>&lt;&lt;<sp/>std::endl;</highlight></codeline>
+<codeline lineno="146"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="147"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>d<sp/>:<sp/><ref refid="classreactor_1_1Environment_1ac67e4fbe9d7365e4570fc9667c003f41" kindref="member">dependencies</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="148"><highlight class="normal"><sp/><sp/><sp/><sp/>dot<sp/>&lt;&lt;<sp/><ref refid="namespacereactor_1a3acae8d24d419d39f72ca08bccf13c94" kindref="member">dot_name</ref>(d.first)<sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;<sp/>-&gt;<sp/>&quot;</highlight><highlight class="normal"><sp/>&lt;&lt;<sp/><ref refid="namespacereactor_1a3acae8d24d419d39f72ca08bccf13c94" kindref="member">dot_name</ref>(d.second)<sp/>&lt;&lt;<sp/></highlight><highlight class="charliteral">&apos;;&apos;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="149"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&lt;&lt;<sp/>std::endl;</highlight></codeline>
+<codeline lineno="150"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="151"><highlight class="normal"><sp/><sp/>dot<sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;}\n&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="152"><highlight class="normal"></highlight></codeline>
+<codeline lineno="153"><highlight class="normal"><sp/><sp/>dot.close();</highlight></codeline>
+<codeline lineno="154"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="155"><highlight class="normal"></highlight></codeline>
+<codeline lineno="156"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1Environment_1a8b832858f8c20d36ffc8331ef9f9ac14" kindref="member">Environment::calculate_indexes</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="157"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>build<sp/>the<sp/>graph</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="158"><highlight class="normal"><sp/><sp/>std::map&lt;Reaction*,<sp/>std::set&lt;Reaction*&gt;&gt;<sp/>graph;</highlight></codeline>
+<codeline lineno="159"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>r<sp/>:<sp/>reactions)<sp/>{</highlight></codeline>
+<codeline lineno="160"><highlight class="normal"><sp/><sp/><sp/><sp/>graph[r];</highlight></codeline>
+<codeline lineno="161"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="162"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>d<sp/>:<sp/>dependencies)<sp/>{</highlight></codeline>
+<codeline lineno="163"><highlight class="normal"><sp/><sp/><sp/><sp/>graph[d.first].insert(d.second);</highlight></codeline>
+<codeline lineno="164"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="165"><highlight class="normal"></highlight></codeline>
+<codeline lineno="166"><highlight class="normal"><sp/><sp/><ref refid="classreactor_1_1Environment_1a5f80b554cf21643375ad1202c8aea85c" kindref="member">export_dependency_graph</ref>(</highlight><highlight class="stringliteral">&quot;/tmp/graph.dot&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="167"><highlight class="normal"><sp/><sp/>log::Debug()<sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;Reactions<sp/>sorted<sp/>by<sp/>index:&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="168"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/>index<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="169"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal"><sp/>(graph.size()<sp/>!=<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="170"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>find<sp/>nodes<sp/>with<sp/>degree<sp/>zero<sp/>and<sp/>assign<sp/>index</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="171"><highlight class="normal"><sp/><sp/><sp/><sp/>std::set&lt;Reaction*&gt;<sp/>degree_zero;</highlight></codeline>
+<codeline lineno="172"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">auto</highlight><highlight class="normal">&amp;<sp/>kv<sp/>:<sp/>graph)<sp/>{</highlight></codeline>
+<codeline lineno="173"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(kv.second.size()<sp/>==<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="174"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>kv.first-&gt;set_index(index);</highlight></codeline>
+<codeline lineno="175"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>degree_zero.insert(kv.first);</highlight></codeline>
+<codeline lineno="176"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="177"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="178"><highlight class="normal"></highlight></codeline>
+<codeline lineno="179"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(degree_zero.size()<sp/>==<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="180"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classreactor_1_1Environment_1a5f80b554cf21643375ad1202c8aea85c" kindref="member">export_dependency_graph</ref>(</highlight><highlight class="stringliteral">&quot;/tmp/reactor_dependency_graph.dot&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="181"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">throw</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1ValidationError" kindref="compound">reactor::ValidationError</ref>(</highlight></codeline>
+<codeline lineno="182"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;There<sp/>is<sp/>a<sp/>loop<sp/>in<sp/>the<sp/>dependency<sp/>graph.<sp/>Graph<sp/>was<sp/>written<sp/>to<sp/>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="183"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;/tmp/reactor_dependency_graph.dot&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="184"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="185"><highlight class="normal"></highlight></codeline>
+<codeline lineno="186"><highlight class="normal"><sp/><sp/><sp/><sp/>log::Debug<sp/>dbg;</highlight></codeline>
+<codeline lineno="187"><highlight class="normal"><sp/><sp/><sp/><sp/>dbg<sp/>&lt;&lt;<sp/>index<sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;:<sp/>&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="188"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>r<sp/>:<sp/>degree_zero)<sp/>{</highlight></codeline>
+<codeline lineno="189"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>dbg<sp/>&lt;&lt;<sp/>r-&gt;fqn()<sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;,<sp/>&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="190"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="191"><highlight class="normal"></highlight></codeline>
+<codeline lineno="192"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>reduce<sp/>graph</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="193"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>r<sp/>:<sp/>degree_zero)<sp/>{</highlight></codeline>
+<codeline lineno="194"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>graph.erase(r);</highlight></codeline>
+<codeline lineno="195"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="196"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">auto</highlight><highlight class="normal">&amp;<sp/>kv<sp/>:<sp/>graph)<sp/>{</highlight></codeline>
+<codeline lineno="197"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>r<sp/>:<sp/>degree_zero)<sp/>{</highlight></codeline>
+<codeline lineno="198"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>kv.second.erase(r);</highlight></codeline>
+<codeline lineno="199"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="200"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="201"><highlight class="normal"></highlight></codeline>
+<codeline lineno="202"><highlight class="normal"><sp/><sp/><sp/><sp/>index++;</highlight></codeline>
+<codeline lineno="203"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="204"><highlight class="normal"></highlight></codeline>
+<codeline lineno="205"><highlight class="normal"><sp/><sp/><ref refid="classreactor_1_1Environment_1aaacf54f45077c2c90e2c2ba628f088e8" kindref="member">_max_reaction_index</ref><sp/>=<sp/>index<sp/>-<sp/>1;</highlight></codeline>
+<codeline lineno="206"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="207"><highlight class="normal"></highlight></codeline>
+<codeline lineno="208"><highlight class="normal">}<sp/><sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>reactor</highlight><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="/home/runner/work/reactor-cpp/reactor-cpp/lib/environment.cc"/>
+  </compounddef>
+</doxygen>

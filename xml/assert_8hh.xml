@@ -1,0 +1,242 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.13">
+  <compounddef id="assert_8hh" kind="file" language="C++">
+    <compoundname>assert.hh</compoundname>
+    <includes local="no">cassert</includes>
+    <includes local="no">sstream</includes>
+    <includes local="no">stdexcept</includes>
+    <includes local="no">string</includes>
+    <includedby refid="action_8cc" local="yes">/home/runner/work/reactor-cpp/reactor-cpp/lib/action.cc</includedby>
+    <includedby refid="assert_8cc" local="yes">/home/runner/work/reactor-cpp/reactor-cpp/lib/assert.cc</includedby>
+    <includedby refid="environment_8cc" local="yes">/home/runner/work/reactor-cpp/reactor-cpp/lib/environment.cc</includedby>
+    <includedby refid="logical__time_8cc" local="yes">/home/runner/work/reactor-cpp/reactor-cpp/lib/logical_time.cc</includedby>
+    <includedby refid="port_8cc" local="yes">/home/runner/work/reactor-cpp/reactor-cpp/lib/port.cc</includedby>
+    <includedby refid="reaction_8cc" local="yes">/home/runner/work/reactor-cpp/reactor-cpp/lib/reaction.cc</includedby>
+    <includedby refid="reactor_8cc" local="yes">/home/runner/work/reactor-cpp/reactor-cpp/lib/reactor.cc</includedby>
+    <includedby refid="scheduler_8cc" local="yes">/home/runner/work/reactor-cpp/reactor-cpp/lib/scheduler.cc</includedby>
+    <includedby refid="action__impl_8hh" local="yes">/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/impl/action_impl.hh</includedby>
+    <includedby refid="port__impl_8hh" local="yes">/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/impl/port_impl.hh</includedby>
+    <incdepgraph>
+      <node id="33">
+        <label>cassert</label>
+      </node>
+      <node id="35">
+        <label>stdexcept</label>
+      </node>
+      <node id="36">
+        <label>string</label>
+      </node>
+      <node id="32">
+        <label>/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/assert.hh</label>
+        <link refid="assert_8hh"/>
+        <childnode refid="33" relation="include">
+        </childnode>
+        <childnode refid="34" relation="include">
+        </childnode>
+        <childnode refid="35" relation="include">
+        </childnode>
+        <childnode refid="36" relation="include">
+        </childnode>
+      </node>
+      <node id="34">
+        <label>sstream</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="44">
+        <label>/home/runner/work/reactor-cpp/reactor-cpp/lib/reactor.cc</label>
+        <link refid="reactor_8cc"/>
+      </node>
+      <node id="48">
+        <label>/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/reactor-cpp.hh</label>
+        <link refid="reactor-cpp_8hh"/>
+      </node>
+      <node id="39">
+        <label>/home/runner/work/reactor-cpp/reactor-cpp/lib/assert.cc</label>
+        <link refid="assert_8cc"/>
+      </node>
+      <node id="38">
+        <label>/home/runner/work/reactor-cpp/reactor-cpp/lib/action.cc</label>
+        <link refid="action_8cc"/>
+      </node>
+      <node id="41">
+        <label>/home/runner/work/reactor-cpp/reactor-cpp/lib/logical_time.cc</label>
+        <link refid="logical__time_8cc"/>
+      </node>
+      <node id="50">
+        <label>/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/port.hh</label>
+        <link refid="port_8hh"/>
+        <childnode refid="40" relation="include">
+        </childnode>
+        <childnode refid="42" relation="include">
+        </childnode>
+        <childnode refid="43" relation="include">
+        </childnode>
+        <childnode refid="44" relation="include">
+        </childnode>
+        <childnode refid="45" relation="include">
+        </childnode>
+        <childnode refid="48" relation="include">
+        </childnode>
+      </node>
+      <node id="37">
+        <label>/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/assert.hh</label>
+        <link refid="assert_8hh"/>
+        <childnode refid="38" relation="include">
+        </childnode>
+        <childnode refid="39" relation="include">
+        </childnode>
+        <childnode refid="40" relation="include">
+        </childnode>
+        <childnode refid="41" relation="include">
+        </childnode>
+        <childnode refid="42" relation="include">
+        </childnode>
+        <childnode refid="43" relation="include">
+        </childnode>
+        <childnode refid="44" relation="include">
+        </childnode>
+        <childnode refid="45" relation="include">
+        </childnode>
+        <childnode refid="46" relation="include">
+        </childnode>
+        <childnode refid="49" relation="include">
+        </childnode>
+      </node>
+      <node id="46">
+        <label>/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/impl/action_impl.hh</label>
+        <link refid="action__impl_8hh"/>
+        <childnode refid="47" relation="include">
+        </childnode>
+      </node>
+      <node id="42">
+        <label>/home/runner/work/reactor-cpp/reactor-cpp/lib/port.cc</label>
+        <link refid="port_8cc"/>
+      </node>
+      <node id="43">
+        <label>/home/runner/work/reactor-cpp/reactor-cpp/lib/reaction.cc</label>
+        <link refid="reaction_8cc"/>
+      </node>
+      <node id="40">
+        <label>/home/runner/work/reactor-cpp/reactor-cpp/lib/environment.cc</label>
+        <link refid="environment_8cc"/>
+      </node>
+      <node id="45">
+        <label>/home/runner/work/reactor-cpp/reactor-cpp/lib/scheduler.cc</label>
+        <link refid="scheduler_8cc"/>
+      </node>
+      <node id="49">
+        <label>/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/impl/port_impl.hh</label>
+        <link refid="port__impl_8hh"/>
+        <childnode refid="50" relation="include">
+        </childnode>
+      </node>
+      <node id="47">
+        <label>/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/action.hh</label>
+        <link refid="action_8hh"/>
+        <childnode refid="38" relation="include">
+        </childnode>
+        <childnode refid="43" relation="include">
+        </childnode>
+        <childnode refid="44" relation="include">
+        </childnode>
+        <childnode refid="45" relation="include">
+        </childnode>
+        <childnode refid="48" relation="include">
+        </childnode>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="classreactor_1_1ValidationError" prot="public">reactor::ValidationError</innerclass>
+    <innernamespace refid="namespacereactor">reactor</innernamespace>
+      <sectiondef kind="define">
+      <memberdef kind="define" id="assert_8hh_1aca68c0d4ac8df0838e209fb5300f7be3" prot="public" static="no">
+        <name>ASSERT</name>
+        <param><defname>x</defname></param>
+        <initializer>assert(x)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/assert.hh" line="20" column="11" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/assert.hh" bodystart="20" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="assert_8hh_1aa8944c5f0d4c2f0c3643c36ab4967a17" prot="public" static="no">
+        <name>VALIDATE</name>
+        <param><defname>con</defname></param>
+        <param><defname>msg</defname></param>
+        <initializer>do {               \
+    (void)sizeof(con); \
+  } while (0)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/assert.hh" line="48" column="10" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/assert.hh" bodystart="48" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">/*</highlight></codeline>
+<codeline lineno="2"><highlight class="comment"><sp/>*<sp/>Copyright<sp/>(C)<sp/>2019<sp/>TU<sp/>Dresden</highlight></codeline>
+<codeline lineno="3"><highlight class="comment"><sp/>*<sp/>All<sp/>rights<sp/>reserved.</highlight></codeline>
+<codeline lineno="4"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="5"><highlight class="comment"><sp/>*<sp/>Authors:</highlight></codeline>
+<codeline lineno="6"><highlight class="comment"><sp/>*<sp/><sp/><sp/>Christian<sp/>Menard</highlight></codeline>
+<codeline lineno="7"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="preprocessor">#pragma<sp/>once</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="comment">//<sp/>A<sp/>custom<sp/>definition<sp/>of<sp/>assert<sp/>that<sp/>mitigates<sp/>unused<sp/>variable<sp/>warnings</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="comment">//<sp/>when<sp/>assertions<sp/>are<sp/>disabled</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="preprocessor">#ifdef<sp/>NDEBUG</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ASSERT(x)<sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="15"><highlight class="preprocessor"><sp/><sp/>do<sp/>{<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="16"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>(void)sizeof(x);<sp/>\</highlight></codeline>
+<codeline lineno="17"><highlight class="preprocessor"><sp/><sp/>}<sp/>while<sp/>(0)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight><highlight class="preprocessor">#else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;cassert&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="20" refid="assert_8hh_1aca68c0d4ac8df0838e209fb5300f7be3" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ASSERT(x)<sp/>assert(x)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;sstream&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdexcept&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;string&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespacereactor" kindref="compound">reactor</ref><sp/>{</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight></codeline>
+<codeline lineno="29" refid="classreactor_1_1ValidationError" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="classreactor_1_1ValidationError" kindref="compound">ValidationError</ref><sp/>:<sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal"><sp/>std::runtime_error<sp/>{</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/></highlight><highlight class="keyword">private</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/>std::string<sp/><ref refid="classreactor_1_1ValidationError_1a5651bea57b5c6ba5e7571172baec633c" kindref="member">build_message</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string&amp;<sp/>msg);</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="34" refid="classreactor_1_1ValidationError_1a6693659e3b5f0846757304ac38a17deb" refkind="member"><highlight class="normal"><sp/><sp/><ref refid="classreactor_1_1ValidationError_1a6693659e3b5f0846757304ac38a17deb" kindref="member">ValidationError</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string&amp;<sp/>msg)</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>:<sp/>std::runtime_error(build_message(msg))<sp/>{}</highlight></codeline>
+<codeline lineno="36"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"></highlight></codeline>
+<codeline lineno="38" refid="namespacereactor_1afb17997129c7498eff1148813c8970d0" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/><ref refid="namespacereactor_1afb17997129c7498eff1148813c8970d0" kindref="member">validate</ref>(</highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>condition,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string&amp;<sp/>message)<sp/>{</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!condition)<sp/>{</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">throw</highlight><highlight class="normal"><sp/><ref refid="classreactor_1_1ValidationError_1a6693659e3b5f0846757304ac38a17deb" kindref="member">ValidationError</ref>(message);</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="42"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"></highlight></codeline>
+<codeline lineno="44"><highlight class="normal"></highlight></codeline>
+<codeline lineno="45"><highlight class="normal"></highlight><highlight class="preprocessor">#ifdef<sp/>REACTOR_CPP_VALIDATE</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="46"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>VALIDATE(con,<sp/>msg)<sp/>reactor::validate(con,<sp/>msg);</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="47"><highlight class="normal"></highlight><highlight class="preprocessor">#else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="48" refid="assert_8hh_1aa8944c5f0d4c2f0c3643c36ab4967a17" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>VALIDATE(con,<sp/>msg)<sp/>\</highlight></codeline>
+<codeline lineno="49"><highlight class="preprocessor"><sp/><sp/>do<sp/>{<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="50"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>(void)sizeof(con);<sp/>\</highlight></codeline>
+<codeline lineno="51"><highlight class="preprocessor"><sp/><sp/>}<sp/>while<sp/>(0)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="52"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="53"><highlight class="normal"></highlight></codeline>
+<codeline lineno="54"><highlight class="normal">}<sp/><sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>reactor</highlight><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/assert.hh"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.13">
+  <compounddef id="logging_8cc" kind="file" language="C++">
+    <compoundname>logging.cc</compoundname>
+    <includes refid="logging_8hh" local="yes">reactor-cpp/logging.hh</includes>
+    <incdepgraph>
+      <node id="436">
+        <label>reactor-cpp/logging.hh</label>
+        <link refid="logging_8hh"/>
+        <childnode refid="437" relation="include">
+        </childnode>
+        <childnode refid="438" relation="include">
+        </childnode>
+        <childnode refid="439" relation="include">
+        </childnode>
+        <childnode refid="440" relation="include">
+        </childnode>
+      </node>
+      <node id="435">
+        <label>/home/runner/work/reactor-cpp/reactor-cpp/lib/logging.cc</label>
+        <link refid="logging_8cc"/>
+        <childnode refid="436" relation="include">
+        </childnode>
+      </node>
+      <node id="437">
+        <label>iostream</label>
+      </node>
+      <node id="439">
+        <label>mutex</label>
+      </node>
+      <node id="440">
+        <label>config.hh</label>
+      </node>
+      <node id="438">
+        <label>memory</label>
+      </node>
+    </incdepgraph>
+    <innernamespace refid="namespacereactor">reactor</innernamespace>
+    <innernamespace refid="namespacereactor_1_1log">reactor::log</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">/*</highlight></codeline>
+<codeline lineno="2"><highlight class="comment"><sp/>*<sp/>Copyright<sp/>(C)<sp/>2019<sp/>TU<sp/>Dresden</highlight></codeline>
+<codeline lineno="3"><highlight class="comment"><sp/>*<sp/>All<sp/>rights<sp/>reserved.</highlight></codeline>
+<codeline lineno="4"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="5"><highlight class="comment"><sp/>*<sp/>Authors:</highlight></codeline>
+<codeline lineno="6"><highlight class="comment"><sp/>*<sp/><sp/><sp/>Christian<sp/>Menard</highlight></codeline>
+<codeline lineno="7"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="logging_8hh" kindref="compound">reactor-cpp/logging.hh</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespacereactor" kindref="compound">reactor</ref><sp/>{</highlight></codeline>
+<codeline lineno="12" refid="namespacereactor_1_1log" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">log<sp/>{</highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal">std::mutex<sp/><ref refid="classreactor_1_1log_1_1BaseLogger" kindref="compound">BaseLogger&lt;true&gt;::mutex</ref>;</highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="17"><highlight class="normal">}<sp/><sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>reactor</highlight><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="/home/runner/work/reactor-cpp/reactor-cpp/lib/logging.cc"/>
+  </compounddef>
+</doxygen>

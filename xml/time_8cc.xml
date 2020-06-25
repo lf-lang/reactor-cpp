@@ -1,0 +1,104 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.13">
+  <compounddef id="time_8cc" kind="file" language="C++">
+    <compoundname>time.cc</compoundname>
+    <includes refid="time_8hh" local="yes">reactor-cpp/time.hh</includes>
+    <includes local="no">ctime</includes>
+    <includes local="no">iomanip</includes>
+    <incdepgraph>
+      <node id="585">
+        <label>iomanip</label>
+      </node>
+      <node id="580">
+        <label>/home/runner/work/reactor-cpp/reactor-cpp/lib/time.cc</label>
+        <link refid="time_8cc"/>
+        <childnode refid="581" relation="include">
+        </childnode>
+        <childnode refid="584" relation="include">
+        </childnode>
+        <childnode refid="585" relation="include">
+        </childnode>
+      </node>
+      <node id="584">
+        <label>ctime</label>
+      </node>
+      <node id="583">
+        <label>iostream</label>
+      </node>
+      <node id="581">
+        <label>reactor-cpp/time.hh</label>
+        <link refid="time_8hh"/>
+        <childnode refid="582" relation="include">
+        </childnode>
+        <childnode refid="583" relation="include">
+        </childnode>
+      </node>
+      <node id="582">
+        <label>chrono</label>
+      </node>
+    </incdepgraph>
+    <innernamespace refid="namespacereactor">reactor</innernamespace>
+    <innernamespace refid="namespacereactor_1_1operators">reactor::operators</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">/*</highlight></codeline>
+<codeline lineno="2"><highlight class="comment"><sp/>*<sp/>Copyright<sp/>(C)<sp/>2019<sp/>TU<sp/>Dresden</highlight></codeline>
+<codeline lineno="3"><highlight class="comment"><sp/>*<sp/>All<sp/>rights<sp/>reserved.</highlight></codeline>
+<codeline lineno="4"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="5"><highlight class="comment"><sp/>*<sp/>Authors:</highlight></codeline>
+<codeline lineno="6"><highlight class="comment"><sp/>*<sp/><sp/><sp/>Christian<sp/>Menard</highlight></codeline>
+<codeline lineno="7"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="comment">//<sp/>tell<sp/>MSCV<sp/>not<sp/>to<sp/>worry<sp/>about<sp/>the<sp/>potential<sp/>unsafe<sp/>use<sp/>of<sp/>localtime</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="preprocessor">#ifdef<sp/>_MSC_VER</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="preprocessor">#pragma<sp/>warning(disable<sp/>:<sp/>4996)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="time_8hh" kindref="compound">reactor-cpp/time.hh</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;ctime&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;iomanip&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespacereactor" kindref="compound">reactor</ref><sp/>{</highlight></codeline>
+<codeline lineno="20" refid="namespacereactor_1_1operators" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">operators<sp/>{</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal">std::ostream&amp;<sp/><ref refid="namespacereactor_1_1operators_1a8ea55f33a5ed641face930e457c1f997" kindref="member">operator&lt;&lt;</ref>(std::ostream&amp;<sp/>os,<sp/><ref refid="namespacereactor_1ad950f8d1a46612500286a4af0f167080" kindref="member">TimePoint</ref><sp/>tp)<sp/>{</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>buf[20];</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/>time_t<sp/>time<sp/>=<sp/>std::chrono::system_clock::to_time_t(</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>std::chrono::time_point_cast&lt;std::chrono::system_clock::duration&gt;(tp));</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/>std::strftime(buf,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(buf),<sp/></highlight><highlight class="stringliteral">&quot;%Y-%m-%d<sp/>%H:%M:%S&quot;</highlight><highlight class="normal">,<sp/>std::localtime(&amp;time));</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>epoch<sp/>=<sp/>std::chrono::duration_cast&lt;<ref refid="namespacereactor_1aa8375b807a80703545664096c5b5b779" kindref="member">Duration</ref>&gt;(tp.time_since_epoch());</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/>os<sp/>&lt;&lt;<sp/>buf<sp/>&lt;&lt;<sp/></highlight><highlight class="charliteral">&apos;.&apos;</highlight><highlight class="normal"><sp/>&lt;&lt;<sp/>std::setw(9)<sp/>&lt;&lt;<sp/>std::setfill(</highlight><highlight class="charliteral">&apos;0&apos;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/>&lt;&lt;<sp/>epoch.count()<sp/>%<sp/>1</highlight><highlight class="stringliteral">&apos;000&apos;</highlight><highlight class="normal">000</highlight><highlight class="stringliteral">&apos;000UL;</highlight></codeline>
+<codeline lineno="31"><highlight class="stringliteral"></highlight></codeline>
+<codeline lineno="32"><highlight class="stringliteral"><sp/><sp/>return<sp/>os;</highlight></codeline>
+<codeline lineno="33"><highlight class="stringliteral">}</highlight></codeline>
+<codeline lineno="34"><highlight class="stringliteral"></highlight></codeline>
+<codeline lineno="35"><highlight class="stringliteral">std::ostream&amp;<sp/>operator&lt;&lt;(std::ostream&amp;<sp/>os,<sp/>std::chrono::seconds<sp/>dur)<sp/>{</highlight></codeline>
+<codeline lineno="36"><highlight class="stringliteral"><sp/><sp/>os<sp/>&lt;&lt;<sp/>dur.count()<sp/>&lt;&lt;<sp/>&quot;<sp/>secs&quot;;</highlight></codeline>
+<codeline lineno="37"><highlight class="stringliteral"><sp/><sp/>return<sp/>os;</highlight></codeline>
+<codeline lineno="38"><highlight class="stringliteral">}</highlight></codeline>
+<codeline lineno="39"><highlight class="stringliteral">std::ostream&amp;<sp/>operator&lt;&lt;(std::ostream&amp;<sp/>os,<sp/>std::chrono::milliseconds<sp/>dur)<sp/>{</highlight></codeline>
+<codeline lineno="40"><highlight class="stringliteral"><sp/><sp/>os<sp/>&lt;&lt;<sp/>dur.count()<sp/>&lt;&lt;<sp/>&quot;<sp/>msecs&quot;;</highlight></codeline>
+<codeline lineno="41"><highlight class="stringliteral"><sp/><sp/>return<sp/>os;</highlight></codeline>
+<codeline lineno="42"><highlight class="stringliteral">}</highlight></codeline>
+<codeline lineno="43"><highlight class="stringliteral">std::ostream&amp;<sp/>operator&lt;&lt;(std::ostream&amp;<sp/>os,<sp/>std::chrono::microseconds<sp/>dur)<sp/>{</highlight></codeline>
+<codeline lineno="44"><highlight class="stringliteral"><sp/><sp/>os<sp/>&lt;&lt;<sp/>dur.count()<sp/>&lt;&lt;<sp/>&quot;<sp/>usecs&quot;;</highlight></codeline>
+<codeline lineno="45"><highlight class="stringliteral"><sp/><sp/>return<sp/>os;</highlight></codeline>
+<codeline lineno="46"><highlight class="stringliteral">}</highlight></codeline>
+<codeline lineno="47"><highlight class="stringliteral">std::ostream&amp;<sp/>operator&lt;&lt;(std::ostream&amp;<sp/>os,<sp/>std::chrono::nanoseconds<sp/>dur)<sp/>{</highlight></codeline>
+<codeline lineno="48"><highlight class="stringliteral"><sp/><sp/>os<sp/>&lt;&lt;<sp/>dur.count()<sp/>&lt;&lt;<sp/>&quot;<sp/>nsecs&quot;;</highlight></codeline>
+<codeline lineno="49"><highlight class="stringliteral"><sp/><sp/>return<sp/>os;</highlight></codeline>
+<codeline lineno="50"><highlight class="stringliteral">}</highlight></codeline>
+<codeline lineno="51"><highlight class="stringliteral"></highlight></codeline>
+<codeline lineno="52"><highlight class="stringliteral">}<sp/><sp/>//<sp/>namespace<sp/>operators</highlight></codeline>
+<codeline lineno="53"><highlight class="stringliteral"></highlight></codeline>
+<codeline lineno="54"><highlight class="stringliteral">}<sp/><sp/>//<sp/>namespace<sp/>reactor</highlight></codeline>
+    </programlisting>
+    <location file="/home/runner/work/reactor-cpp/reactor-cpp/lib/time.cc"/>
+  </compounddef>
+</doxygen>

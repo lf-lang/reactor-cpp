@@ -1,0 +1,311 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.13">
+  <compounddef id="classreactor_1_1ImmutableValuePtr" kind="class" language="C++" prot="public">
+    <compoundname>reactor::ImmutableValuePtr</compoundname>
+    <includes refid="value__ptr_8hh" local="no">value_ptr.hh</includes>
+    <templateparamlist>
+      <param>
+        <type>class</type>
+        <declname>T</declname>
+        <defname>T</defname>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="public-type">
+      <memberdef kind="typedef" id="classreactor_1_1ImmutableValuePtr_1a88dbe82ff9b732b87e054ee37254bdfa" prot="public" static="no">
+        <type>T</type>
+        <definition>using reactor::ImmutableValuePtr&lt; T &gt;::type =  T</definition>
+        <argsstring></argsstring>
+        <name>type</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/value_ptr.hh" line="56" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/value_ptr.hh" bodystart="56" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classreactor_1_1ImmutableValuePtr_1afe0edfdeed222658f79ce58dc2d8a0d6" prot="private" static="no" mutable="no">
+        <type>std::shared_ptr&lt; <ref refid="classreactor_1_1ImmutableValuePtr_1a88dbe82ff9b732b87e054ee37254bdfa" kindref="member">type</ref> &gt;</type>
+        <definition>std::shared_ptr&lt;type&gt; reactor::ImmutableValuePtr&lt; T &gt;::internal_ptr</definition>
+        <argsstring></argsstring>
+        <name>internal_ptr</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/value_ptr.hh" line="59" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/value_ptr.hh" bodystart="59" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="classreactor_1_1ImmutableValuePtr_1ae0d6edc13d77e9a68811d200c02fef84" prot="private" static="no" const="no" explicit="yes" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>reactor::ImmutableValuePtr&lt; T &gt;::ImmutableValuePtr</definition>
+        <argsstring>(type *ptr)</argsstring>
+        <name>ImmutableValuePtr</name>
+        <param>
+          <type><ref refid="classreactor_1_1ImmutableValuePtr_1a88dbe82ff9b732b87e054ee37254bdfa" kindref="member">type</ref> *</type>
+          <declname>ptr</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/value_ptr.hh" line="61" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/value_ptr.hh" bodystart="61" bodyend="61"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classreactor_1_1ImmutableValuePtr_1aa7bbdefa52d839dbf71a1b8369754356" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>constexpr</type>
+        <definition>constexpr reactor::ImmutableValuePtr&lt; T &gt;::ImmutableValuePtr</definition>
+        <argsstring>()</argsstring>
+        <name>ImmutableValuePtr</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/value_ptr.hh" line="64" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/value_ptr.hh" bodystart="64" bodyend="64"/>
+      </memberdef>
+      <memberdef kind="function" id="classreactor_1_1ImmutableValuePtr_1a607b854e71fd1ec5333ae97b15b8fc8d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>reactor::ImmutableValuePtr&lt; T &gt;::ImmutableValuePtr</definition>
+        <argsstring>(const ImmutableValuePtr &amp;)=default</argsstring>
+        <name>ImmutableValuePtr</name>
+        <param>
+          <type>const <ref refid="classreactor_1_1ImmutableValuePtr" kindref="compound">ImmutableValuePtr</ref> &amp;</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/value_ptr.hh" line="65" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classreactor_1_1ImmutableValuePtr_1acd518265a1c01dd99d48254922264f23" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>reactor::ImmutableValuePtr&lt; T &gt;::ImmutableValuePtr</definition>
+        <argsstring>(ImmutableValuePtr &amp;&amp;)=default</argsstring>
+        <name>ImmutableValuePtr</name>
+        <param>
+          <type><ref refid="classreactor_1_1ImmutableValuePtr" kindref="compound">ImmutableValuePtr</ref> &amp;&amp;</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/value_ptr.hh" line="66" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classreactor_1_1ImmutableValuePtr_1aec3f1f481dc495293453c32f8654b5bc" prot="public" static="no" const="no" explicit="yes" inline="yes" virt="non-virtual">
+        <type>constexpr</type>
+        <definition>constexpr reactor::ImmutableValuePtr&lt; T &gt;::ImmutableValuePtr</definition>
+        <argsstring>(std::nullptr_t)</argsstring>
+        <name>ImmutableValuePtr</name>
+        <param>
+          <type>std::nullptr_t</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/value_ptr.hh" line="68" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/value_ptr.hh" bodystart="68" bodyend="69"/>
+      </memberdef>
+      <memberdef kind="function" id="classreactor_1_1ImmutableValuePtr_1a7b1b937ccd6dd4875c3737ba2780019f" prot="public" static="no" const="no" explicit="yes" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>reactor::ImmutableValuePtr&lt; T &gt;::ImmutableValuePtr</definition>
+        <argsstring>(MutableValuePtr&lt; T &gt; &amp;&amp;ptr)</argsstring>
+        <name>ImmutableValuePtr</name>
+        <param>
+          <type><ref refid="classreactor_1_1MutableValuePtr" kindref="compound">MutableValuePtr</ref>&lt; T &gt; &amp;&amp;</type>
+          <declname>ptr</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/value_ptr.hh" line="70" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/value_ptr.hh" bodystart="70" bodyend="71"/>
+      </memberdef>
+      <memberdef kind="function" id="classreactor_1_1ImmutableValuePtr_1a94521923de3774c88536498461c5fd6b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="classreactor_1_1ImmutableValuePtr" kindref="compound">ImmutableValuePtr</ref> &amp;</type>
+        <definition>ImmutableValuePtr&amp; reactor::ImmutableValuePtr&lt; T &gt;::operator=</definition>
+        <argsstring>(std::nullptr_t)</argsstring>
+        <name>operator=</name>
+        <param>
+          <type>std::nullptr_t</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/value_ptr.hh" line="73" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/value_ptr.hh" bodystart="73" bodyend="76"/>
+      </memberdef>
+      <memberdef kind="function" id="classreactor_1_1ImmutableValuePtr_1a0cf1105a09d40db7ceae985f9b329a9f" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="classreactor_1_1ImmutableValuePtr" kindref="compound">ImmutableValuePtr</ref> &amp;</type>
+        <definition>ImmutableValuePtr&amp; reactor::ImmutableValuePtr&lt; T &gt;::operator=</definition>
+        <argsstring>(const ImmutableValuePtr &amp;ptr)</argsstring>
+        <name>operator=</name>
+        <param>
+          <type>const <ref refid="classreactor_1_1ImmutableValuePtr" kindref="compound">ImmutableValuePtr</ref> &amp;</type>
+          <declname>ptr</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/value_ptr.hh" line="77" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/value_ptr.hh" bodystart="77" bodyend="80"/>
+      </memberdef>
+      <memberdef kind="function" id="classreactor_1_1ImmutableValuePtr_1adeb3de5c3f0dc27613a4b3915f9747e7" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="classreactor_1_1ImmutableValuePtr" kindref="compound">ImmutableValuePtr</ref> &amp;</type>
+        <definition>ImmutableValuePtr&amp; reactor::ImmutableValuePtr&lt; T &gt;::operator=</definition>
+        <argsstring>(ImmutableValuePtr &amp;&amp;ptr)</argsstring>
+        <name>operator=</name>
+        <param>
+          <type><ref refid="classreactor_1_1ImmutableValuePtr" kindref="compound">ImmutableValuePtr</ref> &amp;&amp;</type>
+          <declname>ptr</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/value_ptr.hh" line="81" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/value_ptr.hh" bodystart="81" bodyend="84"/>
+      </memberdef>
+      <memberdef kind="function" id="classreactor_1_1ImmutableValuePtr_1a65630b7319b433ce022e660866bc27d1" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="classreactor_1_1ImmutableValuePtr_1a88dbe82ff9b732b87e054ee37254bdfa" kindref="member">type</ref> *</type>
+        <definition>type* reactor::ImmutableValuePtr&lt; T &gt;::get</definition>
+        <argsstring>() const</argsstring>
+        <name>get</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/value_ptr.hh" line="86" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/value_ptr.hh" bodystart="86" bodyend="86"/>
+      </memberdef>
+      <memberdef kind="function" id="classreactor_1_1ImmutableValuePtr_1a214067c64b236305411402aa0f332228" prot="public" static="no" const="yes" explicit="yes" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>reactor::ImmutableValuePtr&lt; T &gt;::operator bool</definition>
+        <argsstring>() const</argsstring>
+        <name>operator bool</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/value_ptr.hh" line="88" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/value_ptr.hh" bodystart="88" bodyend="88"/>
+      </memberdef>
+      <memberdef kind="function" id="classreactor_1_1ImmutableValuePtr_1a1cbbf368f886f35c63604424f9b3b393" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="classreactor_1_1ImmutableValuePtr_1a88dbe82ff9b732b87e054ee37254bdfa" kindref="member">type</ref> &amp;</type>
+        <definition>type&amp; reactor::ImmutableValuePtr&lt; T &gt;::operator*</definition>
+        <argsstring>() const</argsstring>
+        <name>operator*</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/value_ptr.hh" line="89" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/value_ptr.hh" bodystart="89" bodyend="89"/>
+      </memberdef>
+      <memberdef kind="function" id="classreactor_1_1ImmutableValuePtr_1af547b7a43033f0fbe383665c10335173" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="classreactor_1_1ImmutableValuePtr_1a88dbe82ff9b732b87e054ee37254bdfa" kindref="member">type</ref> *</type>
+        <definition>type* reactor::ImmutableValuePtr&lt; T &gt;::operator-&gt;</definition>
+        <argsstring>() const</argsstring>
+        <name>operator-&gt;</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/value_ptr.hh" line="90" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/value_ptr.hh" bodystart="90" bodyend="90"/>
+      </memberdef>
+      <memberdef kind="function" id="classreactor_1_1ImmutableValuePtr_1a642520ceaad885335b2e03e319c59749" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="classreactor_1_1MutableValuePtr" kindref="compound">MutableValuePtr</ref>&lt; T &gt;</type>
+        <definition>MutableValuePtr&lt;T&gt; reactor::ImmutableValuePtr&lt; T &gt;::get_mutable_copy</definition>
+        <argsstring>() const</argsstring>
+        <name>get_mutable_copy</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/value_ptr.hh" line="92" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/value_ptr.hh" bodystart="92" bodyend="94"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="friend">
+      <memberdef kind="friend" id="classreactor_1_1ImmutableValuePtr_1a9fe212a2e336629d1f6df1b337f58c3f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class U</type>
+          </param>
+          <param>
+            <type>class...</type>
+            <declname>Args</declname>
+            <defname>Args</defname>
+          </param>
+        </templateparamlist>
+        <type>friend <ref refid="classreactor_1_1ImmutableValuePtr" kindref="compound">ImmutableValuePtr</ref>&lt; U &gt;</type>
+        <definition>ImmutableValuePtr&lt;U&gt; make_immutable_value</definition>
+        <argsstring>(Args &amp;&amp;... args)</argsstring>
+        <name>make_immutable_value</name>
+        <param>
+          <type>Args &amp;&amp;...</type>
+          <declname>args</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/value_ptr.hh" line="97" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/value_ptr.hh" bodystart="101" bodyend="103"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/value_ptr.hh" line="17" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/value_ptr.hh" bodystart="17" bodyend="-1"/>
+    <listofallmembers>
+      <member refid="classreactor_1_1ImmutableValuePtr_1a65630b7319b433ce022e660866bc27d1" prot="public" virt="non-virtual"><scope>reactor::ImmutableValuePtr</scope><name>get</name></member>
+      <member refid="classreactor_1_1ImmutableValuePtr_1a642520ceaad885335b2e03e319c59749" prot="public" virt="non-virtual"><scope>reactor::ImmutableValuePtr</scope><name>get_mutable_copy</name></member>
+      <member refid="classreactor_1_1ImmutableValuePtr_1ae0d6edc13d77e9a68811d200c02fef84" prot="private" virt="non-virtual"><scope>reactor::ImmutableValuePtr</scope><name>ImmutableValuePtr</name></member>
+      <member refid="classreactor_1_1ImmutableValuePtr_1aa7bbdefa52d839dbf71a1b8369754356" prot="public" virt="non-virtual"><scope>reactor::ImmutableValuePtr</scope><name>ImmutableValuePtr</name></member>
+      <member refid="classreactor_1_1ImmutableValuePtr_1a607b854e71fd1ec5333ae97b15b8fc8d" prot="public" virt="non-virtual"><scope>reactor::ImmutableValuePtr</scope><name>ImmutableValuePtr</name></member>
+      <member refid="classreactor_1_1ImmutableValuePtr_1acd518265a1c01dd99d48254922264f23" prot="public" virt="non-virtual"><scope>reactor::ImmutableValuePtr</scope><name>ImmutableValuePtr</name></member>
+      <member refid="classreactor_1_1ImmutableValuePtr_1aec3f1f481dc495293453c32f8654b5bc" prot="public" virt="non-virtual"><scope>reactor::ImmutableValuePtr</scope><name>ImmutableValuePtr</name></member>
+      <member refid="classreactor_1_1ImmutableValuePtr_1a7b1b937ccd6dd4875c3737ba2780019f" prot="public" virt="non-virtual"><scope>reactor::ImmutableValuePtr</scope><name>ImmutableValuePtr</name></member>
+      <member refid="classreactor_1_1ImmutableValuePtr_1afe0edfdeed222658f79ce58dc2d8a0d6" prot="private" virt="non-virtual"><scope>reactor::ImmutableValuePtr</scope><name>internal_ptr</name></member>
+      <member refid="classreactor_1_1ImmutableValuePtr_1a9fe212a2e336629d1f6df1b337f58c3f" prot="public" virt="non-virtual"><scope>reactor::ImmutableValuePtr</scope><name>make_immutable_value</name></member>
+      <member refid="classreactor_1_1ImmutableValuePtr_1a214067c64b236305411402aa0f332228" prot="public" virt="non-virtual"><scope>reactor::ImmutableValuePtr</scope><name>operator bool</name></member>
+      <member refid="classreactor_1_1ImmutableValuePtr_1a1cbbf368f886f35c63604424f9b3b393" prot="public" virt="non-virtual"><scope>reactor::ImmutableValuePtr</scope><name>operator*</name></member>
+      <member refid="classreactor_1_1ImmutableValuePtr_1af547b7a43033f0fbe383665c10335173" prot="public" virt="non-virtual"><scope>reactor::ImmutableValuePtr</scope><name>operator-&gt;</name></member>
+      <member refid="classreactor_1_1ImmutableValuePtr_1a94521923de3774c88536498461c5fd6b" prot="public" virt="non-virtual"><scope>reactor::ImmutableValuePtr</scope><name>operator=</name></member>
+      <member refid="classreactor_1_1ImmutableValuePtr_1a0cf1105a09d40db7ceae985f9b329a9f" prot="public" virt="non-virtual"><scope>reactor::ImmutableValuePtr</scope><name>operator=</name></member>
+      <member refid="classreactor_1_1ImmutableValuePtr_1adeb3de5c3f0dc27613a4b3915f9747e7" prot="public" virt="non-virtual"><scope>reactor::ImmutableValuePtr</scope><name>operator=</name></member>
+      <member refid="classreactor_1_1ImmutableValuePtr_1a88dbe82ff9b732b87e054ee37254bdfa" prot="public" virt="non-virtual"><scope>reactor::ImmutableValuePtr</scope><name>type</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

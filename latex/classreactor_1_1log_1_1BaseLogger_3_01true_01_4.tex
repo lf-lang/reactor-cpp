@@ -1,0 +1,93 @@
+\hypertarget{classreactor_1_1log_1_1BaseLogger_3_01true_01_4}{}\section{reactor\+:\+:log\+:\+:Base\+Logger$<$ true $>$ Class Template Reference}
+\label{classreactor_1_1log_1_1BaseLogger_3_01true_01_4}\index{reactor\+::log\+::\+Base\+Logger$<$ true $>$@{reactor\+::log\+::\+Base\+Logger$<$ true $>$}}
+
+
+{\ttfamily \#include $<$logging.\+hh$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classreactor_1_1log_1_1BaseLogger_3_01true_01_4_af11fb9ca0a141bdb7d5c14f3931735f9}{Base\+Logger} (const std\+::string \&\hyperlink{classreactor_1_1log_1_1BaseLogger_3_01true_01_4_ac12deb548273b6b993a0153ace1e6cdc}{log\+\_\+prefix})
+\item 
+{\footnotesize template$<$class T $>$ }\\\hyperlink{classreactor_1_1log_1_1BaseLogger}{Base\+Logger} \& \hyperlink{classreactor_1_1log_1_1BaseLogger_3_01true_01_4_a0ed6724c737335c58ddb1d3352ba58b9}{operator$<$$<$} (const T \&msg)
+\item 
+\hyperlink{classreactor_1_1log_1_1BaseLogger_3_01true_01_4_a1c4cf99b3f0d8c2f1c7761e7e5daa02e}{$\sim$\+Base\+Logger} ()
+\end{DoxyCompactItemize}
+\subsection*{Private Types}
+\begin{DoxyCompactItemize}
+\item 
+using \hyperlink{classreactor_1_1log_1_1BaseLogger_3_01true_01_4_a145f94a8210bc4c9bbf54c3af61bd8ce}{Lock} = std\+::unique\+\_\+lock$<$ std\+::mutex $>$
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+const std\+::string \hyperlink{classreactor_1_1log_1_1BaseLogger_3_01true_01_4_ac12deb548273b6b993a0153ace1e6cdc}{log\+\_\+prefix}
+\item 
+\hyperlink{classreactor_1_1log_1_1BaseLogger_3_01true_01_4_a145f94a8210bc4c9bbf54c3af61bd8ce}{Lock} \hyperlink{classreactor_1_1log_1_1BaseLogger_3_01true_01_4_a7a9e073069a113bdabc80230f9cefb12}{lock}
+\end{DoxyCompactItemize}
+\subsection*{Static Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static std\+::mutex \hyperlink{classreactor_1_1log_1_1BaseLogger_3_01true_01_4_a8991911bde1823d50152926e3241c186}{mutex}
+\end{DoxyCompactItemize}
+
+
+\subsection{Member Typedef Documentation}
+\mbox{\Hypertarget{classreactor_1_1log_1_1BaseLogger_3_01true_01_4_a145f94a8210bc4c9bbf54c3af61bd8ce}\label{classreactor_1_1log_1_1BaseLogger_3_01true_01_4_a145f94a8210bc4c9bbf54c3af61bd8ce}} 
+\index{reactor\+::log\+::\+Base\+Logger$<$ true $>$@{reactor\+::log\+::\+Base\+Logger$<$ true $>$}!Lock@{Lock}}
+\index{Lock@{Lock}!reactor\+::log\+::\+Base\+Logger$<$ true $>$@{reactor\+::log\+::\+Base\+Logger$<$ true $>$}}
+\subsubsection{\texorpdfstring{Lock}{Lock}}
+{\footnotesize\ttfamily using \hyperlink{classreactor_1_1log_1_1BaseLogger}{reactor\+::log\+::\+Base\+Logger}$<$ true $>$\+::\hyperlink{classreactor_1_1log_1_1BaseLogger_3_01true_01_4_a145f94a8210bc4c9bbf54c3af61bd8ce}{Lock} =  std\+::unique\+\_\+lock$<$std\+::mutex$>$\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classreactor_1_1log_1_1BaseLogger_3_01true_01_4_af11fb9ca0a141bdb7d5c14f3931735f9}\label{classreactor_1_1log_1_1BaseLogger_3_01true_01_4_af11fb9ca0a141bdb7d5c14f3931735f9}} 
+\index{reactor\+::log\+::\+Base\+Logger$<$ true $>$@{reactor\+::log\+::\+Base\+Logger$<$ true $>$}!Base\+Logger@{Base\+Logger}}
+\index{Base\+Logger@{Base\+Logger}!reactor\+::log\+::\+Base\+Logger$<$ true $>$@{reactor\+::log\+::\+Base\+Logger$<$ true $>$}}
+\subsubsection{\texorpdfstring{Base\+Logger()}{BaseLogger()}}
+{\footnotesize\ttfamily \hyperlink{classreactor_1_1log_1_1BaseLogger}{reactor\+::log\+::\+Base\+Logger}$<$ true $>$\+::\hyperlink{classreactor_1_1log_1_1BaseLogger}{Base\+Logger} (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{log\+\_\+prefix }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{classreactor_1_1log_1_1BaseLogger_3_01true_01_4_a1c4cf99b3f0d8c2f1c7761e7e5daa02e}\label{classreactor_1_1log_1_1BaseLogger_3_01true_01_4_a1c4cf99b3f0d8c2f1c7761e7e5daa02e}} 
+\index{reactor\+::log\+::\+Base\+Logger$<$ true $>$@{reactor\+::log\+::\+Base\+Logger$<$ true $>$}!````~Base\+Logger@{$\sim$\+Base\+Logger}}
+\index{````~Base\+Logger@{$\sim$\+Base\+Logger}!reactor\+::log\+::\+Base\+Logger$<$ true $>$@{reactor\+::log\+::\+Base\+Logger$<$ true $>$}}
+\subsubsection{\texorpdfstring{$\sim$\+Base\+Logger()}{~BaseLogger()}}
+{\footnotesize\ttfamily \hyperlink{classreactor_1_1log_1_1BaseLogger}{reactor\+::log\+::\+Base\+Logger}$<$ true $>$\+::$\sim$\hyperlink{classreactor_1_1log_1_1BaseLogger}{Base\+Logger} (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classreactor_1_1log_1_1BaseLogger_3_01true_01_4_a0ed6724c737335c58ddb1d3352ba58b9}\label{classreactor_1_1log_1_1BaseLogger_3_01true_01_4_a0ed6724c737335c58ddb1d3352ba58b9}} 
+\index{reactor\+::log\+::\+Base\+Logger$<$ true $>$@{reactor\+::log\+::\+Base\+Logger$<$ true $>$}!operator$<$$<$@{operator$<$$<$}}
+\index{operator$<$$<$@{operator$<$$<$}!reactor\+::log\+::\+Base\+Logger$<$ true $>$@{reactor\+::log\+::\+Base\+Logger$<$ true $>$}}
+\subsubsection{\texorpdfstring{operator$<$$<$()}{operator<<()}}
+{\footnotesize\ttfamily template$<$class T $>$ \\
+\hyperlink{classreactor_1_1log_1_1BaseLogger}{Base\+Logger}\& \hyperlink{classreactor_1_1log_1_1BaseLogger}{reactor\+::log\+::\+Base\+Logger}$<$ true $>$\+::operator$<$$<$ (\begin{DoxyParamCaption}\item[{const T \&}]{msg }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\subsection{Member Data Documentation}
+\mbox{\Hypertarget{classreactor_1_1log_1_1BaseLogger_3_01true_01_4_a7a9e073069a113bdabc80230f9cefb12}\label{classreactor_1_1log_1_1BaseLogger_3_01true_01_4_a7a9e073069a113bdabc80230f9cefb12}} 
+\index{reactor\+::log\+::\+Base\+Logger$<$ true $>$@{reactor\+::log\+::\+Base\+Logger$<$ true $>$}!lock@{lock}}
+\index{lock@{lock}!reactor\+::log\+::\+Base\+Logger$<$ true $>$@{reactor\+::log\+::\+Base\+Logger$<$ true $>$}}
+\subsubsection{\texorpdfstring{lock}{lock}}
+{\footnotesize\ttfamily \hyperlink{classreactor_1_1log_1_1BaseLogger_3_01true_01_4_a145f94a8210bc4c9bbf54c3af61bd8ce}{Lock} \hyperlink{classreactor_1_1log_1_1BaseLogger}{reactor\+::log\+::\+Base\+Logger}$<$ true $>$\+::lock\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classreactor_1_1log_1_1BaseLogger_3_01true_01_4_ac12deb548273b6b993a0153ace1e6cdc}\label{classreactor_1_1log_1_1BaseLogger_3_01true_01_4_ac12deb548273b6b993a0153ace1e6cdc}} 
+\index{reactor\+::log\+::\+Base\+Logger$<$ true $>$@{reactor\+::log\+::\+Base\+Logger$<$ true $>$}!log\+\_\+prefix@{log\+\_\+prefix}}
+\index{log\+\_\+prefix@{log\+\_\+prefix}!reactor\+::log\+::\+Base\+Logger$<$ true $>$@{reactor\+::log\+::\+Base\+Logger$<$ true $>$}}
+\subsubsection{\texorpdfstring{log\+\_\+prefix}{log\_prefix}}
+{\footnotesize\ttfamily const std\+::string \hyperlink{classreactor_1_1log_1_1BaseLogger}{reactor\+::log\+::\+Base\+Logger}$<$ true $>$\+::log\+\_\+prefix\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classreactor_1_1log_1_1BaseLogger_3_01true_01_4_a8991911bde1823d50152926e3241c186}\label{classreactor_1_1log_1_1BaseLogger_3_01true_01_4_a8991911bde1823d50152926e3241c186}} 
+\index{reactor\+::log\+::\+Base\+Logger$<$ true $>$@{reactor\+::log\+::\+Base\+Logger$<$ true $>$}!mutex@{mutex}}
+\index{mutex@{mutex}!reactor\+::log\+::\+Base\+Logger$<$ true $>$@{reactor\+::log\+::\+Base\+Logger$<$ true $>$}}
+\subsubsection{\texorpdfstring{mutex}{mutex}}
+{\footnotesize\ttfamily std\+::mutex \hyperlink{classreactor_1_1log_1_1BaseLogger}{reactor\+::log\+::\+Base\+Logger}$<$ true $>$\+::mutex\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [private]}}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/home/runner/work/reactor-\/cpp/reactor-\/cpp/include/reactor-\/cpp/\hyperlink{logging_8hh}{logging.\+hh}\item 
+/home/runner/work/reactor-\/cpp/reactor-\/cpp/lib/\hyperlink{logging_8cc}{logging.\+cc}\end{DoxyCompactItemize}

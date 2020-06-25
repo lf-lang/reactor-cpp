@@ -1,0 +1,364 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.13">
+  <compounddef id="classreactor_1_1Action" kind="class" language="C++" prot="public">
+    <compoundname>reactor::Action</compoundname>
+    <basecompoundref refid="classreactor_1_1BaseAction" prot="public" virt="non-virtual">reactor::BaseAction</basecompoundref>
+    <derivedcompoundref refid="classreactor_1_1LogicalAction" prot="public" virt="non-virtual">reactor::LogicalAction&lt; T &gt;</derivedcompoundref>
+    <derivedcompoundref refid="classreactor_1_1PhysicalAction" prot="public" virt="non-virtual">reactor::PhysicalAction&lt; T &gt;</derivedcompoundref>
+    <includes refid="action_8hh" local="no">action.hh</includes>
+    <templateparamlist>
+      <param>
+        <type>class T</type>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classreactor_1_1Action_1a0002a99457bb578aa89854ad71db4fb2" prot="private" static="no" mutable="no">
+        <type><ref refid="classreactor_1_1ImmutableValuePtr" kindref="compound">ImmutableValuePtr</ref>&lt; T &gt;</type>
+        <definition>ImmutableValuePtr&lt;T&gt; reactor::Action&lt; T &gt;::value_ptr</definition>
+        <argsstring></argsstring>
+        <name>value_ptr</name>
+        <initializer>{nullptr}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/action.hh" line="55" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/action.hh" bodystart="55" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="classreactor_1_1Action_1a4ae275c1b030d5e8111469cc0ca5e09d" prot="private" static="no" const="no" explicit="no" inline="yes" final="yes" virt="virtual">
+        <type>void</type>
+        <definition>void reactor::Action&lt; T &gt;::cleanup</definition>
+        <argsstring>() override final</argsstring>
+        <name>cleanup</name>
+        <reimplements refid="classreactor_1_1BaseAction_1a7e4ad7157e653054c7afa22b78e46923">cleanup</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/action.hh" line="57" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/action.hh" bodystart="57" bodyend="57"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="protected-func">
+      <memberdef kind="function" id="classreactor_1_1Action_1ad0d36ea549eb0b04bd95d69fa8ac5d39" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>reactor::Action&lt; T &gt;::Action</definition>
+        <argsstring>(const std::string &amp;name, Reactor *container, bool logical, Duration min_delay)</argsstring>
+        <name>Action</name>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>name</declname>
+        </param>
+        <param>
+          <type><ref refid="classreactor_1_1Reactor" kindref="compound">Reactor</ref> *</type>
+          <declname>container</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>logical</declname>
+        </param>
+        <param>
+          <type><ref refid="namespacereactor_1aa8375b807a80703545664096c5b5b779" kindref="member">Duration</ref></type>
+          <declname>min_delay</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/action.hh" line="60" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/action.hh" bodystart="60" bodyend="64"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classreactor_1_1Action_1a60364e6742fb14dd515ff355abc5f3db" prot="public" static="no" const="no" explicit="no" inline="yes" final="yes" virt="virtual">
+        <type>void</type>
+        <definition>void reactor::Action&lt; T &gt;::startup</definition>
+        <argsstring>() override final</argsstring>
+        <name>startup</name>
+        <reimplements refid="classreactor_1_1ReactorElement_1a8cb574cb20ff963903ad905fb0a157e3">startup</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/action.hh" line="67" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/action.hh" bodystart="67" bodyend="67"/>
+      </memberdef>
+      <memberdef kind="function" id="classreactor_1_1Action_1a5e6698cc0893efca3a088f2158345b9c" prot="public" static="no" const="no" explicit="no" inline="yes" final="yes" virt="virtual">
+        <type>void</type>
+        <definition>void reactor::Action&lt; T &gt;::shutdown</definition>
+        <argsstring>() override final</argsstring>
+        <name>shutdown</name>
+        <reimplements refid="classreactor_1_1ReactorElement_1a8fce084bef582156979ebba56737e907">shutdown</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/action.hh" line="68" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/action.hh" bodystart="68" bodyend="68"/>
+      </memberdef>
+      <memberdef kind="function" id="classreactor_1_1Action_1a795f5b52075c020ec993d1149a720f62" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class Dur</type>
+            <defval><ref refid="namespacereactor_1aa8375b807a80703545664096c5b5b779" kindref="member">Duration</ref></defval>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void reactor::Action&lt; T &gt;::schedule</definition>
+        <argsstring>(const ImmutableValuePtr&lt; T &gt; &amp;value_ptr, Dur delay=Dur::zero())</argsstring>
+        <name>schedule</name>
+        <param>
+          <type>const <ref refid="classreactor_1_1ImmutableValuePtr" kindref="compound">ImmutableValuePtr</ref>&lt; T &gt; &amp;</type>
+          <declname>value_ptr</declname>
+        </param>
+        <param>
+          <type>Dur</type>
+          <declname>delay</declname>
+          <defval>Dur::zero()</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/action.hh" line="71" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/impl/action_impl.hh" bodystart="16" bodyend="31"/>
+      </memberdef>
+      <memberdef kind="function" id="classreactor_1_1Action_1a863d3d618afb82404326c5076c9fd32a" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class Dur</type>
+            <defval><ref refid="namespacereactor_1aa8375b807a80703545664096c5b5b779" kindref="member">Duration</ref></defval>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void reactor::Action&lt; T &gt;::schedule</definition>
+        <argsstring>(MutableValuePtr&lt; T &gt; &amp;&amp;value_ptr, Dur delay=Dur::zero())</argsstring>
+        <name>schedule</name>
+        <param>
+          <type><ref refid="classreactor_1_1MutableValuePtr" kindref="compound">MutableValuePtr</ref>&lt; T &gt; &amp;&amp;</type>
+          <declname>value_ptr</declname>
+        </param>
+        <param>
+          <type>Dur</type>
+          <declname>delay</declname>
+          <defval>Dur::zero()</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/action.hh" line="73" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/action.hh" bodystart="73" bodyend="76"/>
+      </memberdef>
+      <memberdef kind="function" id="classreactor_1_1Action_1a1dc2c0762950c330da3345f9192d62fa" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class Dur</type>
+            <defval><ref refid="namespacereactor_1aa8375b807a80703545664096c5b5b779" kindref="member">Duration</ref></defval>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void reactor::Action&lt; T &gt;::schedule</definition>
+        <argsstring>(const T &amp;value, Dur delay=Dur::zero())</argsstring>
+        <name>schedule</name>
+        <param>
+          <type>const T &amp;</type>
+          <declname>value</declname>
+        </param>
+        <param>
+          <type>Dur</type>
+          <declname>delay</declname>
+          <defval>Dur::zero()</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/action.hh" line="78" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/action.hh" bodystart="78" bodyend="80"/>
+      </memberdef>
+      <memberdef kind="function" id="classreactor_1_1Action_1ad8afb46b0b3bb753538cd37f7eae3be1" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class Dur</type>
+            <defval><ref refid="namespacereactor_1aa8375b807a80703545664096c5b5b779" kindref="member">Duration</ref></defval>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void reactor::Action&lt; T &gt;::schedule</definition>
+        <argsstring>(T &amp;&amp;value, Dur delay=Dur::zero())</argsstring>
+        <name>schedule</name>
+        <param>
+          <type>T &amp;&amp;</type>
+          <declname>value</declname>
+        </param>
+        <param>
+          <type>Dur</type>
+          <declname>delay</declname>
+          <defval>Dur::zero()</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/action.hh" line="82" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/action.hh" bodystart="82" bodyend="84"/>
+      </memberdef>
+      <memberdef kind="function" id="classreactor_1_1Action_1a3b7937c4ce3f0a25562a08734ce8c2dc" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>const <ref refid="classreactor_1_1ImmutableValuePtr" kindref="compound">ImmutableValuePtr</ref>&lt; T &gt; &amp;</type>
+        <definition>const ImmutableValuePtr&lt;T&gt;&amp; reactor::Action&lt; T &gt;::get</definition>
+        <argsstring>() const</argsstring>
+        <name>get</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/action.hh" line="86" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/action.hh" bodystart="86" bodyend="86"/>
+      </memberdef>
+      <memberdef kind="function" id="classreactor_1_1Action_1a91d6979d528882d4aba1c892c130dbd1" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool reactor::Action&lt; T &gt;::is_present</definition>
+        <argsstring>() const</argsstring>
+        <name>is_present</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/action.hh" line="87" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/action.hh" bodystart="87" bodyend="87"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="3">
+        <label>reactor::LogicalAction&lt; T &gt;</label>
+        <link refid="classreactor_1_1LogicalAction"/>
+        <childnode refid="0" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="4">
+        <label>reactor::PhysicalAction&lt; T &gt;</label>
+        <link refid="classreactor_1_1PhysicalAction"/>
+        <childnode refid="0" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>reactor::BaseAction</label>
+        <link refid="classreactor_1_1BaseAction"/>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>reactor::ReactorElement</label>
+        <link refid="classreactor_1_1ReactorElement"/>
+      </node>
+      <node id="0">
+        <label>reactor::Action&lt; T &gt;</label>
+        <link refid="classreactor_1_1Action"/>
+        <childnode refid="1" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="6">
+        <label>reactor::BaseAction</label>
+        <link refid="classreactor_1_1BaseAction"/>
+        <childnode refid="7" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="7">
+        <label>reactor::ReactorElement</label>
+        <link refid="classreactor_1_1ReactorElement"/>
+        <childnode refid="8" relation="usage">
+          <edgelabel>_container</edgelabel>
+        </childnode>
+        <childnode refid="9" relation="usage">
+          <edgelabel>_environment</edgelabel>
+        </childnode>
+      </node>
+      <node id="5">
+        <label>reactor::Action&lt; T &gt;</label>
+        <link refid="classreactor_1_1Action"/>
+        <childnode refid="6" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="9">
+        <label>reactor::Environment</label>
+        <link refid="classreactor_1_1Environment"/>
+        <childnode refid="10" relation="usage">
+          <edgelabel>_scheduler</edgelabel>
+        </childnode>
+      </node>
+      <node id="11">
+        <label>reactor::LogicalTime</label>
+        <link refid="classreactor_1_1LogicalTime"/>
+      </node>
+      <node id="8">
+        <label>reactor::Reactor</label>
+        <link refid="classreactor_1_1Reactor"/>
+        <childnode refid="7" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="10">
+        <label>reactor::Scheduler</label>
+        <link refid="classreactor_1_1Scheduler"/>
+        <childnode refid="11" relation="usage">
+          <edgelabel>_logical_time</edgelabel>
+        </childnode>
+        <childnode refid="9" relation="usage">
+          <edgelabel>_environment</edgelabel>
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/action.hh" line="53" column="1" bodyfile="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/action.hh" bodystart="53" bodyend="88"/>
+    <listofallmembers>
+      <member refid="classreactor_1_1Action_1ad0d36ea549eb0b04bd95d69fa8ac5d39" prot="protected" virt="non-virtual"><scope>reactor::Action</scope><name>Action</name></member>
+      <member refid="classreactor_1_1BaseAction_1a94dadf5eacb10e4e1d7bc99e53ac8599" prot="protected" virt="non-virtual"><scope>reactor::Action</scope><name>BaseAction</name></member>
+      <member refid="classreactor_1_1Action_1a4ae275c1b030d5e8111469cc0ca5e09d" prot="private" virt="virtual"><scope>reactor::Action</scope><name>cleanup</name></member>
+      <member refid="classreactor_1_1ReactorElement_1a25bf298de879a82eefc1ba426be05812" prot="public" virt="non-virtual"><scope>reactor::Action</scope><name>container</name></member>
+      <member refid="classreactor_1_1ReactorElement_1a895b09f977450723c59b67b41e643db8" prot="public" virt="non-virtual"><scope>reactor::Action</scope><name>environment</name></member>
+      <member refid="classreactor_1_1ReactorElement_1af57b89113cd189208ea95668ad5bd141" prot="public" virt="non-virtual"><scope>reactor::Action</scope><name>fqn</name></member>
+      <member refid="classreactor_1_1Action_1a3b7937c4ce3f0a25562a08734ce8c2dc" prot="public" virt="non-virtual"><scope>reactor::Action</scope><name>get</name></member>
+      <member refid="classreactor_1_1BaseAction_1abff8e7a40679e9f0d6d31eb795530279" prot="public" virt="non-virtual"><scope>reactor::Action</scope><name>is_logical</name></member>
+      <member refid="classreactor_1_1BaseAction_1ae088220a837f00686793dd0a50629dc0" prot="public" virt="non-virtual"><scope>reactor::Action</scope><name>is_physical</name></member>
+      <member refid="classreactor_1_1Action_1a91d6979d528882d4aba1c892c130dbd1" prot="public" virt="non-virtual"><scope>reactor::Action</scope><name>is_present</name></member>
+      <member refid="classreactor_1_1ReactorElement_1a29c516a59fd1ccc43fa0023c550b6964" prot="public" virt="non-virtual"><scope>reactor::Action</scope><name>is_top_level</name></member>
+      <member refid="classreactor_1_1BaseAction_1a98201db474f34cb9e38151a6960128f0" prot="protected" virt="non-virtual"><scope>reactor::Action</scope><name>min_delay</name></member>
+      <member refid="classreactor_1_1ReactorElement_1a99579f61dbaf5d5d98aebfe26eb8bf77" prot="public" virt="non-virtual"><scope>reactor::Action</scope><name>name</name></member>
+      <member refid="classreactor_1_1ReactorElement_1aebc8c1cabcadca08400284fdb05ce746" prot="public" virt="non-virtual"><scope>reactor::Action</scope><name>ReactorElement</name></member>
+      <member refid="classreactor_1_1ReactorElement_1ac5f85a8322de3fad7191a8f749b507fd" prot="public" virt="non-virtual"><scope>reactor::Action</scope><name>ReactorElement</name></member>
+      <member refid="classreactor_1_1ReactorElement_1aa975574e21f5f7a4bb761f04ed57dfa4" prot="public" virt="non-virtual"><scope>reactor::Action</scope><name>ReactorElement</name></member>
+      <member refid="classreactor_1_1ReactorElement_1a2ba6e1e309233db7cfc124563f9f8f9f" prot="public" virt="non-virtual"><scope>reactor::Action</scope><name>ReactorElement</name></member>
+      <member refid="classreactor_1_1BaseAction_1a5cde20240a08d79c6c826d97f9a7f916" prot="protected" virt="non-virtual"><scope>reactor::Action</scope><name>register_scheduler</name></member>
+      <member refid="classreactor_1_1BaseAction_1a8ee41c1fd582f54518b6ca06b95a54ad" prot="protected" virt="non-virtual"><scope>reactor::Action</scope><name>register_trigger</name></member>
+      <member refid="classreactor_1_1Action_1a795f5b52075c020ec993d1149a720f62" prot="public" virt="non-virtual"><scope>reactor::Action</scope><name>schedule</name></member>
+      <member refid="classreactor_1_1Action_1a863d3d618afb82404326c5076c9fd32a" prot="public" virt="non-virtual"><scope>reactor::Action</scope><name>schedule</name></member>
+      <member refid="classreactor_1_1Action_1a1dc2c0762950c330da3345f9192d62fa" prot="public" virt="non-virtual"><scope>reactor::Action</scope><name>schedule</name></member>
+      <member refid="classreactor_1_1Action_1ad8afb46b0b3bb753538cd37f7eae3be1" prot="public" virt="non-virtual"><scope>reactor::Action</scope><name>schedule</name></member>
+      <member refid="classreactor_1_1BaseAction_1ac480015d4e2e2309fa7f9b2e2a7a59ab" prot="public" virt="non-virtual"><scope>reactor::Action</scope><name>schedulers</name></member>
+      <member refid="classreactor_1_1Action_1a5e6698cc0893efca3a088f2158345b9c" prot="public" virt="virtual"><scope>reactor::Action</scope><name>shutdown</name></member>
+      <member refid="classreactor_1_1Action_1a60364e6742fb14dd515ff355abc5f3db" prot="public" virt="virtual"><scope>reactor::Action</scope><name>startup</name></member>
+      <member refid="classreactor_1_1BaseAction_1a330820b1a4bbe1b18d5b30773a690818" prot="public" virt="non-virtual"><scope>reactor::Action</scope><name>triggers</name></member>
+      <member refid="classreactor_1_1ReactorElement_1a9291659e2893372cfea42ffccfd487b2" prot="public" virt="non-virtual"><scope>reactor::Action</scope><name>Type</name></member>
+      <member refid="classreactor_1_1Action_1a0002a99457bb578aa89854ad71db4fb2" prot="private" virt="non-virtual"><scope>reactor::Action</scope><name>value_ptr</name></member>
+      <member refid="classreactor_1_1ReactorElement_1ac9075040ad83b1945f75f3065c0405fa" prot="public" virt="virtual"><scope>reactor::Action</scope><name>~ReactorElement</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

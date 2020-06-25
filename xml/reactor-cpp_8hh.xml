@@ -1,0 +1,246 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.13">
+  <compounddef id="reactor-cpp_8hh" kind="file" language="C++">
+    <compoundname>reactor-cpp.hh</compoundname>
+    <includes refid="action_8hh" local="yes">action.hh</includes>
+    <includes refid="environment_8hh" local="yes">environment.hh</includes>
+    <includes refid="logical__time_8hh" local="yes">logical_time.hh</includes>
+    <includes refid="port_8hh" local="yes">port.hh</includes>
+    <includes refid="reaction_8hh" local="yes">reaction.hh</includes>
+    <includes refid="reactor_8hh" local="yes">reactor.hh</includes>
+    <includes refid="time_8hh" local="yes">time.hh</includes>
+    <incdepgraph>
+      <node id="261">
+        <label>functional</label>
+      </node>
+      <node id="239">
+        <label>/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/reactor-cpp.hh</label>
+        <link refid="reactor-cpp_8hh"/>
+        <childnode refid="240" relation="include">
+        </childnode>
+        <childnode refid="257" relation="include">
+        </childnode>
+        <childnode refid="241" relation="include">
+        </childnode>
+        <childnode refid="266" relation="include">
+        </childnode>
+        <childnode refid="268" relation="include">
+        </childnode>
+        <childnode refid="245" relation="include">
+        </childnode>
+        <childnode refid="242" relation="include">
+        </childnode>
+      </node>
+      <node id="255">
+        <label>cassert</label>
+      </node>
+      <node id="256">
+        <label>stdexcept</label>
+      </node>
+      <node id="248">
+        <label>string</label>
+      </node>
+      <node id="266">
+        <label>port.hh</label>
+        <link refid="port_8hh"/>
+        <childnode refid="246" relation="include">
+        </childnode>
+        <childnode refid="245" relation="include">
+        </childnode>
+        <childnode refid="250" relation="include">
+        </childnode>
+        <childnode refid="267" relation="include">
+        </childnode>
+      </node>
+      <node id="263">
+        <label>map</label>
+      </node>
+      <node id="254">
+        <label>../assert.hh</label>
+        <link refid="assert_8hh"/>
+        <childnode refid="255" relation="include">
+        </childnode>
+        <childnode refid="247" relation="include">
+        </childnode>
+        <childnode refid="256" relation="include">
+        </childnode>
+        <childnode refid="248" relation="include">
+        </childnode>
+      </node>
+      <node id="249">
+        <label>fwd.hh</label>
+        <link refid="fwd_8hh"/>
+      </node>
+      <node id="268">
+        <label>reaction.hh</label>
+        <link refid="reaction_8hh"/>
+        <childnode refid="261" relation="include">
+        </childnode>
+        <childnode refid="246" relation="include">
+        </childnode>
+        <childnode refid="245" relation="include">
+        </childnode>
+      </node>
+      <node id="253">
+        <label>impl/action_impl.hh</label>
+        <link refid="action__impl_8hh"/>
+        <childnode refid="254" relation="include">
+        </childnode>
+        <childnode refid="257" relation="include">
+        </childnode>
+      </node>
+      <node id="260">
+        <label>condition_variable</label>
+      </node>
+      <node id="241">
+        <label>logical_time.hh</label>
+        <link refid="logical__time_8hh"/>
+        <childnode refid="242" relation="include">
+        </childnode>
+      </node>
+      <node id="262">
+        <label>future</label>
+      </node>
+      <node id="258">
+        <label>vector</label>
+      </node>
+      <node id="250">
+        <label>value_ptr.hh</label>
+        <link refid="value__ptr_8hh"/>
+        <childnode refid="251" relation="include">
+        </childnode>
+        <childnode refid="252" relation="include">
+        </childnode>
+      </node>
+      <node id="247">
+        <label>sstream</label>
+      </node>
+      <node id="259">
+        <label>scheduler.hh</label>
+        <link refid="scheduler_8hh"/>
+        <childnode refid="260" relation="include">
+        </childnode>
+        <childnode refid="261" relation="include">
+        </childnode>
+        <childnode refid="262" relation="include">
+        </childnode>
+        <childnode refid="263" relation="include">
+        </childnode>
+        <childnode refid="264" relation="include">
+        </childnode>
+        <childnode refid="246" relation="include">
+        </childnode>
+        <childnode refid="265" relation="include">
+        </childnode>
+        <childnode refid="258" relation="include">
+        </childnode>
+        <childnode refid="249" relation="include">
+        </childnode>
+        <childnode refid="241" relation="include">
+        </childnode>
+      </node>
+      <node id="244">
+        <label>iostream</label>
+      </node>
+      <node id="242">
+        <label>time.hh</label>
+        <link refid="time_8hh"/>
+        <childnode refid="243" relation="include">
+        </childnode>
+        <childnode refid="244" relation="include">
+        </childnode>
+      </node>
+      <node id="264">
+        <label>mutex</label>
+      </node>
+      <node id="243">
+        <label>chrono</label>
+      </node>
+      <node id="265">
+        <label>thread</label>
+      </node>
+      <node id="245">
+        <label>reactor.hh</label>
+        <link refid="reactor_8hh"/>
+        <childnode refid="246" relation="include">
+        </childnode>
+        <childnode refid="247" relation="include">
+        </childnode>
+        <childnode refid="248" relation="include">
+        </childnode>
+        <childnode refid="249" relation="include">
+        </childnode>
+        <childnode refid="242" relation="include">
+        </childnode>
+      </node>
+      <node id="252">
+        <label>type_traits</label>
+      </node>
+      <node id="246">
+        <label>set</label>
+      </node>
+      <node id="267">
+        <label>impl/port_impl.hh</label>
+        <link refid="port__impl_8hh"/>
+        <childnode refid="254" relation="include">
+        </childnode>
+        <childnode refid="257" relation="include">
+        </childnode>
+      </node>
+      <node id="257">
+        <label>../environment.hh</label>
+        <link refid="environment_8hh"/>
+        <childnode refid="246" relation="include">
+        </childnode>
+        <childnode refid="248" relation="include">
+        </childnode>
+        <childnode refid="258" relation="include">
+        </childnode>
+        <childnode refid="245" relation="include">
+        </childnode>
+        <childnode refid="259" relation="include">
+        </childnode>
+      </node>
+      <node id="240">
+        <label>action.hh</label>
+        <link refid="action_8hh"/>
+        <childnode refid="241" relation="include">
+        </childnode>
+        <childnode refid="245" relation="include">
+        </childnode>
+        <childnode refid="250" relation="include">
+        </childnode>
+        <childnode refid="253" relation="include">
+        </childnode>
+      </node>
+      <node id="251">
+        <label>memory</label>
+      </node>
+    </incdepgraph>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">/*</highlight></codeline>
+<codeline lineno="2"><highlight class="comment"><sp/>*<sp/>Copyright<sp/>(C)<sp/>2019<sp/>TU<sp/>Dresden</highlight></codeline>
+<codeline lineno="3"><highlight class="comment"><sp/>*<sp/>All<sp/>rights<sp/>reserved.</highlight></codeline>
+<codeline lineno="4"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="5"><highlight class="comment"><sp/>*<sp/>Authors:</highlight></codeline>
+<codeline lineno="6"><highlight class="comment"><sp/>*<sp/><sp/><sp/>Christian<sp/>Menard</highlight></codeline>
+<codeline lineno="7"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="preprocessor">#pragma<sp/>once</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="comment">//<sp/>include<sp/>everything<sp/>that<sp/>is<sp/>needed<sp/>to<sp/>use<sp/>reactor-cpp</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="action_8hh" kindref="compound">action.hh</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="environment_8hh" kindref="compound">environment.hh</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="logical__time_8hh" kindref="compound">logical_time.hh</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="port_8hh" kindref="compound">port.hh</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="reaction_8hh" kindref="compound">reaction.hh</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="reactor_8hh" kindref="compound">reactor.hh</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="time_8hh" kindref="compound">time.hh</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="/home/runner/work/reactor-cpp/reactor-cpp/include/reactor-cpp/reactor-cpp.hh"/>
+  </compounddef>
+</doxygen>

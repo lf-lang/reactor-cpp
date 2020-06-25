@@ -1,0 +1,49 @@
+\hypertarget{assert_8hh}{}\section{/home/runner/work/reactor-\/cpp/reactor-\/cpp/include/reactor-\/cpp/assert.hh File Reference}
+\label{assert_8hh}\index{/home/runner/work/reactor-\/cpp/reactor-\/cpp/include/reactor-\/cpp/assert.\+hh@{/home/runner/work/reactor-\/cpp/reactor-\/cpp/include/reactor-\/cpp/assert.\+hh}}
+{\ttfamily \#include $<$cassert$>$}\newline
+{\ttfamily \#include $<$sstream$>$}\newline
+{\ttfamily \#include $<$stdexcept$>$}\newline
+{\ttfamily \#include $<$string$>$}\newline
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{classreactor_1_1ValidationError}{reactor\+::\+Validation\+Error}
+\end{DoxyCompactItemize}
+\subsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+ \hyperlink{namespacereactor}{reactor}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{assert_8hh_aca68c0d4ac8df0838e209fb5300f7be3}{A\+S\+S\+E\+RT}(x)~assert(x)
+\item 
+\#define \hyperlink{assert_8hh_aa8944c5f0d4c2f0c3643c36ab4967a17}{V\+A\+L\+I\+D\+A\+TE}(con,  msg)
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{namespacereactor_afb17997129c7498eff1148813c8970d0}{reactor\+::validate} (bool condition, const std\+::string \&message)
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\mbox{\Hypertarget{assert_8hh_aca68c0d4ac8df0838e209fb5300f7be3}\label{assert_8hh_aca68c0d4ac8df0838e209fb5300f7be3}} 
+\index{assert.\+hh@{assert.\+hh}!A\+S\+S\+E\+RT@{A\+S\+S\+E\+RT}}
+\index{A\+S\+S\+E\+RT@{A\+S\+S\+E\+RT}!assert.\+hh@{assert.\+hh}}
+\subsubsection{\texorpdfstring{A\+S\+S\+E\+RT}{ASSERT}}
+{\footnotesize\ttfamily \#define A\+S\+S\+E\+RT(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~assert(x)}
+
+\mbox{\Hypertarget{assert_8hh_aa8944c5f0d4c2f0c3643c36ab4967a17}\label{assert_8hh_aa8944c5f0d4c2f0c3643c36ab4967a17}} 
+\index{assert.\+hh@{assert.\+hh}!V\+A\+L\+I\+D\+A\+TE@{V\+A\+L\+I\+D\+A\+TE}}
+\index{V\+A\+L\+I\+D\+A\+TE@{V\+A\+L\+I\+D\+A\+TE}!assert.\+hh@{assert.\+hh}}
+\subsubsection{\texorpdfstring{V\+A\+L\+I\+D\+A\+TE}{VALIDATE}}
+{\footnotesize\ttfamily \#define V\+A\+L\+I\+D\+A\+TE(\begin{DoxyParamCaption}\item[{}]{con,  }\item[{}]{msg }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}
+\textcolor{keywordflow}{do} \{               \(\backslash\)
+    (void)\textcolor{keyword}{sizeof}(con); \(\backslash\)
+  \} \textcolor{keywordflow}{while} (0)
+\end{DoxyCode}
