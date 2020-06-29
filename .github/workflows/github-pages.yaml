@@ -16,11 +16,7 @@ jobs:
       - name: Install sphinx and plugins
         run: sudo pip3 install -r doc/requirements.txt
 
-      - name: run doxygen
-        run: doxygen reactor-cpp.doxyfile
-        working-directory: doc
-
-      - name: run sphinx
+      - name: build documentation
         run: make html
         working-directory: doc
 

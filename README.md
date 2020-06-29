@@ -52,24 +52,12 @@ If python3 is the default on your system, run:
 pip --user install -r doc/requirements.txt
 ```
 
-Now we can run doxygen:
+Now we can build the documentation with:
 ```sh
-cd doc
-doxygen reactor-cpp.doxyfile
-```
-
-This already produces a decent html documentation in
-`doc/doxygen/html`. However, we want to use some of the features that sphinx
-provides and benefit from the more modern look and feel.
-
-Running
-```
 make html
 ```
-in the `doc` directory will generate the sphinx based project documentaion in
-`doc/build/html`. Note that doxygen needs to be run first in order for this
-step to work properly.
 
+This will output the project documentaion in `doc/build/html`.
 
 ## Publications
 

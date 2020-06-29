@@ -3,8 +3,15 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to reactor-cpp's documentation!
-=======================================
+reactor-cpp
+===========
+
+reactor-cpp is a framework for writing reactor-oriented programs.  While
+reactor-cpp can be used as a standalone framework, it is designed to work in
+conjunction with `Lingua Franca <https://github.com/icyphy/lingua-franca>`_, a
+polyglot coordination language. Have a look at the Lingua Franca
+`wiki <https://github.com/icyphy/lingua-franca/wiki>`_ to get an overview of the
+reactor model.
 
 .. toctree::
    :maxdepth: 2
