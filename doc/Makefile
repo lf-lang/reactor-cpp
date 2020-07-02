@@ -20,7 +20,7 @@ help:
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
 clean: Makefile
-	rm -rf doxyoutput/ api/
+	rm -rf doxgen/ api/
 	@$(SPHINXBUILD) -M clean "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
 html: Makefile
