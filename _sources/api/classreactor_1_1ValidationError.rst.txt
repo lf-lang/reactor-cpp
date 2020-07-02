@@ -3,7 +3,7 @@
 Class ValidationError
 =====================
 
-- Defined in :ref:`file__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_assert.hh`
+- Defined in :ref:`file_include_reactor-cpp_assert.hh`
 
 
 Inheritance Relationships
@@ -22,4 +22,5 @@ Class Documentation
 .. doxygenclass:: reactor::ValidationError
    :members:
    :protected-members:
+   :private-members:
    :undoc-members:

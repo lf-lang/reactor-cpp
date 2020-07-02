@@ -1,0 +1,67 @@
+
+.. _file_lib_environment.cc:
+
+File environment.cc
+===================
+
+|exhale_lsh| :ref:`Parent directory <dir_lib>` (``lib``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``lib/environment.cc``)
+-----------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_lib_environment.cc.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``algorithm``
+
+- ``fstream``
+
+- ``map``
+
+- ``reactor-cpp/assert.hh`` (:ref:`file_include_reactor-cpp_assert.hh`)
+
+- ``reactor-cpp/environment.hh`` (:ref:`file_include_reactor-cpp_environment.hh`)
+
+- ``reactor-cpp/logging.hh`` (:ref:`file_include_reactor-cpp_logging.hh`)
+
+- ``reactor-cpp/port.hh`` (:ref:`file_include_reactor-cpp_port.hh`)
+
+- ``reactor-cpp/reaction.hh`` (:ref:`file_include_reactor-cpp_reaction.hh`)
+
+
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_reactor`
+
+
+Functions
+---------
+
+
+- :ref:`exhale_function_namespacereactor_1a3acae8d24d419d39f72ca08bccf13c94`
+
+- :ref:`exhale_function_namespacereactor_1a50e4996eb605ff7e10a26dcdbae25340`
+

@@ -1,0 +1,50 @@
+
+.. _file_lib_port.cc:
+
+File port.cc
+============
+
+|exhale_lsh| :ref:`Parent directory <dir_lib>` (``lib``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``lib/port.cc``)
+----------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_lib_port.cc.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``reactor-cpp/assert.hh`` (:ref:`file_include_reactor-cpp_assert.hh`)
+
+- ``reactor-cpp/environment.hh`` (:ref:`file_include_reactor-cpp_environment.hh`)
+
+- ``reactor-cpp/port.hh`` (:ref:`file_include_reactor-cpp_port.hh`)
+
+- ``reactor-cpp/reaction.hh`` (:ref:`file_include_reactor-cpp_reaction.hh`)
+
+
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_reactor`
+

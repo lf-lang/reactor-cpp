@@ -3,7 +3,7 @@
 Class Timer
 ===========
 
-- Defined in :ref:`file__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_action.hh`
+- Defined in :ref:`file_include_reactor-cpp_action.hh`
 
 
 Inheritance Relationships
@@ -28,4 +28,5 @@ Class Documentation
 .. doxygenclass:: reactor::Timer
    :members:
    :protected-members:
+   :private-members:
    :undoc-members:

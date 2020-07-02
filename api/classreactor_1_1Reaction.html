@@ -344,7 +344,7 @@
   <div class="section" id="class-reaction">
 <span id="exhale-class-classreactor-1-1reaction"></span><h1>Class Reaction<a class="headerlink" href="#class-reaction" title="Permalink to this headline">¶</a></h1>
 <ul class="simple">
-<li><p>Defined in <a class="reference internal" href="file__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_reaction.hh.html#file-home-runner-work-reactor-cpp-reactor-cpp-include-reactor-cpp-reaction-hh"><span class="std std-ref">File reaction.hh</span></a></p></li>
+<li><p>Defined in <a class="reference internal" href="file_include_reactor-cpp_reaction.hh.html#file-include-reactor-cpp-reaction-hh"><span class="std std-ref">File reaction.hh</span></a></p></li>
 </ul>
 <div class="section" id="inheritance-relationships">
 <h2>Inheritance Relationships<a class="headerlink" href="#inheritance-relationships" title="Permalink to this headline">¶</a></h2>
@@ -460,6 +460,67 @@
 <dl class="cpp function">
 <dt id="_CPPv4NK7reactor8Reaction5indexEv">
 <span id="_CPPv3NK7reactor8Reaction5indexEv"></span><span id="_CPPv2NK7reactor8Reaction5indexEv"></span><span id="reactor::Reaction::indexC"></span><span class="target" id="classreactor_1_1Reaction_1a3bff1f3f5ad6094ba8d121c1657b3ef2"></span>unsigned <code class="sig-name descname">index</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK7reactor8Reaction5indexEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Private Functions</p>
+<dl class="cpp function">
+<dt id="_CPPv4N7reactor8Reaction17set_deadline_implE8DurationNSt8functionIFvvEEE">
+<span id="_CPPv3N7reactor8Reaction17set_deadline_implE8DurationNSt8functionIFvvEEE"></span><span id="_CPPv2N7reactor8Reaction17set_deadline_implE8DurationNSt8functionIFvvEEE"></span><span class="target" id="classreactor_1_1Reaction_1a8fee209cdb1d77185b0e9a992c044b71"></span>void <code class="sig-name descname">set_deadline_impl</code><span class="sig-paren">(</span><a class="reference internal" href="typedef_namespacereactor_1aa8375b807a80703545664096c5b5b779.html#_CPPv4N7reactor8DurationE" title="reactor::Duration">Duration</a> <em>deadline</em>, std::function&lt;void<span class="sig-paren">(</span>void<span class="sig-paren">)</span>&gt; <em>handler</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7reactor8Reaction17set_deadline_implE8DurationNSt8functionIFvvEEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Private Members</p>
+<dl class="cpp var">
+<dt id="_CPPv4N7reactor8Reaction16_action_triggersE">
+<span id="_CPPv3N7reactor8Reaction16_action_triggersE"></span><span id="_CPPv2N7reactor8Reaction16_action_triggersE"></span><span id="reactor::Reaction::_action_triggers__std::set:BaseActionP:"></span><span class="target" id="classreactor_1_1Reaction_1ae78a33de1d45afcfecf0297d79841028"></span>std::set&lt;<a class="reference internal" href="classreactor_1_1BaseAction.html#_CPPv4N7reactor10BaseActionE" title="reactor::BaseAction">BaseAction</a>*&gt; <code class="sig-name descname">_action_triggers</code><a class="headerlink" href="#_CPPv4N7reactor8Reaction16_action_triggersE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N7reactor8Reaction19_scheduable_actionsE">
+<span id="_CPPv3N7reactor8Reaction19_scheduable_actionsE"></span><span id="_CPPv2N7reactor8Reaction19_scheduable_actionsE"></span><span id="reactor::Reaction::_scheduable_actions__std::set:BaseActionP:"></span><span class="target" id="classreactor_1_1Reaction_1af5baa35846e71e7c0fc2f0fc4de14c84"></span>std::set&lt;<a class="reference internal" href="classreactor_1_1BaseAction.html#_CPPv4N7reactor10BaseActionE" title="reactor::BaseAction">BaseAction</a>*&gt; <code class="sig-name descname">_scheduable_actions</code><a class="headerlink" href="#_CPPv4N7reactor8Reaction19_scheduable_actionsE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N7reactor8Reaction14_port_triggersE">
+<span id="_CPPv3N7reactor8Reaction14_port_triggersE"></span><span id="_CPPv2N7reactor8Reaction14_port_triggersE"></span><span id="reactor::Reaction::_port_triggers__std::set:BasePortP:"></span><span class="target" id="classreactor_1_1Reaction_1a963d6a24063a5dae91f5e74ec9db00bd"></span>std::set&lt;<a class="reference internal" href="classreactor_1_1BasePort.html#_CPPv4N7reactor8BasePortE" title="reactor::BasePort">BasePort</a>*&gt; <code class="sig-name descname">_port_triggers</code><a class="headerlink" href="#_CPPv4N7reactor8Reaction14_port_triggersE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N7reactor8Reaction17_antidependenciesE">
+<span id="_CPPv3N7reactor8Reaction17_antidependenciesE"></span><span id="_CPPv2N7reactor8Reaction17_antidependenciesE"></span><span id="reactor::Reaction::_antidependencies__std::set:BasePortP:"></span><span class="target" id="classreactor_1_1Reaction_1aed9f1447027533b2b0c2ae77b933e546"></span>std::set&lt;<a class="reference internal" href="classreactor_1_1BasePort.html#_CPPv4N7reactor8BasePortE" title="reactor::BasePort">BasePort</a>*&gt; <code class="sig-name descname">_antidependencies</code><a class="headerlink" href="#_CPPv4N7reactor8Reaction17_antidependenciesE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N7reactor8Reaction13_dependenciesE">
+<span id="_CPPv3N7reactor8Reaction13_dependenciesE"></span><span id="_CPPv2N7reactor8Reaction13_dependenciesE"></span><span id="reactor::Reaction::_dependencies__std::set:BasePortP:"></span><span class="target" id="classreactor_1_1Reaction_1a5f1411deb1e0d3ab353f4e332a027556"></span>std::set&lt;<a class="reference internal" href="classreactor_1_1BasePort.html#_CPPv4N7reactor8BasePortE" title="reactor::BasePort">BasePort</a>*&gt; <code class="sig-name descname">_dependencies</code><a class="headerlink" href="#_CPPv4N7reactor8Reaction13_dependenciesE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N7reactor8Reaction9_priorityE">
+<span id="_CPPv3N7reactor8Reaction9_priorityE"></span><span id="_CPPv2N7reactor8Reaction9_priorityE"></span><span id="reactor::Reaction::_priority__iC"></span><span class="target" id="classreactor_1_1Reaction_1aea5d30c041bc7adb9ab986212bed6af4"></span><em class="property">const</em> int <code class="sig-name descname">_priority</code><a class="headerlink" href="#_CPPv4N7reactor8Reaction9_priorityE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N7reactor8Reaction6_indexE">
+<span id="_CPPv3N7reactor8Reaction6_indexE"></span><span id="_CPPv2N7reactor8Reaction6_indexE"></span><span id="reactor::Reaction::_index__unsigned"></span><span class="target" id="classreactor_1_1Reaction_1a833e6769a31f10fd46399bcaa3b54038"></span>unsigned <code class="sig-name descname">_index</code><a class="headerlink" href="#_CPPv4N7reactor8Reaction6_indexE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N7reactor8Reaction4bodyE">
+<span id="_CPPv3N7reactor8Reaction4bodyE"></span><span id="_CPPv2N7reactor8Reaction4bodyE"></span><span class="target" id="classreactor_1_1Reaction_1aca4e15066e159bf9c009c87f5ec11180"></span>std::function&lt;void<span class="sig-paren">(</span>void<span class="sig-paren">)</span>&gt; <code class="sig-name descname">body</code><a class="headerlink" href="#_CPPv4N7reactor8Reaction4bodyE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N7reactor8Reaction8deadlineE">
+<span id="_CPPv3N7reactor8Reaction8deadlineE"></span><span id="_CPPv2N7reactor8Reaction8deadlineE"></span><span id="reactor::Reaction::deadline__Duration"></span><span class="target" id="classreactor_1_1Reaction_1aa8704882695ff4a0b9ab7d866b2f79b1"></span><a class="reference internal" href="typedef_namespacereactor_1aa8375b807a80703545664096c5b5b779.html#_CPPv4N7reactor8DurationE" title="reactor::Duration">Duration</a> <code class="sig-name descname">deadline</code> = {<a class="reference internal" href="typedef_namespacereactor_1aa8375b807a80703545664096c5b5b779.html#_CPPv4N7reactor8DurationE" title="reactor::Duration">Duration</a>::zero()}<a class="headerlink" href="#_CPPv4N7reactor8Reaction8deadlineE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N7reactor8Reaction16deadline_handlerE">
+<span id="_CPPv3N7reactor8Reaction16deadline_handlerE"></span><span id="_CPPv2N7reactor8Reaction16deadline_handlerE"></span><span class="target" id="classreactor_1_1Reaction_1aaa6466268aa7e9ba823a7a45b7c75667"></span>std::function&lt;void<span class="sig-paren">(</span>void<span class="sig-paren">)</span>&gt; <code class="sig-name descname">deadline_handler</code> = {nullptr}<a class="headerlink" href="#_CPPv4N7reactor8Reaction16deadline_handlerE" title="Permalink to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
 </div>

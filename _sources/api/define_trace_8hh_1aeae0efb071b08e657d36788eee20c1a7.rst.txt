@@ -3,7 +3,7 @@
 Define tracepoint
 =================
 
-- Defined in :ref:`file__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_trace.hh`
+- Defined in :ref:`file_include_reactor-cpp_trace.hh`
 
 
 Define Documentation

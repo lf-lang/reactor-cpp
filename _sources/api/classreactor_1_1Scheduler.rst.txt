@@ -3,7 +3,7 @@
 Class Scheduler
 ===============
 
-- Defined in :ref:`file__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_scheduler.hh`
+- Defined in :ref:`file_include_reactor-cpp_scheduler.hh`
 
 
 Class Documentation
@@ -13,4 +13,5 @@ Class Documentation
 .. doxygenclass:: reactor::Scheduler
    :members:
    :protected-members:
+   :private-members:
    :undoc-members:

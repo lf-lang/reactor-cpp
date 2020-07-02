@@ -1,0 +1,71 @@
+
+.. _file_include_reactor-cpp_reaction.hh:
+
+File reaction.hh
+================
+
+|exhale_lsh| :ref:`Parent directory <dir_include_reactor-cpp>` (``include/reactor-cpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``include/reactor-cpp/reaction.hh``)
+------------------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_include_reactor-cpp_reaction.hh.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``functional``
+
+- ``reactor.hh`` (:ref:`file_include_reactor-cpp_reactor.hh`)
+
+- ``set``
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_lib_action.cc`
+
+- :ref:`file_lib_environment.cc`
+
+- :ref:`file_lib_port.cc`
+
+- :ref:`file_lib_reaction.cc`
+
+- :ref:`file_lib_reactor.cc`
+
+- :ref:`file_lib_scheduler.cc`
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_reactor`
+
+
+Classes
+-------
+
+
+- :ref:`exhale_class_classreactor_1_1Reaction`
+

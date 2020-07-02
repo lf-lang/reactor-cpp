@@ -1,0 +1,56 @@
+
+.. _file_include_reactor-cpp_trace.hh:
+
+File trace.hh
+=============
+
+|exhale_lsh| :ref:`Parent directory <dir_include_reactor-cpp>` (``include/reactor-cpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``include/reactor-cpp/trace.hh``)
+---------------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_include_reactor-cpp_trace.hh.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``config.hh``
+
+- ``logical_time.hh`` (:ref:`file_include_reactor-cpp_logical_time.hh`)
+
+- ``string``
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_lib_scheduler.cc`
+
+- :ref:`file_lib_trace.cc`
+
+
+
+
+Defines
+-------
+
+
+- :ref:`exhale_define_trace_8hh_1aeae0efb071b08e657d36788eee20c1a7`
+

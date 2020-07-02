@@ -3,7 +3,7 @@
 Class Tag
 =========
 
-- Defined in :ref:`file__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_logical_time.hh`
+- Defined in :ref:`file_include_reactor-cpp_logical_time.hh`
 
 
 Class Documentation
@@ -13,4 +13,5 @@ Class Documentation
 .. doxygenclass:: reactor::Tag
    :members:
    :protected-members:
+   :private-members:
    :undoc-members:

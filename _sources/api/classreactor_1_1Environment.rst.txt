@@ -3,7 +3,7 @@
 Class Environment
 =================
 
-- Defined in :ref:`file__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_environment.hh`
+- Defined in :ref:`file_include_reactor-cpp_environment.hh`
 
 
 Class Documentation
@@ -13,4 +13,5 @@ Class Documentation
 .. doxygenclass:: reactor::Environment
    :members:
    :protected-members:
+   :private-members:
    :undoc-members:

@@ -344,7 +344,7 @@
   <div class="section" id="class-environment">
 <span id="exhale-class-classreactor-1-1environment"></span><h1>Class Environment<a class="headerlink" href="#class-environment" title="Permalink to this headline">¶</a></h1>
 <ul class="simple">
-<li><p>Defined in <a class="reference internal" href="file__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_environment.hh.html#file-home-runner-work-reactor-cpp-reactor-cpp-include-reactor-cpp-environment-hh"><span class="std std-ref">File environment.hh</span></a></p></li>
+<li><p>Defined in <a class="reference internal" href="file_include_reactor-cpp_environment.hh.html#file-include-reactor-cpp-environment-hh"><span class="std std-ref">File environment.hh</span></a></p></li>
 </ul>
 <div class="section" id="class-documentation">
 <h2>Class Documentation<a class="headerlink" href="#class-documentation" title="Permalink to this headline">¶</a></h2>
@@ -480,6 +480,80 @@
 <dl class="cpp function">
 <dt id="_CPPv4NK7reactor11Environment18max_reaction_indexEv">
 <span id="_CPPv3NK7reactor11Environment18max_reaction_indexEv"></span><span id="_CPPv2NK7reactor11Environment18max_reaction_indexEv"></span><span id="reactor::Environment::max_reaction_indexC"></span><span class="target" id="classreactor_1_1Environment_1a2d50de0d09d5aa56a9876441233590f0"></span>unsigned <code class="sig-name descname">max_reaction_index</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK7reactor11Environment18max_reaction_indexEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Private Types</p>
+<dl class="cpp type">
+<dt id="_CPPv4N7reactor11Environment10DependencyE">
+<span id="_CPPv3N7reactor11Environment10DependencyE"></span><span id="_CPPv2N7reactor11Environment10DependencyE"></span><span class="target" id="classreactor_1_1Environment_1aefeb24b3f7a321c7dc8309cac1ed176d"></span><em class="property">using </em><code class="sig-name descname">Dependency</code> = std::pair&lt;<a class="reference internal" href="classreactor_1_1Reaction.html#_CPPv4N7reactor8ReactionE" title="reactor::Reaction">Reaction</a>*, <a class="reference internal" href="classreactor_1_1Reaction.html#_CPPv4N7reactor8ReactionE" title="reactor::Reaction">Reaction</a>*&gt;<a class="headerlink" href="#_CPPv4N7reactor11Environment10DependencyE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Private Functions</p>
+<dl class="cpp function">
+<dt id="_CPPv4N7reactor11Environment22build_dependency_graphEP7Reactor">
+<span id="_CPPv3N7reactor11Environment22build_dependency_graphEP7Reactor"></span><span id="_CPPv2N7reactor11Environment22build_dependency_graphEP7Reactor"></span><span id="reactor::Environment::build_dependency_graph__ReactorP"></span><span class="target" id="classreactor_1_1Environment_1a25e3210c41ddd193223c63adc454358a"></span>void <code class="sig-name descname">build_dependency_graph</code><span class="sig-paren">(</span><a class="reference internal" href="classreactor_1_1Reactor.html#_CPPv4N7reactor7ReactorE" title="reactor::Reactor">Reactor</a> *<em>reactor</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7reactor11Environment22build_dependency_graphEP7Reactor" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N7reactor11Environment17calculate_indexesEv">
+<span id="_CPPv3N7reactor11Environment17calculate_indexesEv"></span><span id="_CPPv2N7reactor11Environment17calculate_indexesEv"></span><span id="reactor::Environment::calculate_indexes"></span><span class="target" id="classreactor_1_1Environment_1a8b832858f8c20d36ffc8331ef9f9ac14"></span>void <code class="sig-name descname">calculate_indexes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7reactor11Environment17calculate_indexesEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Private Members</p>
+<dl class="cpp var">
+<dt id="_CPPv4N7reactor11Environment12_num_workersE">
+<span id="_CPPv3N7reactor11Environment12_num_workersE"></span><span id="_CPPv2N7reactor11Environment12_num_workersE"></span><span id="reactor::Environment::_num_workers__unsignedC"></span><span class="target" id="classreactor_1_1Environment_1a01fac164f06a9f97bb2ee5b0b6d4a368"></span><em class="property">const</em> unsigned <code class="sig-name descname">_num_workers</code><a class="headerlink" href="#_CPPv4N7reactor11Environment12_num_workersE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N7reactor11Environment10_schedulerE">
+<span id="_CPPv3N7reactor11Environment10_schedulerE"></span><span id="_CPPv2N7reactor11Environment10_schedulerE"></span><span id="reactor::Environment::_scheduler__Scheduler"></span><span class="target" id="classreactor_1_1Environment_1ae07319eb6bc85a9c00ac324db4891217"></span><a class="reference internal" href="classreactor_1_1Scheduler.html#_CPPv4N7reactor9SchedulerE" title="reactor::Scheduler">Scheduler</a> <code class="sig-name descname">_scheduler</code><a class="headerlink" href="#_CPPv4N7reactor11Environment10_schedulerE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N7reactor11Environment12_run_foreverE">
+<span id="_CPPv3N7reactor11Environment12_run_foreverE"></span><span id="_CPPv2N7reactor11Environment12_run_foreverE"></span><span id="reactor::Environment::_run_forever__bC"></span><span class="target" id="classreactor_1_1Environment_1ad842507a720c670f9a51dbee020ed08b"></span><em class="property">const</em> bool <code class="sig-name descname">_run_forever</code><a class="headerlink" href="#_CPPv4N7reactor11Environment12_run_foreverE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N7reactor11Environment19_fast_fwd_executionE">
+<span id="_CPPv3N7reactor11Environment19_fast_fwd_executionE"></span><span id="_CPPv2N7reactor11Environment19_fast_fwd_executionE"></span><span id="reactor::Environment::_fast_fwd_execution__bC"></span><span class="target" id="classreactor_1_1Environment_1ad49bd4d74a5fdf2132a4ca9933135b99"></span><em class="property">const</em> bool <code class="sig-name descname">_fast_fwd_execution</code><a class="headerlink" href="#_CPPv4N7reactor11Environment19_fast_fwd_executionE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N7reactor11Environment19_top_level_reactorsE">
+<span id="_CPPv3N7reactor11Environment19_top_level_reactorsE"></span><span id="_CPPv2N7reactor11Environment19_top_level_reactorsE"></span><span id="reactor::Environment::_top_level_reactors__std::set:ReactorP:"></span><span class="target" id="classreactor_1_1Environment_1a15707bfeefc0200d2956e3b52c8270db"></span>std::set&lt;<a class="reference internal" href="classreactor_1_1Reactor.html#_CPPv4N7reactor7ReactorE" title="reactor::Reactor">Reactor</a>*&gt; <code class="sig-name descname">_top_level_reactors</code><a class="headerlink" href="#_CPPv4N7reactor11Environment19_top_level_reactorsE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N7reactor11Environment9reactionsE">
+<span id="_CPPv3N7reactor11Environment9reactionsE"></span><span id="_CPPv2N7reactor11Environment9reactionsE"></span><span id="reactor::Environment::reactions__std::set:ReactionP:"></span><span class="target" id="classreactor_1_1Environment_1abaca5b55047bbf45f4280eeeb8cd38c4"></span>std::set&lt;<a class="reference internal" href="classreactor_1_1Reaction.html#_CPPv4N7reactor8ReactionE" title="reactor::Reaction">Reaction</a>*&gt; <code class="sig-name descname">reactions</code><a class="headerlink" href="#_CPPv4N7reactor11Environment9reactionsE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N7reactor11Environment12dependenciesE">
+<span id="_CPPv3N7reactor11Environment12dependenciesE"></span><span id="_CPPv2N7reactor11Environment12dependenciesE"></span><span id="reactor::Environment::dependencies__std::vector:Dependency:"></span><span class="target" id="classreactor_1_1Environment_1ac67e4fbe9d7365e4570fc9667c003f41"></span>std::vector&lt;<a class="reference internal" href="#_CPPv4N7reactor11Environment10DependencyE" title="reactor::Environment::Dependency">Dependency</a>&gt; <code class="sig-name descname">dependencies</code><a class="headerlink" href="#_CPPv4N7reactor11Environment12dependenciesE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N7reactor11Environment6_phaseE">
+<span id="_CPPv3N7reactor11Environment6_phaseE"></span><span id="_CPPv2N7reactor11Environment6_phaseE"></span><span id="reactor::Environment::_phase__Phase"></span><span class="target" id="classreactor_1_1Environment_1a15d6118f5ae312ad7665418969cc831a"></span><a class="reference internal" href="#_CPPv4N7reactor11Environment5PhaseE" title="reactor::Environment::Phase">Phase</a> <code class="sig-name descname">_phase</code> = {<a class="reference internal" href="#_CPPv4N7reactor11Environment5PhaseE" title="reactor::Environment::Phase">Phase</a>::<a class="reference internal" href="#_CPPv4N7reactor11Environment5Phase12ConstructionE" title="reactor::Environment::Phase::Construction">Construction</a>}<a class="headerlink" href="#_CPPv4N7reactor11Environment6_phaseE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N7reactor11Environment11_start_timeE">
+<span id="_CPPv3N7reactor11Environment11_start_timeE"></span><span id="_CPPv2N7reactor11Environment11_start_timeE"></span><span id="reactor::Environment::_start_time__TimePoint"></span><span class="target" id="classreactor_1_1Environment_1adcc50c30d8fb1ad1dca3033e6819e3b8"></span><a class="reference internal" href="typedef_namespacereactor_1ad950f8d1a46612500286a4af0f167080.html#_CPPv4N7reactor9TimePointE" title="reactor::TimePoint">TimePoint</a> <code class="sig-name descname">_start_time</code><a class="headerlink" href="#_CPPv4N7reactor11Environment11_start_timeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N7reactor11Environment19_max_reaction_indexE">
+<span id="_CPPv3N7reactor11Environment19_max_reaction_indexE"></span><span id="_CPPv2N7reactor11Environment19_max_reaction_indexE"></span><span id="reactor::Environment::_max_reaction_index__unsigned"></span><span class="target" id="classreactor_1_1Environment_1aaacf54f45077c2c90e2c2ba628f088e8"></span>unsigned <code class="sig-name descname">_max_reaction_index</code><a class="headerlink" href="#_CPPv4N7reactor11Environment19_max_reaction_indexE" title="Permalink to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
 </div>

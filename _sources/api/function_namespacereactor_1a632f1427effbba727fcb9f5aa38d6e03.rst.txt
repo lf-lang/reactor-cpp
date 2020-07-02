@@ -3,7 +3,7 @@
 Function operator<(const LogicalTime&, const Tag&)
 ==================================================
 
-- Defined in :ref:`file__home_runner_work_reactor-cpp_reactor-cpp_lib_logical_time.cc`
+- Defined in :ref:`file_lib_logical_time.cc`
 
 
 Function Documentation

@@ -3,7 +3,7 @@
 Function operator<<(std::ostream&, TimePoint)
 =============================================
 
-- Defined in :ref:`file__home_runner_work_reactor-cpp_reactor-cpp_lib_time.cc`
+- Defined in :ref:`file_lib_time.cc`
 
 
 Function Documentation

@@ -1,0 +1,24 @@
+
+.. _program_listing_file_lib_trace.cc:
+
+Program Listing for File trace.cc
+=================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_lib_trace.cc>` (``lib/trace.cc``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   /*
+    * Copyright (C) 2020 TU Dresden
+    * All rights reserved.
+    *
+    * Authors:
+    *   Christian Menard
+    */
+   
+   #define TRACEPOINT_CREATE_PROBES
+   #define TRACEPOINT_DEFINE
+   
+   #include "reactor-cpp/trace.hh"

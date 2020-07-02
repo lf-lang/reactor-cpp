@@ -1,0 +1,21 @@
+.. _dir_include_reactor-cpp_impl:
+
+
+Directory impl
+==============
+
+
+|exhale_lsh| :ref:`Parent directory <dir_include_reactor-cpp>` (``include/reactor-cpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+*Directory path:* ``include/reactor-cpp/impl``
+
+
+Files
+-----
+
+- :ref:`file_include_reactor-cpp_impl_action_impl.hh`
+- :ref:`file_include_reactor-cpp_impl_port_impl.hh`
+
+

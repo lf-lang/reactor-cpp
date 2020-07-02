@@ -3,7 +3,7 @@
 Class ReactorElement
 ====================
 
-- Defined in :ref:`file__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_reactor.hh`
+- Defined in :ref:`file_include_reactor-cpp_reactor.hh`
 
 
 Inheritance Relationships
@@ -25,4 +25,5 @@ Class Documentation
 .. doxygenclass:: reactor::ReactorElement
    :members:
    :protected-members:
+   :private-members:
    :undoc-members:

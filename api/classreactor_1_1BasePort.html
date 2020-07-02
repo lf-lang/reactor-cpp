@@ -344,7 +344,7 @@
   <div class="section" id="class-baseport">
 <span id="exhale-class-classreactor-1-1baseport"></span><h1>Class BasePort<a class="headerlink" href="#class-baseport" title="Permalink to this headline">¶</a></h1>
 <ul class="simple">
-<li><p>Defined in <a class="reference internal" href="file__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_port.hh.html#file-home-runner-work-reactor-cpp-reactor-cpp-include-reactor-cpp-port-hh"><span class="std std-ref">File port.hh</span></a></p></li>
+<li><p>Defined in <a class="reference internal" href="file_include_reactor-cpp_port.hh.html#file-include-reactor-cpp-port-hh"><span class="std std-ref">File port.hh</span></a></p></li>
 </ul>
 <div class="section" id="inheritance-relationships">
 <h2>Inheritance Relationships<a class="headerlink" href="#inheritance-relationships" title="Permalink to this headline">¶</a></h2>
@@ -450,6 +450,39 @@
 <dl class="cpp function">
 <dt id="_CPPv4N7reactor8BasePort7cleanupEv">
 <span id="_CPPv3N7reactor8BasePort7cleanupEv"></span><span id="_CPPv2N7reactor8BasePort7cleanupEv"></span><span id="reactor::BasePort::cleanup"></span><span class="target" id="classreactor_1_1BasePort_1afe81e6747077349da4c420a873783579"></span>void <code class="sig-name descname">cleanup</code><span class="sig-paren">(</span><span class="sig-paren">)</span> = 0<a class="headerlink" href="#_CPPv4N7reactor8BasePort7cleanupEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Private Members</p>
+<dl class="cpp var">
+<dt id="_CPPv4N7reactor8BasePort15_inward_bindingE">
+<span id="_CPPv3N7reactor8BasePort15_inward_bindingE"></span><span id="_CPPv2N7reactor8BasePort15_inward_bindingE"></span><span id="reactor::BasePort::_inward_binding__BasePortP"></span><span class="target" id="classreactor_1_1BasePort_1a2a457c372d11a3d959a91f27139a4938"></span><a class="reference internal" href="#_CPPv4N7reactor8BasePortE" title="reactor::BasePort">BasePort</a> *<code class="sig-name descname">_inward_binding</code> = nullptr<a class="headerlink" href="#_CPPv4N7reactor8BasePort15_inward_bindingE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N7reactor8BasePort17_outward_bindingsE">
+<span id="_CPPv3N7reactor8BasePort17_outward_bindingsE"></span><span id="_CPPv2N7reactor8BasePort17_outward_bindingsE"></span><span id="reactor::BasePort::_outward_bindings__std::set:BasePortP:"></span><span class="target" id="classreactor_1_1BasePort_1ada6d7c004f6529f49428030dfec9b52d"></span>std::set&lt;<a class="reference internal" href="#_CPPv4N7reactor8BasePortE" title="reactor::BasePort">BasePort</a>*&gt; <code class="sig-name descname">_outward_bindings</code><a class="headerlink" href="#_CPPv4N7reactor8BasePort17_outward_bindingsE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N7reactor8BasePort4typeE">
+<span id="_CPPv3N7reactor8BasePort4typeE"></span><span id="_CPPv2N7reactor8BasePort4typeE"></span><span id="reactor::BasePort::type__PortTypeC"></span><span class="target" id="classreactor_1_1BasePort_1a9af5e0d55ee1a425b2c5975ab1ca871e"></span><em class="property">const</em> <a class="reference internal" href="enum_namespacereactor_1a08c8e2d85e5bc706b1af8a87e40eec6d.html#_CPPv4N7reactor8PortTypeE" title="reactor::PortType">PortType</a> <code class="sig-name descname">type</code><a class="headerlink" href="#_CPPv4N7reactor8BasePort4typeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N7reactor8BasePort13_dependenciesE">
+<span id="_CPPv3N7reactor8BasePort13_dependenciesE"></span><span id="_CPPv2N7reactor8BasePort13_dependenciesE"></span><span id="reactor::BasePort::_dependencies__std::set:ReactionP:"></span><span class="target" id="classreactor_1_1BasePort_1ab6c05497d78f1462ea0969e3feb59137"></span>std::set&lt;<a class="reference internal" href="classreactor_1_1Reaction.html#_CPPv4N7reactor8ReactionE" title="reactor::Reaction">Reaction</a>*&gt; <code class="sig-name descname">_dependencies</code><a class="headerlink" href="#_CPPv4N7reactor8BasePort13_dependenciesE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N7reactor8BasePort9_triggersE">
+<span id="_CPPv3N7reactor8BasePort9_triggersE"></span><span id="_CPPv2N7reactor8BasePort9_triggersE"></span><span id="reactor::BasePort::_triggers__std::set:ReactionP:"></span><span class="target" id="classreactor_1_1BasePort_1a26cdf0eb1d25ebdcdbd576c78f56bf38"></span>std::set&lt;<a class="reference internal" href="classreactor_1_1Reaction.html#_CPPv4N7reactor8ReactionE" title="reactor::Reaction">Reaction</a>*&gt; <code class="sig-name descname">_triggers</code><a class="headerlink" href="#_CPPv4N7reactor8BasePort9_triggersE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N7reactor8BasePort17_antidependenciesE">
+<span id="_CPPv3N7reactor8BasePort17_antidependenciesE"></span><span id="_CPPv2N7reactor8BasePort17_antidependenciesE"></span><span id="reactor::BasePort::_antidependencies__std::set:ReactionP:"></span><span class="target" id="classreactor_1_1BasePort_1ae323964a96ecb4e0d952d7632736464b"></span>std::set&lt;<a class="reference internal" href="classreactor_1_1Reaction.html#_CPPv4N7reactor8ReactionE" title="reactor::Reaction">Reaction</a>*&gt; <code class="sig-name descname">_antidependencies</code><a class="headerlink" href="#_CPPv4N7reactor8BasePort17_antidependenciesE" title="Permalink to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
 </div>

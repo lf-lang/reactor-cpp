@@ -1,0 +1,38 @@
+
+.. _program_listing_file_include_reactor-cpp_fwd.hh:
+
+Program Listing for File fwd.hh
+===============================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_include_reactor-cpp_fwd.hh>` (``include/reactor-cpp/fwd.hh``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   /*
+    * Copyright (C) 2019 TU Dresden
+    * All rights reserved.
+    *
+    * Authors:
+    *   Christian Menard
+    */
+   
+   #pragma once
+   
+   namespace reactor {
+   
+   class BaseAction;
+   class BasePort;
+   class Environment;
+   class Reaction;
+   class Reactor;
+   class Scheduler;
+   class Tag;
+   
+   template <class T>
+   class Action;
+   template <class T>
+   class Port;
+   
+   }  // namespace reactor

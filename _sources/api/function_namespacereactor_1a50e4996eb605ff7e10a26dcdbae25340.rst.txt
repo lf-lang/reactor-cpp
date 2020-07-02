@@ -3,7 +3,7 @@
 Function recursive_assemble
 ===========================
 
-- Defined in :ref:`file__home_runner_work_reactor-cpp_reactor-cpp_lib_environment.cc`
+- Defined in :ref:`file_lib_environment.cc`
 
 
 Function Documentation

@@ -3,7 +3,7 @@
 Define TRACEPOINT_CREATE_PROBES
 ===============================
 
-- Defined in :ref:`file__home_runner_work_reactor-cpp_reactor-cpp_lib_trace.cc`
+- Defined in :ref:`file_lib_trace.cc`
 
 
 Define Documentation

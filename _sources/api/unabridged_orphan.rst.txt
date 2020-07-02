@@ -11,22 +11,22 @@ Directories
 .. toctree::
    :maxdepth: 5
 
-   dir__home_runner_work_reactor-cpp_reactor-cpp_include.rst
+   dir_include.rst
 
 .. toctree::
    :maxdepth: 5
 
-   dir__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp.rst
+   dir_include_reactor-cpp.rst
 
 .. toctree::
    :maxdepth: 5
 
-   dir__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_impl.rst
+   dir_include_reactor-cpp_impl.rst
 
 .. toctree::
    :maxdepth: 5
 
-   dir__home_runner_work_reactor-cpp_reactor-cpp_lib.rst
+   dir_lib.rst
 
 Files
 *****
@@ -35,134 +35,134 @@ Files
 .. toctree::
    :maxdepth: 5
 
-   file__home_runner_work_reactor-cpp_reactor-cpp_lib_action.cc.rst
+   file_lib_action.cc.rst
 
 .. toctree::
    :maxdepth: 5
 
-   file__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_action.hh.rst
+   file_include_reactor-cpp_action.hh.rst
 
 .. toctree::
    :maxdepth: 5
 
-   file__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_impl_action_impl.hh.rst
+   file_include_reactor-cpp_impl_action_impl.hh.rst
 
 .. toctree::
    :maxdepth: 5
 
-   file__home_runner_work_reactor-cpp_reactor-cpp_lib_assert.cc.rst
+   file_lib_assert.cc.rst
 
 .. toctree::
    :maxdepth: 5
 
-   file__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_assert.hh.rst
+   file_include_reactor-cpp_assert.hh.rst
 
 .. toctree::
    :maxdepth: 5
 
-   file__home_runner_work_reactor-cpp_reactor-cpp_lib_environment.cc.rst
+   file_lib_environment.cc.rst
 
 .. toctree::
    :maxdepth: 5
 
-   file__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_environment.hh.rst
+   file_include_reactor-cpp_environment.hh.rst
 
 .. toctree::
    :maxdepth: 5
 
-   file__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_fwd.hh.rst
+   file_include_reactor-cpp_fwd.hh.rst
 
 .. toctree::
    :maxdepth: 5
 
-   file__home_runner_work_reactor-cpp_reactor-cpp_lib_logging.cc.rst
+   file_lib_logging.cc.rst
 
 .. toctree::
    :maxdepth: 5
 
-   file__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_logging.hh.rst
+   file_include_reactor-cpp_logging.hh.rst
 
 .. toctree::
    :maxdepth: 5
 
-   file__home_runner_work_reactor-cpp_reactor-cpp_lib_logical_time.cc.rst
+   file_lib_logical_time.cc.rst
 
 .. toctree::
    :maxdepth: 5
 
-   file__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_logical_time.hh.rst
+   file_include_reactor-cpp_logical_time.hh.rst
 
 .. toctree::
    :maxdepth: 5
 
-   file__home_runner_work_reactor-cpp_reactor-cpp_lib_port.cc.rst
+   file_lib_port.cc.rst
 
 .. toctree::
    :maxdepth: 5
 
-   file__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_port.hh.rst
+   file_include_reactor-cpp_port.hh.rst
 
 .. toctree::
    :maxdepth: 5
 
-   file__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_impl_port_impl.hh.rst
+   file_include_reactor-cpp_impl_port_impl.hh.rst
 
 .. toctree::
    :maxdepth: 5
 
-   file__home_runner_work_reactor-cpp_reactor-cpp_lib_reaction.cc.rst
+   file_lib_reaction.cc.rst
 
 .. toctree::
    :maxdepth: 5
 
-   file__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_reaction.hh.rst
+   file_include_reactor-cpp_reaction.hh.rst
 
 .. toctree::
    :maxdepth: 5
 
-   file__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_reactor-cpp.hh.rst
+   file_include_reactor-cpp_reactor-cpp.hh.rst
 
 .. toctree::
    :maxdepth: 5
 
-   file__home_runner_work_reactor-cpp_reactor-cpp_lib_reactor.cc.rst
+   file_lib_reactor.cc.rst
 
 .. toctree::
    :maxdepth: 5
 
-   file__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_reactor.hh.rst
+   file_include_reactor-cpp_reactor.hh.rst
 
 .. toctree::
    :maxdepth: 5
 
-   file__home_runner_work_reactor-cpp_reactor-cpp_lib_scheduler.cc.rst
+   file_lib_scheduler.cc.rst
 
 .. toctree::
    :maxdepth: 5
 
-   file__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_scheduler.hh.rst
+   file_include_reactor-cpp_scheduler.hh.rst
 
 .. toctree::
    :maxdepth: 5
 
-   file__home_runner_work_reactor-cpp_reactor-cpp_lib_time.cc.rst
+   file_lib_time.cc.rst
 
 .. toctree::
    :maxdepth: 5
 
-   file__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_time.hh.rst
+   file_include_reactor-cpp_time.hh.rst
 
 .. toctree::
    :maxdepth: 5
 
-   file__home_runner_work_reactor-cpp_reactor-cpp_lib_trace.cc.rst
+   file_lib_trace.cc.rst
 
 .. toctree::
    :maxdepth: 5
 
-   file__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_trace.hh.rst
+   file_include_reactor-cpp_trace.hh.rst
 
 .. toctree::
    :maxdepth: 5
 
-   file__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_value_ptr.hh.rst
+   file_include_reactor-cpp_value_ptr.hh.rst

@@ -3,7 +3,7 @@
 Template Class MutableValuePtr
 ==============================
 
-- Defined in :ref:`file__home_runner_work_reactor-cpp_reactor-cpp_include_reactor-cpp_value_ptr.hh`
+- Defined in :ref:`file_include_reactor-cpp_value_ptr.hh`
 
 
 Class Documentation
@@ -13,4 +13,5 @@ Class Documentation
 .. doxygenclass:: reactor::MutableValuePtr
    :members:
    :protected-members:
+   :private-members:
    :undoc-members:

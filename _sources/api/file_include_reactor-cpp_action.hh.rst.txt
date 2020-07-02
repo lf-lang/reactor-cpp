@@ -1,0 +1,83 @@
+
+.. _file_include_reactor-cpp_action.hh:
+
+File action.hh
+==============
+
+|exhale_lsh| :ref:`Parent directory <dir_include_reactor-cpp>` (``include/reactor-cpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``include/reactor-cpp/action.hh``)
+----------------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_include_reactor-cpp_action.hh.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``impl/action_impl.hh`` (:ref:`file_include_reactor-cpp_impl_action_impl.hh`)
+
+- ``logical_time.hh`` (:ref:`file_include_reactor-cpp_logical_time.hh`)
+
+- ``reactor.hh`` (:ref:`file_include_reactor-cpp_reactor.hh`)
+
+- ``value_ptr.hh`` (:ref:`file_include_reactor-cpp_value_ptr.hh`)
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_lib_action.cc`
+
+- :ref:`file_lib_reaction.cc`
+
+- :ref:`file_lib_reactor.cc`
+
+- :ref:`file_lib_scheduler.cc`
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_reactor`
+
+
+Classes
+-------
+
+
+- :ref:`exhale_class_classreactor_1_1Action`
+
+- :ref:`exhale_class_classreactor_1_1Action_3_01void_01_4`
+
+- :ref:`exhale_class_classreactor_1_1BaseAction`
+
+- :ref:`exhale_class_classreactor_1_1LogicalAction`
+
+- :ref:`exhale_class_classreactor_1_1PhysicalAction`
+
+- :ref:`exhale_class_classreactor_1_1ShutdownAction`
+
+- :ref:`exhale_class_classreactor_1_1StartupAction`
+
+- :ref:`exhale_class_classreactor_1_1Timer`
+
