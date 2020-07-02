@@ -32,6 +32,7 @@ extensions = [
     "exhale",
     "sphinx_rtd_theme",
     "sphinx.ext.todo",
+    "sphinx.ext.extlinks",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -59,7 +60,27 @@ html_static_path = ['_static']
 breathe_projects = {"reactor-cpp": "../doxygen/xml"}
 breathe_default_project = "reactor-cpp"
 
+
+def specificationsForKind(kind):
+    '''
+    For a given input ``kind``, return the list of reStructuredText
+    specifications for the associated Breathe directive.
+    '''
+    # Change the defaults for .. doxygenclass:: and .. doxygenstruct::
+    if kind == "class" or kind == "struct":
+        return [
+          ":members:",
+          ":protected-members:",
+          ":private-members:",
+          ":undoc-members:"
+        ]
+    # An empty list signals to Exhale to use the defaults
+    else:
+        return []
+
+
 # Exhale Configuration
+from exhale import utils
 exhale_args = {
     # These arguments are required
     "containmentFolder":     "./api",
@@ -68,6 +89,9 @@ exhale_args = {
     "doxygenStripFromPath":  "..",
     # Suggested optional arguments
     "createTreeView":        True,
+    # override breathe defaults
+    "customSpecificationsMapping": utils.makeCustomSpecificationsMapping(
+        specificationsForKind),
 }
 
 # Tell sphinx what the primary language being documented is.
@@ -88,3 +112,8 @@ html_theme_options = {
 
 # show todo notes
 todo_include_todos = True
+
+# configure external links
+extlinks = {
+    'std-memory': ('https://en.cppreference.com/w/cpp/memory/%s', 'std::'),
+}
