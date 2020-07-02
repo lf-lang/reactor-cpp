@@ -49,6 +49,9 @@ class MutableValuePtr {
 
 template <class T>
 class ImmutableValuePtr {
+ public:
+  using const_T = typename std::add_const<T>::type;
+
  private:
   std::shared_ptr<T> internal_ptr;
 
@@ -77,11 +80,11 @@ class ImmutableValuePtr {
     return *this;
   }
 
-  T* get() const { return internal_ptr.get(); }
+  const_T* get() const { return internal_ptr.get(); }
 
   explicit operator bool() const { return get() == nullptr; }
-  T& operator*() const { return *get(); }
-  T* operator->() const { return get(); }
+  const_T& operator*() const { return *get(); }
+  const_T* operator->() const { return get(); }
 
   MutableValuePtr<T> get_mutable_copy() const {
     return MutableValuePtr<T>(new T(*internal_ptr));
