@@ -18,13 +18,10 @@ class ImmutableValuePtr;
 
 template <class T>
 class MutableValuePtr {
- public:
-  using type = T;
-
  private:
-  std::unique_ptr<type> internal_ptr;
+  std::unique_ptr<T> internal_ptr;
 
-  explicit MutableValuePtr(type* ptr) : internal_ptr(ptr) {}
+  explicit MutableValuePtr(T* ptr) : internal_ptr(ptr) {}
 
  public:
   MutableValuePtr(const MutableValuePtr&) = delete;
@@ -38,11 +35,11 @@ class MutableValuePtr {
     return *this;
   }
 
-  type* get() const { return internal_ptr.get(); }
+  T* get() const { return internal_ptr.get(); }
 
   explicit operator bool() const { return get() == nullptr; }
-  type& operator*() const { return *get(); }
-  type* operator->() const { return get(); }
+  T& operator*() const { return *get(); }
+  T* operator->() const { return get(); }
 
   friend class ImmutableValuePtr<T>;
 
@@ -52,13 +49,10 @@ class MutableValuePtr {
 
 template <class T>
 class ImmutableValuePtr {
- public:
-  using type = T;
-
  private:
-  std::shared_ptr<type> internal_ptr;
+  std::shared_ptr<T> internal_ptr;
 
-  explicit ImmutableValuePtr(type* ptr) : internal_ptr(ptr) {}
+  explicit ImmutableValuePtr(T* ptr) : internal_ptr(ptr) {}
 
  public:
   constexpr ImmutableValuePtr() : internal_ptr(nullptr) {}
@@ -83,11 +77,11 @@ class ImmutableValuePtr {
     return *this;
   }
 
-  type* get() const { return internal_ptr.get(); }
+  T* get() const { return internal_ptr.get(); }
 
   explicit operator bool() const { return get() == nullptr; }
-  type& operator*() const { return *get(); }
-  type* operator->() const { return get(); }
+  T& operator*() const { return *get(); }
+  T* operator->() const { return get(); }
 
   MutableValuePtr<T> get_mutable_copy() const {
     return MutableValuePtr<T>(new T(*internal_ptr));
