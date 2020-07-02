@@ -31,6 +31,7 @@ extensions = [
     "breathe",
     "exhale",
     "sphinx_rtd_theme",
+    "sphinx.ext.todo",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -84,3 +85,6 @@ html_theme_options = {
     'includehidden': True,
     'titles_only': False
 }
+
+# show todo notes
+todo_include_todos = True
