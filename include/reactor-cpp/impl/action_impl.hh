@@ -17,7 +17,7 @@ void Action<T>::schedule(const ImmutableValuePtr<T>& value_ptr, Dur delay) {
   auto d = std::chrono::duration_cast<Duration>(delay);
   VALIDATE(d >= Duration::zero(),
            "Schedule cannot be called with a negative delay!");
-  ASSERT(value_ptr != nullptr);
+  VALIDATE(value_ptr != nullptr);
   auto scheduler = environment()->scheduler();
   auto setup = [value_ptr, this]() { this->value_ptr = std::move(value_ptr); };
   if (is_logical()) {
