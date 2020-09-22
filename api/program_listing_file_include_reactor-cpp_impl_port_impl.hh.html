@@ -371,7 +371,7 @@
   <span class="n">VALIDATE</span><span class="p">(</span><span class="o">!</span><span class="n">has_inward_binding</span><span class="p">(),</span>
            <span class="s">&quot;set() may only be called on a ports that do not have an inward &quot;</span>
            <span class="s">&quot;binding!&quot;</span><span class="p">);</span>
-  <span class="n">VALIDATE</span><span class="p">(</span><span class="n">value_ptr</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">);</span>
+  <span class="n">VALIDATE</span><span class="p">(</span><span class="n">value_ptr</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">,</span> <span class="s">&quot;Ports may not be set to nullptr!&quot;</span><span class="p">);</span>
   <span class="k">auto</span> <span class="n">scheduler</span> <span class="o">=</span> <span class="n">environment</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">scheduler</span><span class="p">();</span>
   <span class="k">this</span><span class="o">-&gt;</span><span class="n">value_ptr</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">value_ptr</span><span class="p">);</span>
   <span class="n">scheduler</span><span class="o">-&gt;</span><span class="n">set_port</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>

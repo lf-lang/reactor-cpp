@@ -421,12 +421,15 @@
   <span class="p">}</span>
   <span class="kt">void</span> <span class="nf">set</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span> <span class="n">set</span><span class="p">(</span><span class="n">make_immutable_value</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">value</span><span class="p">));</span> <span class="p">}</span>
   <span class="kt">void</span> <span class="nf">set</span><span class="p">(</span><span class="n">T</span><span class="o">&amp;&amp;</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span> <span class="n">set</span><span class="p">(</span><span class="n">make_immutable_value</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">forward</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">value</span><span class="p">)));</span> <span class="p">}</span>
+  <span class="c1">// Setting a port to nullptr is not permitted.</span>
+  <span class="kt">void</span> <span class="nf">set</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">nullptr_t</span><span class="p">)</span> <span class="o">=</span> <span class="k">delete</span><span class="p">;</span>
 
   <span class="kt">void</span> <span class="nf">startup</span><span class="p">()</span> <span class="k">override</span> <span class="k">final</span> <span class="p">{}</span>
   <span class="kt">void</span> <span class="nf">shutdown</span><span class="p">()</span> <span class="k">override</span> <span class="k">final</span> <span class="p">{}</span>
 
   <span class="k">const</span> <span class="n">ImmutableValuePtr</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">get</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
   <span class="kt">bool</span> <span class="nf">is_present</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+
 <span class="p">};</span>
 
 <span class="k">template</span> <span class="o">&lt;&gt;</span>
