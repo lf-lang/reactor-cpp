@@ -79,12 +79,15 @@ class Port : public BasePort {
   }
   void set(const T& value) { set(make_immutable_value<T>(value)); }
   void set(T&& value) { set(make_immutable_value<T>(std::forward<T>(value))); }
+  // Setting a port to nullptr is not permitted.
+  void set(std::nullptr_t) = delete;
 
   void startup() override final {}
   void shutdown() override final {}
 
   const ImmutableValuePtr<T>& get() const;
   bool is_present() const;
+
 };
 
 template <>

@@ -82,6 +82,9 @@ class Action : public BaseAction {
   void schedule(T&& value, Dur delay = Dur::zero()) {
     schedule(make_immutable_value<T>(std::forward<T>(value)), delay);
   }
+  // Scheduling an action with nullptr value is not permitted.
+  template <class Dur = Duration>
+  void schedule(std::nullptr_t, Dur) = delete;
 
   const ImmutableValuePtr<T>& get() const { return value_ptr; }
   bool is_present() const { return value_ptr != nullptr; }
