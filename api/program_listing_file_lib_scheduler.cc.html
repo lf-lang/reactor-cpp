@@ -466,14 +466,29 @@
 
       <span class="c1">// synchronize with physical time if not in fast forward mode</span>
       <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">_environment</span><span class="o">-&gt;</span><span class="n">fast_fwd_execution</span><span class="p">())</span> <span class="p">{</span>
-        <span class="c1">// wait until the next tag or until a new event is inserted</span>
+        <span class="c1">// keep track of the current physical time in a static variable</span>
+        <span class="k">static</span> <span class="k">auto</span> <span class="n">physical_time</span> <span class="o">=</span> <span class="n">TimePoint</span><span class="o">::</span><span class="n">min</span><span class="p">();</span>
+
+        <span class="c1">// If physical time is smaller than the next logical time point, then</span>
+        <span class="c1">// update the physical time. This step is small optimization to avoid</span>
+        <span class="c1">// calling get_physical_time() in every iteration as this would add</span>
+        <span class="c1">// a significant overhead.</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">physical_time</span> <span class="o">&lt;</span> <span class="n">t_next</span><span class="p">.</span><span class="n">time_point</span><span class="p">())</span>
+          <span class="n">physical_time</span> <span class="o">=</span> <span class="n">get_physical_time</span><span class="p">();</span>
+
+        <span class="c1">// If physical time is still smaller than the next logical time point,</span>
+        <span class="c1">// then wait until the next tag or until a new event is inserted</span>
         <span class="c1">// asynchronously into the queue</span>
-        <span class="k">auto</span> <span class="n">status</span> <span class="o">=</span> <span class="n">cv_schedule</span><span class="p">.</span><span class="n">wait_until</span><span class="p">(</span><span class="n">lock</span><span class="p">,</span> <span class="n">t_next</span><span class="p">.</span><span class="n">time_point</span><span class="p">());</span>
-        <span class="c1">// Start over if the event queue was modified</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">status</span> <span class="o">==</span> <span class="n">std</span><span class="o">::</span><span class="n">cv_status</span><span class="o">::</span><span class="n">no_timeout</span><span class="p">)</span> <span class="p">{</span>
-          <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">physical_time</span> <span class="o">&lt;</span> <span class="n">t_next</span><span class="p">.</span><span class="n">time_point</span><span class="p">())</span> <span class="p">{</span>
+          <span class="k">auto</span> <span class="n">status</span> <span class="o">=</span> <span class="n">cv_schedule</span><span class="p">.</span><span class="n">wait_until</span><span class="p">(</span><span class="n">lock</span><span class="p">,</span> <span class="n">t_next</span><span class="p">.</span><span class="n">time_point</span><span class="p">());</span>
+          <span class="c1">// Start over if the event queue was modified</span>
+          <span class="k">if</span> <span class="p">(</span><span class="n">status</span> <span class="o">==</span> <span class="n">std</span><span class="o">::</span><span class="n">cv_status</span><span class="o">::</span><span class="n">no_timeout</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+          <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="c1">// update physical time and continue otherwise</span>
+            <span class="n">physical_time</span> <span class="o">=</span> <span class="n">t_next</span><span class="p">.</span><span class="n">time_point</span><span class="p">();</span>
+          <span class="p">}</span>
         <span class="p">}</span>
-        <span class="c1">// continue otherwise</span>
       <span class="p">}</span>
 
       <span class="c1">// retrieve all events with tag equal to current logical time from the</span>
@@ -602,10 +617,13 @@
     <span class="n">tracepoint</span><span class="p">(</span><span class="n">reactor_cpp</span><span class="p">,</span> <span class="n">schedule_action</span><span class="p">,</span> <span class="n">action</span><span class="o">-&gt;</span><span class="n">container</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">fqn</span><span class="p">(),</span>
                <span class="n">action</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">(),</span> <span class="n">tag</span><span class="p">);</span>
 
-    <span class="k">if</span> <span class="p">(</span><span class="n">event_queue</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span> <span class="o">==</span> <span class="n">event_queue</span><span class="p">.</span><span class="n">end</span><span class="p">())</span>
-      <span class="n">event_queue</span><span class="p">.</span><span class="n">emplace</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">make_unique</span><span class="o">&lt;</span><span class="n">EventMap</span><span class="o">&gt;</span><span class="p">());</span>
+    <span class="c1">// create a new event map or retrieve the existing one</span>
+    <span class="k">auto</span> <span class="n">emplace_result</span> <span class="o">=</span>
+        <span class="n">event_queue</span><span class="p">.</span><span class="n">try_emplace</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">make_unique</span><span class="o">&lt;</span><span class="n">EventMap</span><span class="o">&gt;</span><span class="p">());</span>
+    <span class="k">auto</span><span class="o">&amp;</span> <span class="n">event_map</span> <span class="o">=</span> <span class="o">*</span><span class="n">emplace_result</span><span class="p">.</span><span class="n">first</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">;</span>
 
-    <span class="p">(</span><span class="o">*</span><span class="n">event_queue</span><span class="p">[</span><span class="n">tag</span><span class="p">])[</span><span class="n">action</span><span class="p">]</span> <span class="o">=</span> <span class="n">setup</span><span class="p">;</span>
+    <span class="c1">// insert the new event</span>
+    <span class="n">event_map</span><span class="p">[</span><span class="n">action</span><span class="p">]</span> <span class="o">=</span> <span class="n">setup</span><span class="p">;</span>
   <span class="p">}</span>
 <span class="p">}</span>
 
