@@ -275,10 +275,13 @@ void Scheduler::schedule_sync(const Tag& tag,
     tracepoint(reactor_cpp, schedule_action, action->container()->fqn(),
                action->name(), tag);
 
-    if (event_queue.find(tag) == event_queue.end())
-      event_queue.emplace(tag, std::make_unique<EventMap>());
+    // create a new event map or retrieve the existing one
+    auto emplace_result =
+        event_queue.try_emplace(tag, std::make_unique<EventMap>());
+    auto& event_map = *emplace_result.first->second;
 
-    (*event_queue[tag])[action] = setup;
+    // insert the new event
+    event_map[action] = setup;
   }
 }
 
