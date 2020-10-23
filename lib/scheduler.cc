@@ -124,14 +124,29 @@ bool Scheduler::next() {
 
       // synchronize with physical time if not in fast forward mode
       if (!_environment->fast_fwd_execution()) {
-        // wait until the next tag or until a new event is inserted
+        // keep track of the current physical time in a static variable
+        static auto physical_time = TimePoint::min();
+
+        // If physical time is smaller than the next logical time point, then
+        // update the physical time. This step is small optimization to avoid
+        // calling get_physical_time() in every iteration as this would add
+        // a significant overhead.
+        if (physical_time < t_next.time_point())
+          physical_time = get_physical_time();
+
+        // If physical time is still smaller than the next logical time point,
+        // then wait until the next tag or until a new event is inserted
         // asynchronously into the queue
-        auto status = cv_schedule.wait_until(lock, t_next.time_point());
-        // Start over if the event queue was modified
-        if (status == std::cv_status::no_timeout) {
-          return true;
+        if (physical_time < t_next.time_point()) {
+          auto status = cv_schedule.wait_until(lock, t_next.time_point());
+          // Start over if the event queue was modified
+          if (status == std::cv_status::no_timeout) {
+            return true;
+          } else {
+            // update physical time and continue otherwise
+            physical_time = t_next.time_point();
+          }
         }
-        // continue otherwise
       }
 
       // retrieve all events with tag equal to current logical time from the
