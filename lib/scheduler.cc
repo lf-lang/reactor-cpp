@@ -44,8 +44,12 @@ void Scheduler::work(unsigned id) {
 
     lock.lock();
     executing_reactions.erase(reaction);
+    // check if this was the last running worker and if so notify the scheduler
+    const bool notify = ready_reactions.empty() && executing_reactions.empty();
     lock.unlock();
-    cv_done_reactions.notify_one();
+    if (notify) {
+      cv_done_reactions.notify_one();
+    }
   }
 
   log::Debug() << "Stopping worker " << id;
