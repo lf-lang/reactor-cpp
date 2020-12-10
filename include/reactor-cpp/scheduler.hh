@@ -54,7 +54,8 @@ class Scheduler {
 
   void work(unsigned id);
 
-  bool next();
+  std::pair<bool, std::unique_ptr<Scheduler::EventMap>> next();
+  void process_events(std::unique_ptr<EventMap> events);
 
   void set_port_helper(BasePort* p);
 

@@ -68,7 +68,19 @@ void Scheduler::start() {
     }
   }
 
-  while (next()) {
+  bool continue_execution = true;
+  while (continue_execution) {
+    // advance logical time and retrieve a list of events
+    auto result = next();
+
+    // next() returns false if the execution stops, true otherwise
+    continue_execution = result.first;
+
+    // process the events returned by next() (if any)
+    auto& events = result.second;
+    if (events != nullptr) {
+      process_events(std::move(events));
+    }
   }
 
   {
@@ -83,7 +95,7 @@ void Scheduler::start() {
   }
 }
 
-bool Scheduler::next() {
+std::pair<bool, std::unique_ptr<Scheduler::EventMap>> Scheduler::next() {
   std::unique_ptr<EventMap> events{nullptr};
   bool run_again = true;
 
@@ -102,7 +114,7 @@ bool Scheduler::next() {
         // The shutdown call might schedule shutdown reactions. If non was
         // scheduled, we simply return.
         if (event_queue.empty()) {
-          return false;
+          return std::make_pair(false, std::move(events));
         }
       }
     }
@@ -120,7 +132,7 @@ bool Scheduler::next() {
                      << ", " << t_next.micro_step() << "]";
         _logical_time.advance_to(t_next);
       } else {
-        return false;
+        return std::make_pair(false, std::move(events));
       }
     } else {
       // collect events of the next tag
@@ -145,7 +157,7 @@ bool Scheduler::next() {
           auto status = cv_schedule.wait_until(lock, t_next.time_point());
           // Start over if the event queue was modified
           if (status == std::cv_status::no_timeout) {
-            return true;
+            return std::make_pair(true, std::move(events));
           } else {
             // update physical time and continue otherwise
             physical_time = t_next.time_point();
@@ -165,6 +177,10 @@ bool Scheduler::next() {
     }
   }  // mutex m_schedule
 
+  return std::make_pair(run_again, std::move(events));
+}
+
+void Scheduler::process_events(std::unique_ptr<Scheduler::EventMap> events) {
   // execute all setup functions; this sets the values of the corresponding
   // actions
   for (auto& kv : *events) {
@@ -174,7 +190,6 @@ bool Scheduler::next() {
     }
   }
 
-  std::vector<std::future<void>> futures;
   for (auto& kv : *events) {
     for (auto n : kv.first->triggers()) {
       // There is no need to acquire the mutex. At this point the scheduler
@@ -216,9 +231,7 @@ bool Scheduler::next() {
     p->cleanup();
   }
   set_ports.clear();
-
-  return run_again;
-}  // namespace reactor
+}
 
 void Scheduler::dispatch_reactions_to_workers(
     const std::vector<Reaction*>& reactions) {
