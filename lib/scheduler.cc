@@ -22,31 +22,51 @@ void Scheduler::work(unsigned id) {
   log::Debug() << "Starting worker " << id;
 
   while (true) {
+    // find a reaction to be processed
+    Reaction* reaction{nullptr};
     std::unique_lock<std::mutex> lock(m_reaction_queue);
-    cv_ready_reactions.wait(
-        lock, [this]() { return !this->ready_reactions.empty() || terminate; });
-    if (terminate) {
-      lock.unlock();
-      break;
+    {
+      // wait for reactions to become ready for execution or for a terminate
+      // signal
+      cv_ready_reactions.wait(lock, [this]() {
+        return !this->ready_reactions.empty() || terminate;
+      });
+
+      // break out of the while loop if a termination is indicated
+      if (terminate) {
+        lock.unlock();
+        break;
+      }
+
+      // Otherwise, remove one reaction from the ready queue and add it to
+      // the list of reactions that are currently executing.
+      reaction = ready_reactions.back();
+      ready_reactions.pop_back();
+      executing_reactions.insert(reaction);
     }
-
-    auto reaction = ready_reactions.back();
-    ready_reactions.pop_back();
-    executing_reactions.insert(reaction);
     lock.unlock();
+    // mutex m_reaction_queue
 
+    // execute the reaction
     log::Debug() << "Execute reaction " << reaction->fqn();
-
-    // do the work
     tracepoint(reactor_cpp, reaction_execution_starts, id, reaction->fqn());
     reaction->trigger();
     tracepoint(reactor_cpp, reaction_execution_finishes, id, reaction->fqn());
 
-    lock.lock();
-    executing_reactions.erase(reaction);
-    // check if this was the last running worker and if so notify the scheduler
-    const bool notify = ready_reactions.empty() && executing_reactions.empty();
-    lock.unlock();
+    bool notify = false;
+    lock.lock();  // mutex m_reaction_queue
+    {
+      // remove the reaction from the list of reactions that are currently
+      // executing
+      executing_reactions.erase(reaction);
+      // check if this was the last running worker and, if so, set a flag to
+      // notify the scheduler
+      notify = ready_reactions.empty() && executing_reactions.empty();
+    }
+    lock.unlock();  // mutex m_reaction_queue
+
+    // All ready reactions where processed. Notify the scheduler in order to
+    // produce new ready reactions and thus continue execution.
     if (notify) {
       cv_done_reactions.notify_one();
     }
