@@ -30,7 +30,6 @@ class Scheduler {
 
  private:
   const bool using_workers;
-  bool terminate{false};
   LogicalTime _logical_time{};
 
   Environment* _environment;
@@ -42,24 +41,25 @@ class Scheduler {
 
   std::mutex m_event_queue;
   std::map<Tag, std::unique_ptr<EventMap>> event_queue;
-
   std::vector<BasePort*> set_ports;
 
   std::mutex m_reaction_queue;
   std::vector<std::vector<Reaction*>> reaction_queue;
+  unsigned reaction_queue_pos{std::numeric_limits<unsigned>::max()};
   std::vector<Reaction*> ready_reactions;
-  std::set<Reaction*> executing_reactions;
   std::condition_variable cv_ready_reactions;
   std::condition_variable cv_done_reactions;
+  unsigned running_workers{0};
 
   void work(unsigned id);
 
-  std::pair<bool, std::unique_ptr<Scheduler::EventMap>> next();
-  void process_events(std::unique_ptr<EventMap> events);
+  void next();
 
   void set_port_helper(BasePort* p);
 
   std::atomic<bool> _stop{false};
+  bool terminate_workers{false};
+  bool continue_execution{true};
 
   void dispatch_reactions_to_workers(const std::vector<Reaction*>& reactions);
   void execute_reactions_inline(const std::vector<Reaction*>& reactions);

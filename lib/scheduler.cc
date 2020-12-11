@@ -19,56 +19,121 @@
 namespace reactor {
 
 void Scheduler::work(unsigned id) {
-  log::Debug() << "Starting worker " << id;
+  log::Debug() << "(Worker " << id << ") "
+               << "Starting";
+
+  // acquire the mutex m_reaction_queue
+  std::unique_lock<std::mutex> lock(m_reaction_queue);
 
   while (true) {
-    // find a reaction to be processed
-    Reaction* reaction{nullptr};
-    std::unique_lock<std::mutex> lock(m_reaction_queue);
-    {
-      // wait for reactions to become ready for execution or for a terminate
-      // signal
-      cv_ready_reactions.wait(lock, [this]() {
-        return !this->ready_reactions.empty() || terminate;
-      });
+    // break out of the while loop if a termination is indicated
+    if (terminate_workers) {
+      lock.unlock();
+      break;
+    }
 
-      // break out of the while loop if a termination is indicated
-      if (terminate) {
-        lock.unlock();
-        break;
+    // process ready reactions as long as there are any
+    while (!ready_reactions.empty()) {
+      // Check if there are reactions to be executed.
+      // If there is a ready reaction, remove it from the ready queue and add
+      // it to the list of reactions that are currently executing.
+      auto reaction = ready_reactions.back();
+      ready_reactions.pop_back();
+
+      lock.unlock();  // mutex m_reaction_queue
+
+      // execute the reaction
+      log::Debug() << "(Worker " << id << ") "
+                   << "execute reaction " << reaction->fqn();
+      tracepoint(reactor_cpp, reaction_execution_starts, id, reaction->fqn());
+      reaction->trigger();
+      tracepoint(reactor_cpp, reaction_execution_finishes, id, reaction->fqn());
+
+      lock.lock();  // mutex m_reaction_queue
+    }
+
+    if (running_workers == 1) {
+      // This is the last worker -> schedule
+      log::Debug() << "(Worker " << id << ") "
+                   << "I am the last active worker.";
+
+      // Have we finished iterating over the reaction queue?
+      if (reaction_queue_pos < reaction_queue.size()) {
+        // No -> continue iterating
+        log::Debug() << "(Worker " << id << ") "
+                     << "Scanning the reaction queue for ready reactions";
+
+        // continue the actual iteration
+        while (reaction_queue_pos < reaction_queue.size() &&
+               reaction_queue[reaction_queue_pos].empty()) {
+          reaction_queue_pos++;
+        }
+
+        if (reaction_queue_pos < reaction_queue.size()) {
+          auto& reactions = reaction_queue[reaction_queue_pos];
+
+          // any ready reactions of current priority?
+          if (!reactions.empty()) {
+            log::Debug() << "(Worker " << id << ") "
+                         << "Process reactions of priority "
+                         << reaction_queue_pos;
+
+            // Make sure that any reaction is only executed once even if it was
+            // triggered multiple times.
+            std::sort(reactions.begin(), reactions.end());
+            reactions.erase(std::unique(reactions.begin(), reactions.end()),
+                            reactions.end());
+
+            // place all ready reactions on the ready queue
+            for (auto r : reactions) {
+              log::Debug() << "(Worker " << id << ") "
+                           << "Reaction " << r->fqn()
+                           << " is ready for execution";
+              tracepoint(reactor_cpp, trigger_reaction, r->container()->fqn(),
+                         r->name(), _logical_time);
+              ready_reactions.push_back(r);
+            }
+
+            reactions.clear();
+          }
+        }
+
+        if (ready_reactions.size() == 1) {
+          // if there is only one reaction, then this worker processes it
+          // directly
+          continue;
+        } else if (ready_reactions.size() > 1) {
+          // notify other workers if there is more than one ready reaction
+          lock.unlock();
+          cv_ready_reactions.notify_all();
+          lock.lock();
+          continue;
+        }
       }
 
-      // Otherwise, remove one reaction from the ready queue and add it to
-      // the list of reactions that are currently executing.
-      reaction = ready_reactions.back();
-      ready_reactions.pop_back();
-      executing_reactions.insert(reaction);
-    }
-    lock.unlock();
-    // mutex m_reaction_queue
-
-    // execute the reaction
-    log::Debug() << "Execute reaction " << reaction->fqn();
-    tracepoint(reactor_cpp, reaction_execution_starts, id, reaction->fqn());
-    reaction->trigger();
-    tracepoint(reactor_cpp, reaction_execution_finishes, id, reaction->fqn());
-
-    bool notify = false;
-    lock.lock();  // mutex m_reaction_queue
-    {
-      // remove the reaction from the list of reactions that are currently
-      // executing
-      executing_reactions.erase(reaction);
-      // check if this was the last running worker and, if so, set a flag to
-      // notify the scheduler
-      notify = ready_reactions.empty() && executing_reactions.empty();
-    }
-    lock.unlock();  // mutex m_reaction_queue
-
-    // All ready reactions where processed. Notify the scheduler in order to
-    // produce new ready reactions and thus continue execution.
-    if (notify) {
-      cv_done_reactions.notify_one();
+      if (continue_execution) {
+        // if we reach this point, all reactions in the ready queue where
+        // processed and we need to call next()
+        log::Debug() << "(Worker " << id << ") "
+                     << "call next()";
+        next();
+        reaction_queue_pos = 0;
+      } else {
+        terminate_workers = true;
+        lock.unlock();
+        cv_ready_reactions.notify_all();
+        lock.lock();
+      }
+    } else {
+      // wait for reactions to become ready for execution, or for a terminate
+      // signal
+      log::Debug() << "(Worker " << id << ") "
+                   << "wait for ready reactions";
+      running_workers--;
+      cv_ready_reactions.wait(lock, [this]() {
+        return !this->ready_reactions.empty() || terminate_workers;
+      });
+      running_workers++;
     }
   }
 
@@ -81,33 +146,11 @@ void Scheduler::start() {
   // initialize the reaction queue
   reaction_queue.resize(_environment->max_reaction_index() + 1);
 
-  if (using_workers) {
-    // start worker threads
-    for (unsigned i = 1; i < _environment->num_workers() + 1; i++) {
-      worker_threads.emplace_back([this, i]() { this->work(i); });
-    }
+  running_workers = _environment->num_workers();
+  // start worker threads
+  for (unsigned i = 1; i < _environment->num_workers() + 1; i++) {
+    worker_threads.emplace_back([this, i]() { this->work(i); });
   }
-
-  bool continue_execution = true;
-  while (continue_execution) {
-    // advance logical time and retrieve a list of events
-    auto result = next();
-
-    // next() returns false if the execution stops, true otherwise
-    continue_execution = result.first;
-
-    // process the events returned by next() (if any)
-    auto& events = result.second;
-    if (events != nullptr) {
-      process_events(std::move(events));
-    }
-  }
-
-  {
-    std::lock_guard<std::mutex> lg(m_reaction_queue);
-    terminate = true;
-  }
-  cv_ready_reactions.notify_all();
 
   // join all worker threads
   for (auto& t : worker_threads) {
@@ -115,9 +158,23 @@ void Scheduler::start() {
   }
 }
 
-std::pair<bool, std::unique_ptr<Scheduler::EventMap>> Scheduler::next() {
-  std::unique_ptr<EventMap> events{nullptr};
-  bool run_again = true;
+void Scheduler::next() {
+  static std::unique_ptr<EventMap> events{nullptr};
+
+  // clean up before scheduling any new events
+  if (events != nullptr) {
+    // cleanup all triggered actions
+    for (auto& kv : *events) {
+      kv.first->cleanup();
+    }
+    events = nullptr;
+
+    // cleanup all set ports
+    for (auto p : set_ports) {
+      p->cleanup();
+    }
+    set_ports.clear();
+  }
 
   {
     std::unique_lock<std::mutex> lock{m_schedule};
@@ -126,81 +183,74 @@ std::pair<bool, std::unique_ptr<Scheduler::EventMap>> Scheduler::next() {
     if (event_queue.empty() && !_stop) {
       if (_environment->run_forever()) {
         // wait for a new asynchronous event
-        cv_schedule.wait(lock, [this]() { return !event_queue.empty(); });
+        cv_schedule.wait(lock,
+                         [this]() { return !event_queue.empty() || _stop; });
       } else {
         log::Debug() << "No more events in queue. -> Terminate!";
         _environment->sync_shutdown();
-
-        // The shutdown call might schedule shutdown reactions. If non was
-        // scheduled, we simply return.
-        if (event_queue.empty()) {
-          return std::make_pair(false, std::move(events));
-        }
       }
     }
 
-    if (_stop) {
-      run_again = false;
-      log::Debug() << "Shutting down the scheduler";
-      Tag t_next = Tag::from_logical_time(_logical_time).delay();
-      if (t_next == event_queue.begin()->first) {
-        log::Debug() << "Schedule the last round of reactions including all "
-                        "termination reactions";
+    while (events == nullptr) {
+      if (_stop) {
+        continue_execution = false;
+        log::Debug() << "Shutting down the scheduler";
+        Tag t_next = Tag::from_logical_time(_logical_time).delay();
+        if (t_next == event_queue.begin()->first) {
+          log::Debug() << "Schedule the last round of reactions including all "
+                          "termination reactions";
+          events = std::move(event_queue.begin()->second);
+          event_queue.erase(event_queue.begin());
+          log::Debug() << "advance logical time to tag [" << t_next.time_point()
+                       << ", " << t_next.micro_step() << "]";
+          _logical_time.advance_to(t_next);
+        } else {
+          return;
+        }
+      } else {
+        // collect events of the next tag
+        auto t_next = event_queue.begin()->first;
+
+        // synchronize with physical time if not in fast forward mode
+        if (!_environment->fast_fwd_execution()) {
+          // keep track of the current physical time in a static variable
+          static auto physical_time = TimePoint::min();
+
+          // If physical time is smaller than the next logical time point, then
+          // update the physical time. This step is small optimization to avoid
+          // calling get_physical_time() in every iteration as this would add
+          // a significant overhead.
+          if (physical_time < t_next.time_point())
+            physical_time = get_physical_time();
+
+          // If physical time is still smaller than the next logical time point,
+          // then wait until the next tag or until a new event is inserted
+          // asynchronously into the queue
+          if (physical_time < t_next.time_point()) {
+            auto status = cv_schedule.wait_until(lock, t_next.time_point());
+            // Start over if the event queue was modified
+            if (status == std::cv_status::no_timeout) {
+              continue;
+            } else {
+              // update physical time and continue otherwise
+              physical_time = t_next.time_point();
+            }
+          }
+        }
+
+        // retrieve all events with tag equal to current logical time from the
+        // queue
         events = std::move(event_queue.begin()->second);
         event_queue.erase(event_queue.begin());
+
+        // advance logical time
         log::Debug() << "advance logical time to tag [" << t_next.time_point()
                      << ", " << t_next.micro_step() << "]";
         _logical_time.advance_to(t_next);
-      } else {
-        return std::make_pair(false, std::move(events));
       }
-    } else {
-      // collect events of the next tag
-      auto t_next = event_queue.begin()->first;
-
-      // synchronize with physical time if not in fast forward mode
-      if (!_environment->fast_fwd_execution()) {
-        // keep track of the current physical time in a static variable
-        static auto physical_time = TimePoint::min();
-
-        // If physical time is smaller than the next logical time point, then
-        // update the physical time. This step is small optimization to avoid
-        // calling get_physical_time() in every iteration as this would add
-        // a significant overhead.
-        if (physical_time < t_next.time_point())
-          physical_time = get_physical_time();
-
-        // If physical time is still smaller than the next logical time point,
-        // then wait until the next tag or until a new event is inserted
-        // asynchronously into the queue
-        if (physical_time < t_next.time_point()) {
-          auto status = cv_schedule.wait_until(lock, t_next.time_point());
-          // Start over if the event queue was modified
-          if (status == std::cv_status::no_timeout) {
-            return std::make_pair(true, std::move(events));
-          } else {
-            // update physical time and continue otherwise
-            physical_time = t_next.time_point();
-          }
-        }
-      }
-
-      // retrieve all events with tag equal to current logical time from the
-      // queue
-      events = std::move(event_queue.begin()->second);
-      event_queue.erase(event_queue.begin());
-
-      // advance logical time
-      log::Debug() << "advance logical time to tag [" << t_next.time_point()
-                   << ", " << t_next.micro_step() << "]";
-      _logical_time.advance_to(t_next);
     }
   }  // mutex m_schedule
 
-  return std::make_pair(run_again, std::move(events));
-}
-
-void Scheduler::process_events(std::unique_ptr<Scheduler::EventMap> events) {
   // execute all setup functions; this sets the values of the corresponding
   // actions
   for (auto& kv : *events) {
@@ -217,75 +267,6 @@ void Scheduler::process_events(std::unique_ptr<Scheduler::EventMap> events) {
       // workers are running
       reaction_queue[n->index()].push_back(n);
     }
-  }
-
-  // process all reactions in the queue in order of there index
-  for (unsigned i = 0; i < reaction_queue.size(); i++) {
-    auto& reactions = reaction_queue[i];
-
-    if (!reactions.empty()) {
-      log::Debug() << "Process reactions of priority " << i;
-
-      // Make sure that any reaction is only executed once even if it was
-      // triggered multiple times.
-      std::sort(reactions.begin(), reactions.end());
-      reactions.erase(std::unique(reactions.begin(), reactions.end()),
-                      reactions.end());
-
-      if (using_workers && reactions.size() > 1) {
-        dispatch_reactions_to_workers(reactions);
-      } else {
-        execute_reactions_inline(reactions);
-      }
-      reactions.clear();
-    }
-  }
-
-  // cleanup all triggered actions
-  for (auto& kv : *events) {
-    kv.first->cleanup();
-  }
-
-  // cleanup all set ports
-  for (auto p : set_ports) {
-    p->cleanup();
-  }
-  set_ports.clear();
-}
-
-void Scheduler::dispatch_reactions_to_workers(
-    const std::vector<Reaction*>& reactions) {
-  // dispatch all ready reactions
-  std::unique_lock<std::mutex> lock(m_reaction_queue);
-  for (auto r : reactions) {
-    log::Debug() << "Schedule reaction " << r->fqn();
-    tracepoint(reactor_cpp, trigger_reaction, r->container()->fqn(), r->name(),
-               _logical_time);
-    ready_reactions.push_back(r);
-  }
-  lock.unlock();
-
-  // notify workers about ready reactions
-  cv_ready_reactions.notify_all();
-
-  // we need to acquire the mutex now as workers are running
-  lock.lock();
-  while (!ready_reactions.empty() || !executing_reactions.empty()) {
-    log::Debug() << "Waiting for workers ...";
-    cv_done_reactions.wait(lock);
-  }
-  lock.unlock();
-}
-
-void Scheduler::execute_reactions_inline(
-    const std::vector<Reaction*>& reactions) {
-  for (auto r : reactions) {
-    log::Debug() << "Execute reaction " << r->fqn();
-    tracepoint(reactor_cpp, trigger_reaction, r->container()->fqn(), r->name(),
-               _logical_time);
-    tracepoint(reactor_cpp, reaction_execution_starts, 0, r->fqn());
-    r->trigger();
-    tracepoint(reactor_cpp, reaction_execution_finishes, 0, r->fqn());
   }
 }
 
@@ -335,9 +316,9 @@ void Scheduler::set_port(BasePort* p) {
   auto lg = using_workers ? std::unique_lock<std::mutex>(m_event_queue)
                           : std::unique_lock<std::mutex>();
   // We do not check here if p is already in the list. This means clean()
-  // could be called multiple times for a single port. However, calling clean()
-  // multiple time is not harmful and more efficient then checking if the
-  // port is already in the list.
+  // could be called multiple times for a single port. However, calling
+  // clean() multiple time is not harmful and more efficient then checking if
+  // the port is already in the list.
   set_ports.push_back(p);
   // recursively search for triggered reactions
   set_port_helper(p);
