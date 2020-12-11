@@ -133,9 +133,9 @@ void Scheduler::work(unsigned id) {
         reaction_queue_pos = 0;
       } else {
         terminate_workers = true;
-        acquire_lock(&lock);
-        cv_ready_reactions.notify_all();
         release_lock(&lock);
+        cv_ready_reactions.notify_all();
+        acquire_lock(&lock);
       }
     } else {
       // wait for reactions to become ready for execution, or for a terminate
