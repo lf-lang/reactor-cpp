@@ -46,9 +46,12 @@ class Scheduler {
   std::mutex m_reaction_queue;
   std::vector<std::vector<Reaction*>> reaction_queue;
   unsigned reaction_queue_pos{std::numeric_limits<unsigned>::max()};
+
+  std::mutex m_ready_reactions;
   std::vector<Reaction*> ready_reactions;
   std::condition_variable cv_ready_reactions;
-  std::condition_variable cv_done_reactions;
+
+  std::mutex m_running_workers;
   unsigned running_workers{0};
 
   void work(unsigned id);
@@ -58,14 +61,8 @@ class Scheduler {
   void set_port_helper(BasePort* p);
 
   std::atomic<bool> _stop{false};
-  bool terminate_workers{false};
+  std::atomic<bool> terminate_workers{false};
   bool continue_execution{true};
-
-  void dispatch_reactions_to_workers(const std::vector<Reaction*>& reactions);
-  void execute_reactions_inline(const std::vector<Reaction*>& reactions);
-
-  void acquire_lock(std::unique_lock<std::mutex>* lock) const;
-  void release_lock(std::unique_lock<std::mutex>* lock) const;
 
  public:
   Scheduler(Environment* env);
