@@ -64,6 +64,9 @@ class Scheduler {
   void dispatch_reactions_to_workers(const std::vector<Reaction*>& reactions);
   void execute_reactions_inline(const std::vector<Reaction*>& reactions);
 
+  void acquire_lock(std::unique_lock<std::mutex>* lock) const;
+  void release_lock(std::unique_lock<std::mutex>* lock) const;
+
  public:
   Scheduler(Environment* env);
   ~Scheduler();

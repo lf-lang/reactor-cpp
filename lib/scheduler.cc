@@ -18,17 +18,28 @@
 
 namespace reactor {
 
+void Scheduler::acquire_lock(std::unique_lock<std::mutex>* lock) const {
+  if (using_workers)
+    lock->lock();
+}
+
+void Scheduler::release_lock(std::unique_lock<std::mutex>* lock) const {
+  if (using_workers)
+    lock->unlock();
+}
+
 void Scheduler::work(unsigned id) {
   log::Debug() << "(Worker " << id << ") "
                << "Starting";
 
   // acquire the mutex m_reaction_queue
-  std::unique_lock<std::mutex> lock(m_reaction_queue);
+  std::unique_lock<std::mutex> lock(m_reaction_queue, std::defer_lock);
+  acquire_lock(&lock);
 
   while (true) {
     // break out of the while loop if a termination is indicated
     if (terminate_workers) {
-      lock.unlock();
+      release_lock(&lock);
       break;
     }
 
@@ -40,7 +51,7 @@ void Scheduler::work(unsigned id) {
       auto reaction = ready_reactions.back();
       ready_reactions.pop_back();
 
-      lock.unlock();  // mutex m_reaction_queue
+      release_lock(&lock);
 
       // execute the reaction
       log::Debug() << "(Worker " << id << ") "
@@ -49,7 +60,7 @@ void Scheduler::work(unsigned id) {
       reaction->trigger();
       tracepoint(reactor_cpp, reaction_execution_finishes, id, reaction->fqn());
 
-      lock.lock();  // mutex m_reaction_queue
+      acquire_lock(&lock);
     }
 
     if (running_workers == 1) {
@@ -104,9 +115,11 @@ void Scheduler::work(unsigned id) {
           continue;
         } else if (ready_reactions.size() > 1) {
           // notify other workers if there is more than one ready reaction
-          lock.unlock();
-          cv_ready_reactions.notify_all();
-          lock.lock();
+          if (using_workers) {
+            lock.unlock();
+            cv_ready_reactions.notify_all();
+            lock.lock();
+          }
           continue;
         }
       }
@@ -120,9 +133,9 @@ void Scheduler::work(unsigned id) {
         reaction_queue_pos = 0;
       } else {
         terminate_workers = true;
-        lock.unlock();
+        acquire_lock(&lock);
         cv_ready_reactions.notify_all();
-        lock.lock();
+        release_lock(&lock);
       }
     } else {
       // wait for reactions to become ready for execution, or for a terminate
