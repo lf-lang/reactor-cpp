@@ -103,7 +103,9 @@ const std::set<Port<void>*>& Port<void>::typed_outward_bindings() const {
 }
 
 Port<void>* Port<void>::typed_inward_binding() const {
-  return dynamic_cast<Port<void>*>(inward_binding());
+  // we can use a static cast here since we know that this port is always
+  // connected with another Port<T>.
+  return static_cast<Port<void>*>(inward_binding());
 }
 
 void Port<void>::set() {

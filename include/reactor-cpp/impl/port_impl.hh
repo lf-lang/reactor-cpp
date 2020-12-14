@@ -21,7 +21,9 @@ const std::set<Port<T>*>& Port<T>::typed_outward_bindings() const {
 
 template <class T>
 Port<T>* Port<T>::typed_inward_binding() const {
-  return dynamic_cast<Port<T>*>(inward_binding());
+  // we can use a static cast here since we know that this port is always
+  // connected with another Port<T>.
+  return static_cast<Port<T>*>(inward_binding());
 }
 
 template <class T>
