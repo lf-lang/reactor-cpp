@@ -363,7 +363,9 @@
 
 <span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
 <span class="n">Port</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;*</span> <span class="n">Port</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">typed_inward_binding</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
-  <span class="k">return</span> <span class="k">dynamic_cast</span><span class="o">&lt;</span><span class="n">Port</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;*&gt;</span><span class="p">(</span><span class="n">inward_binding</span><span class="p">());</span>
+  <span class="c1">// we can use a static cast here since we know that this port is always</span>
+  <span class="c1">// connected with another Port&lt;T&gt;.</span>
+  <span class="k">return</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">Port</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;*&gt;</span><span class="p">(</span><span class="n">inward_binding</span><span class="p">());</span>
 <span class="p">}</span>
 
 <span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>

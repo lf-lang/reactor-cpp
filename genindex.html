@@ -678,10 +678,10 @@
 </li>
       <li><a href="api/classreactor_1_1Port.html#_CPPv4N7reactor4Port3setENSt9nullptr_tE">reactor::Port::set (C++ function)</a>, <a href="api/classreactor_1_1Port.html#_CPPv4N7reactor4Port3setERK17ImmutableValuePtrI1TE">[1]</a>, <a href="api/classreactor_1_1Port.html#_CPPv4N7reactor4Port3setERK1T">[2]</a>, <a href="api/classreactor_1_1Port.html#_CPPv4N7reactor4Port3setERR15MutableValuePtrI1TE">[3]</a>, <a href="api/classreactor_1_1Port.html#_CPPv4N7reactor4Port3setERR1T">[4]</a>
 </li>
-      <li><a href="api/classreactor_1_1Port.html#_CPPv4N7reactor4Port8shutdownEv">reactor::Port::shutdown (C++ function)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/classreactor_1_1Port.html#_CPPv4N7reactor4Port8shutdownEv">reactor::Port::shutdown (C++ function)</a>
+</li>
       <li><a href="api/classreactor_1_1Port.html#_CPPv4N7reactor4Port7startupEv">reactor::Port::startup (C++ function)</a>
 </li>
       <li><a href="api/classreactor_1_1Port.html#_CPPv4NK7reactor4Port20typed_inward_bindingEv">reactor::Port::typed_inward_binding (C++ function)</a>
@@ -878,21 +878,15 @@
 </li>
       <li><a href="api/classreactor_1_1Scheduler.html#_CPPv4N7reactor9Scheduler5_stopE">reactor::Scheduler::_stop (C++ member)</a>
 </li>
-      <li><a href="api/classreactor_1_1Scheduler.html#_CPPv4N7reactor9Scheduler17cv_done_reactionsE">reactor::Scheduler::cv_done_reactions (C++ member)</a>
+      <li><a href="api/classreactor_1_1Scheduler.html#_CPPv4N7reactor9Scheduler18continue_executionE">reactor::Scheduler::continue_execution (C++ member)</a>
 </li>
       <li><a href="api/classreactor_1_1Scheduler.html#_CPPv4N7reactor9Scheduler18cv_ready_reactionsE">reactor::Scheduler::cv_ready_reactions (C++ member)</a>
 </li>
       <li><a href="api/classreactor_1_1Scheduler.html#_CPPv4N7reactor9Scheduler11cv_scheduleE">reactor::Scheduler::cv_schedule (C++ member)</a>
 </li>
-      <li><a href="api/classreactor_1_1Scheduler.html#_CPPv4N7reactor9Scheduler29dispatch_reactions_to_workersERKNSt6vectorIP8ReactionEE">reactor::Scheduler::dispatch_reactions_to_workers (C++ function)</a>
-</li>
       <li><a href="api/classreactor_1_1Scheduler.html#_CPPv4N7reactor9Scheduler11event_queueE">reactor::Scheduler::event_queue (C++ member)</a>
 </li>
       <li><a href="api/classreactor_1_1Scheduler.html#_CPPv4N7reactor9Scheduler8EventMapE">reactor::Scheduler::EventMap (C++ type)</a>
-</li>
-      <li><a href="api/classreactor_1_1Scheduler.html#_CPPv4N7reactor9Scheduler24execute_reactions_inlineERKNSt6vectorIP8ReactionEE">reactor::Scheduler::execute_reactions_inline (C++ function)</a>
-</li>
-      <li><a href="api/classreactor_1_1Scheduler.html#_CPPv4N7reactor9Scheduler19executing_reactionsE">reactor::Scheduler::executing_reactions (C++ member)</a>
 </li>
       <li><a href="api/classreactor_1_1Scheduler.html#_CPPv4N7reactor9Scheduler4lockEv">reactor::Scheduler::lock (C++ function)</a>
 </li>
@@ -902,13 +896,21 @@
 </li>
       <li><a href="api/classreactor_1_1Scheduler.html#_CPPv4N7reactor9Scheduler16m_reaction_queueE">reactor::Scheduler::m_reaction_queue (C++ member)</a>
 </li>
+      <li><a href="api/classreactor_1_1Scheduler.html#_CPPv4N7reactor9Scheduler17m_ready_reactionsE">reactor::Scheduler::m_ready_reactions (C++ member)</a>
+</li>
+      <li><a href="api/classreactor_1_1Scheduler.html#_CPPv4N7reactor9Scheduler17m_running_workersE">reactor::Scheduler::m_running_workers (C++ member)</a>
+</li>
       <li><a href="api/classreactor_1_1Scheduler.html#_CPPv4N7reactor9Scheduler10m_scheduleE">reactor::Scheduler::m_schedule (C++ member)</a>
 </li>
       <li><a href="api/classreactor_1_1Scheduler.html#_CPPv4N7reactor9Scheduler4nextEv">reactor::Scheduler::next (C++ function)</a>
 </li>
       <li><a href="api/classreactor_1_1Scheduler.html#_CPPv4N7reactor9Scheduler14reaction_queueE">reactor::Scheduler::reaction_queue (C++ member)</a>
 </li>
+      <li><a href="api/classreactor_1_1Scheduler.html#_CPPv4N7reactor9Scheduler18reaction_queue_posE">reactor::Scheduler::reaction_queue_pos (C++ member)</a>
+</li>
       <li><a href="api/classreactor_1_1Scheduler.html#_CPPv4N7reactor9Scheduler15ready_reactionsE">reactor::Scheduler::ready_reactions (C++ member)</a>
+</li>
+      <li><a href="api/classreactor_1_1Scheduler.html#_CPPv4N7reactor9Scheduler15running_workersE">reactor::Scheduler::running_workers (C++ member)</a>
 </li>
       <li><a href="api/classreactor_1_1Scheduler.html#_CPPv4N7reactor9Scheduler14schedule_asyncERK3TagP10BaseActionNSt8functionIFvvEEE">reactor::Scheduler::schedule_async (C++ function)</a>
 </li>
@@ -928,7 +930,7 @@
 </li>
       <li><a href="api/classreactor_1_1Scheduler.html#_CPPv4N7reactor9Scheduler4stopEv">reactor::Scheduler::stop (C++ function)</a>
 </li>
-      <li><a href="api/classreactor_1_1Scheduler.html#_CPPv4N7reactor9Scheduler9terminateE">reactor::Scheduler::terminate (C++ member)</a>
+      <li><a href="api/classreactor_1_1Scheduler.html#_CPPv4N7reactor9Scheduler17terminate_workersE">reactor::Scheduler::terminate_workers (C++ member)</a>
 </li>
       <li><a href="api/classreactor_1_1Scheduler.html#_CPPv4N7reactor9Scheduler6unlockEv">reactor::Scheduler::unlock (C++ function)</a>
 </li>
@@ -937,10 +939,6 @@
       <li><a href="api/classreactor_1_1Scheduler.html#_CPPv4N7reactor9Scheduler4workEj">reactor::Scheduler::work (C++ function)</a>
 </li>
       <li><a href="api/classreactor_1_1Scheduler.html#_CPPv4N7reactor9Scheduler14worker_threadsE">reactor::Scheduler::worker_threads (C++ member)</a>
-</li>
-      <li><a href="api/classreactor_1_1Scheduler.html#_CPPv4N7reactor9Scheduler8WorkItemE">reactor::Scheduler::WorkItem (C++ type)</a>
-</li>
-      <li><a href="api/classreactor_1_1Scheduler.html#_CPPv4N7reactor9Scheduler7WorkPtrE">reactor::Scheduler::WorkPtr (C++ type)</a>
 </li>
       <li><a href="api/classreactor_1_1Scheduler.html#_CPPv4N7reactor9SchedulerD0Ev">reactor::Scheduler::~Scheduler (C++ function)</a>
 </li>

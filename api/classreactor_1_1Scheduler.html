@@ -354,16 +354,6 @@
 <dd><div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric">Public Types</p>
 <dl class="cpp type">
-<dt id="_CPPv4N7reactor9Scheduler8WorkItemE">
-<span id="_CPPv3N7reactor9Scheduler8WorkItemE"></span><span id="_CPPv2N7reactor9Scheduler8WorkItemE"></span><span class="target" id="classreactor_1_1Scheduler_1a5a4a25635fcb20f268876a0bf70eb68e"></span><em class="property">using </em><code class="sig-name descname">WorkItem</code> = std::packaged_task&lt;void<span class="sig-paren">(</span>void<span class="sig-paren">)</span>&gt;<a class="headerlink" href="#_CPPv4N7reactor9Scheduler8WorkItemE" title="Permalink to this definition">¶</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp type">
-<dt id="_CPPv4N7reactor9Scheduler7WorkPtrE">
-<span id="_CPPv3N7reactor9Scheduler7WorkPtrE"></span><span id="_CPPv2N7reactor9Scheduler7WorkPtrE"></span><span class="target" id="classreactor_1_1Scheduler_1a4a4934dc58f294069b8c64435cdfe564"></span><em class="property">using </em><code class="sig-name descname">WorkPtr</code> = std::unique_ptr&lt;<a class="reference internal" href="#_CPPv4N7reactor9Scheduler8WorkItemE" title="reactor::Scheduler::WorkItem">WorkItem</a>&gt;<a class="headerlink" href="#_CPPv4N7reactor9Scheduler7WorkPtrE" title="Permalink to this definition">¶</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp type">
 <dt id="_CPPv4N7reactor9Scheduler8EventMapE">
 <span id="_CPPv3N7reactor9Scheduler8EventMapE"></span><span id="_CPPv2N7reactor9Scheduler8EventMapE"></span><span class="target" id="classreactor_1_1Scheduler_1aa32e06a71b7406a238616cc5d7b55610"></span><em class="property">using </em><code class="sig-name descname">EventMap</code> = std::map&lt;<a class="reference internal" href="classreactor_1_1BaseAction.html#_CPPv4N7reactor10BaseActionE" title="reactor::BaseAction">BaseAction</a>*, std::function&lt;void<span class="sig-paren">(</span>void<span class="sig-paren">)</span>&gt;&gt;<a class="headerlink" href="#_CPPv4N7reactor9Scheduler8EventMapE" title="Permalink to this definition">¶</a><br /></dt>
 <dd></dd></dl>
@@ -431,22 +421,12 @@
 
 <dl class="cpp function">
 <dt id="_CPPv4N7reactor9Scheduler4nextEv">
-<span id="_CPPv3N7reactor9Scheduler4nextEv"></span><span id="_CPPv2N7reactor9Scheduler4nextEv"></span><span id="reactor::Scheduler::next"></span><span class="target" id="classreactor_1_1Scheduler_1ad1c1bbd55c9933b9e5886d378419185c"></span>bool <code class="sig-name descname">next</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7reactor9Scheduler4nextEv" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3N7reactor9Scheduler4nextEv"></span><span id="_CPPv2N7reactor9Scheduler4nextEv"></span><span id="reactor::Scheduler::next"></span><span class="target" id="classreactor_1_1Scheduler_1a0eff99010fd3c5f5e7ae4f3cf7fe6fdd"></span>void <code class="sig-name descname">next</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7reactor9Scheduler4nextEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp function">
 <dt id="_CPPv4N7reactor9Scheduler15set_port_helperEP8BasePort">
 <span id="_CPPv3N7reactor9Scheduler15set_port_helperEP8BasePort"></span><span id="_CPPv2N7reactor9Scheduler15set_port_helperEP8BasePort"></span><span id="reactor::Scheduler::set_port_helper__BasePortP"></span><span class="target" id="classreactor_1_1Scheduler_1a09d04a0906b272908481b48ef12fc3f3"></span>void <code class="sig-name descname">set_port_helper</code><span class="sig-paren">(</span><a class="reference internal" href="classreactor_1_1BasePort.html#_CPPv4N7reactor8BasePortE" title="reactor::BasePort">BasePort</a> *<em>p</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7reactor9Scheduler15set_port_helperEP8BasePort" title="Permalink to this definition">¶</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp function">
-<dt id="_CPPv4N7reactor9Scheduler29dispatch_reactions_to_workersERKNSt6vectorIP8ReactionEE">
-<span id="_CPPv3N7reactor9Scheduler29dispatch_reactions_to_workersERKNSt6vectorIP8ReactionEE"></span><span id="_CPPv2N7reactor9Scheduler29dispatch_reactions_to_workersERKNSt6vectorIP8ReactionEE"></span><span id="reactor::Scheduler::dispatch_reactions_to_workers__std::vector:ReactionP:CR"></span><span class="target" id="classreactor_1_1Scheduler_1afd11a12a4dd2c8a6a82596d9148208e8"></span>void <code class="sig-name descname">dispatch_reactions_to_workers</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;<a class="reference internal" href="classreactor_1_1Reaction.html#_CPPv4N7reactor8ReactionE" title="reactor::Reaction">Reaction</a>*&gt; &amp;<em>reactions</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7reactor9Scheduler29dispatch_reactions_to_workersERKNSt6vectorIP8ReactionEE" title="Permalink to this definition">¶</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp function">
-<dt id="_CPPv4N7reactor9Scheduler24execute_reactions_inlineERKNSt6vectorIP8ReactionEE">
-<span id="_CPPv3N7reactor9Scheduler24execute_reactions_inlineERKNSt6vectorIP8ReactionEE"></span><span id="_CPPv2N7reactor9Scheduler24execute_reactions_inlineERKNSt6vectorIP8ReactionEE"></span><span id="reactor::Scheduler::execute_reactions_inline__std::vector:ReactionP:CR"></span><span class="target" id="classreactor_1_1Scheduler_1aaf483ce8d003c8322a878cbe9f5a2c63"></span>void <code class="sig-name descname">execute_reactions_inline</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;<a class="reference internal" href="classreactor_1_1Reaction.html#_CPPv4N7reactor8ReactionE" title="reactor::Reaction">Reaction</a>*&gt; &amp;<em>reactions</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7reactor9Scheduler24execute_reactions_inlineERKNSt6vectorIP8ReactionEE" title="Permalink to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
 </div>
@@ -455,11 +435,6 @@
 <dl class="cpp var">
 <dt id="_CPPv4N7reactor9Scheduler13using_workersE">
 <span id="_CPPv3N7reactor9Scheduler13using_workersE"></span><span id="_CPPv2N7reactor9Scheduler13using_workersE"></span><span id="reactor::Scheduler::using_workers__bC"></span><span class="target" id="classreactor_1_1Scheduler_1ac4b787be81d8b6d7a72ce987d24a2261"></span><em class="property">const</em> bool <code class="sig-name descname">using_workers</code><a class="headerlink" href="#_CPPv4N7reactor9Scheduler13using_workersE" title="Permalink to this definition">¶</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp var">
-<dt id="_CPPv4N7reactor9Scheduler9terminateE">
-<span id="_CPPv3N7reactor9Scheduler9terminateE"></span><span id="_CPPv2N7reactor9Scheduler9terminateE"></span><span id="reactor::Scheduler::terminate__b"></span><span class="target" id="classreactor_1_1Scheduler_1a25e5b848efc680452eef58a0fc0b773c"></span>bool <code class="sig-name descname">terminate</code> = {false}<a class="headerlink" href="#_CPPv4N7reactor9Scheduler9terminateE" title="Permalink to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp var">
@@ -518,13 +493,18 @@
 <dd></dd></dl>
 
 <dl class="cpp var">
-<dt id="_CPPv4N7reactor9Scheduler15ready_reactionsE">
-<span id="_CPPv3N7reactor9Scheduler15ready_reactionsE"></span><span id="_CPPv2N7reactor9Scheduler15ready_reactionsE"></span><span id="reactor::Scheduler::ready_reactions__std::vector:ReactionP:"></span><span class="target" id="classreactor_1_1Scheduler_1a03e5a171cbb041f02fd10fedf7f2f7de"></span>std::vector&lt;<a class="reference internal" href="classreactor_1_1Reaction.html#_CPPv4N7reactor8ReactionE" title="reactor::Reaction">Reaction</a>*&gt; <code class="sig-name descname">ready_reactions</code><a class="headerlink" href="#_CPPv4N7reactor9Scheduler15ready_reactionsE" title="Permalink to this definition">¶</a><br /></dt>
+<dt id="_CPPv4N7reactor9Scheduler18reaction_queue_posE">
+<span id="_CPPv3N7reactor9Scheduler18reaction_queue_posE"></span><span id="_CPPv2N7reactor9Scheduler18reaction_queue_posE"></span><span id="reactor::Scheduler::reaction_queue_pos__unsigned"></span><span class="target" id="classreactor_1_1Scheduler_1a183702037ff11283f8414ca67f9e61d3"></span>unsigned <code class="sig-name descname">reaction_queue_pos</code> = {std::numeric_limits&lt;unsigned&gt;::max()}<a class="headerlink" href="#_CPPv4N7reactor9Scheduler18reaction_queue_posE" title="Permalink to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp var">
-<dt id="_CPPv4N7reactor9Scheduler19executing_reactionsE">
-<span id="_CPPv3N7reactor9Scheduler19executing_reactionsE"></span><span id="_CPPv2N7reactor9Scheduler19executing_reactionsE"></span><span id="reactor::Scheduler::executing_reactions__std::set:ReactionP:"></span><span class="target" id="classreactor_1_1Scheduler_1a606c5c5af3e45a75b7304fdfd0283e14"></span>std::set&lt;<a class="reference internal" href="classreactor_1_1Reaction.html#_CPPv4N7reactor8ReactionE" title="reactor::Reaction">Reaction</a>*&gt; <code class="sig-name descname">executing_reactions</code><a class="headerlink" href="#_CPPv4N7reactor9Scheduler19executing_reactionsE" title="Permalink to this definition">¶</a><br /></dt>
+<dt id="_CPPv4N7reactor9Scheduler17m_ready_reactionsE">
+<span id="_CPPv3N7reactor9Scheduler17m_ready_reactionsE"></span><span id="_CPPv2N7reactor9Scheduler17m_ready_reactionsE"></span><span id="reactor::Scheduler::m_ready_reactions__std::mutex"></span><span class="target" id="classreactor_1_1Scheduler_1a9e44be924a87ce3c547efabe9596d4a8"></span>std::mutex <code class="sig-name descname">m_ready_reactions</code><a class="headerlink" href="#_CPPv4N7reactor9Scheduler17m_ready_reactionsE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N7reactor9Scheduler15ready_reactionsE">
+<span id="_CPPv3N7reactor9Scheduler15ready_reactionsE"></span><span id="_CPPv2N7reactor9Scheduler15ready_reactionsE"></span><span id="reactor::Scheduler::ready_reactions__std::vector:ReactionP:"></span><span class="target" id="classreactor_1_1Scheduler_1a03e5a171cbb041f02fd10fedf7f2f7de"></span>std::vector&lt;<a class="reference internal" href="classreactor_1_1Reaction.html#_CPPv4N7reactor8ReactionE" title="reactor::Reaction">Reaction</a>*&gt; <code class="sig-name descname">ready_reactions</code><a class="headerlink" href="#_CPPv4N7reactor9Scheduler15ready_reactionsE" title="Permalink to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp var">
@@ -533,13 +513,28 @@
 <dd></dd></dl>
 
 <dl class="cpp var">
-<dt id="_CPPv4N7reactor9Scheduler17cv_done_reactionsE">
-<span id="_CPPv3N7reactor9Scheduler17cv_done_reactionsE"></span><span id="_CPPv2N7reactor9Scheduler17cv_done_reactionsE"></span><span id="reactor::Scheduler::cv_done_reactions__std::condition_variable"></span><span class="target" id="classreactor_1_1Scheduler_1a5ce0b7fa5a71eaf46b1d423c1ff90557"></span>std::condition_variable <code class="sig-name descname">cv_done_reactions</code><a class="headerlink" href="#_CPPv4N7reactor9Scheduler17cv_done_reactionsE" title="Permalink to this definition">¶</a><br /></dt>
+<dt id="_CPPv4N7reactor9Scheduler17m_running_workersE">
+<span id="_CPPv3N7reactor9Scheduler17m_running_workersE"></span><span id="_CPPv2N7reactor9Scheduler17m_running_workersE"></span><span id="reactor::Scheduler::m_running_workers__std::mutex"></span><span class="target" id="classreactor_1_1Scheduler_1af7734dc7ed92a5cbee4b8fe75ddcfdb1"></span>std::mutex <code class="sig-name descname">m_running_workers</code><a class="headerlink" href="#_CPPv4N7reactor9Scheduler17m_running_workersE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N7reactor9Scheduler15running_workersE">
+<span id="_CPPv3N7reactor9Scheduler15running_workersE"></span><span id="_CPPv2N7reactor9Scheduler15running_workersE"></span><span id="reactor::Scheduler::running_workers__unsigned"></span><span class="target" id="classreactor_1_1Scheduler_1a63d97a5393cb001aa0fa19cb1325ed1d"></span>unsigned <code class="sig-name descname">running_workers</code> = {0}<a class="headerlink" href="#_CPPv4N7reactor9Scheduler15running_workersE" title="Permalink to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp var">
 <dt id="_CPPv4N7reactor9Scheduler5_stopE">
 <span id="_CPPv3N7reactor9Scheduler5_stopE"></span><span id="_CPPv2N7reactor9Scheduler5_stopE"></span><span id="reactor::Scheduler::_stop__std::atomic:b:"></span><span class="target" id="classreactor_1_1Scheduler_1a77d3790a2a37875efc1980ba55824561"></span>std::atomic&lt;bool&gt; <code class="sig-name descname">_stop</code> = {false}<a class="headerlink" href="#_CPPv4N7reactor9Scheduler5_stopE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N7reactor9Scheduler17terminate_workersE">
+<span id="_CPPv3N7reactor9Scheduler17terminate_workersE"></span><span id="_CPPv2N7reactor9Scheduler17terminate_workersE"></span><span id="reactor::Scheduler::terminate_workers__std::atomic:b:"></span><span class="target" id="classreactor_1_1Scheduler_1a109150f7e598f27c73ba832f48543099"></span>std::atomic&lt;bool&gt; <code class="sig-name descname">terminate_workers</code> = {false}<a class="headerlink" href="#_CPPv4N7reactor9Scheduler17terminate_workersE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N7reactor9Scheduler18continue_executionE">
+<span id="_CPPv3N7reactor9Scheduler18continue_executionE"></span><span id="_CPPv2N7reactor9Scheduler18continue_executionE"></span><span id="reactor::Scheduler::continue_execution__b"></span><span class="target" id="classreactor_1_1Scheduler_1a25b501d1d4aa3aade8a26a83357049d2"></span>bool <code class="sig-name descname">continue_execution</code> = {true}<a class="headerlink" href="#_CPPv4N7reactor9Scheduler18continue_executionE" title="Permalink to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
 </div>

@@ -361,33 +361,132 @@
 <span class="k">namespace</span> <span class="n">reactor</span> <span class="p">{</span>
 
 <span class="kt">void</span> <span class="n">Scheduler</span><span class="o">::</span><span class="n">work</span><span class="p">(</span><span class="kt">unsigned</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">log</span><span class="o">::</span><span class="n">Debug</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Starting worker &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">id</span><span class="p">;</span>
+  <span class="n">log</span><span class="o">::</span><span class="n">Debug</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;(Worker &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">id</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;) &quot;</span>
+               <span class="o">&lt;&lt;</span> <span class="s">&quot;Starting&quot;</span><span class="p">;</span>
 
   <span class="k">while</span> <span class="p">(</span><span class="nb">true</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">unique_lock</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">lock</span><span class="p">(</span><span class="n">m_reaction_queue</span><span class="p">);</span>
-    <span class="n">cv_ready_reactions</span><span class="p">.</span><span class="n">wait</span><span class="p">(</span>
-        <span class="n">lock</span><span class="p">,</span> <span class="p">[</span><span class="k">this</span><span class="p">]()</span> <span class="p">{</span> <span class="k">return</span> <span class="o">!</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">ready_reactions</span><span class="p">.</span><span class="n">empty</span><span class="p">()</span> <span class="o">||</span> <span class="n">terminate</span><span class="p">;</span> <span class="p">});</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">terminate</span><span class="p">)</span> <span class="p">{</span>
-      <span class="n">lock</span><span class="p">.</span><span class="n">unlock</span><span class="p">();</span>
+    <span class="c1">// break out of the while loop if a termination is indicated</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">terminate_workers</span><span class="p">.</span><span class="n">load</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">memory_order_acquire</span><span class="p">))</span> <span class="p">{</span>
       <span class="k">break</span><span class="p">;</span>
     <span class="p">}</span>
 
-    <span class="k">auto</span> <span class="n">reaction</span> <span class="o">=</span> <span class="n">ready_reactions</span><span class="p">.</span><span class="n">back</span><span class="p">();</span>
-    <span class="n">ready_reactions</span><span class="p">.</span><span class="n">pop_back</span><span class="p">();</span>
-    <span class="n">executing_reactions</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">reaction</span><span class="p">);</span>
-    <span class="n">lock</span><span class="p">.</span><span class="n">unlock</span><span class="p">();</span>
+    <span class="p">{</span>
+      <span class="k">auto</span> <span class="n">lg</span> <span class="o">=</span> <span class="n">using_workers</span> <span class="o">?</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_lock</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m_ready_reactions</span><span class="p">)</span>
+                              <span class="o">:</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_lock</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span><span class="p">();</span>
 
-    <span class="n">log</span><span class="o">::</span><span class="n">Debug</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Execute reaction &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">reaction</span><span class="o">-&gt;</span><span class="n">fqn</span><span class="p">();</span>
+      <span class="c1">// process ready reactions as long as there are any</span>
+      <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">ready_reactions</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span> <span class="p">{</span>
+        <span class="c1">// Check if there are reactions to be executed.</span>
+        <span class="c1">// If there is a ready reaction, remove it from the ready queue and add</span>
+        <span class="c1">// it to the list of reactions that are currently executing.</span>
+        <span class="k">auto</span> <span class="n">reaction</span> <span class="o">=</span> <span class="n">ready_reactions</span><span class="p">.</span><span class="n">back</span><span class="p">();</span>
+        <span class="n">ready_reactions</span><span class="p">.</span><span class="n">pop_back</span><span class="p">();</span>
 
-    <span class="c1">// do the work</span>
-    <span class="n">tracepoint</span><span class="p">(</span><span class="n">reactor_cpp</span><span class="p">,</span> <span class="n">reaction_execution_starts</span><span class="p">,</span> <span class="n">id</span><span class="p">,</span> <span class="n">reaction</span><span class="o">-&gt;</span><span class="n">fqn</span><span class="p">());</span>
-    <span class="n">reaction</span><span class="o">-&gt;</span><span class="n">trigger</span><span class="p">();</span>
-    <span class="n">tracepoint</span><span class="p">(</span><span class="n">reactor_cpp</span><span class="p">,</span> <span class="n">reaction_execution_finishes</span><span class="p">,</span> <span class="n">id</span><span class="p">,</span> <span class="n">reaction</span><span class="o">-&gt;</span><span class="n">fqn</span><span class="p">());</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">using_workers</span><span class="p">)</span>
+          <span class="n">lg</span><span class="p">.</span><span class="n">unlock</span><span class="p">();</span>
 
-    <span class="n">lock</span><span class="p">.</span><span class="n">lock</span><span class="p">();</span>
-    <span class="n">executing_reactions</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="n">reaction</span><span class="p">);</span>
-    <span class="n">lock</span><span class="p">.</span><span class="n">unlock</span><span class="p">();</span>
-    <span class="n">cv_done_reactions</span><span class="p">.</span><span class="n">notify_one</span><span class="p">();</span>
+        <span class="c1">// execute the reaction</span>
+        <span class="n">log</span><span class="o">::</span><span class="n">Debug</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;(Worker &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">id</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;) &quot;</span>
+                     <span class="o">&lt;&lt;</span> <span class="s">&quot;execute reaction &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">reaction</span><span class="o">-&gt;</span><span class="n">fqn</span><span class="p">();</span>
+        <span class="n">tracepoint</span><span class="p">(</span><span class="n">reactor_cpp</span><span class="p">,</span> <span class="n">reaction_execution_starts</span><span class="p">,</span> <span class="n">id</span><span class="p">,</span> <span class="n">reaction</span><span class="o">-&gt;</span><span class="n">fqn</span><span class="p">());</span>
+        <span class="n">reaction</span><span class="o">-&gt;</span><span class="n">trigger</span><span class="p">();</span>
+        <span class="n">tracepoint</span><span class="p">(</span><span class="n">reactor_cpp</span><span class="p">,</span> <span class="n">reaction_execution_finishes</span><span class="p">,</span> <span class="n">id</span><span class="p">,</span>
+                   <span class="n">reaction</span><span class="o">-&gt;</span><span class="n">fqn</span><span class="p">());</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">using_workers</span><span class="p">)</span>
+          <span class="n">lg</span><span class="p">.</span><span class="n">lock</span><span class="p">();</span>
+      <span class="p">}</span>
+    <span class="p">}</span>  <span class="c1">// m_ready_reactions</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">using_workers</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">unique_lock</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">lg</span><span class="p">(</span><span class="n">m_running_workers</span><span class="p">);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">running_workers</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// wait for reactions to become ready for execution, or for a terminate</span>
+        <span class="c1">// signal</span>
+        <span class="n">log</span><span class="o">::</span><span class="n">Debug</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;(Worker &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">id</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;) &quot;</span>
+                     <span class="o">&lt;&lt;</span> <span class="s">&quot;wait for ready reactions&quot;</span><span class="p">;</span>
+        <span class="n">running_workers</span><span class="o">--</span><span class="p">;</span>
+        <span class="n">cv_ready_reactions</span><span class="p">.</span><span class="n">wait</span><span class="p">(</span><span class="n">lg</span><span class="p">,</span> <span class="p">[</span><span class="k">this</span><span class="p">]()</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="o">!</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">ready_reactions</span><span class="p">.</span><span class="n">empty</span><span class="p">()</span> <span class="o">||</span> <span class="n">terminate_workers</span><span class="p">;</span>
+        <span class="p">});</span>
+        <span class="n">running_workers</span><span class="o">++</span><span class="p">;</span>
+        <span class="k">continue</span><span class="p">;</span>  <span class="c1">// start from the top after waking up</span>
+      <span class="p">}</span>
+      <span class="n">ASSERT</span><span class="p">(</span><span class="n">running_workers</span> <span class="o">==</span> <span class="mi">1</span><span class="p">);</span>
+      <span class="n">log</span><span class="o">::</span><span class="n">Debug</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;(Worker &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">id</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;) &quot;</span>
+                   <span class="o">&lt;&lt;</span> <span class="s">&quot;I am the last active worker.&quot;</span><span class="p">;</span>
+    <span class="p">}</span>  <span class="c1">// m_running_workers</span>
+
+    <span class="c1">// Reaching this point means that the current worker thread is the last</span>
+    <span class="c1">// running worker. Thus, it needs to schedule new reactions. This also</span>
+    <span class="c1">// implies that we can safely work with all the data structures without</span>
+    <span class="c1">// acquiring any mutexes.</span>
+
+    <span class="c1">// Have we finished iterating over the reaction queue?</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">reaction_queue_pos</span> <span class="o">&lt;</span> <span class="n">reaction_queue</span><span class="p">.</span><span class="n">size</span><span class="p">())</span> <span class="p">{</span>
+      <span class="c1">// No -&gt; continue iterating</span>
+      <span class="n">log</span><span class="o">::</span><span class="n">Debug</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;(Worker &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">id</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;) &quot;</span>
+                   <span class="o">&lt;&lt;</span> <span class="s">&quot;Scanning the reaction queue for ready reactions&quot;</span><span class="p">;</span>
+
+      <span class="c1">// continue the actual iteration</span>
+      <span class="k">while</span> <span class="p">(</span><span class="n">reaction_queue_pos</span> <span class="o">&lt;</span> <span class="n">reaction_queue</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&amp;&amp;</span>
+             <span class="n">reaction_queue</span><span class="p">[</span><span class="n">reaction_queue_pos</span><span class="p">].</span><span class="n">empty</span><span class="p">())</span> <span class="p">{</span>
+        <span class="n">reaction_queue_pos</span><span class="o">++</span><span class="p">;</span>
+      <span class="p">}</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="n">reaction_queue_pos</span> <span class="o">&lt;</span> <span class="n">reaction_queue</span><span class="p">.</span><span class="n">size</span><span class="p">())</span> <span class="p">{</span>
+        <span class="k">auto</span><span class="o">&amp;</span> <span class="n">reactions</span> <span class="o">=</span> <span class="n">reaction_queue</span><span class="p">[</span><span class="n">reaction_queue_pos</span><span class="p">];</span>
+
+        <span class="c1">// any ready reactions of current priority?</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">reactions</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span> <span class="p">{</span>
+          <span class="n">log</span><span class="o">::</span><span class="n">Debug</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;(Worker &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">id</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;) &quot;</span>
+                       <span class="o">&lt;&lt;</span> <span class="s">&quot;Process reactions of priority &quot;</span>
+                       <span class="o">&lt;&lt;</span> <span class="n">reaction_queue_pos</span><span class="p">;</span>
+
+          <span class="c1">// Make sure that any reaction is only executed once even if it</span>
+          <span class="c1">// was triggered multiple times.</span>
+          <span class="n">std</span><span class="o">::</span><span class="n">sort</span><span class="p">(</span><span class="n">reactions</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">reactions</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+          <span class="n">reactions</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">unique</span><span class="p">(</span><span class="n">reactions</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">reactions</span><span class="p">.</span><span class="n">end</span><span class="p">()),</span>
+                          <span class="n">reactions</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+
+          <span class="c1">// place all ready reactions on the ready queue</span>
+          <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">r</span> <span class="p">:</span> <span class="n">reactions</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">log</span><span class="o">::</span><span class="n">Debug</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;(Worker &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">id</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;) &quot;</span>
+                         <span class="o">&lt;&lt;</span> <span class="s">&quot;Reaction &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">r</span><span class="o">-&gt;</span><span class="n">fqn</span><span class="p">()</span>
+                         <span class="o">&lt;&lt;</span> <span class="s">&quot; is ready for execution&quot;</span><span class="p">;</span>
+            <span class="n">tracepoint</span><span class="p">(</span><span class="n">reactor_cpp</span><span class="p">,</span> <span class="n">trigger_reaction</span><span class="p">,</span> <span class="n">r</span><span class="o">-&gt;</span><span class="n">container</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">fqn</span><span class="p">(),</span>
+                       <span class="n">r</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">(),</span> <span class="n">_logical_time</span><span class="p">);</span>
+            <span class="n">ready_reactions</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">r</span><span class="p">);</span>
+          <span class="p">}</span>
+
+          <span class="n">reactions</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="n">ready_reactions</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// if there is only one reaction, then this worker processes it</span>
+        <span class="c1">// directly</span>
+        <span class="k">continue</span><span class="p">;</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">ready_reactions</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// notify other workers if there is more than one ready reaction</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">using_workers</span><span class="p">)</span> <span class="p">{</span>
+          <span class="n">cv_ready_reactions</span><span class="p">.</span><span class="n">notify_all</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">continue</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="c1">// if we reach this point, all reactions in the ready queue where processed</span>
+    <span class="c1">// and we need to call next() or terminate the execution</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">continue_execution</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">log</span><span class="o">::</span><span class="n">Debug</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;(Worker &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">id</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;) &quot;</span>
+                   <span class="o">&lt;&lt;</span> <span class="s">&quot;call next()&quot;</span><span class="p">;</span>
+      <span class="n">next</span><span class="p">();</span>
+      <span class="n">reaction_queue_pos</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="n">terminate_workers</span><span class="p">.</span><span class="n">store</span><span class="p">(</span><span class="nb">true</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">memory_order_release</span><span class="p">);</span>
+      <span class="n">cv_ready_reactions</span><span class="p">.</span><span class="n">notify_all</span><span class="p">();</span>
+    <span class="p">}</span>
   <span class="p">}</span>
 
   <span class="n">log</span><span class="o">::</span><span class="n">Debug</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Stopping worker &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">id</span><span class="p">;</span>
@@ -399,21 +498,11 @@
   <span class="c1">// initialize the reaction queue</span>
   <span class="n">reaction_queue</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">_environment</span><span class="o">-&gt;</span><span class="n">max_reaction_index</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
 
-  <span class="k">if</span> <span class="p">(</span><span class="n">using_workers</span><span class="p">)</span> <span class="p">{</span>
-    <span class="c1">// start worker threads</span>
-    <span class="k">for</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">_environment</span><span class="o">-&gt;</span><span class="n">num_workers</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-      <span class="n">worker_threads</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">([</span><span class="k">this</span><span class="p">,</span> <span class="n">i</span><span class="p">]()</span> <span class="p">{</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">work</span><span class="p">(</span><span class="n">i</span><span class="p">);</span> <span class="p">});</span>
-    <span class="p">}</span>
+  <span class="n">running_workers</span> <span class="o">=</span> <span class="n">_environment</span><span class="o">-&gt;</span><span class="n">num_workers</span><span class="p">();</span>
+  <span class="c1">// start worker threads</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">_environment</span><span class="o">-&gt;</span><span class="n">num_workers</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">worker_threads</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">([</span><span class="k">this</span><span class="p">,</span> <span class="n">i</span><span class="p">]()</span> <span class="p">{</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">work</span><span class="p">(</span><span class="n">i</span><span class="p">);</span> <span class="p">});</span>
   <span class="p">}</span>
-
-  <span class="k">while</span> <span class="p">(</span><span class="n">next</span><span class="p">())</span> <span class="p">{</span>
-  <span class="p">}</span>
-
-  <span class="p">{</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">lock_guard</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">lg</span><span class="p">(</span><span class="n">m_reaction_queue</span><span class="p">);</span>
-    <span class="n">terminate</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
-  <span class="p">}</span>
-  <span class="n">cv_ready_reactions</span><span class="p">.</span><span class="n">notify_all</span><span class="p">();</span>
 
   <span class="c1">// join all worker threads</span>
   <span class="k">for</span> <span class="p">(</span><span class="k">auto</span><span class="o">&amp;</span> <span class="nl">t</span> <span class="p">:</span> <span class="n">worker_threads</span><span class="p">)</span> <span class="p">{</span>
@@ -421,9 +510,23 @@
   <span class="p">}</span>
 <span class="p">}</span>
 
-<span class="kt">bool</span> <span class="n">Scheduler</span><span class="o">::</span><span class="n">next</span><span class="p">()</span> <span class="p">{</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">EventMap</span><span class="o">&gt;</span> <span class="n">events</span><span class="p">{</span><span class="k">nullptr</span><span class="p">};</span>
-  <span class="kt">bool</span> <span class="n">run_again</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+<span class="kt">void</span> <span class="n">Scheduler</span><span class="o">::</span><span class="n">next</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">static</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">EventMap</span><span class="o">&gt;</span> <span class="n">events</span><span class="p">{</span><span class="k">nullptr</span><span class="p">};</span>
+
+  <span class="c1">// clean up before scheduling any new events</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">events</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// cleanup all triggered actions</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">auto</span><span class="o">&amp;</span> <span class="nl">kv</span> <span class="p">:</span> <span class="o">*</span><span class="n">events</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">kv</span><span class="p">.</span><span class="n">first</span><span class="o">-&gt;</span><span class="n">cleanup</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="n">events</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+
+    <span class="c1">// cleanup all set ports</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">p</span> <span class="p">:</span> <span class="n">set_ports</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">p</span><span class="o">-&gt;</span><span class="n">cleanup</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="n">set_ports</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+  <span class="p">}</span>
 
   <span class="p">{</span>
     <span class="n">std</span><span class="o">::</span><span class="n">unique_lock</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">lock</span><span class="p">{</span><span class="n">m_schedule</span><span class="p">};</span>
@@ -432,74 +535,71 @@
     <span class="k">if</span> <span class="p">(</span><span class="n">event_queue</span><span class="p">.</span><span class="n">empty</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">_stop</span><span class="p">)</span> <span class="p">{</span>
       <span class="k">if</span> <span class="p">(</span><span class="n">_environment</span><span class="o">-&gt;</span><span class="n">run_forever</span><span class="p">())</span> <span class="p">{</span>
         <span class="c1">// wait for a new asynchronous event</span>
-        <span class="n">cv_schedule</span><span class="p">.</span><span class="n">wait</span><span class="p">(</span><span class="n">lock</span><span class="p">,</span> <span class="p">[</span><span class="k">this</span><span class="p">]()</span> <span class="p">{</span> <span class="k">return</span> <span class="o">!</span><span class="n">event_queue</span><span class="p">.</span><span class="n">empty</span><span class="p">();</span> <span class="p">});</span>
+        <span class="n">cv_schedule</span><span class="p">.</span><span class="n">wait</span><span class="p">(</span><span class="n">lock</span><span class="p">,</span>
+                         <span class="p">[</span><span class="k">this</span><span class="p">]()</span> <span class="p">{</span> <span class="k">return</span> <span class="o">!</span><span class="n">event_queue</span><span class="p">.</span><span class="n">empty</span><span class="p">()</span> <span class="o">||</span> <span class="n">_stop</span><span class="p">;</span> <span class="p">});</span>
       <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
         <span class="n">log</span><span class="o">::</span><span class="n">Debug</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;No more events in queue. -&gt; Terminate!&quot;</span><span class="p">;</span>
         <span class="n">_environment</span><span class="o">-&gt;</span><span class="n">sync_shutdown</span><span class="p">();</span>
-
-        <span class="c1">// The shutdown call might schedule shutdown reactions. If non was</span>
-        <span class="c1">// scheduled, we simply return.</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">event_queue</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span> <span class="p">{</span>
-          <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
-        <span class="p">}</span>
       <span class="p">}</span>
     <span class="p">}</span>
 
-    <span class="k">if</span> <span class="p">(</span><span class="n">_stop</span><span class="p">)</span> <span class="p">{</span>
-      <span class="n">run_again</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
-      <span class="n">log</span><span class="o">::</span><span class="n">Debug</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Shutting down the scheduler&quot;</span><span class="p">;</span>
-      <span class="n">Tag</span> <span class="n">t_next</span> <span class="o">=</span> <span class="n">Tag</span><span class="o">::</span><span class="n">from_logical_time</span><span class="p">(</span><span class="n">_logical_time</span><span class="p">).</span><span class="n">delay</span><span class="p">();</span>
-      <span class="k">if</span> <span class="p">(</span><span class="n">t_next</span> <span class="o">==</span> <span class="n">event_queue</span><span class="p">.</span><span class="n">begin</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">first</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">log</span><span class="o">::</span><span class="n">Debug</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Schedule the last round of reactions including all &quot;</span>
-                        <span class="s">&quot;termination reactions&quot;</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">events</span> <span class="o">==</span> <span class="k">nullptr</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">_stop</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">continue_execution</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">log</span><span class="o">::</span><span class="n">Debug</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Shutting down the scheduler&quot;</span><span class="p">;</span>
+        <span class="n">Tag</span> <span class="n">t_next</span> <span class="o">=</span> <span class="n">Tag</span><span class="o">::</span><span class="n">from_logical_time</span><span class="p">(</span><span class="n">_logical_time</span><span class="p">).</span><span class="n">delay</span><span class="p">();</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">t_next</span> <span class="o">==</span> <span class="n">event_queue</span><span class="p">.</span><span class="n">begin</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">first</span><span class="p">)</span> <span class="p">{</span>
+          <span class="n">log</span><span class="o">::</span><span class="n">Debug</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Schedule the last round of reactions including all &quot;</span>
+                          <span class="s">&quot;termination reactions&quot;</span><span class="p">;</span>
+          <span class="n">events</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">event_queue</span><span class="p">.</span><span class="n">begin</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">);</span>
+          <span class="n">event_queue</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="n">event_queue</span><span class="p">.</span><span class="n">begin</span><span class="p">());</span>
+          <span class="n">log</span><span class="o">::</span><span class="n">Debug</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;advance logical time to tag [&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">t_next</span><span class="p">.</span><span class="n">time_point</span><span class="p">()</span>
+                       <span class="o">&lt;&lt;</span> <span class="s">&quot;, &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">t_next</span><span class="p">.</span><span class="n">micro_step</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;]&quot;</span><span class="p">;</span>
+          <span class="n">_logical_time</span><span class="p">.</span><span class="n">advance_to</span><span class="p">(</span><span class="n">t_next</span><span class="p">);</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+          <span class="k">return</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="c1">// collect events of the next tag</span>
+        <span class="k">auto</span> <span class="n">t_next</span> <span class="o">=</span> <span class="n">event_queue</span><span class="p">.</span><span class="n">begin</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">first</span><span class="p">;</span>
+
+        <span class="c1">// synchronize with physical time if not in fast forward mode</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">_environment</span><span class="o">-&gt;</span><span class="n">fast_fwd_execution</span><span class="p">())</span> <span class="p">{</span>
+          <span class="c1">// keep track of the current physical time in a static variable</span>
+          <span class="k">static</span> <span class="k">auto</span> <span class="n">physical_time</span> <span class="o">=</span> <span class="n">TimePoint</span><span class="o">::</span><span class="n">min</span><span class="p">();</span>
+
+          <span class="c1">// If physical time is smaller than the next logical time point,</span>
+          <span class="c1">// then update the physical time. This step is small optimization to</span>
+          <span class="c1">// avoid calling get_physical_time() in every iteration as this</span>
+          <span class="c1">// would add a significant overhead.</span>
+          <span class="k">if</span> <span class="p">(</span><span class="n">physical_time</span> <span class="o">&lt;</span> <span class="n">t_next</span><span class="p">.</span><span class="n">time_point</span><span class="p">())</span>
+            <span class="n">physical_time</span> <span class="o">=</span> <span class="n">get_physical_time</span><span class="p">();</span>
+
+          <span class="c1">// If physical time is still smaller than the next logical time</span>
+          <span class="c1">// point, then wait until the next tag or until a new event is</span>
+          <span class="c1">// inserted asynchronously into the queue</span>
+          <span class="k">if</span> <span class="p">(</span><span class="n">physical_time</span> <span class="o">&lt;</span> <span class="n">t_next</span><span class="p">.</span><span class="n">time_point</span><span class="p">())</span> <span class="p">{</span>
+            <span class="k">auto</span> <span class="n">status</span> <span class="o">=</span> <span class="n">cv_schedule</span><span class="p">.</span><span class="n">wait_until</span><span class="p">(</span><span class="n">lock</span><span class="p">,</span> <span class="n">t_next</span><span class="p">.</span><span class="n">time_point</span><span class="p">());</span>
+            <span class="c1">// Start over if the event queue was modified</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">status</span> <span class="o">==</span> <span class="n">std</span><span class="o">::</span><span class="n">cv_status</span><span class="o">::</span><span class="n">no_timeout</span><span class="p">)</span> <span class="p">{</span>
+              <span class="k">continue</span><span class="p">;</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+              <span class="c1">// update physical time and continue otherwise</span>
+              <span class="n">physical_time</span> <span class="o">=</span> <span class="n">t_next</span><span class="p">.</span><span class="n">time_point</span><span class="p">();</span>
+            <span class="p">}</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="c1">// retrieve all events with tag equal to current logical time from the</span>
+        <span class="c1">// queue</span>
         <span class="n">events</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">event_queue</span><span class="p">.</span><span class="n">begin</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">);</span>
         <span class="n">event_queue</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="n">event_queue</span><span class="p">.</span><span class="n">begin</span><span class="p">());</span>
+
+        <span class="c1">// advance logical time</span>
         <span class="n">log</span><span class="o">::</span><span class="n">Debug</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;advance logical time to tag [&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">t_next</span><span class="p">.</span><span class="n">time_point</span><span class="p">()</span>
                      <span class="o">&lt;&lt;</span> <span class="s">&quot;, &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">t_next</span><span class="p">.</span><span class="n">micro_step</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;]&quot;</span><span class="p">;</span>
         <span class="n">_logical_time</span><span class="p">.</span><span class="n">advance_to</span><span class="p">(</span><span class="n">t_next</span><span class="p">);</span>
-      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
       <span class="p">}</span>
-    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-      <span class="c1">// collect events of the next tag</span>
-      <span class="k">auto</span> <span class="n">t_next</span> <span class="o">=</span> <span class="n">event_queue</span><span class="p">.</span><span class="n">begin</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">first</span><span class="p">;</span>
-
-      <span class="c1">// synchronize with physical time if not in fast forward mode</span>
-      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">_environment</span><span class="o">-&gt;</span><span class="n">fast_fwd_execution</span><span class="p">())</span> <span class="p">{</span>
-        <span class="c1">// keep track of the current physical time in a static variable</span>
-        <span class="k">static</span> <span class="k">auto</span> <span class="n">physical_time</span> <span class="o">=</span> <span class="n">TimePoint</span><span class="o">::</span><span class="n">min</span><span class="p">();</span>
-
-        <span class="c1">// If physical time is smaller than the next logical time point, then</span>
-        <span class="c1">// update the physical time. This step is small optimization to avoid</span>
-        <span class="c1">// calling get_physical_time() in every iteration as this would add</span>
-        <span class="c1">// a significant overhead.</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">physical_time</span> <span class="o">&lt;</span> <span class="n">t_next</span><span class="p">.</span><span class="n">time_point</span><span class="p">())</span>
-          <span class="n">physical_time</span> <span class="o">=</span> <span class="n">get_physical_time</span><span class="p">();</span>
-
-        <span class="c1">// If physical time is still smaller than the next logical time point,</span>
-        <span class="c1">// then wait until the next tag or until a new event is inserted</span>
-        <span class="c1">// asynchronously into the queue</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">physical_time</span> <span class="o">&lt;</span> <span class="n">t_next</span><span class="p">.</span><span class="n">time_point</span><span class="p">())</span> <span class="p">{</span>
-          <span class="k">auto</span> <span class="n">status</span> <span class="o">=</span> <span class="n">cv_schedule</span><span class="p">.</span><span class="n">wait_until</span><span class="p">(</span><span class="n">lock</span><span class="p">,</span> <span class="n">t_next</span><span class="p">.</span><span class="n">time_point</span><span class="p">());</span>
-          <span class="c1">// Start over if the event queue was modified</span>
-          <span class="k">if</span> <span class="p">(</span><span class="n">status</span> <span class="o">==</span> <span class="n">std</span><span class="o">::</span><span class="n">cv_status</span><span class="o">::</span><span class="n">no_timeout</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
-          <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-            <span class="c1">// update physical time and continue otherwise</span>
-            <span class="n">physical_time</span> <span class="o">=</span> <span class="n">t_next</span><span class="p">.</span><span class="n">time_point</span><span class="p">();</span>
-          <span class="p">}</span>
-        <span class="p">}</span>
-      <span class="p">}</span>
-
-      <span class="c1">// retrieve all events with tag equal to current logical time from the</span>
-      <span class="c1">// queue</span>
-      <span class="n">events</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">event_queue</span><span class="p">.</span><span class="n">begin</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">);</span>
-      <span class="n">event_queue</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="n">event_queue</span><span class="p">.</span><span class="n">begin</span><span class="p">());</span>
-
-      <span class="c1">// advance logical time</span>
-      <span class="n">log</span><span class="o">::</span><span class="n">Debug</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;advance logical time to tag [&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">t_next</span><span class="p">.</span><span class="n">time_point</span><span class="p">()</span>
-                   <span class="o">&lt;&lt;</span> <span class="s">&quot;, &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">t_next</span><span class="p">.</span><span class="n">micro_step</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;]&quot;</span><span class="p">;</span>
-      <span class="n">_logical_time</span><span class="p">.</span><span class="n">advance_to</span><span class="p">(</span><span class="n">t_next</span><span class="p">);</span>
     <span class="p">}</span>
   <span class="p">}</span>  <span class="c1">// mutex m_schedule</span>
 
@@ -512,7 +612,6 @@
     <span class="p">}</span>
   <span class="p">}</span>
 
-  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">future</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;&gt;</span> <span class="n">futures</span><span class="p">;</span>
   <span class="k">for</span> <span class="p">(</span><span class="k">auto</span><span class="o">&amp;</span> <span class="nl">kv</span> <span class="p">:</span> <span class="o">*</span><span class="n">events</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">n</span> <span class="p">:</span> <span class="n">kv</span><span class="p">.</span><span class="n">first</span><span class="o">-&gt;</span><span class="n">triggers</span><span class="p">())</span> <span class="p">{</span>
       <span class="c1">// There is no need to acquire the mutex. At this point the scheduler</span>
@@ -520,77 +619,6 @@
       <span class="c1">// workers are running</span>
       <span class="n">reaction_queue</span><span class="p">[</span><span class="n">n</span><span class="o">-&gt;</span><span class="n">index</span><span class="p">()].</span><span class="n">push_back</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
     <span class="p">}</span>
-  <span class="p">}</span>
-
-  <span class="c1">// process all reactions in the queue in order of there index</span>
-  <span class="k">for</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">reaction_queue</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">auto</span><span class="o">&amp;</span> <span class="n">reactions</span> <span class="o">=</span> <span class="n">reaction_queue</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
-
-    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">reactions</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span> <span class="p">{</span>
-      <span class="n">log</span><span class="o">::</span><span class="n">Debug</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Process reactions of priority &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">i</span><span class="p">;</span>
-
-      <span class="c1">// Make sure that any reaction is only executed once even if it was</span>
-      <span class="c1">// triggered multiple times.</span>
-      <span class="n">std</span><span class="o">::</span><span class="n">sort</span><span class="p">(</span><span class="n">reactions</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">reactions</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
-      <span class="n">reactions</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">unique</span><span class="p">(</span><span class="n">reactions</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">reactions</span><span class="p">.</span><span class="n">end</span><span class="p">()),</span>
-                      <span class="n">reactions</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
-
-      <span class="k">if</span> <span class="p">(</span><span class="n">using_workers</span> <span class="o">&amp;&amp;</span> <span class="n">reactions</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">dispatch_reactions_to_workers</span><span class="p">(</span><span class="n">reactions</span><span class="p">);</span>
-      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-        <span class="n">execute_reactions_inline</span><span class="p">(</span><span class="n">reactions</span><span class="p">);</span>
-      <span class="p">}</span>
-      <span class="n">reactions</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
-
-  <span class="c1">// cleanup all triggered actions</span>
-  <span class="k">for</span> <span class="p">(</span><span class="k">auto</span><span class="o">&amp;</span> <span class="nl">kv</span> <span class="p">:</span> <span class="o">*</span><span class="n">events</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">kv</span><span class="p">.</span><span class="n">first</span><span class="o">-&gt;</span><span class="n">cleanup</span><span class="p">();</span>
-  <span class="p">}</span>
-
-  <span class="c1">// cleanup all set ports</span>
-  <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">p</span> <span class="p">:</span> <span class="n">set_ports</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">p</span><span class="o">-&gt;</span><span class="n">cleanup</span><span class="p">();</span>
-  <span class="p">}</span>
-  <span class="n">set_ports</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
-
-  <span class="k">return</span> <span class="n">run_again</span><span class="p">;</span>
-<span class="p">}</span>  <span class="c1">// namespace reactor</span>
-
-<span class="kt">void</span> <span class="n">Scheduler</span><span class="o">::</span><span class="n">dispatch_reactions_to_workers</span><span class="p">(</span>
-    <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Reaction</span><span class="o">*&gt;&amp;</span> <span class="n">reactions</span><span class="p">)</span> <span class="p">{</span>
-  <span class="c1">// dispatch all ready reactions</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">unique_lock</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">lock</span><span class="p">(</span><span class="n">m_reaction_queue</span><span class="p">);</span>
-  <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">r</span> <span class="p">:</span> <span class="n">reactions</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">log</span><span class="o">::</span><span class="n">Debug</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Schedule reaction &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">r</span><span class="o">-&gt;</span><span class="n">fqn</span><span class="p">();</span>
-    <span class="n">tracepoint</span><span class="p">(</span><span class="n">reactor_cpp</span><span class="p">,</span> <span class="n">trigger_reaction</span><span class="p">,</span> <span class="n">r</span><span class="o">-&gt;</span><span class="n">container</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">fqn</span><span class="p">(),</span> <span class="n">r</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">(),</span>
-               <span class="n">_logical_time</span><span class="p">);</span>
-    <span class="n">ready_reactions</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">r</span><span class="p">);</span>
-  <span class="p">}</span>
-  <span class="n">lock</span><span class="p">.</span><span class="n">unlock</span><span class="p">();</span>
-
-  <span class="c1">// notify workers about ready reactions</span>
-  <span class="n">cv_ready_reactions</span><span class="p">.</span><span class="n">notify_all</span><span class="p">();</span>
-
-  <span class="c1">// we need to acquire the mutex now as workers are running</span>
-  <span class="n">lock</span><span class="p">.</span><span class="n">lock</span><span class="p">();</span>
-  <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">ready_reactions</span><span class="p">.</span><span class="n">empty</span><span class="p">()</span> <span class="o">||</span> <span class="o">!</span><span class="n">executing_reactions</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span> <span class="p">{</span>
-    <span class="n">log</span><span class="o">::</span><span class="n">Debug</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Waiting for workers ...&quot;</span><span class="p">;</span>
-    <span class="n">cv_done_reactions</span><span class="p">.</span><span class="n">wait</span><span class="p">(</span><span class="n">lock</span><span class="p">);</span>
-  <span class="p">}</span>
-  <span class="n">lock</span><span class="p">.</span><span class="n">unlock</span><span class="p">();</span>
-<span class="p">}</span>
-
-<span class="kt">void</span> <span class="n">Scheduler</span><span class="o">::</span><span class="n">execute_reactions_inline</span><span class="p">(</span>
-    <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Reaction</span><span class="o">*&gt;&amp;</span> <span class="n">reactions</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">r</span> <span class="p">:</span> <span class="n">reactions</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">log</span><span class="o">::</span><span class="n">Debug</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Execute reaction &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">r</span><span class="o">-&gt;</span><span class="n">fqn</span><span class="p">();</span>
-    <span class="n">tracepoint</span><span class="p">(</span><span class="n">reactor_cpp</span><span class="p">,</span> <span class="n">trigger_reaction</span><span class="p">,</span> <span class="n">r</span><span class="o">-&gt;</span><span class="n">container</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">fqn</span><span class="p">(),</span> <span class="n">r</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">(),</span>
-               <span class="n">_logical_time</span><span class="p">);</span>
-    <span class="n">tracepoint</span><span class="p">(</span><span class="n">reactor_cpp</span><span class="p">,</span> <span class="n">reaction_execution_starts</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">r</span><span class="o">-&gt;</span><span class="n">fqn</span><span class="p">());</span>
-    <span class="n">r</span><span class="o">-&gt;</span><span class="n">trigger</span><span class="p">();</span>
-    <span class="n">tracepoint</span><span class="p">(</span><span class="n">reactor_cpp</span><span class="p">,</span> <span class="n">reaction_execution_finishes</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">r</span><span class="o">-&gt;</span><span class="n">fqn</span><span class="p">());</span>
   <span class="p">}</span>
 <span class="p">}</span>
 
@@ -637,12 +665,12 @@
 
 <span class="kt">void</span> <span class="n">Scheduler</span><span class="o">::</span><span class="n">set_port</span><span class="p">(</span><span class="n">BasePort</span><span class="o">*</span> <span class="n">p</span><span class="p">)</span> <span class="p">{</span>
   <span class="n">log</span><span class="o">::</span><span class="n">Debug</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Set port &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">p</span><span class="o">-&gt;</span><span class="n">fqn</span><span class="p">();</span>
-  <span class="k">auto</span> <span class="n">lg</span> <span class="o">=</span> <span class="n">using_workers</span> <span class="o">?</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_lock</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m_event_queue</span><span class="p">)</span>
+  <span class="k">auto</span> <span class="n">lg</span> <span class="o">=</span> <span class="n">using_workers</span> <span class="o">?</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_lock</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m_reaction_queue</span><span class="p">)</span>
                           <span class="o">:</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_lock</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span><span class="p">();</span>
   <span class="c1">// We do not check here if p is already in the list. This means clean()</span>
-  <span class="c1">// could be called multiple times for a single port. However, calling clean()</span>
-  <span class="c1">// multiple time is not harmful and more efficient then checking if the</span>
-  <span class="c1">// port is already in the list.</span>
+  <span class="c1">// could be called multiple times for a single port. However, calling</span>
+  <span class="c1">// clean() multiple time is not harmful and more efficient then checking if</span>
+  <span class="c1">// the port is already in the list.</span>
   <span class="n">set_ports</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>
   <span class="c1">// recursively search for triggered reactions</span>
   <span class="n">set_port_helper</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>

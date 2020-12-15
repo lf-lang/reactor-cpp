@@ -366,13 +366,10 @@
 
 <span class="k">class</span> <span class="nc">Scheduler</span> <span class="p">{</span>
  <span class="k">public</span><span class="o">:</span>
-  <span class="k">using</span> <span class="n">WorkItem</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">packaged_task</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="o">&gt;</span><span class="p">;</span>
-  <span class="k">using</span> <span class="n">WorkPtr</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">WorkItem</span><span class="o">&gt;</span><span class="p">;</span>
   <span class="k">using</span> <span class="n">EventMap</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="n">BaseAction</span><span class="o">*</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="p">;</span>
 
  <span class="k">private</span><span class="o">:</span>
   <span class="k">const</span> <span class="kt">bool</span> <span class="n">using_workers</span><span class="p">;</span>
-  <span class="kt">bool</span> <span class="n">terminate</span><span class="p">{</span><span class="nb">false</span><span class="p">};</span>
   <span class="n">LogicalTime</span> <span class="n">_logical_time</span><span class="p">{};</span>
 
   <span class="n">Environment</span><span class="o">*</span> <span class="n">_environment</span><span class="p">;</span>
@@ -384,26 +381,28 @@
 
   <span class="n">std</span><span class="o">::</span><span class="n">mutex</span> <span class="n">m_event_queue</span><span class="p">;</span>
   <span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="n">Tag</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">EventMap</span><span class="o">&gt;&gt;</span> <span class="n">event_queue</span><span class="p">;</span>
-
   <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">BasePort</span><span class="o">*&gt;</span> <span class="n">set_ports</span><span class="p">;</span>
 
   <span class="n">std</span><span class="o">::</span><span class="n">mutex</span> <span class="n">m_reaction_queue</span><span class="p">;</span>
   <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Reaction</span><span class="o">*&gt;&gt;</span> <span class="n">reaction_queue</span><span class="p">;</span>
+  <span class="kt">unsigned</span> <span class="n">reaction_queue_pos</span><span class="p">{</span><span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="kt">unsigned</span><span class="o">&gt;::</span><span class="n">max</span><span class="p">()};</span>
+
+  <span class="n">std</span><span class="o">::</span><span class="n">mutex</span> <span class="n">m_ready_reactions</span><span class="p">;</span>
   <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Reaction</span><span class="o">*&gt;</span> <span class="n">ready_reactions</span><span class="p">;</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">Reaction</span><span class="o">*&gt;</span> <span class="n">executing_reactions</span><span class="p">;</span>
   <span class="n">std</span><span class="o">::</span><span class="n">condition_variable</span> <span class="n">cv_ready_reactions</span><span class="p">;</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">condition_variable</span> <span class="n">cv_done_reactions</span><span class="p">;</span>
+
+  <span class="n">std</span><span class="o">::</span><span class="n">mutex</span> <span class="n">m_running_workers</span><span class="p">;</span>
+  <span class="kt">unsigned</span> <span class="n">running_workers</span><span class="p">{</span><span class="mi">0</span><span class="p">};</span>
 
   <span class="kt">void</span> <span class="nf">work</span><span class="p">(</span><span class="kt">unsigned</span> <span class="n">id</span><span class="p">);</span>
 
-  <span class="kt">bool</span> <span class="nf">next</span><span class="p">();</span>
+  <span class="kt">void</span> <span class="nf">next</span><span class="p">();</span>
 
   <span class="kt">void</span> <span class="nf">set_port_helper</span><span class="p">(</span><span class="n">BasePort</span><span class="o">*</span> <span class="n">p</span><span class="p">);</span>
 
   <span class="n">std</span><span class="o">::</span><span class="n">atomic</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">_stop</span><span class="p">{</span><span class="nb">false</span><span class="p">};</span>
-
-  <span class="kt">void</span> <span class="nf">dispatch_reactions_to_workers</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Reaction</span><span class="o">*&gt;&amp;</span> <span class="n">reactions</span><span class="p">);</span>
-  <span class="kt">void</span> <span class="nf">execute_reactions_inline</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Reaction</span><span class="o">*&gt;&amp;</span> <span class="n">reactions</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">atomic</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">terminate_workers</span><span class="p">{</span><span class="nb">false</span><span class="p">};</span>
+  <span class="kt">bool</span> <span class="n">continue_execution</span><span class="p">{</span><span class="nb">true</span><span class="p">};</span>
 
  <span class="k">public</span><span class="o">:</span>
   <span class="n">Scheduler</span><span class="p">(</span><span class="n">Environment</span><span class="o">*</span> <span class="n">env</span><span class="p">);</span>
