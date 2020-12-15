@@ -92,8 +92,7 @@ def main():
 
     # add some metadata
     configure_process_name(trace_events, 0, "Execution")
-    configure_thread_name(trace_events, 0, 0, "Scheduler")
-    for i in range(1, 17):
+    for i in range(1, 128):
         configure_thread_name(trace_events, 0, i, "Worker %d" % i)
     for process, pid in pid_registry.items():
         configure_process_name(trace_events, pid, process)
