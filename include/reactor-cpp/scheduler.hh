@@ -24,8 +24,6 @@ namespace reactor {
 
 class Scheduler {
  public:
-  using WorkItem = std::packaged_task<void(void)>;
-  using WorkPtr = std::unique_ptr<WorkItem>;
   using EventMap = std::map<BaseAction*, std::function<void(void)>>;
 
  private:
