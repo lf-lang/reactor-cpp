@@ -56,83 +56,88 @@ void Scheduler::work(unsigned id) {
       }
     }  // m_ready_reactions
 
-    if (using_workers) {
-      std::unique_lock<std::mutex> lg(m_running_workers);
-      if (running_workers > 1) {
-        // wait for reactions to become ready for execution, or for a terminate
-        // signal
-        log::Debug() << "(Worker " << id << ") "
-                     << "wait for ready reactions";
-        running_workers--;
-        cv_ready_reactions.wait(lg, [this]() {
-          return !this->ready_reactions.empty() || terminate_workers;
-        });
-        running_workers++;
-        continue;  // start from the top after waking up
-      }
-      ASSERT(running_workers == 1);
-      log::Debug() << "(Worker " << id << ") "
-                   << "I am the last active worker.";
-    }  // m_running_workers
+    {
+      auto lg = using_workers ? std::unique_lock<std::mutex>(m_running_workers)
+                              : std::unique_lock<std::mutex>();
 
-    // Reaching this point means that the current worker thread is the last
-    // running worker. Thus, it needs to schedule new reactions. This also
-    // implies that we can safely work with all the data structures without
-    // acquiring any mutexes.
-
-    // Have we finished iterating over the reaction queue?
-    if (reaction_queue_pos < reaction_queue.size()) {
-      // No -> continue iterating
-      log::Debug() << "(Worker " << id << ") "
-                   << "Scanning the reaction queue for ready reactions";
-
-      // continue the actual iteration
-      while (reaction_queue_pos < reaction_queue.size() &&
-             reaction_queue[reaction_queue_pos].empty()) {
-        reaction_queue_pos++;
-      }
-
-      if (reaction_queue_pos < reaction_queue.size()) {
-        auto& reactions = reaction_queue[reaction_queue_pos];
-
-        // any ready reactions of current priority?
-        if (!reactions.empty()) {
+      if (using_workers) {
+        if (running_workers > 1) {
+          // wait for reactions to become ready for execution, or for a
+          // terminate signal
           log::Debug() << "(Worker " << id << ") "
-                       << "Process reactions of priority "
-                       << reaction_queue_pos;
+                       << "wait for ready reactions";
+          running_workers--;
+          cv_ready_reactions.wait(lg, [this]() {
+            return !this->ready_reactions.empty() || terminate_workers;
+          });
+          running_workers++;
+          continue;  // start from the top after waking up
+        }
+        ASSERT(running_workers == 1);
+        log::Debug() << "(Worker " << id << ") "
+                     << "I am the last active worker.";
+      }
 
-          // Make sure that any reaction is only executed once even if it
-          // was triggered multiple times.
-          std::sort(reactions.begin(), reactions.end());
-          reactions.erase(std::unique(reactions.begin(), reactions.end()),
-                          reactions.end());
+      // Reaching this point means that the current worker thread is the last
+      // running worker. Since holding the m_running_workers mutec guarantees
+      // that no other worker is running, we can safely work with all the data
+      // structures without acquiring additional mutexes.
 
-          // place all ready reactions on the ready queue
-          for (auto r : reactions) {
+      // Have we finished iterating over the reaction queue?
+      if (reaction_queue_pos < reaction_queue.size()) {
+        // No -> continue iterating
+        log::Debug() << "(Worker " << id << ") "
+                     << "Scanning the reaction queue for ready reactions";
+
+        // continue the actual iteration
+        while (reaction_queue_pos < reaction_queue.size() &&
+               reaction_queue[reaction_queue_pos].empty()) {
+          reaction_queue_pos++;
+        }
+
+        if (reaction_queue_pos < reaction_queue.size()) {
+          auto& reactions = reaction_queue[reaction_queue_pos];
+
+          // any ready reactions of current priority?
+          if (!reactions.empty()) {
             log::Debug() << "(Worker " << id << ") "
-                         << "Reaction " << r->fqn()
-                         << " is ready for execution";
-            tracepoint(reactor_cpp, trigger_reaction, r->container()->fqn(),
-                       r->name(), _logical_time);
-            ready_reactions.push_back(r);
+                         << "Process reactions of priority "
+                         << reaction_queue_pos;
+
+            // Make sure that any reaction is only executed once even if it
+            // was triggered multiple times.
+            std::sort(reactions.begin(), reactions.end());
+            reactions.erase(std::unique(reactions.begin(), reactions.end()),
+                            reactions.end());
+
+            // place all ready reactions on the ready queue
+            for (auto r : reactions) {
+              log::Debug() << "(Worker " << id << ") "
+                           << "Reaction " << r->fqn()
+                           << " is ready for execution";
+              tracepoint(reactor_cpp, trigger_reaction, r->container()->fqn(),
+                         r->name(), _logical_time);
+              ready_reactions.push_back(r);
+            }
+
+            reactions.clear();
           }
+        }
 
-          reactions.clear();
+        if (ready_reactions.size() == 1) {
+          // if there is only one reaction, then this worker processes it
+          // directly
+          continue;
+        } else if (ready_reactions.size() > 1) {
+          // notify other workers if there is more than one ready reaction
+          if (using_workers) {
+            lg.unlock();
+            cv_ready_reactions.notify_all();
+          }
+          continue;
         }
       }
-
-      if (ready_reactions.size() == 1) {
-        // if there is only one reaction, then this worker processes it
-        // directly
-        continue;
-      } else if (ready_reactions.size() > 1) {
-        // notify other workers if there is more than one ready reaction
-        if (using_workers) {
-          cv_ready_reactions.notify_all();
-        }
-        continue;
-      }
-    }
+    }  // m_running_workers
 
     // if we reach this point, all reactions in the ready queue where processed
     // and we need to call next() or terminate the execution
