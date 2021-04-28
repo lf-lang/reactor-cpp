@@ -49,70 +49,32 @@ void Scheduler::work(unsigned id) {
       // that no other worker is running, we can safely work with all the data
       // structures without acquiring additional mutexes.
 
-      // Have we finished iterating over the reaction queue?
-      if (reaction_queue_pos < reaction_queue.size()) {
-        // No -> continue iterating
-        log::Debug() << "(Worker " << id << ") "
-                     << "Scanning the reaction queue for ready reactions";
+      schedule_ready_reactions(id);
 
-        // continue the actual iteration
-        while (reaction_queue_pos < reaction_queue.size() &&
-               reaction_queue[reaction_queue_pos].empty()) {
-          reaction_queue_pos++;
+      if (ready_reactions.size() == 1) {
+        // if there is only one reaction, then this worker processes it
+        // directly
+        continue;
+      } else if (ready_reactions.size() > 1) {
+        // notify other workers if there is more than one ready reaction
+        if (using_workers) {
+          lg.unlock();
+          cv_ready_reactions.notify_all();
         }
-
-        if (reaction_queue_pos < reaction_queue.size()) {
-          auto& reactions = reaction_queue[reaction_queue_pos];
-
-          // any ready reactions of current priority?
-          if (!reactions.empty()) {
-            log::Debug() << "(Worker " << id << ") "
-                         << "Process reactions of priority "
-                         << reaction_queue_pos;
-
-            // Make sure that any reaction is only executed once even if it
-            // was triggered multiple times.
-            std::sort(reactions.begin(), reactions.end());
-            reactions.erase(std::unique(reactions.begin(), reactions.end()),
-                            reactions.end());
-
-            // place all ready reactions on the ready queue
-            for (auto r : reactions) {
-              log::Debug() << "(Worker " << id << ") "
-                           << "Reaction " << r->fqn()
-                           << " is ready for execution";
-              tracepoint(reactor_cpp, trigger_reaction, r->container()->fqn(),
-                         r->name(), _logical_time);
-              ready_reactions.push_back(r);
-            }
-
-            reactions.clear();
-          }
-        }
-
-        if (ready_reactions.size() == 1) {
-          // if there is only one reaction, then this worker processes it
-          // directly
-          continue;
-        } else if (ready_reactions.size() > 1) {
-          // notify other workers if there is more than one ready reaction
-          if (using_workers) {
-            lg.unlock();
-            cv_ready_reactions.notify_all();
-          }
-          continue;
-        }
+        continue;
       }
     }  // m_running_workers
 
-    // if we reach this point, all reactions in the ready queue where processed
-    // and we need to call next() or terminate the execution
+    // if we reach this point, all reactions in the reaction queue for the
+    // current tag where processed and we need to call next() or terminate the
+    // execution
     if (continue_execution) {
       log::Debug() << "(Worker " << id << ") "
                    << "call next()";
       next();
       reaction_queue_pos = 0;
     } else {
+      // let all workers know that they should terminate
       terminate_workers.store(true, std::memory_order_release);
       cv_ready_reactions.notify_all();
     }
@@ -157,6 +119,48 @@ void Scheduler::wait_for_ready_reactions(unsigned id,
     return !this->ready_reactions.empty() || terminate_workers;
   });
   running_workers++;
+}
+
+void Scheduler::schedule_ready_reactions(unsigned id) {
+  // Have we finished iterating over the reaction queue?
+  if (reaction_queue_pos < reaction_queue.size()) {
+    // No -> continue iterating
+    log::Debug() << "(Worker " << id << ") "
+                 << "Scanning the reaction queue for ready reactions";
+
+    // continue the actual iteration
+    while (reaction_queue_pos < reaction_queue.size() &&
+           reaction_queue[reaction_queue_pos].empty()) {
+      reaction_queue_pos++;
+    }
+
+    if (reaction_queue_pos < reaction_queue.size()) {
+      auto& reactions = reaction_queue[reaction_queue_pos];
+
+      // any ready reactions of current priority?
+      if (!reactions.empty()) {
+        log::Debug() << "(Worker " << id << ") "
+                     << "Process reactions of priority " << reaction_queue_pos;
+
+        // Make sure that any reaction is only executed once even if it
+        // was triggered multiple times.
+        std::sort(reactions.begin(), reactions.end());
+        reactions.erase(std::unique(reactions.begin(), reactions.end()),
+                        reactions.end());
+
+        // place all ready reactions on the ready queue
+        for (auto r : reactions) {
+          log::Debug() << "(Worker " << id << ") "
+                       << "Reaction " << r->fqn() << " is ready for execution";
+          tracepoint(reactor_cpp, trigger_reaction, r->container()->fqn(),
+                     r->name(), _logical_time);
+          ready_reactions.push_back(r);
+        }
+
+        reactions.clear();
+      }
+    }
+  }
 }
 
 void Scheduler::start() {
