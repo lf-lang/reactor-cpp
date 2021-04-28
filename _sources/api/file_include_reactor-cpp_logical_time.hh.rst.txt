@@ -86,11 +86,11 @@ Functions
 
 - :ref:`exhale_function_namespacereactor_1a187a8a69a9cd1edb808e7c92a7a944a0`
 
+- :ref:`exhale_function_namespacereactor_1a0c98d4882f478da43c2c1a169a1fedd2`
+
 - :ref:`exhale_function_namespacereactor_1a55f3e1662b62c0347fb588c294b3f471`
 
 - :ref:`exhale_function_namespacereactor_1a97c015047b9fb102d5b41e244da88917`
-
-- :ref:`exhale_function_namespacereactor_1a0c98d4882f478da43c2c1a169a1fedd2`
 
 - :ref:`exhale_function_namespacereactor_1a2e90ae0e79dfde9f7fbeb54d66a1e3a8`
 

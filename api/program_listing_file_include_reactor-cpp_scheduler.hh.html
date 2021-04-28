@@ -399,6 +399,10 @@
   <span class="kt">unsigned</span> <span class="n">running_workers</span><span class="p">{</span><span class="mi">0</span><span class="p">};</span>
 
   <span class="kt">void</span> <span class="nf">work</span><span class="p">(</span><span class="kt">unsigned</span> <span class="n">id</span><span class="p">);</span>
+  <span class="kt">void</span> <span class="nf">process_ready_reactions</span><span class="p">(</span><span class="kt">unsigned</span> <span class="n">id</span><span class="p">);</span>
+  <span class="kt">void</span> <span class="nf">wait_for_ready_reactions</span><span class="p">(</span><span class="kt">unsigned</span> <span class="n">id</span><span class="p">,</span>
+                                <span class="n">std</span><span class="o">::</span><span class="n">unique_lock</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;&amp;</span> <span class="n">lock</span><span class="p">);</span>
+  <span class="kt">void</span> <span class="nf">schedule_ready_reactions</span><span class="p">(</span><span class="kt">unsigned</span> <span class="n">id</span><span class="p">);</span>
 
   <span class="kt">void</span> <span class="nf">next</span><span class="p">();</span>
 
