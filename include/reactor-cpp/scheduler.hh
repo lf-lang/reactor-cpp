@@ -54,6 +54,8 @@ class Scheduler {
 
   void work(unsigned id);
   void process_ready_reactions(unsigned id);
+  void wait_for_ready_reactions(unsigned id,
+                                std::unique_lock<std::mutex>& lock);
 
   void next();
 

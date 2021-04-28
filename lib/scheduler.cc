@@ -30,17 +30,13 @@ void Scheduler::work(unsigned id) {
       auto lg = using_workers ? std::unique_lock<std::mutex>(m_running_workers)
                               : std::unique_lock<std::mutex>();
 
+      // let all workers except the last one sleep until new reactions are added
+      // to the ready queue
       if (using_workers) {
         if (running_workers > 1) {
           // wait for reactions to become ready for execution, or for a
           // terminate signal
-          log::Debug() << "(Worker " << id << ") "
-                       << "wait for ready reactions";
-          running_workers--;
-          cv_ready_reactions.wait(lg, [this]() {
-            return !this->ready_reactions.empty() || terminate_workers;
-          });
-          running_workers++;
+          wait_for_ready_reactions(id, lg);
           continue;  // start from the top after waking up
         }
         ASSERT(running_workers == 1);
@@ -49,7 +45,7 @@ void Scheduler::work(unsigned id) {
       }
 
       // Reaching this point means that the current worker thread is the last
-      // running worker. Since holding the m_running_workers mutec guarantees
+      // running worker. Since holding the m_running_workers mutex guarantees
       // that no other worker is running, we can safely work with all the data
       // structures without acquiring additional mutexes.
 
@@ -150,6 +146,17 @@ void Scheduler::process_ready_reactions(unsigned id) {
     if (using_workers)
       lg.lock();
   }
+}
+
+void Scheduler::wait_for_ready_reactions(unsigned id,
+                                         std::unique_lock<std::mutex>& lock) {
+  log::Debug() << "(Worker " << id << ") "
+               << "wait for ready reactions";
+  running_workers--;
+  cv_ready_reactions.wait(lock, [this]() {
+    return !this->ready_reactions.empty() || terminate_workers;
+  });
+  running_workers++;
 }
 
 void Scheduler::start() {
