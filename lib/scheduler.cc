@@ -27,8 +27,12 @@ void Scheduler::work(unsigned id) {
     process_ready_reactions(id);
 
     {
-      auto lg = using_workers ? std::unique_lock<std::mutex>(m_running_workers)
+      auto lg = using_workers ? std::unique_lock<std::mutex>(m_running_workers,
+                                                             std::defer_lock)
                               : std::unique_lock<std::mutex>();
+
+      while (!lg.try_lock())
+        ;
 
       // let all workers except the last one sleep until new reactions are added
       // to the ready queue
@@ -87,8 +91,13 @@ void Scheduler::work(unsigned id) {
 }
 
 void Scheduler::process_ready_reactions(unsigned id) {
-  auto lg = using_workers ? std::unique_lock<std::mutex>(m_ready_reactions)
+  auto lg = using_workers ? std::unique_lock<std::mutex>(m_ready_reactions,
+                                                         std::defer_lock)
                           : std::unique_lock<std::mutex>();
+
+  if (using_workers)
+    while (!lg.try_lock())
+      ;
 
   // process ready reactions as long as there are any
   while (!ready_reactions.empty()) {
@@ -109,7 +118,8 @@ void Scheduler::process_ready_reactions(unsigned id) {
     tracepoint(reactor_cpp, reaction_execution_finishes, id, reaction->fqn());
 
     if (using_workers)
-      lg.lock();
+      while (!lg.try_lock())
+        ;
   }
 }
 
