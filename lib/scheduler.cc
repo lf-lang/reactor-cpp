@@ -22,12 +22,7 @@ void Scheduler::work(unsigned id) {
   log::Debug() << "(Worker " << id << ") "
                << "Starting";
 
-  while (true) {
-    // break out of the while loop if a termination is indicated
-    if (terminate_workers.load(std::memory_order_acquire)) {
-      break;
-    }
-
+  while (!terminate_workers.load(std::memory_order_acquire)) {
     // process ready reactions as long as there are any
     process_ready_reactions(id);
 
