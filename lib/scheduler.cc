@@ -28,33 +28,8 @@ void Scheduler::work(unsigned id) {
       break;
     }
 
-    {
-      auto lg = using_workers ? std::unique_lock<std::mutex>(m_ready_reactions)
-                              : std::unique_lock<std::mutex>();
-
-      // process ready reactions as long as there are any
-      while (!ready_reactions.empty()) {
-        // Check if there are reactions to be executed.
-        // If there is a ready reaction, remove it from the ready queue and add
-        // it to the list of reactions that are currently executing.
-        auto reaction = ready_reactions.back();
-        ready_reactions.pop_back();
-
-        if (using_workers)
-          lg.unlock();
-
-        // execute the reaction
-        log::Debug() << "(Worker " << id << ") "
-                     << "execute reaction " << reaction->fqn();
-        tracepoint(reactor_cpp, reaction_execution_starts, id, reaction->fqn());
-        reaction->trigger();
-        tracepoint(reactor_cpp, reaction_execution_finishes, id,
-                   reaction->fqn());
-
-        if (using_workers)
-          lg.lock();
-      }
-    }  // m_ready_reactions
+    // process ready reactions as long as there are any
+    process_ready_reactions(id);
 
     {
       auto lg = using_workers ? std::unique_lock<std::mutex>(m_running_workers)
@@ -153,6 +128,33 @@ void Scheduler::work(unsigned id) {
   }
 
   log::Debug() << "Stopping worker " << id;
+}
+
+void Scheduler::process_ready_reactions(unsigned id) {
+  auto lg = using_workers ? std::unique_lock<std::mutex>(m_ready_reactions)
+                          : std::unique_lock<std::mutex>();
+
+  // process ready reactions as long as there are any
+  while (!ready_reactions.empty()) {
+    // Check if there are reactions to be executed.
+    // If there is a ready reaction, remove it from the ready queue and add
+    // it to the list of reactions that are currently executing.
+    auto reaction = ready_reactions.back();
+    ready_reactions.pop_back();
+
+    if (using_workers)
+      lg.unlock();
+
+    // execute the reaction
+    log::Debug() << "(Worker " << id << ") "
+                 << "execute reaction " << reaction->fqn();
+    tracepoint(reactor_cpp, reaction_execution_starts, id, reaction->fqn());
+    reaction->trigger();
+    tracepoint(reactor_cpp, reaction_execution_finishes, id, reaction->fqn());
+
+    if (using_workers)
+      lg.lock();
+  }
 }
 
 void Scheduler::start() {

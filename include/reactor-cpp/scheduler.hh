@@ -53,6 +53,7 @@ class Scheduler {
   unsigned running_workers{0};
 
   void work(unsigned id);
+  void process_ready_reactions(unsigned id);
 
   void next();
 
