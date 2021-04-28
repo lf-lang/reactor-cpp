@@ -51,15 +51,18 @@ void Scheduler::work(unsigned id) {
 
       schedule_ready_reactions(id);
 
-      if (ready_reactions.size() == 1) {
+      auto num_ready_reactions = ready_reactions.size();
+      lg.unlock();
+      if (num_ready_reactions == 1) {
         // if there is only one reaction, then this worker processes it
         // directly
         continue;
-      } else if (ready_reactions.size() > 1) {
+      } else if (num_ready_reactions > 1) {
         // notify other workers if there is more than one ready reaction
         if (using_workers) {
-          lg.unlock();
-          cv_ready_reactions.notify_all();
+          for (size_t i = 0; i < num_ready_reactions; i++) {
+            cv_ready_reactions.notify_one();
+          }
         }
         continue;
       }
