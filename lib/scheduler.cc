@@ -22,62 +22,72 @@ void Scheduler::work(unsigned id) {
   log::Debug() << "(Worker " << id << ") "
                << "Starting";
 
-  while (!terminate_workers.load(std::memory_order_acquire)) {
+  while (true) {
+    // wait for work
+    sem_running_workers.acquire();
+    log::Debug() << "(Worker " << id << ") "
+                 << "Waking up";
+
+    // break out of the loop if a termination was requested
+    if (terminate_workers.load(std::memory_order_acquire))
+      break;
+
     // process ready reactions as long as there are any
     process_ready_reactions(id);
 
-    {
-      auto lg = using_workers ? std::unique_lock<std::mutex>(m_running_workers)
-                              : std::unique_lock<std::mutex>();
-
-      // let all workers except the last one sleep until new reactions are added
-      // to the ready queue
-      if (using_workers) {
-        if (running_workers > 1) {
-          // wait for reactions to become ready for execution, or for a
-          // terminate signal
-          wait_for_ready_reactions(id, lg);
-          continue;  // start from the top after waking up
-        }
-        ASSERT(running_workers == 1);
+    // Reaching this point means that all ready reactions are processed. In
+    // consequence, all workers except one go to sleep and wait for ready
+    // reactions.  The remaining worker takes care of the scheduling.
+    if (using_workers) {
+      if (running_workers.fetch_sub(1) > 1) {
         log::Debug() << "(Worker " << id << ") "
-                     << "I am the last active worker.";
+                     << "Waiting for work";
+        continue;  // go back to the top of the loop and wait for work
       }
-
-      // Reaching this point means that the current worker thread is the last
-      // running worker. Since holding the m_running_workers mutex guarantees
-      // that no other worker is running, we can safely work with all the data
-      // structures without acquiring additional mutexes.
-
-      schedule_ready_reactions(id);
-
-      if (ready_reactions.size() == 1) {
-        // if there is only one reaction, then this worker processes it
-        // directly
-        continue;
-      } else if (ready_reactions.size() > 1) {
-        // notify other workers if there is more than one ready reaction
-        if (using_workers) {
-          lg.unlock();
-          cv_ready_reactions.notify_all();
-        }
-        continue;
-      }
-    }  // m_running_workers
-
-    // if we reach this point, all reactions in the reaction queue for the
-    // current tag where processed and we need to call next() or terminate the
-    // execution
-    if (continue_execution) {
       log::Debug() << "(Worker " << id << ") "
-                   << "call next()";
-      next();
-      reaction_queue_pos = 0;
-    } else {
-      // let all workers know that they should terminate
-      terminate_workers.store(true, std::memory_order_release);
-      cv_ready_reactions.notify_all();
+                   << "I am the last active worker.";
     }
+
+    // Reaching this point means that the current worker thread is the last
+    // running worker. Since the semaphore sem_running_workers guarantees
+    // that no other worker is running, we can safely work with all the data
+    // structures without acquiring additional mutexes.
+
+    schedule_ready_reactions(id);
+
+    unsigned num_ready_reactions = ready_reactions.size();
+
+    if (num_ready_reactions == 0) {
+      // if we reach this point, all reactions in the reaction queue for the
+      // current tag where processed and we need to call next() or terminate the
+      // execution
+      if (continue_execution) {
+        log::Debug() << "(Worker " << id << ") "
+                     << "call next()";
+        next();
+        reaction_queue_pos = 0;
+
+        schedule_ready_reactions(id);
+        num_ready_reactions = ready_reactions.size();
+      }
+
+      if (!continue_execution && num_ready_reactions == 0) {
+        // let all workers know that they should terminate
+        terminate_workers.store(true, std::memory_order_release);
+        running_workers.fetch_add(_environment->num_workers());
+        sem_running_workers.release(_environment->num_workers());
+        continue;
+      }
+    }
+
+    // we use as many workers as there are ready reactions, but at most the
+    // total number of workers we have
+    unsigned workers_to_wakeup =
+        std::min(num_ready_reactions, _environment->num_workers());
+    log::Debug() << "(Worker " << id << ") wakeup " << workers_to_wakeup
+                 << " workers";
+    running_workers.fetch_add(workers_to_wakeup);
+    sem_running_workers.release(workers_to_wakeup);
   }
 
   log::Debug() << "Stopping worker " << id;
@@ -108,17 +118,6 @@ void Scheduler::process_ready_reactions(unsigned id) {
     if (using_workers)
       lg.lock();
   }
-}
-
-void Scheduler::wait_for_ready_reactions(unsigned id,
-                                         std::unique_lock<std::mutex>& lock) {
-  log::Debug() << "(Worker " << id << ") "
-               << "wait for ready reactions";
-  running_workers--;
-  cv_ready_reactions.wait(lock, [this]() {
-    return !this->ready_reactions.empty() || terminate_workers;
-  });
-  running_workers++;
 }
 
 void Scheduler::schedule_ready_reactions(unsigned id) {
@@ -159,6 +158,8 @@ void Scheduler::schedule_ready_reactions(unsigned id) {
 
         reactions.clear();
       }
+    } else {
+      log::Debug() << "(Worker " << id << ") Reached end of reaction queue";
     }
   }
 }
@@ -169,7 +170,6 @@ void Scheduler::start() {
   // initialize the reaction queue
   reaction_queue.resize(_environment->max_reaction_index() + 1);
 
-  running_workers = _environment->num_workers();
   // start worker threads
   for (unsigned i = 1; i < _environment->num_workers() + 1; i++) {
     worker_threads.emplace_back([this, i]() { this->work(i); });

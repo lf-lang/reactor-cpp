@@ -13,6 +13,7 @@
 #include <future>
 #include <map>
 #include <mutex>
+#include <semaphore>
 #include <set>
 #include <thread>
 #include <vector>
@@ -47,15 +48,12 @@ class Scheduler {
 
   std::mutex m_ready_reactions;
   std::vector<Reaction*> ready_reactions;
-  std::condition_variable cv_ready_reactions;
 
-  std::mutex m_running_workers;
-  unsigned running_workers{0};
+  std::counting_semaphore<1024> sem_running_workers{1};
+  std::atomic<unsigned> running_workers{1};
 
   void work(unsigned id);
   void process_ready_reactions(unsigned id);
-  void wait_for_ready_reactions(unsigned id,
-                                std::unique_lock<std::mutex>& lock);
   void schedule_ready_reactions(unsigned id);
 
   void next();
