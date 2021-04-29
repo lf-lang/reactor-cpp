@@ -13,13 +13,13 @@
 #include <future>
 #include <map>
 #include <mutex>
-#include <semaphore>
 #include <set>
 #include <thread>
 #include <vector>
 
 #include "fwd.hh"
 #include "logical_time.hh"
+#include "semaphore.hh"
 
 namespace reactor {
 
@@ -49,7 +49,7 @@ class Scheduler {
   std::mutex m_ready_reactions;
   std::vector<Reaction*> ready_reactions;
 
-  std::counting_semaphore<1024> sem_running_workers{1};
+  Semaphore sem_running_workers{1};
   std::atomic<unsigned> running_workers{1};
 
   void work(unsigned id);

@@ -39,7 +39,7 @@ void Scheduler::work(unsigned id) {
     // consequence, all workers except one go to sleep and wait for ready
     // reactions.  The remaining worker takes care of the scheduling.
     if (using_workers) {
-      if (running_workers.fetch_sub(1) > 1) {
+      if (running_workers.fetch_sub(1, std::memory_order_acq_rel) > 1) {
         log::Debug() << "(Worker " << id << ") "
                      << "Waiting for work";
         continue;  // go back to the top of the loop and wait for work
@@ -74,7 +74,7 @@ void Scheduler::work(unsigned id) {
       if (!continue_execution && num_ready_reactions == 0) {
         // let all workers know that they should terminate
         terminate_workers.store(true, std::memory_order_release);
-        running_workers.fetch_add(_environment->num_workers());
+        running_workers.fetch_add(_environment->num_workers(), std::memory_order_acq_rel);
         sem_running_workers.release(_environment->num_workers());
         continue;
       }
@@ -86,7 +86,7 @@ void Scheduler::work(unsigned id) {
         std::min(num_ready_reactions, _environment->num_workers());
     log::Debug() << "(Worker " << id << ") wakeup " << workers_to_wakeup
                  << " workers";
-    running_workers.fetch_add(workers_to_wakeup);
+    running_workers.fetch_add(workers_to_wakeup, std::memory_order_acq_rel);
     sem_running_workers.release(workers_to_wakeup);
   }
 
