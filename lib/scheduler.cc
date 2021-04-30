@@ -74,7 +74,8 @@ void Scheduler::work(unsigned id) {
       if (!continue_execution && num_ready_reactions == 0) {
         // let all workers know that they should terminate
         terminate_workers.store(true, std::memory_order_release);
-        running_workers.fetch_add(_environment->num_workers(), std::memory_order_acq_rel);
+        running_workers.fetch_add(_environment->num_workers(),
+                                  std::memory_order_acq_rel);
         sem_running_workers.release(_environment->num_workers());
         continue;
       }
@@ -94,19 +95,17 @@ void Scheduler::work(unsigned id) {
 }
 
 void Scheduler::process_ready_reactions(unsigned id) {
-  auto lg = using_workers ? std::unique_lock<std::mutex>(m_ready_reactions)
-                          : std::unique_lock<std::mutex>();
-
   // process ready reactions as long as there are any
-  while (!ready_reactions.empty()) {
-    // Check if there are reactions to be executed.
-    // If there is a ready reaction, remove it from the ready queue and add
-    // it to the list of reactions that are currently executing.
-    auto reaction = ready_reactions.back();
-    ready_reactions.pop_back();
+  while (true) {
+    // get the position of the next reaction to process via atomic decrement
+    int pos = num_ready_reactions.fetch_sub(1, std::memory_order_acq_rel) - 1;
 
-    if (using_workers)
-      lg.unlock();
+    // break out of the loop if we reached the end of the queue
+    if (pos < 0)
+      break;
+
+    // read-only access to the ready_reactions vector is thread-safe
+    auto reaction = ready_reactions[pos];
 
     // execute the reaction
     log::Debug() << "(Worker " << id << ") "
@@ -114,13 +113,13 @@ void Scheduler::process_ready_reactions(unsigned id) {
     tracepoint(reactor_cpp, reaction_execution_starts, id, reaction->fqn());
     reaction->trigger();
     tracepoint(reactor_cpp, reaction_execution_finishes, id, reaction->fqn());
-
-    if (using_workers)
-      lg.lock();
   }
 }
 
 void Scheduler::schedule_ready_reactions(unsigned id) {
+  // clear any old reactions that where already processed
+  ready_reactions.clear();
+
   // Have we finished iterating over the reaction queue?
   if (reaction_queue_pos < reaction_queue.size()) {
     // No -> continue iterating
@@ -156,6 +155,7 @@ void Scheduler::schedule_ready_reactions(unsigned id) {
           ready_reactions.push_back(r);
         }
 
+        num_ready_reactions.store(reactions.size(), std::memory_order_release);
         reactions.clear();
       }
     } else {

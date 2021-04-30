@@ -46,8 +46,8 @@ class Scheduler {
   std::vector<std::vector<Reaction*>> reaction_queue;
   unsigned reaction_queue_pos{std::numeric_limits<unsigned>::max()};
 
-  std::mutex m_ready_reactions;
   std::vector<Reaction*> ready_reactions;
+  std::atomic<unsigned> num_ready_reactions{0};
 
   Semaphore sem_running_workers{1};
   std::atomic<unsigned> running_workers{1};
