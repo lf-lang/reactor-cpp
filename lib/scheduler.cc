@@ -146,17 +146,19 @@ void Scheduler::schedule_ready_reactions(unsigned id) {
         reactions.erase(std::unique(reactions.begin(), reactions.end()),
                         reactions.end());
 
-        // place all ready reactions on the ready queue
-        for (auto r : reactions) {
-          log::Debug() << "(Worker " << id << ") "
-                       << "Reaction " << r->fqn() << " is ready for execution";
-          tracepoint(reactor_cpp, trigger_reaction, r->container()->fqn(),
-                     r->name(), _logical_time);
-          ready_reactions.push_back(r);
+        if constexpr (log::debug_enabled || tracing_enabled) {
+          for (auto r : reactions) {
+            log::Debug() << "(Worker " << id << ") "
+                         << "Reaction " << r->fqn()
+                         << " is ready for execution";
+            tracepoint(reactor_cpp, trigger_reaction, r->container()->fqn(),
+                       r->name(), _logical_time);
+          }
         }
 
-        num_ready_reactions.store(reactions.size(), std::memory_order_release);
-        reactions.clear();
+        ready_reactions.swap(reactions);
+        num_ready_reactions.store(ready_reactions.size(),
+                                  std::memory_order_release);
       }
     } else {
       log::Debug() << "(Worker " << id << ") Reached end of reaction queue";
