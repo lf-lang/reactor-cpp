@@ -54,7 +54,9 @@ class Scheduler {
 
   void work(unsigned id);
   void process_ready_reactions(unsigned id);
-  void schedule_ready_reactions(unsigned id);
+
+  void schedule();
+  void schedule_ready_reactions();
 
   void next();
 

@@ -53,42 +53,9 @@ void Scheduler::work(unsigned id) {
     // that no other worker is running, we can safely work with all the data
     // structures without acquiring additional mutexes.
 
-    schedule_ready_reactions(id);
+    log::Debug() << "(Worker " << id << ") calling schedule()";
 
-    unsigned num_ready_reactions = ready_reactions.size();
-
-    if (num_ready_reactions == 0) {
-      // if we reach this point, all reactions in the reaction queue for the
-      // current tag where processed and we need to call next() or terminate the
-      // execution
-      if (continue_execution) {
-        log::Debug() << "(Worker " << id << ") "
-                     << "call next()";
-        next();
-        reaction_queue_pos = 0;
-
-        schedule_ready_reactions(id);
-        num_ready_reactions = ready_reactions.size();
-      }
-
-      if (!continue_execution && num_ready_reactions == 0) {
-        // let all workers know that they should terminate
-        terminate_workers.store(true, std::memory_order_release);
-        running_workers.fetch_add(_environment->num_workers(),
-                                  std::memory_order_acq_rel);
-        sem_running_workers.release(_environment->num_workers());
-        continue;
-      }
-    }
-
-    // we use as many workers as there are ready reactions, but at most the
-    // total number of workers we have
-    unsigned workers_to_wakeup =
-        std::min(num_ready_reactions, _environment->num_workers());
-    log::Debug() << "(Worker " << id << ") wakeup " << workers_to_wakeup
-                 << " workers";
-    running_workers.fetch_add(workers_to_wakeup, std::memory_order_acq_rel);
-    sem_running_workers.release(workers_to_wakeup);
+    schedule();
   }
 
   log::Debug() << "Stopping worker " << id;
@@ -116,14 +83,51 @@ void Scheduler::process_ready_reactions(unsigned id) {
   }
 }
 
-void Scheduler::schedule_ready_reactions(unsigned id) {
+void Scheduler::schedule() {
+  schedule_ready_reactions();
+
+  unsigned num_ready_reactions = ready_reactions.size();
+
+  if (num_ready_reactions == 0) {
+    // if we reach this point, all reactions in the reaction queue for the
+    // current tag where processed and we need to call next() or terminate the
+    // execution
+    if (continue_execution) {
+      log::Debug() << "(Scheduler) call next()";
+      next();
+      reaction_queue_pos = 0;
+
+      schedule_ready_reactions();
+      num_ready_reactions = ready_reactions.size();
+    }
+
+    if (!continue_execution && num_ready_reactions == 0) {
+      // let all workers know that they should terminate
+      terminate_workers.store(true, std::memory_order_release);
+      running_workers.fetch_add(_environment->num_workers(),
+                                std::memory_order_acq_rel);
+      sem_running_workers.release(_environment->num_workers());
+      return;
+    }
+  }
+
+  // we use as many workers as there are ready reactions, but at most the
+  // total number of workers we have
+  unsigned workers_to_wakeup =
+      std::min(num_ready_reactions, _environment->num_workers());
+  log::Debug() << "(Scheudler) wakeup " << workers_to_wakeup << " workers";
+  running_workers.fetch_add(workers_to_wakeup, std::memory_order_acq_rel);
+  sem_running_workers.release(workers_to_wakeup);
+}
+
+void Scheduler::schedule_ready_reactions() {
   // clear any old reactions that where already processed
   ready_reactions.clear();
 
   // Have we finished iterating over the reaction queue?
   if (reaction_queue_pos < reaction_queue.size()) {
     // No -> continue iterating
-    log::Debug() << "(Worker " << id << ") "
+    log::Debug() << "(Scheduler) "
                  << "Scanning the reaction queue for ready reactions";
 
     // continue the actual iteration
@@ -137,8 +141,8 @@ void Scheduler::schedule_ready_reactions(unsigned id) {
 
       // any ready reactions of current priority?
       if (!reactions.empty()) {
-        log::Debug() << "(Worker " << id << ") "
-                     << "Process reactions of priority " << reaction_queue_pos;
+        log::Debug() << "(Scheduler) Process reactions of priority "
+                     << reaction_queue_pos;
 
         // Make sure that any reaction is only executed once even if it
         // was triggered multiple times.
@@ -148,8 +152,7 @@ void Scheduler::schedule_ready_reactions(unsigned id) {
 
         if constexpr (log::debug_enabled || tracing_enabled) {
           for (auto r : reactions) {
-            log::Debug() << "(Worker " << id << ") "
-                         << "Reaction " << r->fqn()
+            log::Debug() << "(Scheduler) Reaction " << r->fqn()
                          << " is ready for execution";
             tracepoint(reactor_cpp, trigger_reaction, r->container()->fqn(),
                        r->name(), _logical_time);
@@ -161,7 +164,7 @@ void Scheduler::schedule_ready_reactions(unsigned id) {
                                   std::memory_order_release);
       }
     } else {
-      log::Debug() << "(Worker " << id << ") Reached end of reaction queue";
+      log::Debug() << "(Scheduler) Reached end of reaction queue";
     }
   }
 }
