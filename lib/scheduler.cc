@@ -99,13 +99,16 @@ void Worker::process_ready_reactions() {
     // read-only access to the ready_reactions vector is thread-safe
     auto reaction = scheduler.ready_reactions[pos];
 
-    // execute the reaction
-    log::Debug() << "(Worker " << id << ") "
-                 << "execute reaction " << reaction->fqn();
-    tracepoint(reactor_cpp, reaction_execution_starts, id, reaction->fqn());
-    reaction->trigger();
-    tracepoint(reactor_cpp, reaction_execution_finishes, id, reaction->fqn());
+    execute_reaction(reaction);
   }
+}
+
+void Worker::execute_reaction(Reaction* reaction) const {
+  log::Debug() << "(Worker " << id << ") "
+               << "execute reaction " << reaction->fqn();
+  tracepoint(reactor_cpp, reaction_execution_starts, id, reaction->fqn());
+  reaction->trigger();
+  tracepoint(reactor_cpp, reaction_execution_finishes, id, reaction->fqn());
 }
 
 void Worker::terminate_all_workers(unsigned count) {

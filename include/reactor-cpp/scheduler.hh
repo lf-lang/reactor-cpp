@@ -40,6 +40,7 @@ class Worker {
 
   void work();
   void process_ready_reactions();
+  void execute_reaction(Reaction* reaction) const;
 
  public:
   Worker(Scheduler& scheduler, unsigned id)
