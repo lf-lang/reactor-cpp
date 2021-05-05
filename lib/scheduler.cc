@@ -41,7 +41,7 @@ void Worker::work() {
   log::Debug() << "(Worker " << this->id << ") Starting";
 
   if (id == 0) {
-    log::Debug() << "(Worker 1) do the initial scheduling";
+    log::Debug() << "(Worker 0) do the initial scheduling";
     scheduler.schedule();
   }
 
