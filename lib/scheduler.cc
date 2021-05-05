@@ -22,6 +22,11 @@ void Scheduler::work(unsigned id) {
   log::Debug() << "(Worker " << id << ") "
                << "Starting";
 
+  if (id == 1) {
+    log::Debug() << "(Worker 1) do the initial scheduling";
+    schedule();
+  }
+
   while (true) {
     // wait for work
     sem_running_workers.acquire();

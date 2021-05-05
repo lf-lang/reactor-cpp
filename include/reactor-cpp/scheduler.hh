@@ -49,8 +49,8 @@ class Scheduler {
   std::vector<Reaction*> ready_reactions;
   std::atomic<unsigned> num_ready_reactions{0};
 
-  Semaphore sem_running_workers{1};
-  std::atomic<unsigned> running_workers{1};
+  Semaphore sem_running_workers{0};
+  std::atomic<unsigned> running_workers{0};
 
   void work(unsigned id);
   void process_ready_reactions(unsigned id);
