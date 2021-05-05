@@ -36,10 +36,10 @@ class Worker {
   static std::atomic<unsigned> running_workers;
   static std::atomic<bool> terminate;
   static Semaphore work_semaphore;
-  static thread_local Worker* current_worker;
+  static thread_local const Worker* current_worker;
 
-  void work();
-  void process_ready_reactions();
+  void work() const;
+  void process_ready_reactions() const;
   void execute_reaction(Reaction* reaction) const;
 
  public:

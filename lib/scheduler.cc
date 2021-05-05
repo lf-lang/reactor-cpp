@@ -21,7 +21,7 @@ namespace reactor {
 std::atomic<unsigned> Worker::running_workers{0};
 std::atomic<bool> Worker::terminate{0};
 Semaphore Worker::work_semaphore{0};
-thread_local Worker* Worker::current_worker{nullptr};
+thread_local const Worker* Worker::current_worker{nullptr};
 
 Worker::Worker(Worker&& w) : scheduler{w.scheduler}, id{w.id}, thread{} {
   // Need to provide the move constructor in order to organize workers in a
@@ -34,7 +34,7 @@ Worker::Worker(Worker&& w) : scheduler{w.scheduler}, id{w.id}, thread{} {
   }
 }
 
-void Worker::work() {
+void Worker::work() const {
   // initialize the current worker thread local variable
   current_worker = this;
 
@@ -84,7 +84,7 @@ void Worker::work() {
   log::Debug() << "Stopping worker " << id;
 }
 
-void Worker::process_ready_reactions() {
+void Worker::process_ready_reactions() const {
   // process ready reactions as long as there are any
   while (true) {
     // get the position of the next reaction to process via atomic decrement
