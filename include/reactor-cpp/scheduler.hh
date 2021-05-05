@@ -23,6 +23,34 @@
 
 namespace reactor {
 
+class Scheduler;
+
+class Worker {
+ public:
+  Scheduler& scheduler;
+  const unsigned id{0};
+  std::thread thread;
+
+  static std::atomic<unsigned> running_workers;
+  static std::atomic<bool> terminate;
+  static Semaphore work_semaphore;
+
+  void work();
+  void process_ready_reactions();
+
+ public:
+  Worker(Scheduler& scheduler, unsigned id)
+      : scheduler{scheduler}, id{id}, thread{} {}
+  Worker(Worker&& w);
+  Worker(const Worker&) = delete;
+
+  void start_thread() { thread = std::thread(&Worker::work, this); }
+  void join_thread() { thread.join(); }
+
+  static void terminate_all_workers(unsigned count);
+  static void wakeup_workers(unsigned count);
+};
+
 class Scheduler {
  public:
   using EventMap = std::map<BaseAction*, std::function<void(void)>>;
@@ -32,7 +60,7 @@ class Scheduler {
   LogicalTime _logical_time{};
 
   Environment* _environment;
-  std::vector<std::thread> worker_threads;
+  std::vector<Worker> workers{};
 
   std::mutex m_schedule;
   std::unique_lock<std::mutex> schedule_lock{m_schedule, std::defer_lock};
@@ -49,12 +77,6 @@ class Scheduler {
   std::vector<Reaction*> ready_reactions;
   std::atomic<unsigned> num_ready_reactions{0};
 
-  Semaphore sem_running_workers{0};
-  std::atomic<unsigned> running_workers{0};
-
-  void work(unsigned id);
-  void process_ready_reactions(unsigned id);
-
   void schedule();
   void schedule_ready_reactions();
 
@@ -63,7 +85,6 @@ class Scheduler {
   void set_port_helper(BasePort* p);
 
   std::atomic<bool> _stop{false};
-  std::atomic<bool> terminate_workers{false};
   bool continue_execution{true};
 
  public:
@@ -87,6 +108,8 @@ class Scheduler {
   void start();
 
   void stop();
+
+  friend Worker;
 };
 
 }  // namespace reactor

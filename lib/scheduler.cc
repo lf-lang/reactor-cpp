@@ -18,32 +18,46 @@
 
 namespace reactor {
 
-void Scheduler::work(unsigned id) {
-  log::Debug() << "(Worker " << id << ") "
-               << "Starting";
+std::atomic<unsigned> Worker::running_workers{0};
+std::atomic<bool> Worker::terminate{0};
+Semaphore Worker::work_semaphore{0};
+
+Worker::Worker(Worker&& w) : scheduler{w.scheduler}, id{w.id}, thread{} {
+  // Need to provide the move constructor in order to organize workers in a
+  // std::vector. However, moving is not save if the thread is already running,
+  // thus we throw an exception here if the the worker is moved but the
+  // internal thread is already running.
+
+  if (w.thread.joinable()) {
+    throw std::runtime_error{"Running workers cannot be moved!"};
+  }
+}
+
+void Worker::work() {
+  log::Debug() << "(Worker " << this->id << ") Starting";
 
   if (id == 1) {
     log::Debug() << "(Worker 1) do the initial scheduling";
-    schedule();
+    scheduler.schedule();
   }
 
   while (true) {
     // wait for work
-    sem_running_workers.acquire();
-    log::Debug() << "(Worker " << id << ") "
-                 << "Waking up";
+    log::Debug() << "(Worker " << id << ") Wait for work";
+    work_semaphore.acquire();
+    log::Debug() << "(Worker " << id << ") Waking up";
 
     // break out of the loop if a termination was requested
-    if (terminate_workers.load(std::memory_order_acquire))
+    if (terminate.load(std::memory_order_acquire))
       break;
 
     // process ready reactions as long as there are any
-    process_ready_reactions(id);
+    process_ready_reactions();
 
     // Reaching this point means that all ready reactions are processed. In
     // consequence, all workers except one go to sleep and wait for ready
     // reactions.  The remaining worker takes care of the scheduling.
-    if (using_workers) {
+    if (scheduler.using_workers) {
       if (running_workers.fetch_sub(1, std::memory_order_acq_rel) > 1) {
         log::Debug() << "(Worker " << id << ") "
                      << "Waiting for work";
@@ -54,30 +68,32 @@ void Scheduler::work(unsigned id) {
     }
 
     // Reaching this point means that the current worker thread is the last
-    // running worker. Since the semaphore sem_running_workers guarantees
-    // that no other worker is running, we can safely work with all the data
-    // structures without acquiring additional mutexes.
+    // running worker. Since the semaphore sem_running_workers guarantees that
+    // no other worker is running, we can safely call schedule() and work with
+    // all the data structures without acquiring additional mutexes.
 
     log::Debug() << "(Worker " << id << ") calling schedule()";
 
-    schedule();
+    scheduler.schedule();
   }
 
   log::Debug() << "Stopping worker " << id;
 }
 
-void Scheduler::process_ready_reactions(unsigned id) {
+void Worker::process_ready_reactions() {
   // process ready reactions as long as there are any
   while (true) {
     // get the position of the next reaction to process via atomic decrement
-    int pos = num_ready_reactions.fetch_sub(1, std::memory_order_acq_rel) - 1;
+    int pos =
+        scheduler.num_ready_reactions.fetch_sub(1, std::memory_order_acq_rel) -
+        1;
 
     // break out of the loop if we reached the end of the queue
     if (pos < 0)
       break;
 
     // read-only access to the ready_reactions vector is thread-safe
-    auto reaction = ready_reactions[pos];
+    auto reaction = scheduler.ready_reactions[pos];
 
     // execute the reaction
     log::Debug() << "(Worker " << id << ") "
@@ -86,6 +102,16 @@ void Scheduler::process_ready_reactions(unsigned id) {
     reaction->trigger();
     tracepoint(reactor_cpp, reaction_execution_finishes, id, reaction->fqn());
   }
+}
+
+void Worker::terminate_all_workers(unsigned count) {
+  terminate.store(true, std::memory_order_release);
+  wakeup_workers(count);
+}
+
+void Worker::wakeup_workers(unsigned count) {
+  running_workers.fetch_add(count, std::memory_order_acq_rel);
+  work_semaphore.release(count);
 }
 
 void Scheduler::schedule() {
@@ -108,10 +134,7 @@ void Scheduler::schedule() {
 
     if (!continue_execution && num_ready_reactions == 0) {
       // let all workers know that they should terminate
-      terminate_workers.store(true, std::memory_order_release);
-      running_workers.fetch_add(_environment->num_workers(),
-                                std::memory_order_acq_rel);
-      sem_running_workers.release(_environment->num_workers());
+      Worker::terminate_all_workers(_environment->num_workers());
       return;
     }
   }
@@ -121,8 +144,7 @@ void Scheduler::schedule() {
   unsigned workers_to_wakeup =
       std::min(num_ready_reactions, _environment->num_workers());
   log::Debug() << "(Scheudler) wakeup " << workers_to_wakeup << " workers";
-  running_workers.fetch_add(workers_to_wakeup, std::memory_order_acq_rel);
-  sem_running_workers.release(workers_to_wakeup);
+  Worker::wakeup_workers(workers_to_wakeup);
 }
 
 void Scheduler::schedule_ready_reactions() {
@@ -180,14 +202,20 @@ void Scheduler::start() {
   // initialize the reaction queue
   reaction_queue.resize(_environment->max_reaction_index() + 1);
 
-  // start worker threads
-  for (unsigned i = 1; i < _environment->num_workers() + 1; i++) {
-    worker_threads.emplace_back([this, i]() { this->work(i); });
+  // initialize and start the workers
+  auto num_workers = _environment->num_workers();
+  // by resizing the workers vector, we make sure that there is sufficient
+  // space for all the workers and non of them needs to be moved. This is
+  // important because a running worker may not be moved.
+  workers.reserve(num_workers);
+  for (unsigned i = 0; i < num_workers; i++) {
+    workers.emplace_back(*this, i + 1);
+    workers.back().start_thread();
   }
 
   // join all worker threads
-  for (auto& t : worker_threads) {
-    t.join();
+  for (auto& w : workers) {
+    w.join_thread();
   }
 }
 
