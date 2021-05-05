@@ -21,6 +21,7 @@ namespace reactor {
 std::atomic<unsigned> Worker::running_workers{0};
 std::atomic<bool> Worker::terminate{0};
 Semaphore Worker::work_semaphore{0};
+thread_local Worker* Worker::current_worker{nullptr};
 
 Worker::Worker(Worker&& w) : scheduler{w.scheduler}, id{w.id}, thread{} {
   // Need to provide the move constructor in order to organize workers in a
@@ -34,9 +35,12 @@ Worker::Worker(Worker&& w) : scheduler{w.scheduler}, id{w.id}, thread{} {
 }
 
 void Worker::work() {
+  // initialize the current worker thread local variable
+  current_worker = this;
+
   log::Debug() << "(Worker " << this->id << ") Starting";
 
-  if (id == 1) {
+  if (id == 0) {
     log::Debug() << "(Worker 1) do the initial scheduling";
     scheduler.schedule();
   }
@@ -151,6 +155,14 @@ void Scheduler::schedule_ready_reactions() {
   // clear any old reactions that where already processed
   ready_reactions.clear();
 
+  // insert any triggered reactions into the reaction queue
+  for (auto& v : triggered_reactions) {
+    for (auto n : v) {
+      reaction_queue[n->index()].push_back(n);
+    }
+    v.clear();
+  }
+
   // Have we finished iterating over the reaction queue?
   if (reaction_queue_pos < reaction_queue.size()) {
     // No -> continue iterating
@@ -199,17 +211,20 @@ void Scheduler::schedule_ready_reactions() {
 void Scheduler::start() {
   log::Debug() << "Starting the scheduler...";
 
-  // initialize the reaction queue
-  reaction_queue.resize(_environment->max_reaction_index() + 1);
-
-  // initialize and start the workers
   auto num_workers = _environment->num_workers();
-  // by resizing the workers vector, we make sure that there is sufficient
-  // space for all the workers and non of them needs to be moved. This is
-  // important because a running worker may not be moved.
+  // initialize the reaction queue, set ports vector, and triggered reactions
+  // vector
+  reaction_queue.resize(_environment->max_reaction_index() + 1);
+  set_ports.resize(num_workers);
+  triggered_reactions.resize(num_workers);
+
+  // Initialize and start the workers. By resizing the workers vector first, we
+  // make sure that there is sufficient space for all the workers and non of
+  // them needs to be moved. This is important because a running worker may not
+  // be moved.
   workers.reserve(num_workers);
   for (unsigned i = 0; i < num_workers; i++) {
-    workers.emplace_back(*this, i + 1);
+    workers.emplace_back(*this, i);
     workers.back().start_thread();
   }
 
@@ -231,10 +246,12 @@ void Scheduler::next() {
     events = nullptr;
 
     // cleanup all set ports
-    for (auto p : set_ports) {
-      p->cleanup();
+    for (auto& v : set_ports) {
+      for (auto& p : v) {
+        p->cleanup();
+      }
+      v.clear();
     }
-    set_ports.clear();
   }
 
   {
@@ -374,13 +391,12 @@ void Scheduler::schedule_async(const Tag& tag,
 
 void Scheduler::set_port(BasePort* p) {
   log::Debug() << "Set port " << p->fqn();
-  auto lg = using_workers ? std::unique_lock<std::mutex>(m_reaction_queue)
-                          : std::unique_lock<std::mutex>();
+
   // We do not check here if p is already in the list. This means clean()
   // could be called multiple times for a single port. However, calling
   // clean() multiple time is not harmful and more efficient then checking if
-  // the port is already in the list.
-  set_ports.push_back(p);
+  set_ports[Worker::current_worker_id()].push_back(p);
+
   // recursively search for triggered reactions
   set_port_helper(p);
 }
@@ -393,7 +409,7 @@ void Scheduler::set_port_helper(BasePort* p) {
     }
   } else {
     for (auto n : p->triggers()) {
-      reaction_queue[n->index()].push_back(n);
+      triggered_reactions[Worker::current_worker_id()].push_back(n);
     }
   }
 }

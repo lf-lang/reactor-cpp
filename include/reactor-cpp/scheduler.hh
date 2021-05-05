@@ -23,7 +23,9 @@
 
 namespace reactor {
 
+// forward declarations
 class Scheduler;
+class Worker;
 
 class Worker {
  public:
@@ -34,6 +36,7 @@ class Worker {
   static std::atomic<unsigned> running_workers;
   static std::atomic<bool> terminate;
   static Semaphore work_semaphore;
+  static thread_local Worker* current_worker;
 
   void work();
   void process_ready_reactions();
@@ -49,6 +52,7 @@ class Worker {
 
   static void terminate_all_workers(unsigned count);
   static void wakeup_workers(unsigned count);
+  static unsigned current_worker_id() { return current_worker->id; }
 };
 
 class Scheduler {
@@ -68,9 +72,10 @@ class Scheduler {
 
   std::mutex m_event_queue;
   std::map<Tag, std::unique_ptr<EventMap>> event_queue;
-  std::vector<BasePort*> set_ports;
 
-  std::mutex m_reaction_queue;
+  std::vector<std::vector<BasePort*>> set_ports;
+  std::vector<std::vector<Reaction*>> triggered_reactions;
+
   std::vector<std::vector<Reaction*>> reaction_queue;
   unsigned reaction_queue_pos{std::numeric_limits<unsigned>::max()};
 
