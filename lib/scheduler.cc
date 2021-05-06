@@ -78,21 +78,17 @@ void Worker::execute_reaction(Reaction* reaction) const {
 void Scheduler::schedule() {
   bool found_ready_reactions = schedule_ready_reactions();
 
-  if (!found_ready_reactions) {
-    // if we reach this point, all reactions in the reaction queue for the
-    // current tag where processed and we need to call next() or terminate the
-    // execution
-    if (continue_execution) {
+  while(!found_ready_reactions) {
       log::Debug() << "(Scheduler) call next()";
       next();
       reaction_queue_pos = 0;
 
       found_ready_reactions = schedule_ready_reactions();
-    }
 
-    if (!continue_execution && !found_ready_reactions) {
-      // let all workers know that they should terminate
-      terminate_all_workers();
+      if (!continue_execution && !found_ready_reactions) {
+        // let all workers know that they should terminate
+        terminate_all_workers();
+        break;
     }
   }
 }
@@ -340,11 +336,14 @@ void Scheduler::next() {
     }
   }
 
+  log::Debug() << "evenets: " << events->size();
   for (auto& kv : *events) {
+    log::Debug() << "Action " << kv.first->fqn();
     for (auto n : kv.first->triggers()) {
       // There is no need to acquire the mutex. At this point the scheduler
       // should be the only thread accessing the reaction queue as none of the
       // workers are running
+      log::Debug() << "insert reaction " << n->fqn() << " with index " << n->index();
       reaction_queue[n->index()].push_back(n);
     }
   }
