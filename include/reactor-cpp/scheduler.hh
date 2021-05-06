@@ -33,13 +33,9 @@ class Worker {
   const unsigned id{0};
   std::thread thread;
 
-  static std::atomic<unsigned> running_workers;
-  static std::atomic<bool> terminate;
-  static Semaphore work_semaphore;
   static thread_local const Worker* current_worker;
 
   void work() const;
-  void process_ready_reactions() const;
   void execute_reaction(Reaction* reaction) const;
 
  public:
@@ -51,9 +47,39 @@ class Worker {
   void start_thread() { thread = std::thread(&Worker::work, this); }
   void join_thread() { thread.join(); }
 
-  static void terminate_all_workers(unsigned count);
-  static void wakeup_workers(unsigned count);
   static unsigned current_worker_id() { return current_worker->id; }
+};
+
+class ReadyQueue {
+ private:
+  std::vector<Reaction*> queue{};
+  std::atomic<std::ptrdiff_t> size{0};
+  BaseSemaphore sem{0};
+  std::ptrdiff_t waiting_workers{0};
+  const unsigned num_workers;
+
+ public:
+  ReadyQueue(unsigned num_workers) : num_workers(num_workers) {}
+
+  /**
+   * Retrieve a ready reaction from the queue.
+   *
+   * This method may be called concurrently. In case the queue is empty, the
+   * method blocks and waits until a ready reaction becomes available.
+   */
+  Reaction* pop();
+
+  /**
+   * Fill the queue up with ready reactions.
+   *
+   * This method assumes that the internal queue is empty. It moves all
+   * reactions from the provided `ready_reactions` vector to the internal queue,
+   * leaving `ready_reactions` empty.
+   *
+   * Note that this method is not thread-safe. The caller needs to ensure that
+   * no other thread will try to read from the queue during this operation.
+   */
+  void fill_up(std::vector<Reaction*>& ready_reactions);
 };
 
 class Scheduler {
@@ -80,13 +106,15 @@ class Scheduler {
   std::vector<std::vector<Reaction*>> reaction_queue;
   unsigned reaction_queue_pos{std::numeric_limits<unsigned>::max()};
 
-  std::vector<Reaction*> ready_reactions;
-  std::atomic<unsigned> num_ready_reactions{0};
+  ReadyQueue ready_queue;
+  std::atomic<std::ptrdiff_t> reactions_to_process{0};
 
   void schedule();
-  void schedule_ready_reactions();
+  bool schedule_ready_reactions();
 
   void next();
+
+  void terminate_all_workers();
 
   void set_port_helper(BasePort* p);
 

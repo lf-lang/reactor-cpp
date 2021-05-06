@@ -18,9 +18,6 @@
 
 namespace reactor {
 
-std::atomic<unsigned> Worker::running_workers{0};
-std::atomic<bool> Worker::terminate{0};
-Semaphore Worker::work_semaphore{0};
 thread_local const Worker* Worker::current_worker{nullptr};
 
 Worker::Worker(Worker&& w) : scheduler{w.scheduler}, id{w.id}, thread{} {
@@ -46,61 +43,28 @@ void Worker::work() const {
   }
 
   while (true) {
-    // wait for work
-    log::Debug() << "(Worker " << id << ") Wait for work";
-    work_semaphore.acquire();
-    log::Debug() << "(Worker " << id << ") Waking up";
+    // wait for a ready reaction
+    auto reaction = scheduler.ready_queue.pop();
 
-    // break out of the loop if a termination was requested
-    if (terminate.load(std::memory_order_acquire))
+    // receiving a nullptr indicates that the worker should terminate
+    if (reaction == nullptr) {
       break;
-
-    // process ready reactions as long as there are any
-    process_ready_reactions();
-
-    // Reaching this point means that all ready reactions are processed. In
-    // consequence, all workers except one go to sleep and wait for ready
-    // reactions.  The remaining worker takes care of the scheduling.
-    if (scheduler.using_workers) {
-      if (running_workers.fetch_sub(1, std::memory_order_acq_rel) > 1) {
-        log::Debug() << "(Worker " << id << ") "
-                     << "Waiting for work";
-        continue;  // go back to the top of the loop and wait for work
-      }
-      log::Debug() << "(Worker " << id << ") "
-                   << "I am the last active worker.";
     }
 
-    // Reaching this point means that the current worker thread is the last
-    // running worker. Since the semaphore sem_running_workers guarantees that
-    // no other worker is running, we can safely call schedule() and work with
-    // all the data structures without acquiring additional mutexes.
-
-    log::Debug() << "(Worker " << id << ") calling schedule()";
-
-    scheduler.schedule();
-  }
-
-  log::Debug() << "Stopping worker " << id;
-}
-
-void Worker::process_ready_reactions() const {
-  // process ready reactions as long as there are any
-  while (true) {
-    // get the position of the next reaction to process via atomic decrement
-    int pos =
-        scheduler.num_ready_reactions.fetch_sub(1, std::memory_order_acq_rel) -
-        1;
-
-    // break out of the loop if we reached the end of the queue
-    if (pos < 0)
-      break;
-
-    // read-only access to the ready_reactions vector is thread-safe
-    auto reaction = scheduler.ready_reactions[pos];
-
+    // execute the reaction
     execute_reaction(reaction);
+
+    // was this the very last reaction?
+    if (scheduler.reactions_to_process.fetch_sub(
+            1, std::memory_order_acq_rel) == 1) {
+      // Yes, then schedule. The atomic decrement above ensures that only one
+      // thread enters this block.
+      scheduler.schedule();
+    }
+    // continue otherwise
   }
+
+  log::Debug() << "(Worker " << id << ") terminates";
 }
 
 void Worker::execute_reaction(Reaction* reaction) const {
@@ -111,22 +75,10 @@ void Worker::execute_reaction(Reaction* reaction) const {
   tracepoint(reactor_cpp, reaction_execution_finishes, id, reaction->fqn());
 }
 
-void Worker::terminate_all_workers(unsigned count) {
-  terminate.store(true, std::memory_order_release);
-  wakeup_workers(count);
-}
-
-void Worker::wakeup_workers(unsigned count) {
-  running_workers.fetch_add(count, std::memory_order_acq_rel);
-  work_semaphore.release(count);
-}
-
 void Scheduler::schedule() {
-  schedule_ready_reactions();
+  bool found_ready_reactions = schedule_ready_reactions();
 
-  unsigned num_ready_reactions = ready_reactions.size();
-
-  if (num_ready_reactions == 0) {
+  if (!found_ready_reactions) {
     // if we reach this point, all reactions in the reaction queue for the
     // current tag where processed and we need to call next() or terminate the
     // execution
@@ -135,29 +87,74 @@ void Scheduler::schedule() {
       next();
       reaction_queue_pos = 0;
 
-      schedule_ready_reactions();
-      num_ready_reactions = ready_reactions.size();
+      found_ready_reactions = schedule_ready_reactions();
     }
 
-    if (!continue_execution && num_ready_reactions == 0) {
+    if (!continue_execution && !found_ready_reactions) {
       // let all workers know that they should terminate
-      Worker::terminate_all_workers(_environment->num_workers());
-      return;
+      terminate_all_workers();
     }
   }
-
-  // we use as many workers as there are ready reactions, but at most the
-  // total number of workers we have
-  unsigned workers_to_wakeup =
-      std::min(num_ready_reactions, _environment->num_workers());
-  log::Debug() << "(Scheudler) wakeup " << workers_to_wakeup << " workers";
-  Worker::wakeup_workers(workers_to_wakeup);
 }
 
-void Scheduler::schedule_ready_reactions() {
-  // clear any old reactions that where already processed
-  ready_reactions.clear();
+Reaction* ReadyQueue::pop() {
+  auto old_size = size.fetch_sub(1, std::memory_order_acq_rel);
 
+  // If there is no ready reaction available, wait until there is one.
+  while (old_size <= 0) {
+    log::Debug() << "(Worker " << Worker::current_worker_id()
+                 << ") Wait for work";
+    sem.acquire();
+    log::Debug() << "(Worker " << Worker::current_worker_id() << ") Waking up";
+    old_size = size.fetch_sub(1, std::memory_order_acq_rel);
+    // FIXME: Protect against underflow?
+  }
+
+  auto pos = old_size - 1;
+  return queue[pos];
+}
+
+void ReadyQueue::fill_up(std::vector<Reaction*>& ready_reactions) {
+  // clear the internal queue and swap contents
+  queue.clear();
+  queue.swap(ready_reactions);
+
+  // update the atomic size counter and release the semaphore to wake up
+  // waiting worker threads
+  std::ptrdiff_t new_size = queue.size();
+  auto old_size = size.exchange(new_size, std::memory_order_acq_rel);
+
+  // calculate how many workers to wake up. -old_size indicates the number of
+  // workers who started waiting since the last update.
+  // We want to wake up at most all the waiting workers. If we would release
+  // more, other workers that are out of work would not block when acquiring
+  // the semaphore.
+  // Also, we do not want to wake up more workers than there is work. new_size
+  // indicates the number of ready reactions. Since there is always at least
+  // one worker running running, new_size - running_workers indicates the
+  // number of additional workers needed to process all reactions.
+  waiting_workers += -old_size;
+  auto running_workers = num_workers - waiting_workers;
+  auto workers_to_wakeup =
+      std::min(waiting_workers, new_size - running_workers);
+
+  // wakeup other workers
+  if (workers_to_wakeup > 0) {
+    waiting_workers -= workers_to_wakeup;
+    log::Debug() << "Wakeup " << workers_to_wakeup << " workers";
+    sem.release(workers_to_wakeup);
+  }
+}
+
+void Scheduler::terminate_all_workers() {
+  log::Debug() << "(Scheduler) Send termination signal to all workers";
+  auto num_workers = _environment->num_workers();
+  std::vector<Reaction*> null_reactions{num_workers, nullptr};
+  log::Debug() << null_reactions.size();
+  ready_queue.fill_up(null_reactions);
+}
+
+bool Scheduler::schedule_ready_reactions() {
   // insert any triggered reactions into the reaction queue
   for (auto& v : triggered_reactions) {
     for (auto n : v) {
@@ -201,14 +198,16 @@ void Scheduler::schedule_ready_reactions() {
           }
         }
 
-        ready_reactions.swap(reactions);
-        num_ready_reactions.store(ready_reactions.size(),
-                                  std::memory_order_release);
+        reactions_to_process.store(reactions.size(), std::memory_order_release);
+        ready_queue.fill_up(reactions);
+        return true;
       }
     } else {
       log::Debug() << "(Scheduler) Reached end of reaction queue";
     }
   }
+
+  return false;
 }
 
 void Scheduler::start() {
@@ -352,7 +351,9 @@ void Scheduler::next() {
 }
 
 Scheduler::Scheduler(Environment* env)
-    : using_workers(env->num_workers() > 1), _environment(env) {}
+    : using_workers(env->num_workers() > 1)
+    , _environment(env)
+    , ready_queue(env->num_workers()) {}
 
 Scheduler::~Scheduler() {}
 
