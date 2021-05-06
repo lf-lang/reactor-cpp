@@ -142,7 +142,7 @@ void ReadyQueue::fill_up(std::vector<Reaction*>& ready_reactions) {
   if (workers_to_wakeup > 0) {
     waiting_workers -= workers_to_wakeup;
     log::Debug() << "Wakeup " << workers_to_wakeup << " workers";
-    sem.release(workers_to_wakeup);
+    sem.release((unsigned)workers_to_wakeup);
   }
 }
 
