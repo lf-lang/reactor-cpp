@@ -39,7 +39,7 @@ void Reaction::declare_trigger(BaseAction* action) {
   action->register_trigger(this);
 }
 
-void Reaction::declare_scheduable_action(BaseAction* action) {
+void Reaction::declare_schedulable_action(BaseAction* action) {
   ASSERT(action != nullptr);
   ASSERT(this->environment() == action->environment());
   VALIDATE(this->environment()->phase() == Environment::Phase::Assembly,

@@ -43,7 +43,7 @@ class Reaction : public ReactorElement {
 
   void declare_trigger(BaseAction* action);
   void declare_trigger(BasePort* port);
-  void declare_scheduable_action(BaseAction* action);
+  void declare_schedulable_action(BaseAction* action);
   void declare_antidependency(BasePort* port);
   void declare_dependency(BasePort* port);
 

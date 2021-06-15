@@ -54,7 +54,7 @@ class RightPedal : public Reactor {
     r1.declare_antidependency(&angle);
 
     r2.declare_trigger(&check);
-    r2.declare_scheduable_action(&pol);
+    r2.declare_schedulable_action(&pol);
   }
 };
 
