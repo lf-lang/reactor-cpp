@@ -4,7 +4,8 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>Program Listing for File reaction.cc &mdash; reactor-cpp  documentation</title>
@@ -13,6 +14,8 @@
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
 
   
@@ -30,6 +33,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
@@ -341,7 +345,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="program-listing-for-file-reaction-cc">
+  <section id="program-listing-for-file-reaction-cc">
 <span id="program-listing-file-lib-reaction-cc"></span><h1>Program Listing for File reaction.cc<a class="headerlink" href="#program-listing-for-file-reaction-cc" title="Permalink to this headline">¶</a></h1>
 <p>↰ <a class="reference internal" href="file_lib_reaction.cc.html#file-lib-reaction-cc"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">lib/reaction.cc</span></code>)</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/*</span>
@@ -385,7 +389,7 @@
   <span class="n">action</span><span class="o">-&gt;</span><span class="n">register_trigger</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
 <span class="p">}</span>
 
-<span class="kt">void</span> <span class="n">Reaction</span><span class="o">::</span><span class="n">declare_scheduable_action</span><span class="p">(</span><span class="n">BaseAction</span><span class="o">*</span> <span class="n">action</span><span class="p">)</span> <span class="p">{</span>
+<span class="kt">void</span> <span class="n">Reaction</span><span class="o">::</span><span class="n">declare_schedulable_action</span><span class="p">(</span><span class="n">BaseAction</span><span class="o">*</span> <span class="n">action</span><span class="p">)</span> <span class="p">{</span>
   <span class="n">ASSERT</span><span class="p">(</span><span class="n">action</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">);</span>
   <span class="n">ASSERT</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">environment</span><span class="p">()</span> <span class="o">==</span> <span class="n">action</span><span class="o">-&gt;</span><span class="n">environment</span><span class="p">());</span>
   <span class="n">VALIDATE</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">environment</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">phase</span><span class="p">()</span> <span class="o">==</span> <span class="n">Environment</span><span class="o">::</span><span class="n">Phase</span><span class="o">::</span><span class="n">Assembly</span><span class="p">,</span>
@@ -494,7 +498,7 @@
 <span class="p">}</span>  <span class="c1">// namespace reactor</span>
 </pre></div>
 </div>
-</div>
+</section>
 
 
            </div>
