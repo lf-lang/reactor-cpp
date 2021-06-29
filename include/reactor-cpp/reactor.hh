@@ -37,9 +37,9 @@ class ReactorElement {
   ReactorElement(const std::string& name, Type type, Environment* environment);
   virtual ~ReactorElement() {}
 
-  // not copyable or movable
+  // not copyable, but movable
   ReactorElement(const ReactorElement&) = delete;
-  ReactorElement(ReactorElement&&) = delete;
+  ReactorElement(ReactorElement&&) = default;
 
   Reactor* container() const { return _container; }
 
