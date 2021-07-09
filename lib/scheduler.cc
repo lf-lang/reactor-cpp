@@ -78,17 +78,17 @@ void Worker::execute_reaction(Reaction* reaction) const {
 void Scheduler::schedule() {
   bool found_ready_reactions = schedule_ready_reactions();
 
-  while(!found_ready_reactions) {
-      log::Debug() << "(Scheduler) call next()";
-      next();
-      reaction_queue_pos = 0;
+  while (!found_ready_reactions) {
+    log::Debug() << "(Scheduler) call next()";
+    next();
+    reaction_queue_pos = 0;
 
-      found_ready_reactions = schedule_ready_reactions();
+    found_ready_reactions = schedule_ready_reactions();
 
-      if (!continue_execution && !found_ready_reactions) {
-        // let all workers know that they should terminate
-        terminate_all_workers();
-        break;
+    if (!continue_execution && !found_ready_reactions) {
+      // let all workers know that they should terminate
+      terminate_all_workers();
+      break;
     }
   }
 }
@@ -159,49 +159,42 @@ bool Scheduler::schedule_ready_reactions() {
     v.clear();
   }
 
-  // Have we finished iterating over the reaction queue?
-  if (reaction_queue_pos < reaction_queue.size()) {
-    // No -> continue iterating
-    log::Debug() << "(Scheduler) "
-                 << "Scanning the reaction queue for ready reactions";
+  log::Debug() << "(Scheduler) "
+               << "Scanning the reaction queue for ready reactions";
 
-    // continue the actual iteration
-    while (reaction_queue_pos < reaction_queue.size() &&
-           reaction_queue[reaction_queue_pos].empty()) {
-      reaction_queue_pos++;
-    }
+  // continue iterating over the reaction queue
+  for (; reaction_queue_pos < reaction_queue.size(); reaction_queue_pos++) {
+    auto& reactions = reaction_queue[reaction_queue_pos];
 
-    if (reaction_queue_pos < reaction_queue.size()) {
-      auto& reactions = reaction_queue[reaction_queue_pos];
+    // any ready reactions of current priority?
+    if (!reactions.empty()) {
+      log::Debug() << "(Scheduler) Process reactions of priority "
+                   << reaction_queue_pos;
 
-      // any ready reactions of current priority?
-      if (!reactions.empty()) {
-        log::Debug() << "(Scheduler) Process reactions of priority "
-                     << reaction_queue_pos;
+      // Make sure that any reaction is only executed once even if it
+      // was triggered multiple times.
+      std::sort(reactions.begin(), reactions.end());
+      reactions.erase(std::unique(reactions.begin(), reactions.end()),
+                      reactions.end());
 
-        // Make sure that any reaction is only executed once even if it
-        // was triggered multiple times.
-        std::sort(reactions.begin(), reactions.end());
-        reactions.erase(std::unique(reactions.begin(), reactions.end()),
-                        reactions.end());
-
-        if constexpr (log::debug_enabled || tracing_enabled) {
-          for (auto r : reactions) {
-            log::Debug() << "(Scheduler) Reaction " << r->fqn()
-                         << " is ready for execution";
-            tracepoint(reactor_cpp, trigger_reaction, r->container()->fqn(),
-                       r->name(), _logical_time);
-          }
+      if constexpr (log::debug_enabled || tracing_enabled) {
+        for (auto r : reactions) {
+          log::Debug() << "(Scheduler) Reaction " << r->fqn()
+                       << " is ready for execution";
+          tracepoint(reactor_cpp, trigger_reaction, r->container()->fqn(),
+                     r->name(), _logical_time);
         }
-
-        reactions_to_process.store(reactions.size(), std::memory_order_release);
-        ready_queue.fill_up(reactions);
-        return true;
       }
-    } else {
-      log::Debug() << "(Scheduler) Reached end of reaction queue";
+
+      reactions_to_process.store(reactions.size(), std::memory_order_release);
+      ready_queue.fill_up(reactions);
+
+      // break out of the loop and return
+      return true;
     }
   }
+
+  log::Debug() << "(Scheduler) Reached end of reaction queue";
 
   return false;
 }
@@ -343,7 +336,8 @@ void Scheduler::next() {
       // There is no need to acquire the mutex. At this point the scheduler
       // should be the only thread accessing the reaction queue as none of the
       // workers are running
-      log::Debug() << "insert reaction " << n->fqn() << " with index " << n->index();
+      log::Debug() << "insert reaction " << n->fqn() << " with index "
+                   << n->index();
       reaction_queue[n->index()].push_back(n);
     }
   }
