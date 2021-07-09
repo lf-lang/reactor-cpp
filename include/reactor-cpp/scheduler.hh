@@ -98,7 +98,7 @@ class Scheduler {
   std::condition_variable cv_schedule;
 
   std::mutex m_event_queue;
-  std::map<Tag, std::unique_ptr<EventMap>> event_queue;
+  std::map<Tag, EventMap> event_queue;
 
   std::vector<std::vector<BasePort*>> set_ports;
   std::vector<std::vector<Reaction*>> triggered_reactions;

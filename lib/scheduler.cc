@@ -226,16 +226,14 @@ void Scheduler::start() {
 }
 
 void Scheduler::next() {
-  static std::unique_ptr<EventMap> events{nullptr};
+  static EventMap events{};
 
   // clean up before scheduling any new events
-  if (events != nullptr) {
+  if (!events.empty()) {
     // cleanup all triggered actions
-    for (auto& kv : *events) {
+    for (auto& kv : events) {
       kv.first->cleanup();
     }
-    events = nullptr;
-
     // cleanup all set ports
     for (auto& v : set_ports) {
       for (auto& p : v) {
@@ -243,6 +241,7 @@ void Scheduler::next() {
       }
       v.clear();
     }
+    events.clear();
   }
 
   {
@@ -260,7 +259,7 @@ void Scheduler::next() {
       }
     }
 
-    while (events == nullptr) {
+    while (events.empty()) {
       if (_stop) {
         continue_execution = false;
         log::Debug() << "Shutting down the scheduler";
@@ -322,15 +321,15 @@ void Scheduler::next() {
 
   // execute all setup functions; this sets the values of the corresponding
   // actions
-  for (auto& kv : *events) {
+  for (auto& kv : events) {
     auto& setup = kv.second;
     if (setup != nullptr) {
       setup();
     }
   }
 
-  log::Debug() << "evenets: " << events->size();
-  for (auto& kv : *events) {
+  log::Debug() << "events: " << events.size();
+  for (auto& kv : events) {
     log::Debug() << "Action " << kv.first->fqn();
     for (auto n : kv.first->triggers()) {
       // There is no need to acquire the mutex. At this point the scheduler
@@ -369,9 +368,8 @@ void Scheduler::schedule_sync(const Tag& tag,
                action->name(), tag);
 
     // create a new event map or retrieve the existing one
-    auto emplace_result =
-        event_queue.try_emplace(tag, std::make_unique<EventMap>());
-    auto& event_map = *emplace_result.first->second;
+    auto emplace_result = event_queue.try_emplace(tag, EventMap());
+    auto& event_map = emplace_result.first->second;
 
     // insert the new event
     event_map[action] = setup;
