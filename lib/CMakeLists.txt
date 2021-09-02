@@ -3,7 +3,6 @@ set(SOURCE_FILES
   assert.cc
   environment.cc
   logical_time.cc
-  logging.cc
   port.cc
   reaction.cc
   reactor.cc

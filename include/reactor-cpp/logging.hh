@@ -27,7 +27,7 @@ class BaseLogger<true> {
   using Lock = std::unique_lock<std::mutex>;
 
   const std::string log_prefix;
-  static std::mutex mutex;
+  inline static std::mutex mutex{};
   Lock lock;
 
  public:

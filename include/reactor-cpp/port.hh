@@ -66,6 +66,8 @@ class Port : public BasePort {
   void cleanup() override final { value_ptr = nullptr; }
 
  public:
+  using value_type = T;
+
   Port(const std::string& name, PortType type, Reactor* container)
       : BasePort(name, type, container) {}
 
@@ -98,6 +100,8 @@ class Port<void> : public BasePort {
   void cleanup() override final { present = false; }
 
  public:
+  using value_type = void;
+
   Port(const std::string& name, PortType type, Reactor* container)
       : BasePort(name, type, container) {}
 
@@ -117,6 +121,8 @@ class Input : public Port<T> {
  public:
   Input(const std::string& name, Reactor* container)
       : Port<T>(name, PortType::Input, container) {}
+
+  Input(Input&&) = default;
 };
 
 template <class T>
@@ -124,6 +130,8 @@ class Output : public Port<T> {
  public:
   Output(const std::string& name, Reactor* container)
       : Port<T>(name, PortType::Output, container) {}
+
+  Output(Output&&) = default;
 };
 
 }  // namespace reactor
