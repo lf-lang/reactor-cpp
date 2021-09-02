@@ -31,7 +31,7 @@ make examples
 
 reactor-cpp can be build with [tracing support](https://github.com/tud-ccc/reactor-cpp/tree/master/tracing). This provides a powerful tool for analyzing and debugging reactor applications.
 
-## Documentaion
+## Documentation
 
 A live version of the latest commit on master is automatically deployed and
 available [online](https://tud-ccc.github.io/reactor-cpp/index.html). For tests
