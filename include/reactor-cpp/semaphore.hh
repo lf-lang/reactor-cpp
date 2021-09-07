@@ -9,6 +9,7 @@
 #include <atomic>
 #include <condition_variable>
 #include <mutex>
+#include <thread>
 
 namespace reactor {
 
@@ -16,7 +17,6 @@ class Semaphore {
  private:
   int count;
   std::mutex mutex;
-  std::condition_variable cv;
 
  public:
   Semaphore(int count) : count(count) {}
@@ -26,12 +26,16 @@ class Semaphore {
       std::lock_guard<std::mutex> lg(mutex);
       count += i;
     }
-    cv.notify_all();
   }
 
   void acquire() {
     std::unique_lock<std::mutex> lg(mutex);
-    cv.wait(lg, [&]() { return count != 0; });
+    while (count <= 0) {
+      lg.unlock();
+      using namespace std::chrono_literals;
+      std::this_thread::sleep_for(2000us);
+      lg.lock();
+    }
     count--;
   }
 };
