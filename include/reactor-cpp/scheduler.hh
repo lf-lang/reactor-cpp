@@ -13,13 +13,13 @@
 #include <future>
 #include <map>
 #include <mutex>
+#include <semaphore>
 #include <set>
 #include <thread>
 #include <vector>
 
 #include "fwd.hh"
 #include "logical_time.hh"
-#include "semaphore.hh"
 
 namespace reactor {
 
@@ -54,7 +54,7 @@ class ReadyQueue {
  private:
   std::vector<Reaction*> queue{};
   std::atomic<std::ptrdiff_t> size{0};
-  BaseSemaphore sem{0};
+  std::counting_semaphore<1024> sem{0};
   std::ptrdiff_t waiting_workers{0};
   const unsigned num_workers;
 
