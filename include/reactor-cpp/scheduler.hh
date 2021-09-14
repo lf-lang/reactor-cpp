@@ -54,7 +54,7 @@ class ReadyQueue {
  private:
   std::vector<Reaction*> queue{};
   std::atomic<std::ptrdiff_t> size{0};
-  BaseSemaphore sem{0};
+  Semaphore sem{0};
   std::ptrdiff_t waiting_workers{0};
   const unsigned num_workers;
 
