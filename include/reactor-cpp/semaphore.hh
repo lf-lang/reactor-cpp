@@ -33,7 +33,7 @@ class Semaphore {
     while (count <= 0) {
       lg.unlock();
       using namespace std::chrono_literals;
-      std::this_thread::sleep_for(100us);
+      std::this_thread::sleep_for(200us);
       lg.lock();
     }
     count--;
