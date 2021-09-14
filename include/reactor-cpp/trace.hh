@@ -13,6 +13,10 @@
 
 #ifdef REACTOR_CPP_TRACE
 
+namespace reactor {
+constexpr bool tracing_enabled = true;
+}
+
 #undef TRACEPOINT_PROVIDER
 #define TRACEPOINT_PROVIDER reactor_cpp
 
@@ -89,6 +93,10 @@ TRACEPOINT_EVENT(
 #include <lttng/tracepoint-event.h>
 
 #else
+
+namespace reactor {
+constexpr bool tracing_enabled = false;
+}
 
 // empty definition in case we compile without tracing
 #define tracepoint(...)
