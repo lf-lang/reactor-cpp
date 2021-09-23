@@ -1,77 +1,37 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
   <title>Library API &mdash; reactor-cpp  documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
         <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Namespace reactor" href="namespace_reactor.html" />
     <link rel="prev" title="reactor-cpp" href="../index.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../index.html" class="icon icon-home"> reactor-cpp
-          
-
-          
           </a>
-
-          
-            
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -79,18 +39,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Library API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#class-hierarchy">Class Hierarchy</a></li>
@@ -127,12 +76,15 @@
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Reaction.html">Class Reaction</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Reactor.html">Class Reactor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1ReactorElement.html">Class ReactorElement</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classreactor_1_1ReadyQueue.html">Class ReadyQueue</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Scheduler.html">Class Scheduler</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Semaphore.html">Class Semaphore</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1ShutdownAction.html">Class ShutdownAction</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1StartupAction.html">Class StartupAction</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Tag.html">Class Tag</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Timer.html">Class Timer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1ValidationError.html">Class ValidationError</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Worker.html">Class Worker</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#enums">Enums</a><ul>
@@ -256,6 +208,8 @@
 <li class="toctree-l4"><a class="reference internal" href="variable_namespacereactor_1_1log_1a1985bfad8d1269e6d3d5e119ce846eef.html">Variable error_enabled</a></li>
 <li class="toctree-l4"><a class="reference internal" href="variable_namespacereactor_1_1log_1a3eb2fa07d2ccd17506a05aa3f2f14b2d.html">Variable info_enabled</a></li>
 <li class="toctree-l4"><a class="reference internal" href="variable_namespacereactor_1_1log_1a88a5f4b17305527201bcb473d079d49d.html">Variable warning_enabled</a></li>
+<li class="toctree-l4"><a class="reference internal" href="variable_namespacereactor_1a0edb3b5df7dd7992238566a2369c985b.html">Variable tracing_enabled</a></li>
+<li class="toctree-l4"><a class="reference internal" href="variable_namespacereactor_1a0edb3b5df7dd7992238566a2369c985b.html">Variable tracing_enabled</a></li>
 <li class="toctree-l4"><a class="reference internal" href="variable_namespacereactor_1_1log_1a88a5f4b17305527201bcb473d079d49d.html">Variable warning_enabled</a></li>
 </ul>
 </li>
@@ -282,95 +236,54 @@
 </li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">reactor-cpp</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>Library API</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../_sources/api/library_root.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
+             
   <section id="library-api">
-<h1>Library API<a class="headerlink" href="#library-api" title="Permalink to this headline">¶</a></h1>
+<h1>Library API<a class="headerlink" href="#library-api" title="Permalink to this headline"></a></h1>
 <section id="class-hierarchy">
-<h2>Class Hierarchy<a class="headerlink" href="#class-hierarchy" title="Permalink to this headline">¶</a></h2>
+<h2>Class Hierarchy<a class="headerlink" href="#class-hierarchy" title="Permalink to this headline"></a></h2>
 <ul class="treeView" id="class-treeView">
   <li>
     <ul class="collapsibleList">
-      <li>Namespace <a href="namespace_reactor.html#namespace-reactor">reactor</a><ul><li>Namespace <a href="namespace_reactor__log.html#namespace-reactor-log">reactor::log</a><ul><li>Struct <a href="structreactor_1_1log_1_1Debug.html#exhale-struct-structreactor-1-1log-1-1Debug">Debug</a></li><li>Struct <a href="structreactor_1_1log_1_1Error.html#exhale-struct-structreactor-1-1log-1-1Error">Error</a></li><li>Struct <a href="structreactor_1_1log_1_1Info.html#exhale-struct-structreactor-1-1log-1-1Info">Info</a></li><li>Struct <a href="structreactor_1_1log_1_1Warn.html#exhale-struct-structreactor-1-1log-1-1Warn">Warn</a></li><li>Template Class <a href="classreactor_1_1log_1_1BaseLogger.html#exhale-class-classreactor-1-1log-1-1BaseLogger">BaseLogger</a></li><li>Template <a href="classreactor_1_1log_1_1BaseLogger_3_01false_01_4.html#exhale-class-classreactor-1-1log-1-1BaseLogger-3-01false-01-4">Class BaseLogger&lt; false &gt;</a></li><li class="lastChild">Template <a href="classreactor_1_1log_1_1BaseLogger_3_01true_01_4.html#exhale-class-classreactor-1-1log-1-1BaseLogger-3-01true-01-4">Class BaseLogger&lt; true &gt;</a></li></ul></li><li>Template Class <a href="classreactor_1_1Action.html#exhale-class-classreactor-1-1Action">Action</a></li><li>Template <a href="classreactor_1_1Action_3_01void_01_4.html#exhale-class-classreactor-1-1Action-3-01void-01-4">Class Action&lt; void &gt;</a></li><li>Class <a href="classreactor_1_1BaseAction.html#exhale-class-classreactor-1-1BaseAction">BaseAction</a></li><li>Class <a href="classreactor_1_1BasePort.html#exhale-class-classreactor-1-1BasePort">BasePort</a></li><li>Class <a href="classreactor_1_1Environment.html#exhale-class-classreactor-1-1Environment">Environment</a></li><li>Template Class <a href="classreactor_1_1ImmutableValuePtr.html#exhale-class-classreactor-1-1ImmutableValuePtr">ImmutableValuePtr</a></li><li>Template Class <a href="classreactor_1_1Input.html#exhale-class-classreactor-1-1Input">Input</a></li><li>Template Class <a href="classreactor_1_1LogicalAction.html#exhale-class-classreactor-1-1LogicalAction">LogicalAction</a></li><li>Class <a href="classreactor_1_1LogicalTime.html#exhale-class-classreactor-1-1LogicalTime">LogicalTime</a></li><li>Template Class <a href="classreactor_1_1MutableValuePtr.html#exhale-class-classreactor-1-1MutableValuePtr">MutableValuePtr</a></li><li>Template Class <a href="classreactor_1_1Output.html#exhale-class-classreactor-1-1Output">Output</a></li><li>Template Class <a href="classreactor_1_1PhysicalAction.html#exhale-class-classreactor-1-1PhysicalAction">PhysicalAction</a></li><li>Template Class <a href="classreactor_1_1Port.html#exhale-class-classreactor-1-1Port">Port</a></li><li>Template <a href="classreactor_1_1Port_3_01void_01_4.html#exhale-class-classreactor-1-1Port-3-01void-01-4">Class Port&lt; void &gt;</a></li><li>Class <a href="classreactor_1_1Reaction.html#exhale-class-classreactor-1-1Reaction">Reaction</a></li><li>Class <a href="classreactor_1_1Reactor.html#exhale-class-classreactor-1-1Reactor">Reactor</a></li><li>Class <a href="classreactor_1_1ReactorElement.html#exhale-class-classreactor-1-1ReactorElement">ReactorElement</a></li><li>Class <a href="classreactor_1_1Scheduler.html#exhale-class-classreactor-1-1Scheduler">Scheduler</a></li><li>Class <a href="classreactor_1_1ShutdownAction.html#exhale-class-classreactor-1-1ShutdownAction">ShutdownAction</a></li><li>Class <a href="classreactor_1_1StartupAction.html#exhale-class-classreactor-1-1StartupAction">StartupAction</a></li><li>Class <a href="classreactor_1_1Tag.html#exhale-class-classreactor-1-1Tag">Tag</a></li><li>Class <a href="classreactor_1_1Timer.html#exhale-class-classreactor-1-1Timer">Timer</a></li><li>Class <a href="classreactor_1_1ValidationError.html#exhale-class-classreactor-1-1ValidationError">ValidationError</a></li><li class="lastChild">Enum <a href="enum_namespacereactor_1a08c8e2d85e5bc706b1af8a87e40eec6d.html#exhale-enum-namespacereactor-1a08c8e2d85e5bc706b1af8a87e40eec6d">PortType</a></li></ul></li><li class="lastChild">Enum <a href="enum_namespacereactor_1a08c8e2d85e5bc706b1af8a87e40eec6d.html#exhale-enum-namespacereactor-1a08c8e2d85e5bc706b1af8a87e40eec6d">PortType</a></li>
+      <li>Namespace <a href="namespace_reactor.html#namespace-reactor">reactor</a><ul><li>Namespace <a href="namespace_reactor__log.html#namespace-reactor-log">reactor::log</a><ul><li>Struct <a href="structreactor_1_1log_1_1Debug.html#exhale-struct-structreactor-1-1log-1-1Debug">Debug</a></li><li>Struct <a href="structreactor_1_1log_1_1Error.html#exhale-struct-structreactor-1-1log-1-1Error">Error</a></li><li>Struct <a href="structreactor_1_1log_1_1Info.html#exhale-struct-structreactor-1-1log-1-1Info">Info</a></li><li>Struct <a href="structreactor_1_1log_1_1Warn.html#exhale-struct-structreactor-1-1log-1-1Warn">Warn</a></li><li>Template Class <a href="classreactor_1_1log_1_1BaseLogger.html#exhale-class-classreactor-1-1log-1-1BaseLogger">BaseLogger</a></li><li>Template <a href="classreactor_1_1log_1_1BaseLogger_3_01false_01_4.html#exhale-class-classreactor-1-1log-1-1BaseLogger-3-01false-01-4">Class BaseLogger&lt; false &gt;</a></li><li class="lastChild">Template <a href="classreactor_1_1log_1_1BaseLogger_3_01true_01_4.html#exhale-class-classreactor-1-1log-1-1BaseLogger-3-01true-01-4">Class BaseLogger&lt; true &gt;</a></li></ul></li><li>Template Class <a href="classreactor_1_1Action.html#exhale-class-classreactor-1-1Action">Action</a></li><li>Template <a href="classreactor_1_1Action_3_01void_01_4.html#exhale-class-classreactor-1-1Action-3-01void-01-4">Class Action&lt; void &gt;</a></li><li>Class <a href="classreactor_1_1BaseAction.html#exhale-class-classreactor-1-1BaseAction">BaseAction</a></li><li>Class <a href="classreactor_1_1BasePort.html#exhale-class-classreactor-1-1BasePort">BasePort</a></li><li>Class <a href="classreactor_1_1Environment.html#exhale-class-classreactor-1-1Environment">Environment</a></li><li>Template Class <a href="classreactor_1_1ImmutableValuePtr.html#exhale-class-classreactor-1-1ImmutableValuePtr">ImmutableValuePtr</a></li><li>Template Class <a href="classreactor_1_1Input.html#exhale-class-classreactor-1-1Input">Input</a></li><li>Template Class <a href="classreactor_1_1LogicalAction.html#exhale-class-classreactor-1-1LogicalAction">LogicalAction</a></li><li>Class <a href="classreactor_1_1LogicalTime.html#exhale-class-classreactor-1-1LogicalTime">LogicalTime</a></li><li>Template Class <a href="classreactor_1_1MutableValuePtr.html#exhale-class-classreactor-1-1MutableValuePtr">MutableValuePtr</a></li><li>Template Class <a href="classreactor_1_1Output.html#exhale-class-classreactor-1-1Output">Output</a></li><li>Template Class <a href="classreactor_1_1PhysicalAction.html#exhale-class-classreactor-1-1PhysicalAction">PhysicalAction</a></li><li>Template Class <a href="classreactor_1_1Port.html#exhale-class-classreactor-1-1Port">Port</a></li><li>Template <a href="classreactor_1_1Port_3_01void_01_4.html#exhale-class-classreactor-1-1Port-3-01void-01-4">Class Port&lt; void &gt;</a></li><li>Class <a href="classreactor_1_1Reaction.html#exhale-class-classreactor-1-1Reaction">Reaction</a></li><li>Class <a href="classreactor_1_1Reactor.html#exhale-class-classreactor-1-1Reactor">Reactor</a></li><li>Class <a href="classreactor_1_1ReactorElement.html#exhale-class-classreactor-1-1ReactorElement">ReactorElement</a></li><li>Class <a href="classreactor_1_1ReadyQueue.html#exhale-class-classreactor-1-1ReadyQueue">ReadyQueue</a></li><li>Class <a href="classreactor_1_1Scheduler.html#exhale-class-classreactor-1-1Scheduler">Scheduler</a></li><li>Class <a href="classreactor_1_1Semaphore.html#exhale-class-classreactor-1-1Semaphore">Semaphore</a></li><li>Class <a href="classreactor_1_1ShutdownAction.html#exhale-class-classreactor-1-1ShutdownAction">ShutdownAction</a></li><li>Class <a href="classreactor_1_1StartupAction.html#exhale-class-classreactor-1-1StartupAction">StartupAction</a></li><li>Class <a href="classreactor_1_1Tag.html#exhale-class-classreactor-1-1Tag">Tag</a></li><li>Class <a href="classreactor_1_1Timer.html#exhale-class-classreactor-1-1Timer">Timer</a></li><li>Class <a href="classreactor_1_1ValidationError.html#exhale-class-classreactor-1-1ValidationError">ValidationError</a></li><li>Class <a href="classreactor_1_1Worker.html#exhale-class-classreactor-1-1Worker">Worker</a></li><li class="lastChild">Enum <a href="enum_namespacereactor_1a08c8e2d85e5bc706b1af8a87e40eec6d.html#exhale-enum-namespacereactor-1a08c8e2d85e5bc706b1af8a87e40eec6d">PortType</a></li></ul></li><li class="lastChild">Enum <a href="enum_namespacereactor_1a08c8e2d85e5bc706b1af8a87e40eec6d.html#exhale-enum-namespacereactor-1a08c8e2d85e5bc706b1af8a87e40eec6d">PortType</a></li>
     </ul>
   </li><!-- only tree view element -->
 </ul><!-- /treeView class-treeView --></section>
 <section id="file-hierarchy">
-<h2>File Hierarchy<a class="headerlink" href="#file-hierarchy" title="Permalink to this headline">¶</a></h2>
+<h2>File Hierarchy<a class="headerlink" href="#file-hierarchy" title="Permalink to this headline"></a></h2>
 <ul class="treeView" id="file-treeView">
   <li>
     <ul class="collapsibleList">
-      <li>Directory <a href="dir_include.html#dir-include">include</a><ul><li class="lastChild">Directory <a href="dir_include_reactor-cpp.html#dir-include-reactor-cpp">reactor-cpp</a><ul><li>Directory <a href="dir_include_reactor-cpp_impl.html#dir-include-reactor-cpp-impl">impl</a><ul><li>File <a href="file_include_reactor-cpp_impl_action_impl.hh.html#file-include-reactor-cpp-impl-action-impl.hh">action_impl.hh</a></li><li class="lastChild">File <a href="file_include_reactor-cpp_impl_port_impl.hh.html#file-include-reactor-cpp-impl-port-impl.hh">port_impl.hh</a></li></ul></li><li>File <a href="file_include_reactor-cpp_action.hh.html#file-include-reactor-cpp-action.hh">action.hh</a></li><li>File <a href="file_include_reactor-cpp_assert.hh.html#file-include-reactor-cpp-assert.hh">assert.hh</a></li><li>File <a href="file_include_reactor-cpp_environment.hh.html#file-include-reactor-cpp-environment.hh">environment.hh</a></li><li>File <a href="file_include_reactor-cpp_fwd.hh.html#file-include-reactor-cpp-fwd.hh">fwd.hh</a></li><li>File <a href="file_include_reactor-cpp_logging.hh.html#file-include-reactor-cpp-logging.hh">logging.hh</a></li><li>File <a href="file_include_reactor-cpp_logical_time.hh.html#file-include-reactor-cpp-logical-time.hh">logical_time.hh</a></li><li>File <a href="file_include_reactor-cpp_port.hh.html#file-include-reactor-cpp-port.hh">port.hh</a></li><li>File <a href="file_include_reactor-cpp_reaction.hh.html#file-include-reactor-cpp-reaction.hh">reaction.hh</a></li><li>File <a href="file_include_reactor-cpp_reactor-cpp.hh.html#file-include-reactor-cpp-reactor-cpp.hh">reactor-cpp.hh</a></li><li>File <a href="file_include_reactor-cpp_reactor.hh.html#file-include-reactor-cpp-reactor.hh">reactor.hh</a></li><li>File <a href="file_include_reactor-cpp_scheduler.hh.html#file-include-reactor-cpp-scheduler.hh">scheduler.hh</a></li><li>File <a href="file_include_reactor-cpp_time.hh.html#file-include-reactor-cpp-time.hh">time.hh</a></li><li>File <a href="file_include_reactor-cpp_trace.hh.html#file-include-reactor-cpp-trace.hh">trace.hh</a></li><li class="lastChild">File <a href="file_include_reactor-cpp_value_ptr.hh.html#file-include-reactor-cpp-value-ptr.hh">value_ptr.hh</a></li></ul></li></ul></li><li class="lastChild">Directory <a href="dir_lib.html#dir-lib">lib</a><ul><li>File <a href="file_lib_action.cc.html#file-lib-action.cc">action.cc</a></li><li>File <a href="file_lib_assert.cc.html#file-lib-assert.cc">assert.cc</a></li><li>File <a href="file_lib_environment.cc.html#file-lib-environment.cc">environment.cc</a></li><li>File <a href="file_lib_logging.cc.html#file-lib-logging.cc">logging.cc</a></li><li>File <a href="file_lib_logical_time.cc.html#file-lib-logical-time.cc">logical_time.cc</a></li><li>File <a href="file_lib_port.cc.html#file-lib-port.cc">port.cc</a></li><li>File <a href="file_lib_reaction.cc.html#file-lib-reaction.cc">reaction.cc</a></li><li>File <a href="file_lib_reactor.cc.html#file-lib-reactor.cc">reactor.cc</a></li><li>File <a href="file_lib_scheduler.cc.html#file-lib-scheduler.cc">scheduler.cc</a></li><li>File <a href="file_lib_time.cc.html#file-lib-time.cc">time.cc</a></li><li class="lastChild">File <a href="file_lib_trace.cc.html#file-lib-trace.cc">trace.cc</a></li></ul></li>
+      <li>Directory <a href="dir_include.html#dir-include">include</a><ul><li class="lastChild">Directory <a href="dir_include_reactor-cpp.html#dir-include-reactor-cpp">reactor-cpp</a><ul><li>Directory <a href="dir_include_reactor-cpp_impl.html#dir-include-reactor-cpp-impl">impl</a><ul><li>File <a href="file_include_reactor-cpp_impl_action_impl.hh.html#file-include-reactor-cpp-impl-action-impl.hh">action_impl.hh</a></li><li class="lastChild">File <a href="file_include_reactor-cpp_impl_port_impl.hh.html#file-include-reactor-cpp-impl-port-impl.hh">port_impl.hh</a></li></ul></li><li>File <a href="file_include_reactor-cpp_action.hh.html#file-include-reactor-cpp-action.hh">action.hh</a></li><li>File <a href="file_include_reactor-cpp_assert.hh.html#file-include-reactor-cpp-assert.hh">assert.hh</a></li><li>File <a href="file_include_reactor-cpp_environment.hh.html#file-include-reactor-cpp-environment.hh">environment.hh</a></li><li>File <a href="file_include_reactor-cpp_fwd.hh.html#file-include-reactor-cpp-fwd.hh">fwd.hh</a></li><li>File <a href="file_include_reactor-cpp_logging.hh.html#file-include-reactor-cpp-logging.hh">logging.hh</a></li><li>File <a href="file_include_reactor-cpp_logical_time.hh.html#file-include-reactor-cpp-logical-time.hh">logical_time.hh</a></li><li>File <a href="file_include_reactor-cpp_port.hh.html#file-include-reactor-cpp-port.hh">port.hh</a></li><li>File <a href="file_include_reactor-cpp_reaction.hh.html#file-include-reactor-cpp-reaction.hh">reaction.hh</a></li><li>File <a href="file_include_reactor-cpp_reactor-cpp.hh.html#file-include-reactor-cpp-reactor-cpp.hh">reactor-cpp.hh</a></li><li>File <a href="file_include_reactor-cpp_reactor.hh.html#file-include-reactor-cpp-reactor.hh">reactor.hh</a></li><li>File <a href="file_include_reactor-cpp_scheduler.hh.html#file-include-reactor-cpp-scheduler.hh">scheduler.hh</a></li><li>File <a href="file_include_reactor-cpp_semaphore.hh.html#file-include-reactor-cpp-semaphore.hh">semaphore.hh</a></li><li>File <a href="file_include_reactor-cpp_time.hh.html#file-include-reactor-cpp-time.hh">time.hh</a></li><li>File <a href="file_include_reactor-cpp_trace.hh.html#file-include-reactor-cpp-trace.hh">trace.hh</a></li><li class="lastChild">File <a href="file_include_reactor-cpp_value_ptr.hh.html#file-include-reactor-cpp-value-ptr.hh">value_ptr.hh</a></li></ul></li></ul></li><li class="lastChild">Directory <a href="dir_lib.html#dir-lib">lib</a><ul><li>File <a href="file_lib_action.cc.html#file-lib-action.cc">action.cc</a></li><li>File <a href="file_lib_assert.cc.html#file-lib-assert.cc">assert.cc</a></li><li>File <a href="file_lib_environment.cc.html#file-lib-environment.cc">environment.cc</a></li><li>File <a href="file_lib_logical_time.cc.html#file-lib-logical-time.cc">logical_time.cc</a></li><li>File <a href="file_lib_port.cc.html#file-lib-port.cc">port.cc</a></li><li>File <a href="file_lib_reaction.cc.html#file-lib-reaction.cc">reaction.cc</a></li><li>File <a href="file_lib_reactor.cc.html#file-lib-reactor.cc">reactor.cc</a></li><li>File <a href="file_lib_scheduler.cc.html#file-lib-scheduler.cc">scheduler.cc</a></li><li>File <a href="file_lib_time.cc.html#file-lib-time.cc">time.cc</a></li><li class="lastChild">File <a href="file_lib_trace.cc.html#file-lib-trace.cc">trace.cc</a></li></ul></li>
     </ul>
   </li><!-- only tree view element -->
 </ul><!-- /treeView file-treeView --></section>
 <section id="full-api">
-<h2>Full API<a class="headerlink" href="#full-api" title="Permalink to this headline">¶</a></h2>
+<h2>Full API<a class="headerlink" href="#full-api" title="Permalink to this headline"></a></h2>
 <section id="namespaces">
-<h3>Namespaces<a class="headerlink" href="#namespaces" title="Permalink to this headline">¶</a></h3>
+<h3>Namespaces<a class="headerlink" href="#namespaces" title="Permalink to this headline"></a></h3>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="namespace_reactor.html">Namespace reactor</a><ul>
@@ -379,6 +292,7 @@
 <li class="toctree-l2"><a class="reference internal" href="namespace_reactor.html#enums">Enums</a></li>
 <li class="toctree-l2"><a class="reference internal" href="namespace_reactor.html#functions">Functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="namespace_reactor.html#typedefs">Typedefs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="namespace_reactor.html#variables">Variables</a></li>
 </ul>
 </li>
 </ul>
@@ -402,7 +316,7 @@
 </div>
 </section>
 <section id="classes-and-structs">
-<h3>Classes and Structs<a class="headerlink" href="#classes-and-structs" title="Permalink to this headline">¶</a></h3>
+<h3>Classes and Structs<a class="headerlink" href="#classes-and-structs" title="Permalink to this headline"></a></h3>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="structreactor_1_1log_1_1Debug.html">Struct Debug</a><ul>
@@ -668,8 +582,24 @@
 </div>
 <div class="toctree-wrapper compound">
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="classreactor_1_1ReadyQueue.html">Class ReadyQueue</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="classreactor_1_1ReadyQueue.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="classreactor_1_1Scheduler.html">Class Scheduler</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="classreactor_1_1Scheduler.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="classreactor_1_1Semaphore.html">Class Semaphore</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="classreactor_1_1Semaphore.html#class-documentation">Class Documentation</a></li>
 </ul>
 </li>
 </ul>
@@ -731,9 +661,17 @@
 </li>
 </ul>
 </div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="classreactor_1_1Worker.html">Class Worker</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="classreactor_1_1Worker.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
 </section>
 <section id="enums">
-<h3>Enums<a class="headerlink" href="#enums" title="Permalink to this headline">¶</a></h3>
+<h3>Enums<a class="headerlink" href="#enums" title="Permalink to this headline"></a></h3>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="enum_namespacereactor_1a08c8e2d85e5bc706b1af8a87e40eec6d.html">Enum PortType</a><ul>
@@ -752,7 +690,7 @@
 </div>
 </section>
 <section id="functions">
-<h3>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h3>
+<h3>Functions<a class="headerlink" href="#functions" title="Permalink to this headline"></a></h3>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="function_namespacereactor_1a3acae8d24d419d39f72ca08bccf13c94.html">Function dot_name</a><ul>
@@ -1595,7 +1533,7 @@
 </div>
 </section>
 <section id="variables">
-<h3>Variables<a class="headerlink" href="#variables" title="Permalink to this headline">¶</a></h3>
+<h3>Variables<a class="headerlink" href="#variables" title="Permalink to this headline"></a></h3>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="variable_namespacereactor_1_1log_1a1391126b1838b59126c9e9d1158a7f55.html">Variable debug_enabled</a><ul>
@@ -1648,6 +1586,22 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="variable_namespacereactor_1_1log_1a88a5f4b17305527201bcb473d079d49d.html">Variable warning_enabled</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="variable_namespacereactor_1_1log_1a88a5f4b17305527201bcb473d079d49d.html#variable-documentation">Variable Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="variable_namespacereactor_1a0edb3b5df7dd7992238566a2369c985b.html">Variable tracing_enabled</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="variable_namespacereactor_1a0edb3b5df7dd7992238566a2369c985b.html#variable-documentation">Variable Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="variable_namespacereactor_1a0edb3b5df7dd7992238566a2369c985b.html">Variable tracing_enabled</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="variable_namespacereactor_1a0edb3b5df7dd7992238566a2369c985b.html#variable-documentation">Variable Documentation</a></li>
 </ul>
 </li>
 </ul>
@@ -1662,7 +1616,7 @@
 </div>
 </section>
 <section id="defines">
-<h3>Defines<a class="headerlink" href="#defines" title="Permalink to this headline">¶</a></h3>
+<h3>Defines<a class="headerlink" href="#defines" title="Permalink to this headline"></a></h3>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="define_assert_8hh_1aca68c0d4ac8df0838e209fb5300f7be3.html">Define ASSERT</a><ul>
@@ -1705,7 +1659,7 @@
 </div>
 </section>
 <section id="typedefs">
-<h3>Typedefs<a class="headerlink" href="#typedefs" title="Permalink to this headline">¶</a></h3>
+<h3>Typedefs<a class="headerlink" href="#typedefs" title="Permalink to this headline"></a></h3>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="typedef_namespacereactor_1aa8375b807a80703545664096c5b5b779.html">Typedef Duration</a><ul>
@@ -1760,50 +1714,33 @@
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="namespace_reactor.html" class="btn btn-neutral float-right" title="Namespace reactor" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="../index.html" class="btn btn-neutral float-left" title="reactor-cpp" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="namespace_reactor.html" class="btn btn-neutral float-right" title="Namespace reactor" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2020, Christian Menard.
-
-    </p>
+    <p>&#169; Copyright 2020, Christian Menard.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

@@ -75,11 +75,6 @@ Files
 .. toctree::
    :maxdepth: 5
 
-   file_lib_logging.cc.rst
-
-.. toctree::
-   :maxdepth: 5
-
    file_include_reactor-cpp_logging.hh.rst
 
 .. toctree::
@@ -141,6 +136,11 @@ Files
    :maxdepth: 5
 
    file_include_reactor-cpp_scheduler.hh.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_include_reactor-cpp_semaphore.hh.rst
 
 .. toctree::
    :maxdepth: 5

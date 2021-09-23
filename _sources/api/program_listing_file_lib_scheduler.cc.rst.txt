@@ -30,185 +30,230 @@ Program Listing for File scheduler.cc
    
    namespace reactor {
    
-   void Scheduler::work(unsigned id) {
-     log::Debug() << "(Worker " << id << ") "
-                  << "Starting";
+   thread_local const Worker* Worker::current_worker{nullptr};
    
-     while (!terminate_workers.load(std::memory_order_acquire)) {
-       // process ready reactions as long as there are any
-       process_ready_reactions(id);
+   Worker::Worker(Worker&& w) : scheduler{w.scheduler}, id{w.id}, thread{} {
+     // Need to provide the move constructor in order to organize workers in a
+     // std::vector. However, moving is not save if the thread is already running,
+     // thus we throw an exception here if the the worker is moved but the
+     // internal thread is already running.
    
-       {
-         auto lg = using_workers ? std::unique_lock<std::mutex>(m_running_workers)
-                                 : std::unique_lock<std::mutex>();
-   
-         // let all workers except the last one sleep until new reactions are added
-         // to the ready queue
-         if (using_workers) {
-           if (running_workers > 1) {
-             // wait for reactions to become ready for execution, or for a
-             // terminate signal
-             wait_for_ready_reactions(id, lg);
-             continue;  // start from the top after waking up
-           }
-           ASSERT(running_workers == 1);
-           log::Debug() << "(Worker " << id << ") "
-                        << "I am the last active worker.";
-         }
-   
-         // Reaching this point means that the current worker thread is the last
-         // running worker. Since holding the m_running_workers mutex guarantees
-         // that no other worker is running, we can safely work with all the data
-         // structures without acquiring additional mutexes.
-   
-         schedule_ready_reactions(id);
-   
-         if (ready_reactions.size() == 1) {
-           // if there is only one reaction, then this worker processes it
-           // directly
-           continue;
-         } else if (ready_reactions.size() > 1) {
-           // notify other workers if there is more than one ready reaction
-           if (using_workers) {
-             lg.unlock();
-             cv_ready_reactions.notify_all();
-           }
-           continue;
-         }
-       }  // m_running_workers
-   
-       // if we reach this point, all reactions in the reaction queue for the
-       // current tag where processed and we need to call next() or terminate the
-       // execution
-       if (continue_execution) {
-         log::Debug() << "(Worker " << id << ") "
-                      << "call next()";
-         next();
-         reaction_queue_pos = 0;
-       } else {
-         // let all workers know that they should terminate
-         terminate_workers.store(true, std::memory_order_release);
-         cv_ready_reactions.notify_all();
-       }
+     if (w.thread.joinable()) {
+       throw std::runtime_error{"Running workers cannot be moved!"};
      }
-   
-     log::Debug() << "Stopping worker " << id;
    }
    
-   void Scheduler::process_ready_reactions(unsigned id) {
-     auto lg = using_workers ? std::unique_lock<std::mutex>(m_ready_reactions)
-                             : std::unique_lock<std::mutex>();
+   void Worker::work() const {
+     // initialize the current worker thread local variable
+     current_worker = this;
    
-     // process ready reactions as long as there are any
-     while (!ready_reactions.empty()) {
-       // Check if there are reactions to be executed.
-       // If there is a ready reaction, remove it from the ready queue and add
-       // it to the list of reactions that are currently executing.
-       auto reaction = ready_reactions.back();
-       ready_reactions.pop_back();
+     log::Debug() << "(Worker " << this->id << ") Starting";
    
-       if (using_workers)
-         lg.unlock();
+     if (id == 0) {
+       log::Debug() << "(Worker 0) do the initial scheduling";
+       scheduler.schedule();
+     }
+   
+     while (true) {
+       // wait for a ready reaction
+       auto reaction = scheduler.ready_queue.pop();
+   
+       // receiving a nullptr indicates that the worker should terminate
+       if (reaction == nullptr) {
+         break;
+       }
    
        // execute the reaction
-       log::Debug() << "(Worker " << id << ") "
-                    << "execute reaction " << reaction->fqn();
-       tracepoint(reactor_cpp, reaction_execution_starts, id, reaction->fqn());
-       reaction->trigger();
-       tracepoint(reactor_cpp, reaction_execution_finishes, id, reaction->fqn());
+       execute_reaction(reaction);
    
-       if (using_workers)
-         lg.lock();
+       // was this the very last reaction?
+       if (scheduler.reactions_to_process.fetch_sub(
+               1, std::memory_order_acq_rel) == 1) {
+         // Yes, then schedule. The atomic decrement above ensures that only one
+         // thread enters this block.
+         scheduler.schedule();
+       }
+       // continue otherwise
+     }
+   
+     log::Debug() << "(Worker " << id << ") terminates";
+   }
+   
+   void Worker::execute_reaction(Reaction* reaction) const {
+     log::Debug() << "(Worker " << id << ") "
+                  << "execute reaction " << reaction->fqn();
+     tracepoint(reactor_cpp, reaction_execution_starts, id, reaction->fqn());
+     reaction->trigger();
+     tracepoint(reactor_cpp, reaction_execution_finishes, id, reaction->fqn());
+   }
+   
+   void Scheduler::schedule() {
+     bool found_ready_reactions = schedule_ready_reactions();
+   
+     while (!found_ready_reactions) {
+       log::Debug() << "(Scheduler) call next()";
+       next();
+       reaction_queue_pos = 0;
+   
+       found_ready_reactions = schedule_ready_reactions();
+   
+       if (!continue_execution && !found_ready_reactions) {
+         // let all workers know that they should terminate
+         terminate_all_workers();
+         break;
+       }
      }
    }
    
-   void Scheduler::wait_for_ready_reactions(unsigned id,
-                                            std::unique_lock<std::mutex>& lock) {
-     log::Debug() << "(Worker " << id << ") "
-                  << "wait for ready reactions";
-     running_workers--;
-     cv_ready_reactions.wait(lock, [this]() {
-       return !this->ready_reactions.empty() || terminate_workers;
-     });
-     running_workers++;
+   Reaction* ReadyQueue::pop() {
+     auto old_size = size.fetch_sub(1, std::memory_order_acq_rel);
+   
+     // If there is no ready reaction available, wait until there is one.
+     while (old_size <= 0) {
+       log::Debug() << "(Worker " << Worker::current_worker_id()
+                    << ") Wait for work";
+       sem.acquire();
+       log::Debug() << "(Worker " << Worker::current_worker_id() << ") Waking up";
+       old_size = size.fetch_sub(1, std::memory_order_acq_rel);
+       // FIXME: Protect against underflow?
+     }
+   
+     auto pos = old_size - 1;
+     return queue[pos];
    }
    
-   void Scheduler::schedule_ready_reactions(unsigned id) {
-     // Have we finished iterating over the reaction queue?
-     if (reaction_queue_pos < reaction_queue.size()) {
-       // No -> continue iterating
-       log::Debug() << "(Worker " << id << ") "
-                    << "Scanning the reaction queue for ready reactions";
+   void ReadyQueue::fill_up(std::vector<Reaction*>& ready_reactions) {
+     // clear the internal queue and swap contents
+     queue.clear();
+     queue.swap(ready_reactions);
    
-       // continue the actual iteration
-       while (reaction_queue_pos < reaction_queue.size() &&
-              reaction_queue[reaction_queue_pos].empty()) {
-         reaction_queue_pos++;
+     // update the atomic size counter and release the semaphore to wake up
+     // waiting worker threads
+     std::ptrdiff_t new_size = queue.size();
+     auto old_size = size.exchange(new_size, std::memory_order_acq_rel);
+   
+     // calculate how many workers to wake up. -old_size indicates the number of
+     // workers who started waiting since the last update.
+     // We want to wake up at most all the waiting workers. If we would release
+     // more, other workers that are out of work would not block when acquiring
+     // the semaphore.
+     // Also, we do not want to wake up more workers than there is work. new_size
+     // indicates the number of ready reactions. Since there is always at least
+     // one worker running running, new_size - running_workers indicates the
+     // number of additional workers needed to process all reactions.
+     waiting_workers += -old_size;
+     auto running_workers = num_workers - waiting_workers;
+     auto workers_to_wakeup =
+         std::min(waiting_workers, new_size - running_workers);
+   
+     // wakeup other workers
+     if (workers_to_wakeup > 0) {
+       waiting_workers -= workers_to_wakeup;
+       log::Debug() << "Wakeup " << workers_to_wakeup << " workers";
+       sem.release((unsigned)workers_to_wakeup);
+     }
+   }
+   
+   void Scheduler::terminate_all_workers() {
+     log::Debug() << "(Scheduler) Send termination signal to all workers";
+     auto num_workers = _environment->num_workers();
+     std::vector<Reaction*> null_reactions{num_workers, nullptr};
+     log::Debug() << null_reactions.size();
+     ready_queue.fill_up(null_reactions);
+   }
+   
+   bool Scheduler::schedule_ready_reactions() {
+     // insert any triggered reactions into the reaction queue
+     for (auto& v : triggered_reactions) {
+       for (auto n : v) {
+         reaction_queue[n->index()].push_back(n);
        }
+       v.clear();
+     }
    
-       if (reaction_queue_pos < reaction_queue.size()) {
-         auto& reactions = reaction_queue[reaction_queue_pos];
+     log::Debug() << "(Scheduler) "
+                  << "Scanning the reaction queue for ready reactions";
    
-         // any ready reactions of current priority?
-         if (!reactions.empty()) {
-           log::Debug() << "(Worker " << id << ") "
-                        << "Process reactions of priority " << reaction_queue_pos;
+     // continue iterating over the reaction queue
+     for (; reaction_queue_pos < reaction_queue.size(); reaction_queue_pos++) {
+       auto& reactions = reaction_queue[reaction_queue_pos];
    
-           // Make sure that any reaction is only executed once even if it
-           // was triggered multiple times.
-           std::sort(reactions.begin(), reactions.end());
-           reactions.erase(std::unique(reactions.begin(), reactions.end()),
-                           reactions.end());
+       // any ready reactions of current priority?
+       if (!reactions.empty()) {
+         log::Debug() << "(Scheduler) Process reactions of priority "
+                      << reaction_queue_pos;
    
-           // place all ready reactions on the ready queue
+         // Make sure that any reaction is only executed once even if it
+         // was triggered multiple times.
+         std::sort(reactions.begin(), reactions.end());
+         reactions.erase(std::unique(reactions.begin(), reactions.end()),
+                         reactions.end());
+   
+         if constexpr (log::debug_enabled || tracing_enabled) {
            for (auto r : reactions) {
-             log::Debug() << "(Worker " << id << ") "
-                          << "Reaction " << r->fqn() << " is ready for execution";
+             log::Debug() << "(Scheduler) Reaction " << r->fqn()
+                          << " is ready for execution";
              tracepoint(reactor_cpp, trigger_reaction, r->container()->fqn(),
                         r->name(), _logical_time);
-             ready_reactions.push_back(r);
            }
-   
-           reactions.clear();
          }
+   
+         reactions_to_process.store(reactions.size(), std::memory_order_release);
+         ready_queue.fill_up(reactions);
+   
+         // break out of the loop and return
+         return true;
        }
      }
+   
+     log::Debug() << "(Scheduler) Reached end of reaction queue";
+   
+     return false;
    }
    
    void Scheduler::start() {
      log::Debug() << "Starting the scheduler...";
    
-     // initialize the reaction queue
+     auto num_workers = _environment->num_workers();
+     // initialize the reaction queue, set ports vector, and triggered reactions
+     // vector
      reaction_queue.resize(_environment->max_reaction_index() + 1);
+     set_ports.resize(num_workers);
+     triggered_reactions.resize(num_workers);
    
-     running_workers = _environment->num_workers();
-     // start worker threads
-     for (unsigned i = 1; i < _environment->num_workers() + 1; i++) {
-       worker_threads.emplace_back([this, i]() { this->work(i); });
+     // Initialize and start the workers. By resizing the workers vector first, we
+     // make sure that there is sufficient space for all the workers and non of
+     // them needs to be moved. This is important because a running worker may not
+     // be moved.
+     workers.reserve(num_workers);
+     for (unsigned i = 0; i < num_workers; i++) {
+       workers.emplace_back(*this, i);
+       workers.back().start_thread();
      }
    
      // join all worker threads
-     for (auto& t : worker_threads) {
-       t.join();
+     for (auto& w : workers) {
+       w.join_thread();
      }
    }
    
    void Scheduler::next() {
-     static std::unique_ptr<EventMap> events{nullptr};
+     static EventMap events{};
    
      // clean up before scheduling any new events
-     if (events != nullptr) {
+     if (!events.empty()) {
        // cleanup all triggered actions
-       for (auto& kv : *events) {
+       for (auto& kv : events) {
          kv.first->cleanup();
        }
-       events = nullptr;
-   
        // cleanup all set ports
-       for (auto p : set_ports) {
-         p->cleanup();
+       for (auto& v : set_ports) {
+         for (auto& p : v) {
+           p->cleanup();
+         }
+         v.clear();
        }
-       set_ports.clear();
+       events.clear();
      }
    
      {
@@ -226,7 +271,7 @@ Program Listing for File scheduler.cc
          }
        }
    
-       while (events == nullptr) {
+       while (events.empty()) {
          if (_stop) {
            continue_execution = false;
            log::Debug() << "Shutting down the scheduler";
@@ -288,25 +333,31 @@ Program Listing for File scheduler.cc
    
      // execute all setup functions; this sets the values of the corresponding
      // actions
-     for (auto& kv : *events) {
+     for (auto& kv : events) {
        auto& setup = kv.second;
        if (setup != nullptr) {
          setup();
        }
      }
    
-     for (auto& kv : *events) {
+     log::Debug() << "events: " << events.size();
+     for (auto& kv : events) {
+       log::Debug() << "Action " << kv.first->fqn();
        for (auto n : kv.first->triggers()) {
          // There is no need to acquire the mutex. At this point the scheduler
          // should be the only thread accessing the reaction queue as none of the
          // workers are running
+         log::Debug() << "insert reaction " << n->fqn() << " with index "
+                      << n->index();
          reaction_queue[n->index()].push_back(n);
        }
      }
    }
    
    Scheduler::Scheduler(Environment* env)
-       : using_workers(env->num_workers() > 1), _environment(env) {}
+       : using_workers(env->num_workers() > 1)
+       , _environment(env)
+       , ready_queue(env->num_workers()) {}
    
    Scheduler::~Scheduler() {}
    
@@ -329,9 +380,8 @@ Program Listing for File scheduler.cc
                   action->name(), tag);
    
        // create a new event map or retrieve the existing one
-       auto emplace_result =
-           event_queue.try_emplace(tag, std::make_unique<EventMap>());
-       auto& event_map = *emplace_result.first->second;
+       auto emplace_result = event_queue.try_emplace(tag, EventMap());
+       auto& event_map = emplace_result.first->second;
    
        // insert the new event
        event_map[action] = setup;
@@ -348,13 +398,12 @@ Program Listing for File scheduler.cc
    
    void Scheduler::set_port(BasePort* p) {
      log::Debug() << "Set port " << p->fqn();
-     auto lg = using_workers ? std::unique_lock<std::mutex>(m_reaction_queue)
-                             : std::unique_lock<std::mutex>();
+   
      // We do not check here if p is already in the list. This means clean()
      // could be called multiple times for a single port. However, calling
      // clean() multiple time is not harmful and more efficient then checking if
-     // the port is already in the list.
-     set_ports.push_back(p);
+     set_ports[Worker::current_worker_id()].push_back(p);
+   
      // recursively search for triggered reactions
      set_port_helper(p);
    }
@@ -367,7 +416,7 @@ Program Listing for File scheduler.cc
        }
      } else {
        for (auto n : p->triggers()) {
-         reaction_queue[n->index()].push_back(n);
+         triggered_reactions[Worker::current_worker_id()].push_back(n);
        }
      }
    }

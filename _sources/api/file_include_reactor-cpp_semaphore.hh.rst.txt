@@ -1,0 +1,61 @@
+
+.. _file_include_reactor-cpp_semaphore.hh:
+
+File semaphore.hh
+=================
+
+|exhale_lsh| :ref:`Parent directory <dir_include_reactor-cpp>` (``include/reactor-cpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``include/reactor-cpp/semaphore.hh``)
+-------------------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_include_reactor-cpp_semaphore.hh.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``atomic``
+
+- ``condition_variable``
+
+- ``mutex``
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_include_reactor-cpp_scheduler.hh`
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_reactor`
+
+
+Classes
+-------
+
+
+- :ref:`exhale_class_classreactor_1_1Semaphore`
+

@@ -33,7 +33,7 @@ Includes
 
 - ``fstream``
 
-- ``map``
+- ``map`` (:ref:`file_include_reactor-cpp_semaphore.hh`)
 
 - ``reactor-cpp/assert.hh`` (:ref:`file_include_reactor-cpp_assert.hh`)
 

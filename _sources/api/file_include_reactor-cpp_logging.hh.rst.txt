@@ -45,8 +45,6 @@ Included By
 
 - :ref:`file_lib_environment.cc`
 
-- :ref:`file_lib_logging.cc`
-
 - :ref:`file_lib_reactor.cc`
 
 - :ref:`file_lib_scheduler.cc`

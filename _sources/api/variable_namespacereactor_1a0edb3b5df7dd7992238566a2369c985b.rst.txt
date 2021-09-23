@@ -1,0 +1,13 @@
+.. _exhale_variable_namespacereactor_1a0edb3b5df7dd7992238566a2369c985b:
+
+Variable tracing_enabled
+========================
+
+- Defined in :ref:`file_include_reactor-cpp_trace.hh`
+
+
+Variable Documentation
+----------------------
+
+
+.. doxygenvariable:: tracing_enabled

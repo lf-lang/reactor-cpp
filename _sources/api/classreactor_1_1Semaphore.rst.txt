@@ -1,0 +1,17 @@
+.. _exhale_class_classreactor_1_1Semaphore:
+
+Class Semaphore
+===============
+
+- Defined in :ref:`file_include_reactor-cpp_semaphore.hh`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: reactor::Semaphore
+   :members:
+   :protected-members:
+   :private-members:
+   :undoc-members:

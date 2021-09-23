@@ -78,6 +78,8 @@ Program Listing for File port.hh
      void cleanup() override final { value_ptr = nullptr; }
    
     public:
+     using value_type = T;
+   
      Port(const std::string& name, PortType type, Reactor* container)
          : BasePort(name, type, container) {}
    
@@ -110,6 +112,8 @@ Program Listing for File port.hh
      void cleanup() override final { present = false; }
    
     public:
+     using value_type = void;
+   
      Port(const std::string& name, PortType type, Reactor* container)
          : BasePort(name, type, container) {}
    
@@ -129,6 +133,8 @@ Program Listing for File port.hh
     public:
      Input(const std::string& name, Reactor* container)
          : Port<T>(name, PortType::Input, container) {}
+   
+     Input(Input&&) = default;
    };
    
    template <class T>
@@ -136,6 +142,8 @@ Program Listing for File port.hh
     public:
      Output(const std::string& name, Reactor* container)
          : Port<T>(name, PortType::Output, container) {}
+   
+     Output(Output&&) = default;
    };
    
    }  // namespace reactor

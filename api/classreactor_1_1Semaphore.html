@@ -1,75 +1,37 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>File logging.cc &mdash; reactor-cpp  documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>Class Semaphore &mdash; reactor-cpp  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
         <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Class ShutdownAction" href="classreactor_1_1ShutdownAction.html" />
+    <link rel="prev" title="Class Scheduler" href="classreactor_1_1Scheduler.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../index.html" class="icon icon-home"> reactor-cpp
-          
-
-          
           </a>
-
-          
-            
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -77,30 +39,19 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
-              <ul>
-<li class="toctree-l1"><a class="reference internal" href="library_root.html">Library API</a><ul>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="library_root.html">Library API</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="library_root.html#class-hierarchy">Class Hierarchy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="library_root.html#file-hierarchy">File Hierarchy</a></li>
-<li class="toctree-l2"><a class="reference internal" href="library_root.html#full-api">Full API</a><ul>
+<li class="toctree-l2 current"><a class="reference internal" href="library_root.html#full-api">Full API</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="library_root.html#namespaces">Namespaces</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="namespace_reactor.html">Namespace reactor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="namespace_reactor__log.html">Namespace reactor::log</a></li>
 <li class="toctree-l4"><a class="reference internal" href="namespace_reactor__operators.html">Namespace reactor::operators</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="library_root.html#classes-and-structs">Classes and Structs</a><ul>
+<li class="toctree-l3 current"><a class="reference internal" href="library_root.html#classes-and-structs">Classes and Structs</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="structreactor_1_1log_1_1Debug.html">Struct Debug</a></li>
 <li class="toctree-l4"><a class="reference internal" href="structreactor_1_1log_1_1Error.html">Struct Error</a></li>
 <li class="toctree-l4"><a class="reference internal" href="structreactor_1_1log_1_1Info.html">Struct Info</a></li>
@@ -125,12 +76,15 @@
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Reaction.html">Class Reaction</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Reactor.html">Class Reactor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1ReactorElement.html">Class ReactorElement</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classreactor_1_1ReadyQueue.html">Class ReadyQueue</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Scheduler.html">Class Scheduler</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Class Semaphore</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1ShutdownAction.html">Class ShutdownAction</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1StartupAction.html">Class StartupAction</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Tag.html">Class Tag</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Timer.html">Class Timer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1ValidationError.html">Class ValidationError</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Worker.html">Class Worker</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="library_root.html#enums">Enums</a><ul>
@@ -254,6 +208,8 @@
 <li class="toctree-l4"><a class="reference internal" href="variable_namespacereactor_1_1log_1a1985bfad8d1269e6d3d5e119ce846eef.html">Variable error_enabled</a></li>
 <li class="toctree-l4"><a class="reference internal" href="variable_namespacereactor_1_1log_1a3eb2fa07d2ccd17506a05aa3f2f14b2d.html">Variable info_enabled</a></li>
 <li class="toctree-l4"><a class="reference internal" href="variable_namespacereactor_1_1log_1a88a5f4b17305527201bcb473d079d49d.html">Variable warning_enabled</a></li>
+<li class="toctree-l4"><a class="reference internal" href="variable_namespacereactor_1a0edb3b5df7dd7992238566a2369c985b.html">Variable tracing_enabled</a></li>
+<li class="toctree-l4"><a class="reference internal" href="variable_namespacereactor_1a0edb3b5df7dd7992238566a2369c985b.html">Variable tracing_enabled</a></li>
 <li class="toctree-l4"><a class="reference internal" href="variable_namespacereactor_1_1log_1a88a5f4b17305527201bcb473d079d49d.html">Variable warning_enabled</a></li>
 </ul>
 </li>
@@ -280,147 +236,111 @@
 </li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">reactor-cpp</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-        
-      <li>File logging.cc</li>
-    
-    
+          <li><a href="library_root.html">Library API</a> &raquo;</li>
+      <li>Class Semaphore</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
-            <a href="../_sources/api/file_lib_logging.cc.rst.txt" rel="nofollow"> View page source</a>
-          
-        
+            <a href="../_sources/api/classreactor_1_1Semaphore.rst.txt" rel="nofollow"> View page source</a>
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <section id="file-logging-cc">
-<span id="file-lib-logging-cc"></span><h1>File logging.cc<a class="headerlink" href="#file-logging-cc" title="Permalink to this headline">¶</a></h1>
-<p>↰ <a class="reference internal" href="dir_lib.html#dir-lib"><span class="std std-ref">Parent directory</span></a> (<code class="docutils literal notranslate"><span class="pre">lib</span></code>)</p>
-<div class="contents local topic" id="contents">
-<p class="topic-title">Contents</p>
+             
+  <section id="class-semaphore">
+<span id="exhale-class-classreactor-1-1semaphore"></span><h1>Class Semaphore<a class="headerlink" href="#class-semaphore" title="Permalink to this headline"></a></h1>
 <ul class="simple">
-<li><p><a class="reference internal" href="#definition-lib-logging-cc" id="id1">Definition (<code class="docutils literal notranslate"><span class="pre">lib/logging.cc</span></code>)</a></p></li>
-<li><p><a class="reference internal" href="#includes" id="id2">Includes</a></p></li>
-<li><p><a class="reference internal" href="#namespaces" id="id3">Namespaces</a></p></li>
+<li><p>Defined in <a class="reference internal" href="file_include_reactor-cpp_semaphore.hh.html#file-include-reactor-cpp-semaphore-hh"><span class="std std-ref">File semaphore.hh</span></a></p></li>
 </ul>
+<section id="class-documentation">
+<h2>Class Documentation<a class="headerlink" href="#class-documentation" title="Permalink to this headline"></a></h2>
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4N7reactor9SemaphoreE">
+<span id="_CPPv3N7reactor9SemaphoreE"></span><span id="_CPPv2N7reactor9SemaphoreE"></span><span id="reactor::Semaphore"></span><span class="target" id="classreactor_1_1Semaphore"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">reactor</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">Semaphore</span></span></span><a class="headerlink" href="#_CPPv4N7reactor9SemaphoreE" title="Permalink to this definition"></a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N7reactor9Semaphore9SemaphoreEi">
+<span id="_CPPv3N7reactor9Semaphore9SemaphoreEi"></span><span id="_CPPv2N7reactor9Semaphore9SemaphoreEi"></span><span id="reactor::Semaphore::Semaphore__i"></span><span class="target" id="classreactor_1_1Semaphore_1ac2643b9f55568496b8c15f09ccee1173"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Semaphore</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">count</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7reactor9Semaphore9SemaphoreEi" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N7reactor9Semaphore7releaseEi">
+<span id="_CPPv3N7reactor9Semaphore7releaseEi"></span><span id="_CPPv2N7reactor9Semaphore7releaseEi"></span><span id="reactor::Semaphore::release__i"></span><span class="target" id="classreactor_1_1Semaphore_1a8ef3767a59f5cc187015af0a6aab179f"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">release</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7reactor9Semaphore7releaseEi" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N7reactor9Semaphore7acquireEv">
+<span id="_CPPv3N7reactor9Semaphore7acquireEv"></span><span id="_CPPv2N7reactor9Semaphore7acquireEv"></span><span id="reactor::Semaphore::acquire"></span><span class="target" id="classreactor_1_1Semaphore_1a6ca5b87d0773023b5fb2e96dd07ca7ed"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">acquire</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7reactor9Semaphore7acquireEv" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
 </div>
-<section id="definition-lib-logging-cc">
-<h2>Definition (<code class="docutils literal notranslate"><span class="pre">lib/logging.cc</span></code>)<a class="headerlink" href="#definition-lib-logging-cc" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="program_listing_file_lib_logging.cc.html">Program Listing for File logging.cc</a></li>
-</ul>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-members">Private Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N7reactor9Semaphore5countE">
+<span id="_CPPv3N7reactor9Semaphore5countE"></span><span id="_CPPv2N7reactor9Semaphore5countE"></span><span id="reactor::Semaphore::count__i"></span><span class="target" id="classreactor_1_1Semaphore_1a371cb1cc6da85323e2db02a4ede99ec0"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">count</span></span></span><a class="headerlink" href="#_CPPv4N7reactor9Semaphore5countE" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N7reactor9Semaphore5mutexE">
+<span id="_CPPv3N7reactor9Semaphore5mutexE"></span><span id="_CPPv2N7reactor9Semaphore5mutexE"></span><span id="reactor::Semaphore::mutex__std::mutex"></span><span class="target" id="classreactor_1_1Semaphore_1ae2a558b5f690cc4368e37d1d3b951d7a"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mutex</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">mutex</span></span></span><a class="headerlink" href="#_CPPv4N7reactor9Semaphore5mutexE" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N7reactor9Semaphore2cvE">
+<span id="_CPPv3N7reactor9Semaphore2cvE"></span><span id="_CPPv2N7reactor9Semaphore2cvE"></span><span id="reactor::Semaphore::cv__std::condition_variable"></span><span class="target" id="classreactor_1_1Semaphore_1aa7ae5396e3f9a9e1d4e757e74cc8ffa6"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">condition_variable</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cv</span></span></span><a class="headerlink" href="#_CPPv4N7reactor9Semaphore2cvE" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
 </div>
-</section>
-<section id="includes">
-<h2>Includes<a class="headerlink" href="#includes" title="Permalink to this headline">¶</a></h2>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">reactor-cpp/logging.hh</span></code> (<a class="reference internal" href="file_include_reactor-cpp_logging.hh.html#file-include-reactor-cpp-logging-hh"><span class="std std-ref">File logging.hh</span></a>)</p></li>
-</ul>
-</section>
-<section id="namespaces">
-<h2>Namespaces<a class="headerlink" href="#namespaces" title="Permalink to this headline">¶</a></h2>
-<ul class="simple">
-<li><p><a class="reference internal" href="namespace_reactor.html#namespace-reactor"><span class="std std-ref">Namespace reactor</span></a></p></li>
-<li><p><a class="reference internal" href="namespace_reactor__log.html#namespace-reactor-log"><span class="std std-ref">Namespace reactor::log</span></a></p></li>
-</ul>
+</dd></dl>
+
 </section>
 </section>
 
 
            </div>
-           
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="classreactor_1_1Scheduler.html" class="btn btn-neutral float-left" title="Class Scheduler" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="classreactor_1_1ShutdownAction.html" class="btn btn-neutral float-right" title="Class ShutdownAction" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2020, Christian Menard.
-
-    </p>
+    <p>&#169; Copyright 2020, Christian Menard.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

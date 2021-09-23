@@ -14,7 +14,6 @@ Files
 - :ref:`file_lib_action.cc`
 - :ref:`file_lib_assert.cc`
 - :ref:`file_lib_environment.cc`
-- :ref:`file_lib_logging.cc`
 - :ref:`file_lib_logical_time.cc`
 - :ref:`file_lib_port.cc`
 - :ref:`file_lib_reaction.cc`

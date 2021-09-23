@@ -148,7 +148,17 @@ Classes and Structs
 .. toctree::
    :maxdepth: 5
 
+   classreactor_1_1ReadyQueue.rst
+
+.. toctree::
+   :maxdepth: 5
+
    classreactor_1_1Scheduler.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classreactor_1_1Semaphore.rst
 
 .. toctree::
    :maxdepth: 5
@@ -174,6 +184,11 @@ Classes and Structs
    :maxdepth: 5
 
    classreactor_1_1ValidationError.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classreactor_1_1Worker.rst
 
 Enums
 *****
@@ -756,6 +771,16 @@ Variables
    :maxdepth: 5
 
    variable_namespacereactor_1_1log_1a88a5f4b17305527201bcb473d079d49d.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   variable_namespacereactor_1a0edb3b5df7dd7992238566a2369c985b.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   variable_namespacereactor_1a0edb3b5df7dd7992238566a2369c985b.rst
 
 .. toctree::
    :maxdepth: 5

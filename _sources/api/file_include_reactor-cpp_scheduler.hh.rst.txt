@@ -39,9 +39,11 @@ Includes
 
 - ``logical_time.hh`` (:ref:`file_include_reactor-cpp_logical_time.hh`)
 
-- ``map``
+- ``map`` (:ref:`file_include_reactor-cpp_semaphore.hh`)
 
 - ``mutex``
+
+- ``semaphore.hh`` (:ref:`file_include_reactor-cpp_semaphore.hh`)
 
 - ``set``
 
@@ -73,5 +75,9 @@ Classes
 -------
 
 
+- :ref:`exhale_class_classreactor_1_1ReadyQueue`
+
 - :ref:`exhale_class_classreactor_1_1Scheduler`
+
+- :ref:`exhale_class_classreactor_1_1Worker`
 
