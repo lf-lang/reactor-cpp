@@ -1,7 +1,7 @@
 A Reactor-Oriented Programming Framework in C++
 ---
 
-![CI](https://github.com/tud-ccc/reactor-cpp/workflows/CI/badge.svg)
+![CI](https://github.com/lf-lang/reactor-cpp/workflows/CI/badge.svg)
 
 While reactor-cpp can be used as a standalone framework, it is designed to work
 in conjunction with [Lingua Franca](https://github.com/lf-lang/lingua-franca/),
@@ -29,7 +29,7 @@ make examples
 
 ## Extras
 
-reactor-cpp can be build with [tracing support](https://github.com/tud-ccc/reactor-cpp/tree/master/tracing). This provides a powerful tool for analyzing and debugging reactor applications.
+reactor-cpp can be build with [tracing support](https://github.com/lf-lang/reactor-cpp/tree/master/tracing). This provides a powerful tool for analyzing and debugging reactor applications.
 
 ## Documentation
 
