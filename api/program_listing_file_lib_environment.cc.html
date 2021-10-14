@@ -403,13 +403,40 @@
   <span class="n">std</span><span class="o">::</span><span class="n">ofstream</span> <span class="n">dot</span><span class="p">;</span>
   <span class="n">dot</span><span class="p">.</span><span class="n">open</span><span class="p">(</span><span class="n">path</span><span class="p">);</span>
 
-  <span class="n">dot</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;digraph {</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+  <span class="c1">// sort all reactions by their index</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="kt">unsigned</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Reaction</span><span class="o">*&gt;&gt;</span> <span class="n">reactions_by_index</span><span class="p">;</span>
   <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">r</span> <span class="p">:</span> <span class="n">reactions</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">dot</span> <span class="o">&lt;&lt;</span> <span class="n">dot_name</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; [label=</span><span class="se">\&quot;</span><span class="s">&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">r</span><span class="o">-&gt;</span><span class="n">fqn</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\&quot;</span><span class="s">];&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="n">reactions_by_index</span><span class="p">[</span><span class="n">r</span><span class="o">-&gt;</span><span class="n">index</span><span class="p">()].</span><span class="n">push_back</span><span class="p">(</span><span class="n">r</span><span class="p">);</span>
   <span class="p">}</span>
+
+  <span class="c1">// start the graph</span>
+  <span class="n">dot</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;digraph {</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+  <span class="n">dot</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;rankdir=LR;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+
+  <span class="c1">// place reactions of the same index in the same subgraph</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">auto</span><span class="o">&amp;</span> <span class="nl">index_reactions</span> <span class="p">:</span> <span class="n">reactions_by_index</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">dot</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;subgraph {</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+    <span class="n">dot</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;rank=same;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">r</span> <span class="p">:</span> <span class="n">index_reactions</span><span class="p">.</span><span class="n">second</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">dot</span> <span class="o">&lt;&lt;</span> <span class="n">dot_name</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; [label=</span><span class="se">\&quot;</span><span class="s">&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">r</span><span class="o">-&gt;</span><span class="n">fqn</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\&quot;</span><span class="s">];&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">dot</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;}</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="c1">// establish an order between subgraphs</span>
+  <span class="n">Reaction</span><span class="o">*</span> <span class="n">reaction_from_last_index</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">auto</span><span class="o">&amp;</span> <span class="nl">index_reactions</span> <span class="p">:</span> <span class="n">reactions_by_index</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">Reaction</span><span class="o">*</span> <span class="n">reaction_from_this_index</span> <span class="o">=</span> <span class="n">index_reactions</span><span class="p">.</span><span class="n">second</span><span class="p">.</span><span class="n">front</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">reaction_from_last_index</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">dot</span> <span class="o">&lt;&lt;</span> <span class="n">dot_name</span><span class="p">(</span><span class="n">reaction_from_last_index</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; -&gt; &quot;</span>
+          <span class="o">&lt;&lt;</span> <span class="n">dot_name</span><span class="p">(</span><span class="n">reaction_from_this_index</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; [style=invis];</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">reaction_from_last_index</span> <span class="o">=</span> <span class="n">reaction_from_this_index</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="c1">// add all the dependencies</span>
   <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">d</span> <span class="p">:</span> <span class="n">dependencies</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">dot</span> <span class="o">&lt;&lt;</span> <span class="n">dot_name</span><span class="p">(</span><span class="n">d</span><span class="p">.</span><span class="n">first</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; -&gt; &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">dot_name</span><span class="p">(</span><span class="n">d</span><span class="p">.</span><span class="n">second</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;;&#39;</span>
-        <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="n">dot</span> <span class="o">&lt;&lt;</span> <span class="n">dot_name</span><span class="p">(</span><span class="n">d</span><span class="p">.</span><span class="n">first</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; -&gt; &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">dot_name</span><span class="p">(</span><span class="n">d</span><span class="p">.</span><span class="n">second</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>
   <span class="p">}</span>
   <span class="n">dot</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;}</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
 
