@@ -31,7 +31,10 @@ class Semaphore {
 
   void acquire() {
     std::unique_lock<std::mutex> lg(mutex);
-    cv.wait(lg, [&]() { return count != 0; });
+    while (count == 0) {
+      using namespace std::chrono_literals;
+      cv.wait_for(lg, 100us);
+    }
     count--;
   }
 };
