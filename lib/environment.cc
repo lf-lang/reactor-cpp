@@ -140,13 +140,40 @@ void Environment::export_dependency_graph(const std::string& path) {
   std::ofstream dot;
   dot.open(path);
 
-  dot << "digraph {\n";
+  // sort all reactions by their index
+  std::map<unsigned, std::vector<Reaction*>> reactions_by_index;
   for (auto r : reactions) {
-    dot << dot_name(r) << " [label=\"" << r->fqn() << "\"];" << std::endl;
+    reactions_by_index[r->index()].push_back(r);
   }
+
+  // start the graph
+  dot << "digraph {\n";
+  dot << "rankdir=LR;\n";
+
+  // place reactions of the same index in the same subgraph
+  for (auto& index_reactions : reactions_by_index) {
+    dot << "subgraph {\n";
+    dot << "rank=same;\n";
+    for (auto r : index_reactions.second) {
+      dot << dot_name(r) << " [label=\"" << r->fqn() << "\"];" << std::endl;
+    }
+    dot << "}\n";
+  }
+
+  // establish an order between subgraphs
+  Reaction* reaction_from_last_index = nullptr;
+  for (auto& index_reactions : reactions_by_index) {
+    Reaction* reaction_from_this_index = index_reactions.second.front();
+    if (reaction_from_last_index != nullptr) {
+      dot << dot_name(reaction_from_last_index) << " -> "
+          << dot_name(reaction_from_this_index) << " [style=invis];\n";
+    }
+    reaction_from_last_index = reaction_from_this_index;
+  }
+
+  // add all the dependencies
   for (auto d : dependencies) {
-    dot << dot_name(d.first) << " -> " << dot_name(d.second) << ';'
-        << std::endl;
+    dot << dot_name(d.first) << " -> " << dot_name(d.second) << '\n';
   }
   dot << "}\n";
 
