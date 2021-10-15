@@ -178,6 +178,8 @@ void Environment::export_dependency_graph(const std::string& path) {
   dot << "}\n";
 
   dot.close();
+
+  log::Info() << "Reaction graph was written to " << path;
 }
 
 void Environment::calculate_indexes() {
@@ -190,7 +192,6 @@ void Environment::calculate_indexes() {
     graph[d.first].insert(d.second);
   }
 
-  export_dependency_graph("/tmp/graph.dot");
   log::Debug() << "Reactions sorted by index:";
   unsigned index = 0;
   while (graph.size() != 0) {
