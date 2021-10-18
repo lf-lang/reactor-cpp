@@ -80,11 +80,11 @@ Functions
 
 - :ref:`exhale_function_namespacereactor_1acd3c1262138ace0007602d65740bc806`
 
-- :ref:`exhale_function_namespacereactor_1a187a8a69a9cd1edb808e7c92a7a944a0`
-
 - :ref:`exhale_function_namespacereactor_1adb763d87ec4b89428e75916a5150da36`
 
 - :ref:`exhale_function_namespacereactor_1a601c2be55dc826bea9a245045613ccc5`
+
+- :ref:`exhale_function_namespacereactor_1a187a8a69a9cd1edb808e7c92a7a944a0`
 
 - :ref:`exhale_function_namespacereactor_1a0c98d4882f478da43c2c1a169a1fedd2`
 
@@ -92,17 +92,17 @@ Functions
 
 - :ref:`exhale_function_namespacereactor_1a97c015047b9fb102d5b41e244da88917`
 
-- :ref:`exhale_function_namespacereactor_1ac9d3f8609a66fbbc8a4d375da18a14e2`
-
 - :ref:`exhale_function_namespacereactor_1a2e90ae0e79dfde9f7fbeb54d66a1e3a8`
 
 - :ref:`exhale_function_namespacereactor_1ae9b630f4a987aba9a98c138dd23e87b5`
 
-- :ref:`exhale_function_namespacereactor_1adb34cd1dff4f0af83c099efae8c2f0cc`
+- :ref:`exhale_function_namespacereactor_1ac9d3f8609a66fbbc8a4d375da18a14e2`
 
 - :ref:`exhale_function_namespacereactor_1a33339cac3268e44879ed753a397aec99`
 
 - :ref:`exhale_function_namespacereactor_1aba36ee73a806348027f3a8468faa0dc4`
+
+- :ref:`exhale_function_namespacereactor_1adb34cd1dff4f0af83c099efae8c2f0cc`
 
 
 Typedefs
