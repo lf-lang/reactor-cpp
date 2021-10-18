@@ -27,6 +27,18 @@ class BasePort : public ReactorElement {
   std::set<Reaction*> _triggers;
   std::set<Reaction*> _antidependencies;
 
+  // the source port that this port is ultimately connected to
+  // null if this port is unconnected
+  const BasePort* _source{nullptr};
+
+  /**
+   * Walk all the upstream connections and find the source for this port.
+   *
+   * Returns the source found for this port and also updates the source member
+   * variable.
+   */
+  const BasePort* setup_source();
+
  protected:
   BasePort(const std::string& name, PortType type, Reactor* container)
       : ReactorElement(name, ReactorElement::Type::Port, container)
@@ -37,6 +49,9 @@ class BasePort : public ReactorElement {
   void register_antidependency(Reaction* reaction);
 
   virtual void cleanup() = 0;
+
+  const BasePort* source() const { return _source; }
+  bool has_source() const { return _source != nullptr; }
 
  public:
   bool is_input() const { return type == PortType::Input; }
@@ -54,6 +69,9 @@ class BasePort : public ReactorElement {
   const auto& dependencies() const { return _dependencies; }
   const auto& antidependencies() const { return _antidependencies; }
 
+  void startup() override final { setup_source(); }
+  void shutdown() override final {}
+
   friend class Reaction;
   friend class Scheduler;
 };
@@ -64,6 +82,9 @@ class Port : public BasePort {
   ImmutableValuePtr<T> value_ptr{nullptr};
 
   void cleanup() override final { value_ptr = nullptr; }
+
+ protected:
+  const Port<T>* typed_source() const;
 
  public:
   using value_type = T;
@@ -84,12 +105,8 @@ class Port : public BasePort {
   // Setting a port to nullptr is not permitted.
   void set(std::nullptr_t) = delete;
 
-  void startup() override final {}
-  void shutdown() override final {}
-
   const ImmutableValuePtr<T>& get() const;
   bool is_present() const;
-
 };
 
 template <>
@@ -108,12 +125,10 @@ class Port<void> : public BasePort {
   void bind_to(Port<void>* port) { base_bind_to(port); }
   Port<void>* typed_inward_binding() const;
   const std::set<Port<void>*>& typed_outward_bindings() const;
+  const Port<void>* typed_source() const;
 
   void set();
   bool is_present() const;
-
-  void startup() override final {}
-  void shutdown() override final {}
 };
 
 template <class T>

@@ -98,6 +98,13 @@ void BasePort::register_antidependency(Reaction* reaction) {
   ASSERT(r.second);
 }
 
+const BasePort* BasePort::setup_source() {
+  if (_source == nullptr && has_inward_binding()) {
+    _source = inward_binding()->setup_source();
+  }
+  return _source;
+}
+
 const std::set<Port<void>*>& Port<void>::typed_outward_bindings() const {
   return reinterpret_cast<const std::set<Port<void>*>&>(outward_bindings());
 }
@@ -106,6 +113,12 @@ Port<void>* Port<void>::typed_inward_binding() const {
   // we can use a static cast here since we know that this port is always
   // connected with another Port<T>.
   return static_cast<Port<void>*>(inward_binding());
+}
+
+const Port<void>* Port<void>::typed_source() const {
+  // we can use a static cast here since we know that this port is always
+  // connected with another Port<T>.
+  return static_cast<const Port<void>*>(source());
 }
 
 void Port<void>::set() {
@@ -118,8 +131,8 @@ void Port<void>::set() {
 }
 
 bool Port<void>::is_present() const {
-  if (has_inward_binding()) {
-    return typed_inward_binding()->is_present();
+  if (has_source()) {
+    return typed_source()->is_present();
   } else {
     return present;
   }

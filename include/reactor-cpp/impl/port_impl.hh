@@ -27,6 +27,13 @@ Port<T>* Port<T>::typed_inward_binding() const {
 }
 
 template <class T>
+const Port<T>* Port<T>::typed_source() const {
+  // we can use a static cast here since we know that this port is always
+  // connected with another Port<T>.
+  return static_cast<const Port<T>*>(source());
+}
+
+template <class T>
 void Port<T>::set(const ImmutableValuePtr<T>& value_ptr) {
   VALIDATE(!has_inward_binding(),
            "set() may only be called on a ports that do not have an inward "
@@ -39,8 +46,8 @@ void Port<T>::set(const ImmutableValuePtr<T>& value_ptr) {
 
 template <class T>
 const ImmutableValuePtr<T>& Port<T>::get() const {
-  if (has_inward_binding()) {
-    return typed_inward_binding()->get();
+  if (has_source()) {
+    return typed_source()->get();
   } else {
     return value_ptr;
   }
@@ -48,8 +55,8 @@ const ImmutableValuePtr<T>& Port<T>::get() const {
 
 template <class T>
 bool Port<T>::is_present() const {
-  if (has_inward_binding()) {
-    return typed_inward_binding()->is_present();
+  if (has_source()) {
+    return typed_source()->is_present();
   } else {
     return value_ptr != nullptr;
   }
