@@ -99,8 +99,12 @@ void BasePort::register_antidependency(Reaction* reaction) {
 }
 
 const BasePort* BasePort::setup_source() {
-  if (_source == nullptr && has_inward_binding()) {
-    _source = inward_binding()->setup_source();
+  if (_source == nullptr) {
+    if (has_inward_binding()) {
+      _source = inward_binding()->setup_source();
+    } else {
+      return this;
+    }
   }
   return _source;
 }
