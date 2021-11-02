@@ -26,7 +26,7 @@ class Semaphore {
       std::lock_guard<std::mutex> lg(mutex);
       count += i;
     }
-    cv.notify_all();
+    cv.notify_one();
   }
 
   void acquire() {
