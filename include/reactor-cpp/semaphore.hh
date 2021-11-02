@@ -15,28 +15,49 @@ namespace reactor {
 
 class Semaphore {
  private:
-  int count;
-  std::mutex mutex;
+  std::atomic<int> count;
+
+  bool try_acquire() {
+    int current = count.load(std::memory_order_relaxed);
+    if (current > 0) {
+      int desired = current - 1;
+      return count.compare_exchange_weak(current, desired,
+                                         std::memory_order_acquire,
+                                         std::memory_order_relaxed);
+    }
+    return false;
+  }
 
  public:
   Semaphore(int count) : count(count) {}
 
   void release(int i) {
-    {
-      std::lock_guard<std::mutex> lg(mutex);
-      count += i;
-    }
+    int current = count.load(std::memory_order_relaxed);
+    int desired{0};
+    bool success = false;
+    do {
+      desired = current + i;
+      success = count.compare_exchange_weak(current, desired,
+                                            std::memory_order_release,
+                                            std::memory_order_relaxed);
+    } while (!success);
   }
 
   void acquire() {
-    std::unique_lock<std::mutex> lg(mutex);
-    while (count <= 0) {
-      lg.unlock();
-      using namespace std::chrono_literals;
-      std::this_thread::sleep_for(2000us);
-      lg.lock();
+    using namespace std::chrono_literals;
+    auto delay{1us};
+    size_t tries{0};
+    while (!try_acquire()) {
+      std::this_thread::sleep_for(delay);
+      tries++;
+      if (tries == 10) {
+        delay = 10us;
+      } else if (tries == 50) {
+        delay = 100us;
+      } else if (tries == 100) {
+        delay = 1000us;
+      }
     }
-    count--;
   }
 };
 
