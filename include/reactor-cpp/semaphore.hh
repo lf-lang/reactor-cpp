@@ -45,18 +45,13 @@ class Semaphore {
 
   void acquire() {
     using namespace std::chrono_literals;
-    auto delay{1us};
+    auto delay{50us};
     size_t tries{0};
     while (!try_acquire()) {
-      std::this_thread::sleep_for(delay);
-      tries++;
-      if (tries == 10) {
-        delay = 10us;
-      } else if (tries == 50) {
-        delay = 100us;
-      } else if (tries == 100) {
-        delay = 1000us;
+      if (tries > 100) {
+        std::this_thread::sleep_for(delay);
       }
+      tries++;
     }
   }
 };
