@@ -6,6 +6,8 @@
  *   Christian Menard
  */
 
+#pragma once
+
 #include <string>
 
 #include "config.hh"
