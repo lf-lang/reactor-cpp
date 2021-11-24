@@ -6,8 +6,6 @@
  *   Christian Menard
  */
 
-#pragma once
-
 #include <string>
 
 #include "config.hh"
@@ -15,15 +13,19 @@
 
 #ifdef REACTOR_CPP_TRACE
 
-namespace reactor {
-constexpr bool tracing_enabled = true;
-}
-
 #undef TRACEPOINT_PROVIDER
 #define TRACEPOINT_PROVIDER reactor_cpp
 
 #undef TRACEPOINT_INCLUDE
 #define TRACEPOINT_INCLUDE "reactor-cpp/trace.hh"
+
+// LTTng requires this header to be included multiple times. Therfore, we cannot
+// use `#praga once`, unfortunantely.
+#ifndef _REACTOR_CPP_TRACE_H
+namespace reactor {
+constexpr bool tracing_enabled = true;
+}
+#endif
 
 #if !defined(_REACTOR_CPP_TRACE_H) || defined(TRACEPOINT_HEADER_MULTI_READ)
 #define _REACTOR_CPP_TRACE_H
@@ -96,11 +98,16 @@ TRACEPOINT_EVENT(
 
 #else
 
+#ifndef _REACTOR_CPP_TRACE_H
+#define _REACTOR_CPP_TRACE_H
+
 namespace reactor {
 constexpr bool tracing_enabled = false;
 }
 
 // empty definition in case we compile without tracing
 #define tracepoint(...)
+
+#endif  // _REACTOR_CPP_TRACE_H
 
 #endif // REACTOR_CPP_TRACE
