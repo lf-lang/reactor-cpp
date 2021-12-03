@@ -193,9 +193,9 @@
 <li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1_1operators_1a279ac480746dbb8a6dcd71179df68032.html">Function operator&lt;&lt;(std::ostream&amp;, std::chrono::microseconds)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1_1operators_1ac12faa5aad6eda9a53865201264ea257.html">Function operator&lt;&lt;(std::ostream&amp;, std::chrono::nanoseconds)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a50e4996eb605ff7e10a26dcdbae25340.html">Function recursive_assemble</a></li>
-<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1afb17997129c7498eff1148813c8970d0.html">Function validate</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1aa751a610c79b176a25d5fa431a7354e1.html">Function validate</a></li>
 <li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a50e4996eb605ff7e10a26dcdbae25340.html">Function recursive_assemble</a></li>
-<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1afb17997129c7498eff1148813c8970d0.html">Function validate</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1aa751a610c79b176a25d5fa431a7354e1.html">Function validate</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="library_root.html#variables">Variables</a><ul>
@@ -213,11 +213,11 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="library_root.html#defines">Defines</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="define_trace_8hh_1a14f75d379403e3e8f3767e32aff0ebb6.html">Define _REACTOR_CPP_TRACE_H</a></li>
-<li class="toctree-l4"><a class="reference internal" href="define_assert_8hh_1aca68c0d4ac8df0838e209fb5300f7be3.html">Define ASSERT</a></li>
+<li class="toctree-l4"><a class="reference internal" href="define_assert_8hh_1a0a1d1b5118a7cb87d8a88a9d8395811c.html">Define RUNTIME_VALIDATE</a></li>
 <li class="toctree-l4"><a class="reference internal" href="define_trace_8hh_1aeae0efb071b08e657d36788eee20c1a7.html">Define tracepoint</a></li>
 <li class="toctree-l4"><a class="reference internal" href="define_trace_8cc_1aeb980b4a64d9b54d660780a30415b0bc.html">Define TRACEPOINT_CREATE_PROBES</a></li>
 <li class="toctree-l4"><a class="reference internal" href="define_trace_8cc_1a71ad37c54f22eb10bdfed4267d53bd79.html">Define TRACEPOINT_DEFINE</a></li>
-<li class="toctree-l4"><a class="reference internal" href="define_assert_8hh_1aa8944c5f0d4c2f0c3643c36ab4967a17.html">Define VALIDATE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="define_assert_8hh_1aea1d71af1a30c261dbd16745c82e94ba.html">Define UNUSED</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="library_root.html#typedefs">Typedefs</a><ul>
@@ -277,6 +277,8 @@
 <span class="cp">#include</span> <span class="cpf">&quot;reactor-cpp/environment.hh&quot;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&quot;reactor-cpp/port.hh&quot;</span><span class="cp"></span>
 
+<span class="cp">#include</span> <span class="cpf">&lt;cassert&gt;</span><span class="cp"></span>
+
 <span class="k">namespace</span> <span class="n">reactor</span> <span class="p">{</span>
 
 <span class="n">Reaction</span><span class="o">::</span><span class="n">Reaction</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">name</span><span class="p">,</span>
@@ -286,104 +288,98 @@
     <span class="o">:</span> <span class="n">ReactorElement</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">ReactorElement</span><span class="o">::</span><span class="n">Type</span><span class="o">::</span><span class="n">Reaction</span><span class="p">,</span> <span class="n">container</span><span class="p">)</span>
     <span class="p">,</span> <span class="n">_priority</span><span class="p">(</span><span class="n">priority</span><span class="p">)</span>
     <span class="p">,</span> <span class="n">body</span><span class="p">(</span><span class="n">body</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">ASSERT</span><span class="p">(</span><span class="n">priority</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+  <span class="n">assert</span><span class="p">(</span><span class="n">priority</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
 <span class="p">}</span>
 
 <span class="kt">void</span> <span class="n">Reaction</span><span class="o">::</span><span class="n">declare_trigger</span><span class="p">(</span><span class="n">BaseAction</span><span class="o">*</span> <span class="n">action</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">ASSERT</span><span class="p">(</span><span class="n">action</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">);</span>
-  <span class="n">ASSERT</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">environment</span><span class="p">()</span> <span class="o">==</span> <span class="n">action</span><span class="o">-&gt;</span><span class="n">environment</span><span class="p">());</span>
-  <span class="n">VALIDATE</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">environment</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">phase</span><span class="p">()</span> <span class="o">==</span> <span class="n">Environment</span><span class="o">::</span><span class="n">Phase</span><span class="o">::</span><span class="n">Assembly</span><span class="p">,</span>
+  <span class="n">assert</span><span class="p">(</span><span class="n">action</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">);</span>
+  <span class="n">assert</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">environment</span><span class="p">()</span> <span class="o">==</span> <span class="n">action</span><span class="o">-&gt;</span><span class="n">environment</span><span class="p">());</span>
+  <span class="n">reactor</span><span class="o">::</span><span class="n">validate</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">environment</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">phase</span><span class="p">()</span> <span class="o">==</span> <span class="n">Environment</span><span class="o">::</span><span class="n">Phase</span><span class="o">::</span><span class="n">Assembly</span><span class="p">,</span>
            <span class="s">&quot;Triggers may only be declared during assembly phase!&quot;</span><span class="p">);</span>
-  <span class="n">VALIDATE</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">container</span><span class="p">()</span> <span class="o">==</span> <span class="n">action</span><span class="o">-&gt;</span><span class="n">container</span><span class="p">(),</span>
+  <span class="n">reactor</span><span class="o">::</span><span class="n">validate</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">container</span><span class="p">()</span> <span class="o">==</span> <span class="n">action</span><span class="o">-&gt;</span><span class="n">container</span><span class="p">(),</span>
            <span class="s">&quot;Action triggers must belong to the same reactor as the triggered &quot;</span>
            <span class="s">&quot;reaction&quot;</span><span class="p">);</span>
 
-  <span class="k">auto</span> <span class="n">r</span> <span class="o">=</span> <span class="n">_action_triggers</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">action</span><span class="p">);</span>
-  <span class="n">ASSERT</span><span class="p">(</span><span class="n">r</span><span class="p">.</span><span class="n">second</span><span class="p">);</span>
+  <span class="n">assert</span><span class="p">(</span><span class="n">_action_triggers</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">action</span><span class="p">).</span><span class="n">second</span><span class="p">);</span>
   <span class="n">action</span><span class="o">-&gt;</span><span class="n">register_trigger</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
 <span class="p">}</span>
 
 <span class="kt">void</span> <span class="n">Reaction</span><span class="o">::</span><span class="n">declare_schedulable_action</span><span class="p">(</span><span class="n">BaseAction</span><span class="o">*</span> <span class="n">action</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">ASSERT</span><span class="p">(</span><span class="n">action</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">);</span>
-  <span class="n">ASSERT</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">environment</span><span class="p">()</span> <span class="o">==</span> <span class="n">action</span><span class="o">-&gt;</span><span class="n">environment</span><span class="p">());</span>
-  <span class="n">VALIDATE</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">environment</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">phase</span><span class="p">()</span> <span class="o">==</span> <span class="n">Environment</span><span class="o">::</span><span class="n">Phase</span><span class="o">::</span><span class="n">Assembly</span><span class="p">,</span>
+  <span class="n">assert</span><span class="p">(</span><span class="n">action</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">);</span>
+  <span class="n">assert</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">environment</span><span class="p">()</span> <span class="o">==</span> <span class="n">action</span><span class="o">-&gt;</span><span class="n">environment</span><span class="p">());</span>
+  <span class="n">reactor</span><span class="o">::</span><span class="n">validate</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">environment</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">phase</span><span class="p">()</span> <span class="o">==</span> <span class="n">Environment</span><span class="o">::</span><span class="n">Phase</span><span class="o">::</span><span class="n">Assembly</span><span class="p">,</span>
            <span class="s">&quot;Scheduable actions may only be declared during assembly phase!&quot;</span><span class="p">);</span>
-  <span class="n">VALIDATE</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">container</span><span class="p">()</span> <span class="o">==</span> <span class="n">action</span><span class="o">-&gt;</span><span class="n">container</span><span class="p">(),</span>
+  <span class="n">reactor</span><span class="o">::</span><span class="n">validate</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">container</span><span class="p">()</span> <span class="o">==</span> <span class="n">action</span><span class="o">-&gt;</span><span class="n">container</span><span class="p">(),</span>
            <span class="s">&quot;Scheduable actions must belong to the same reactor as the &quot;</span>
            <span class="s">&quot;triggered reaction&quot;</span><span class="p">);</span>
 
-  <span class="k">auto</span> <span class="n">r</span> <span class="o">=</span> <span class="n">_scheduable_actions</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">action</span><span class="p">);</span>
-  <span class="n">ASSERT</span><span class="p">(</span><span class="n">r</span><span class="p">.</span><span class="n">second</span><span class="p">);</span>
+  <span class="n">assert</span><span class="p">(</span><span class="n">_scheduable_actions</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">action</span><span class="p">).</span><span class="n">second</span><span class="p">);</span>
   <span class="n">action</span><span class="o">-&gt;</span><span class="n">register_scheduler</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
 <span class="p">}</span>
 
 <span class="kt">void</span> <span class="n">Reaction</span><span class="o">::</span><span class="n">declare_trigger</span><span class="p">(</span><span class="n">BasePort</span><span class="o">*</span> <span class="n">port</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">ASSERT</span><span class="p">(</span><span class="n">port</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">);</span>
-  <span class="n">ASSERT</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">environment</span><span class="p">()</span> <span class="o">==</span> <span class="n">port</span><span class="o">-&gt;</span><span class="n">environment</span><span class="p">());</span>
-  <span class="n">ASSERT</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">environment</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">phase</span><span class="p">()</span> <span class="o">==</span> <span class="n">Environment</span><span class="o">::</span><span class="n">Phase</span><span class="o">::</span><span class="n">Assembly</span><span class="p">);</span>
-  <span class="n">VALIDATE</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">environment</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">phase</span><span class="p">()</span> <span class="o">==</span> <span class="n">Environment</span><span class="o">::</span><span class="n">Phase</span><span class="o">::</span><span class="n">Assembly</span><span class="p">,</span>
-           <span class="s">&quot;Triggers may only be declared during assembly phase!&quot;</span><span class="p">);</span>
+  <span class="n">assert</span><span class="p">(</span><span class="n">port</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">);</span>
+  <span class="n">assert</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">environment</span><span class="p">()</span> <span class="o">==</span> <span class="n">port</span><span class="o">-&gt;</span><span class="n">environment</span><span class="p">());</span>
+  <span class="n">assert</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">environment</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">phase</span><span class="p">()</span> <span class="o">==</span> <span class="n">Environment</span><span class="o">::</span><span class="n">Phase</span><span class="o">::</span><span class="n">Assembly</span><span class="p">);</span>
+  <span class="n">reactor</span><span class="o">::</span><span class="n">validate</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">environment</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">phase</span><span class="p">()</span> <span class="o">==</span> <span class="n">Environment</span><span class="o">::</span><span class="n">Phase</span><span class="o">::</span><span class="n">Assembly</span><span class="p">,</span>
+        <span class="s">&quot;Triggers may only be declared during assembly phase!&quot;</span><span class="p">);</span>
 
   <span class="k">if</span> <span class="p">(</span><span class="n">port</span><span class="o">-&gt;</span><span class="n">is_input</span><span class="p">())</span> <span class="p">{</span>
-    <span class="n">VALIDATE</span><span class="p">(</span>
+    <span class="n">reactor</span><span class="o">::</span><span class="n">validate</span><span class="p">(</span>
         <span class="k">this</span><span class="o">-&gt;</span><span class="n">container</span><span class="p">()</span> <span class="o">==</span> <span class="n">port</span><span class="o">-&gt;</span><span class="n">container</span><span class="p">(),</span>
         <span class="s">&quot;Input port triggers must belong to the same reactor as the triggered &quot;</span>
         <span class="s">&quot;reaction&quot;</span><span class="p">);</span>
   <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-    <span class="n">VALIDATE</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">container</span><span class="p">()</span> <span class="o">==</span> <span class="n">port</span><span class="o">-&gt;</span><span class="n">container</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">container</span><span class="p">(),</span>
-             <span class="s">&quot;Output port triggers must belong to a contained reactor&quot;</span><span class="p">);</span>
+    <span class="n">reactor</span><span class="o">::</span><span class="n">validate</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">container</span><span class="p">()</span> <span class="o">==</span> <span class="n">port</span><span class="o">-&gt;</span><span class="n">container</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">container</span><span class="p">(),</span>
+        <span class="s">&quot;Output port triggers must belong to a contained reactor&quot;</span><span class="p">);</span>
   <span class="p">}</span>
 
-  <span class="k">auto</span> <span class="n">r1</span> <span class="o">=</span> <span class="n">_port_triggers</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">port</span><span class="p">);</span>
-  <span class="n">ASSERT</span><span class="p">(</span><span class="n">r1</span><span class="p">.</span><span class="n">second</span><span class="p">);</span>
-  <span class="k">auto</span> <span class="n">r2</span> <span class="o">=</span> <span class="n">_dependencies</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">port</span><span class="p">);</span>
-  <span class="n">ASSERT</span><span class="p">(</span><span class="n">r2</span><span class="p">.</span><span class="n">second</span><span class="p">);</span>
+  <span class="n">assert</span><span class="p">(</span><span class="n">_port_triggers</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">port</span><span class="p">).</span><span class="n">second</span><span class="p">);</span>
+  <span class="n">assert</span><span class="p">(</span><span class="n">_dependencies</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">port</span><span class="p">).</span><span class="n">second</span><span class="p">);</span>
   <span class="n">port</span><span class="o">-&gt;</span><span class="n">register_dependency</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nb">true</span><span class="p">);</span>
 <span class="p">}</span>
 
 <span class="kt">void</span> <span class="n">Reaction</span><span class="o">::</span><span class="n">declare_dependency</span><span class="p">(</span><span class="n">BasePort</span><span class="o">*</span> <span class="n">port</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">ASSERT</span><span class="p">(</span><span class="n">port</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">);</span>
-  <span class="n">ASSERT</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">environment</span><span class="p">()</span> <span class="o">==</span> <span class="n">port</span><span class="o">-&gt;</span><span class="n">environment</span><span class="p">());</span>
-  <span class="n">VALIDATE</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">environment</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">phase</span><span class="p">()</span> <span class="o">==</span> <span class="n">Environment</span><span class="o">::</span><span class="n">Phase</span><span class="o">::</span><span class="n">Assembly</span><span class="p">,</span>
+  <span class="n">assert</span><span class="p">(</span><span class="n">port</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">);</span>
+  <span class="n">assert</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">environment</span><span class="p">()</span> <span class="o">==</span> <span class="n">port</span><span class="o">-&gt;</span><span class="n">environment</span><span class="p">());</span>
+  <span class="n">reactor</span><span class="o">::</span><span class="n">validate</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">environment</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">phase</span><span class="p">()</span> <span class="o">==</span> <span class="n">Environment</span><span class="o">::</span><span class="n">Phase</span><span class="o">::</span><span class="n">Assembly</span><span class="p">,</span>
            <span class="s">&quot;Dependencies may only be declared during assembly phase!&quot;</span><span class="p">);</span>
 
   <span class="k">if</span> <span class="p">(</span><span class="n">port</span><span class="o">-&gt;</span><span class="n">is_input</span><span class="p">())</span> <span class="p">{</span>
-    <span class="n">VALIDATE</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">container</span><span class="p">()</span> <span class="o">==</span> <span class="n">port</span><span class="o">-&gt;</span><span class="n">container</span><span class="p">(),</span>
+    <span class="n">reactor</span><span class="o">::</span><span class="n">validate</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">container</span><span class="p">()</span> <span class="o">==</span> <span class="n">port</span><span class="o">-&gt;</span><span class="n">container</span><span class="p">(),</span>
              <span class="s">&quot;Dependent input ports must belong to the same reactor as the &quot;</span>
              <span class="s">&quot;reaction&quot;</span><span class="p">);</span>
   <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-    <span class="n">VALIDATE</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">container</span><span class="p">()</span> <span class="o">==</span> <span class="n">port</span><span class="o">-&gt;</span><span class="n">container</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">container</span><span class="p">(),</span>
+    <span class="n">reactor</span><span class="o">::</span><span class="n">validate</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">container</span><span class="p">()</span> <span class="o">==</span> <span class="n">port</span><span class="o">-&gt;</span><span class="n">container</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">container</span><span class="p">(),</span>
              <span class="s">&quot;Dependent output ports must belong to a contained reactor&quot;</span><span class="p">);</span>
   <span class="p">}</span>
 
-  <span class="k">auto</span> <span class="n">r</span> <span class="o">=</span> <span class="n">_dependencies</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">port</span><span class="p">);</span>
-  <span class="n">ASSERT</span><span class="p">(</span><span class="n">r</span><span class="p">.</span><span class="n">second</span><span class="p">);</span>
+  <span class="n">assert</span><span class="p">(</span><span class="n">_dependencies</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">port</span><span class="p">).</span><span class="n">second</span><span class="p">);</span>
   <span class="n">port</span><span class="o">-&gt;</span><span class="n">register_dependency</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nb">false</span><span class="p">);</span>
 <span class="p">}</span>
 
 <span class="kt">void</span> <span class="n">Reaction</span><span class="o">::</span><span class="n">declare_antidependency</span><span class="p">(</span><span class="n">BasePort</span><span class="o">*</span> <span class="n">port</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">ASSERT</span><span class="p">(</span><span class="n">port</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">);</span>
-  <span class="n">ASSERT</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">environment</span><span class="p">()</span> <span class="o">==</span> <span class="n">port</span><span class="o">-&gt;</span><span class="n">environment</span><span class="p">());</span>
-  <span class="n">VALIDATE</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">environment</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">phase</span><span class="p">()</span> <span class="o">==</span> <span class="n">Environment</span><span class="o">::</span><span class="n">Phase</span><span class="o">::</span><span class="n">Assembly</span><span class="p">,</span>
+  <span class="n">assert</span><span class="p">(</span><span class="n">port</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">);</span>
+  <span class="n">assert</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">environment</span><span class="p">()</span> <span class="o">==</span> <span class="n">port</span><span class="o">-&gt;</span><span class="n">environment</span><span class="p">());</span>
+  <span class="n">reactor</span><span class="o">::</span><span class="n">validate</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">environment</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">phase</span><span class="p">()</span> <span class="o">==</span> <span class="n">Environment</span><span class="o">::</span><span class="n">Phase</span><span class="o">::</span><span class="n">Assembly</span><span class="p">,</span>
            <span class="s">&quot;Antidependencies may only be declared during assembly phase!&quot;</span><span class="p">);</span>
 
   <span class="k">if</span> <span class="p">(</span><span class="n">port</span><span class="o">-&gt;</span><span class="n">is_output</span><span class="p">())</span> <span class="p">{</span>
-    <span class="n">VALIDATE</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">container</span><span class="p">()</span> <span class="o">==</span> <span class="n">port</span><span class="o">-&gt;</span><span class="n">container</span><span class="p">(),</span>
+    <span class="n">reactor</span><span class="o">::</span><span class="n">validate</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">container</span><span class="p">()</span> <span class="o">==</span> <span class="n">port</span><span class="o">-&gt;</span><span class="n">container</span><span class="p">(),</span>
              <span class="s">&quot;Antidependent output ports must belong to the same reactor as &quot;</span>
              <span class="s">&quot;the reaction&quot;</span><span class="p">);</span>
   <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-    <span class="n">VALIDATE</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">container</span><span class="p">()</span> <span class="o">==</span> <span class="n">port</span><span class="o">-&gt;</span><span class="n">container</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">container</span><span class="p">(),</span>
+    <span class="n">reactor</span><span class="o">::</span><span class="n">validate</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">container</span><span class="p">()</span> <span class="o">==</span> <span class="n">port</span><span class="o">-&gt;</span><span class="n">container</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">container</span><span class="p">(),</span>
              <span class="s">&quot;Antidependent input ports must belong to a contained reactor&quot;</span><span class="p">);</span>
   <span class="p">}</span>
 
-  <span class="k">auto</span> <span class="n">r</span> <span class="o">=</span> <span class="n">_antidependencies</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">port</span><span class="p">);</span>
-  <span class="n">ASSERT</span><span class="p">(</span><span class="n">r</span><span class="p">.</span><span class="n">second</span><span class="p">);</span>
+  <span class="n">assert</span><span class="p">(</span><span class="n">_antidependencies</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">port</span><span class="p">).</span><span class="n">second</span><span class="p">);</span>
   <span class="n">port</span><span class="o">-&gt;</span><span class="n">register_antidependency</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
 <span class="p">}</span>
 
 <span class="kt">void</span> <span class="n">Reaction</span><span class="o">::</span><span class="n">trigger</span><span class="p">()</span> <span class="p">{</span>
   <span class="k">if</span> <span class="p">(</span><span class="n">has_deadline</span><span class="p">())</span> <span class="p">{</span>
-    <span class="n">ASSERT</span><span class="p">(</span><span class="n">deadline_handler</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">);</span>
+    <span class="n">assert</span><span class="p">(</span><span class="n">deadline_handler</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">);</span>
     <span class="k">auto</span> <span class="n">lag</span> <span class="o">=</span>
         <span class="n">container</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">get_physical_time</span><span class="p">()</span> <span class="o">-</span> <span class="n">container</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">get_logical_time</span><span class="p">();</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">lag</span> <span class="o">&gt;</span> <span class="n">deadline</span><span class="p">)</span> <span class="p">{</span>
@@ -397,14 +393,14 @@
 
 <span class="kt">void</span> <span class="n">Reaction</span><span class="o">::</span><span class="n">set_deadline_impl</span><span class="p">(</span><span class="n">Duration</span> <span class="n">dl</span><span class="p">,</span>
                                  <span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">handler</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">ASSERT</span><span class="p">(</span><span class="o">!</span><span class="n">has_deadline</span><span class="p">());</span>
-  <span class="n">ASSERT</span><span class="p">(</span><span class="n">handler</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">);</span>
+  <span class="n">assert</span><span class="p">(</span><span class="o">!</span><span class="n">has_deadline</span><span class="p">());</span>
+  <span class="n">assert</span><span class="p">(</span><span class="n">handler</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">);</span>
   <span class="k">this</span><span class="o">-&gt;</span><span class="n">deadline</span> <span class="o">=</span> <span class="n">dl</span><span class="p">;</span>
   <span class="k">this</span><span class="o">-&gt;</span><span class="n">deadline_handler</span> <span class="o">=</span> <span class="n">handler</span><span class="p">;</span>
 <span class="p">}</span>
 
 <span class="kt">void</span> <span class="n">Reaction</span><span class="o">::</span><span class="n">set_index</span><span class="p">(</span><span class="kt">unsigned</span> <span class="n">index</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">VALIDATE</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">environment</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">phase</span><span class="p">()</span> <span class="o">==</span> <span class="n">Environment</span><span class="o">::</span><span class="n">Phase</span><span class="o">::</span><span class="n">Assembly</span><span class="p">,</span>
+  <span class="n">reactor</span><span class="o">::</span><span class="n">validate</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">environment</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">phase</span><span class="p">()</span> <span class="o">==</span> <span class="n">Environment</span><span class="o">::</span><span class="n">Phase</span><span class="o">::</span><span class="n">Assembly</span><span class="p">,</span>
            <span class="s">&quot;Reaction indexes may only be set during assembly phase!&quot;</span><span class="p">);</span>
   <span class="k">this</span><span class="o">-&gt;</span><span class="n">_index</span> <span class="o">=</span> <span class="n">index</span><span class="p">;</span>
 <span class="p">}</span>

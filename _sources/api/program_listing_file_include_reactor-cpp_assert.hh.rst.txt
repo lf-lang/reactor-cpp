@@ -20,18 +20,16 @@ Program Listing for File assert.hh
    
    #pragma once
    
-   // A custom definition of assert that mitigates unused variable warnings
-   // when assertions are disabled
-   #ifdef NDEBUG
-   #define ASSERT(x)    \
-     do {               \
-       (void)sizeof(x); \
-     } while (0)
+   #ifdef REACTOR_CPP_VALIDATE
+   #define RUNTIME_VALIDATE true
    #else
-   #include <cassert>
-   #define ASSERT(x) assert(x)
+   #define RUNTIME_VALIDATE false
    #endif
    
+   // macro for silencing unused warnings my the compiler
+   #define UNUSED(expr) do { (void)(expr); } while (0)
+   
+   #include <cassert>
    #include <sstream>
    #include <stdexcept>
    #include <string>
@@ -47,20 +45,12 @@ Program Listing for File assert.hh
          : std::runtime_error(build_message(msg)) {}
    };
    
-   void inline validate(bool condition, const std::string& message) {
-     if (!condition) {
-       throw ValidationError(message);
-     }
+   
+   constexpr void validate(bool condition, const std::string& message) {
+         if (RUNTIME_VALIDATE and !condition) {
+           throw ValidationError(message);
+         }
    }
    
-   
-   #ifdef REACTOR_CPP_VALIDATE
-   #define VALIDATE(con, msg) reactor::validate(con, msg);
-   #else
-   #define VALIDATE(con, msg) \
-     do {               \
-       (void)sizeof(con); \
-     } while (0)
-   #endif
    
    }  // namespace reactor

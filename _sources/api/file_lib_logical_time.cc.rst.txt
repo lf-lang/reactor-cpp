@@ -29,6 +29,8 @@ Includes
 --------
 
 
+- ``cassert``
+
 - ``reactor-cpp/assert.hh`` (:ref:`file_include_reactor-cpp_assert.hh`)
 
 - ``reactor-cpp/logical_time.hh`` (:ref:`file_include_reactor-cpp_logical_time.hh`)
@@ -53,9 +55,9 @@ Functions
 
 - :ref:`exhale_function_namespacereactor_1a632f1427effbba727fcb9f5aa38d6e03`
 
-- :ref:`exhale_function_namespacereactor_1a0c98d4882f478da43c2c1a169a1fedd2`
-
 - :ref:`exhale_function_namespacereactor_1a55f3e1662b62c0347fb588c294b3f471`
+
+- :ref:`exhale_function_namespacereactor_1a0c98d4882f478da43c2c1a169a1fedd2`
 
 - :ref:`exhale_function_namespacereactor_1ae9b630f4a987aba9a98c138dd23e87b5`
 
