@@ -59,8 +59,6 @@ Defines
 -------
 
 
-- :ref:`exhale_define_trace_8hh_1a14f75d379403e3e8f3767e32aff0ebb6`
-
 - :ref:`exhale_define_trace_8hh_1aeae0efb071b08e657d36788eee20c1a7`
 
 

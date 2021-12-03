@@ -212,7 +212,6 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="library_root.html#defines">Defines</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="define_trace_8hh_1a14f75d379403e3e8f3767e32aff0ebb6.html">Define _REACTOR_CPP_TRACE_H</a></li>
 <li class="toctree-l4"><a class="reference internal" href="define_assert_8hh_1a0a1d1b5118a7cb87d8a88a9d8395811c.html">Define RUNTIME_VALIDATE</a></li>
 <li class="toctree-l4"><a class="reference internal" href="define_trace_8hh_1aeae0efb071b08e657d36788eee20c1a7.html">Define tracepoint</a></li>
 <li class="toctree-l4"><a class="reference internal" href="define_trace_8cc_1aeb980b4a64d9b54d660780a30415b0bc.html">Define TRACEPOINT_CREATE_PROBES</a></li>
@@ -270,6 +269,8 @@
 <span class="cm"> *   Christian Menard</span>
 <span class="cm"> */</span>
 
+<span class="cp">#pragma once</span>
+
 <span class="cp">#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp"></span>
 
 <span class="cp">#include</span> <span class="cpf">&quot;config.hh&quot;</span><span class="cp"></span>
@@ -277,19 +278,15 @@
 
 <span class="cp">#ifdef REACTOR_CPP_TRACE</span>
 
+<span class="k">namespace</span> <span class="n">reactor</span> <span class="p">{</span>
+<span class="k">constexpr</span> <span class="kt">bool</span> <span class="n">tracing_enabled</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span>
+
 <span class="cp">#undef TRACEPOINT_PROVIDER</span>
 <span class="cp">#define TRACEPOINT_PROVIDER reactor_cpp</span>
 
 <span class="cp">#undef TRACEPOINT_INCLUDE</span>
 <span class="cp">#define TRACEPOINT_INCLUDE &quot;reactor-cpp/trace.hh&quot;</span>
-
-<span class="c1">// LTTng requires this header to be included multiple times. Therfore, we cannot</span>
-<span class="c1">// use `#praga once`, unfortunantely.</span>
-<span class="cp">#ifndef _REACTOR_CPP_TRACE_H</span>
-<span class="k">namespace</span> <span class="n">reactor</span> <span class="p">{</span>
-<span class="k">constexpr</span> <span class="kt">bool</span> <span class="n">tracing_enabled</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
-<span class="p">}</span>
-<span class="cp">#endif</span>
 
 <span class="cp">#if !defined(_REACTOR_CPP_TRACE_H) || defined(TRACEPOINT_HEADER_MULTI_READ)</span>
 <span class="cp">#define _REACTOR_CPP_TRACE_H</span>
@@ -362,17 +359,12 @@
 
 <span class="cp">#else</span>
 
-<span class="cp">#ifndef _REACTOR_CPP_TRACE_H</span>
-<span class="cp">#define _REACTOR_CPP_TRACE_H</span>
-
 <span class="k">namespace</span> <span class="n">reactor</span> <span class="p">{</span>
 <span class="k">constexpr</span> <span class="kt">bool</span> <span class="n">tracing_enabled</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
 <span class="p">}</span>
 
 <span class="c1">// empty definition in case we compile without tracing</span>
 <span class="cp">#define tracepoint(...)</span>
-
-<span class="cp">#endif  </span><span class="c1">// _REACTOR_CPP_TRACE_H</span>
 
 <span class="cp">#endif </span><span class="c1">// REACTOR_CPP_TRACE</span>
 </pre></div>

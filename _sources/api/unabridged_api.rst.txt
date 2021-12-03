@@ -794,11 +794,6 @@ Defines
 .. toctree::
    :maxdepth: 5
 
-   define_trace_8hh_1a14f75d379403e3e8f3767e32aff0ebb6.rst
-
-.. toctree::
-   :maxdepth: 5
-
    define_assert_8hh_1a0a1d1b5118a7cb87d8a88a9d8395811c.rst
 
 .. toctree::
