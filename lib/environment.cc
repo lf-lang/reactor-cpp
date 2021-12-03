@@ -11,6 +11,7 @@
 #include <algorithm>
 #include <fstream>
 #include <map>
+#include <cassert>
 
 #include "reactor-cpp/assert.hh"
 #include "reactor-cpp/logging.hh"
@@ -20,13 +21,12 @@
 namespace reactor {
 
 void Environment::register_reactor(Reactor* reactor) {
-  ASSERT(reactor != nullptr);
-  VALIDATE(this->phase() == Phase::Construction,
+  assert(reactor != nullptr);
+  reactor::validate(this->phase() == Phase::Construction,
            "Reactors may only be registered during construction phase!");
-  VALIDATE(reactor->is_top_level(),
+  reactor::validate(reactor->is_top_level(),
            "The environment may only contain top level reactors!");
-  auto r = _top_level_reactors.insert(reactor);
-  ASSERT(r.second);
+  assert(_top_level_reactors.insert(reactor).second);
 }
 
 void recursive_assemble(Reactor* container) {
@@ -37,7 +37,7 @@ void recursive_assemble(Reactor* container) {
 }
 
 void Environment::assemble() {
-  VALIDATE(this->phase() == Phase::Construction,
+  reactor::validate(this->phase() == Phase::Construction,
            "assemble() may only be called during construction phase!");
   _phase = Phase::Assembly;
   for (auto r : _top_level_reactors) {
@@ -55,7 +55,7 @@ void Environment::build_dependency_graph(Reactor* reactor) {
   for (auto r : reactor->reactions()) {
     reactions.insert(r);
     auto result = priority_map.emplace(r->priority(), r);
-    VALIDATE(result.second,
+    reactor::validate(result.second,
              "priorities must be unique for all reactions of the same reactor");
   }
 
@@ -85,7 +85,7 @@ void Environment::build_dependency_graph(Reactor* reactor) {
 }
 
 std::thread Environment::startup() {
-  VALIDATE(this->phase() == Phase::Assembly,
+  reactor::validate(this->phase() == Phase::Assembly,
            "startup() may only be called during assembly phase!");
 
   // build the dependency graph
@@ -109,7 +109,7 @@ std::thread Environment::startup() {
 }
 
 void Environment::sync_shutdown() {
-  VALIDATE(this->phase() == Phase::Execution,
+  reactor::validate(this->phase() == Phase::Execution,
            "sync_shutdown() may only be called during execution phase!");
   _phase = Phase::Shutdown;
 

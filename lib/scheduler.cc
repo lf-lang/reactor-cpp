@@ -16,6 +16,8 @@
 #include "reactor-cpp/reaction.hh"
 #include "reactor-cpp/trace.hh"
 
+#include <cassert>
+
 namespace reactor {
 
 thread_local const Worker* Worker::current_worker{nullptr};
@@ -352,7 +354,7 @@ Scheduler::~Scheduler() {}
 void Scheduler::schedule_sync(const Tag& tag,
                               BaseAction* action,
                               std::function<void(void)> setup) {
-  ASSERT(_logical_time < tag);
+  assert(_logical_time < tag);
   // TODO verify that the action is indeed allowed to be scheduled by the
   // current reaction
   log::Debug() << "Schedule action " << action->fqn()
@@ -397,7 +399,7 @@ void Scheduler::set_port(BasePort* p) {
 }
 
 void Scheduler::set_port_helper(BasePort* p) {
-  ASSERT(!(p->has_outward_bindings() && !p->triggers().empty()));
+  assert(!(p->has_outward_bindings() && !p->triggers().empty()));
   if (p->has_outward_bindings()) {
     for (auto binding : p->outward_bindings()) {
       set_port_helper(binding);
