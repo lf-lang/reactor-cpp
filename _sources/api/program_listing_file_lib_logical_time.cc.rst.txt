@@ -22,9 +22,8 @@ Program Listing for File logical_time.cc
    
    #include "reactor-cpp/assert.hh"
    
-   #include <cassert>
-   
    namespace reactor {
+   
    bool operator==(const Tag& lhs, const Tag& rhs) {
      return lhs.time_point() == rhs.time_point() &&
             lhs.micro_step() == rhs.micro_step();
@@ -51,7 +50,7 @@ Program Listing for File logical_time.cc
    }
    
    void LogicalTime::advance_to(const Tag& tag) {
-     assert(*this < tag);
+     ASSERT(*this < tag);
      _time_point = tag.time_point();
      _micro_step = tag.micro_step();
    }

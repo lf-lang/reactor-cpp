@@ -27,9 +27,9 @@ Program Listing for File action_impl.hh
    template <class Dur>
    void Action<T>::schedule(const ImmutableValuePtr<T>& value_ptr, Dur delay) {
      auto d = std::chrono::duration_cast<Duration>(delay);
-     reactor::validate(d >= Duration::zero(),
+     VALIDATE(d >= Duration::zero(),
               "Schedule cannot be called with a negative delay!");
-     reactor::validate(value_ptr != nullptr,
+     VALIDATE(value_ptr != nullptr,
               "Actions may not be scheduled with a nullptr value!");
      auto scheduler = environment()->scheduler();
      auto setup = [value_ptr, this]() { this->value_ptr = std::move(value_ptr); };
@@ -46,7 +46,7 @@ Program Listing for File action_impl.hh
    template <class Dur>
    void Action<void>::schedule(Dur delay) {
      auto d = std::chrono::duration_cast<Duration>(delay);
-     reactor::validate(d >= Duration::zero(),
+     VALIDATE(d >= Duration::zero(),
               "Schedule cannot be called with a negative delay!");
      auto scheduler = environment()->scheduler();
      auto setup = [this]() { this->present = true; };

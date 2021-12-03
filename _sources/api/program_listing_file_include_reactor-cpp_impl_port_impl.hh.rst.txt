@@ -40,10 +40,10 @@ Program Listing for File port_impl.hh
    
    template <class T>
    void Port<T>::set(const ImmutableValuePtr<T>& value_ptr) {
-     reactor::validate(!has_inward_binding(),
+     VALIDATE(!has_inward_binding(),
               "set() may only be called on a ports that do not have an inward "
               "binding!");
-     reactor::validate(value_ptr != nullptr, "Ports may not be set to nullptr!");
+     VALIDATE(value_ptr != nullptr, "Ports may not be set to nullptr!");
      auto scheduler = environment()->scheduler();
      this->value_ptr = std::move(value_ptr);
      scheduler->set_port(this);

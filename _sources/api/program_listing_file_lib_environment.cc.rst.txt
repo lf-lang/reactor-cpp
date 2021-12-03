@@ -23,7 +23,6 @@ Program Listing for File environment.cc
    #include <algorithm>
    #include <fstream>
    #include <map>
-   #include <cassert>
    
    #include "reactor-cpp/assert.hh"
    #include "reactor-cpp/logging.hh"
@@ -33,12 +32,13 @@ Program Listing for File environment.cc
    namespace reactor {
    
    void Environment::register_reactor(Reactor* reactor) {
-     assert(reactor != nullptr);
-     reactor::validate(this->phase() == Phase::Construction,
+     ASSERT(reactor != nullptr);
+     VALIDATE(this->phase() == Phase::Construction,
               "Reactors may only be registered during construction phase!");
-     reactor::validate(reactor->is_top_level(),
+     VALIDATE(reactor->is_top_level(),
               "The environment may only contain top level reactors!");
-     assert(_top_level_reactors.insert(reactor).second);
+     auto r = _top_level_reactors.insert(reactor);
+     ASSERT(r.second);
    }
    
    void recursive_assemble(Reactor* container) {
@@ -49,7 +49,7 @@ Program Listing for File environment.cc
    }
    
    void Environment::assemble() {
-     reactor::validate(this->phase() == Phase::Construction,
+     VALIDATE(this->phase() == Phase::Construction,
               "assemble() may only be called during construction phase!");
      _phase = Phase::Assembly;
      for (auto r : _top_level_reactors) {
@@ -67,7 +67,7 @@ Program Listing for File environment.cc
      for (auto r : reactor->reactions()) {
        reactions.insert(r);
        auto result = priority_map.emplace(r->priority(), r);
-       reactor::validate(result.second,
+       VALIDATE(result.second,
                 "priorities must be unique for all reactions of the same reactor");
      }
    
@@ -97,7 +97,7 @@ Program Listing for File environment.cc
    }
    
    std::thread Environment::startup() {
-     reactor::validate(this->phase() == Phase::Assembly,
+     VALIDATE(this->phase() == Phase::Assembly,
               "startup() may only be called during assembly phase!");
    
      // build the dependency graph
@@ -121,7 +121,7 @@ Program Listing for File environment.cc
    }
    
    void Environment::sync_shutdown() {
-     reactor::validate(this->phase() == Phase::Execution,
+     VALIDATE(this->phase() == Phase::Execution,
               "sync_shutdown() may only be called during execution phase!");
      _phase = Phase::Shutdown;
    

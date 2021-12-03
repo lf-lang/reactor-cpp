@@ -29,8 +29,6 @@ Includes
 --------
 
 
-- ``cassert``
-
 - ``reactor-cpp/action.hh`` (:ref:`file_include_reactor-cpp_action.hh`)
 
 - ``reactor-cpp/assert.hh`` (:ref:`file_include_reactor-cpp_assert.hh`)

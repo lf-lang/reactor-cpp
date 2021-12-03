@@ -31,8 +31,6 @@ Includes
 
 - ``algorithm``
 
-- ``cassert``
-
 - ``fstream``
 
 - ``map`` (:ref:`file_include_reactor-cpp_semaphore.hh`)
