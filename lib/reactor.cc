@@ -97,7 +97,7 @@ void Reactor::register_reaction(Reaction* reaction) {
   assert(reaction != nullptr);
   reactor::validate(this->environment()->phase() == Environment::Phase::Construction,
            "Reactions can only be registered during construction phase!");
-  assert(_reaction.insert(reaction).second);
+  assert(_reactions.insert(reaction).second);
 }
 void Reactor::register_reactor(Reactor* reactor) {
   UNUSED(reactor);
