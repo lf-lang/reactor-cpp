@@ -9,9 +9,9 @@
 #pragma once
 
 #ifdef REACTOR_CPP_VALIDATE
-#define RUNTIME_VALIDATE true
+constexpr bool kDoRuntimeValidation = true;
 #else
-#define RUNTIME_VALIDATE false
+constexpr bool kDoRuntimeValidation = false;
 #endif
 
 // macro for silencing unused warnings my the compiler
@@ -35,7 +35,7 @@ class ValidationError : public std::runtime_error {
 
 
 constexpr void validate(bool condition, const std::string& message) {
-      if (RUNTIME_VALIDATE && !condition) {
+      if constexpr ( kDoRuntimeValidation && !condition) {
         throw ValidationError(message);
       }
 }
