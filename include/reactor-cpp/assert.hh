@@ -35,7 +35,7 @@ class ValidationError : public std::runtime_error {
 
 
 constexpr void validate(bool condition, const std::string& message) {
-      if (RUNTIME_VALIDATE and !condition) {
+      if (RUNTIME_VALIDATE && !condition) {
         throw ValidationError(message);
       }
 }
