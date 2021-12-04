@@ -15,17 +15,15 @@
 #include "reactor-cpp/port.hh"
 #include "reactor-cpp/reaction.hh"
 
-#include <cassert>
-
 namespace reactor {
 
 ReactorElement::ReactorElement(const std::string& name,
                                ReactorElement::Type type,
                                Reactor* container)
     : _name(name), _container(container) {
-  assert(container != nullptr);
+  toggle_assert(container != nullptr);
   this->_environment = container->environment();
-  assert(this->_environment != nullptr);
+  toggle_assert(this->_environment != nullptr);
   reactor::validate(this->_environment->phase() == Environment::Phase::Construction,
            "Reactor elements can only be created during construction phase!");
   // We need a reinterpret_cast here as the derived class is not yet created
@@ -61,7 +59,7 @@ ReactorElement::ReactorElement(const std::string& name,
                                ReactorElement::Type type,
                                Environment* environment)
     : _name(name), _fqn(name), _container(nullptr), _environment(environment) {
-  assert(environment != nullptr);
+  toggle_assert(environment != nullptr);
   reactor::validate(type == Type::Reactor,
            "Only reactors can be owned by the environment!");
   reactor::validate(this->_environment->phase() == Environment::Phase::Construction,
@@ -77,38 +75,38 @@ Reactor::Reactor(const std::string& name, Environment* environment)
 
 void Reactor::register_action(BaseAction* action) {
   UNUSED(action);
-  assert(action != nullptr);
+  toggle_assert(action != nullptr);
   reactor::validate(this->environment()->phase() == Environment::Phase::Construction,
            "Actions can only be registered during construction phase!");
-  assert(_actions.insert(action).second);
+  toggle_assert(_actions.insert(action).second);
 }
 void Reactor::register_port(BasePort* port) {
-  assert(port != nullptr);
+  toggle_assert(port != nullptr);
   reactor::validate(this->environment()->phase() == Environment::Phase::Construction,
            "Ports can only be registered during construction phase!");
   if (port->is_input()) {
-    assert(_inputs.insert(port).second);
+    toggle_assert(_inputs.insert(port).second);
   } else {
-    assert(_outputs.insert(port).second);
+    toggle_assert(_outputs.insert(port).second);
   }
 }
 void Reactor::register_reaction(Reaction* reaction) {
   UNUSED(reaction);
-  assert(reaction != nullptr);
+  toggle_assert(reaction != nullptr);
   reactor::validate(this->environment()->phase() == Environment::Phase::Construction,
            "Reactions can only be registered during construction phase!");
-  assert(_reactions.insert(reaction).second);
+  toggle_assert(_reactions.insert(reaction).second);
 }
 void Reactor::register_reactor(Reactor* reactor) {
   UNUSED(reactor);
-  assert(reactor != nullptr);
+  toggle_assert(reactor != nullptr);
   reactor::validate(this->environment()->phase() == Environment::Phase::Construction,
            "Reactions can only be registered during construction phase!");
-  assert(_reactors.insert(reactor).second);
+  toggle_assert(_reactors.insert(reactor).second);
 }
 
 void Reactor::startup() {
-  assert(environment()->phase() == Environment::Phase::Startup);
+  toggle_assert(environment()->phase() == Environment::Phase::Startup);
   log::Debug() << "Starting up reactor " << fqn();
   // call startup on all contained objects
   for (auto x : _actions)
@@ -124,7 +122,7 @@ void Reactor::startup() {
 }
 
 void Reactor::shutdown() {
-  assert(environment()->phase() == Environment::Phase::Shutdown);
+  toggle_assert(environment()->phase() == Environment::Phase::Shutdown);
   log::Debug() << "Terminating reactor " << fqn();
   // call shutdown on all contained objects
   for (auto x : _actions)

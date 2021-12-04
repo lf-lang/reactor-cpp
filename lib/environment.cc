@@ -11,7 +11,6 @@
 #include <algorithm>
 #include <fstream>
 #include <map>
-#include <cassert>
 
 #include "reactor-cpp/assert.hh"
 #include "reactor-cpp/logging.hh"
@@ -21,12 +20,12 @@
 namespace reactor {
 
 void Environment::register_reactor(Reactor* reactor) {
-  assert(reactor != nullptr);
+  toggle_assert(reactor != nullptr);
   reactor::validate(this->phase() == Phase::Construction,
            "Reactors may only be registered during construction phase!");
   reactor::validate(reactor->is_top_level(),
            "The environment may only contain top level reactors!");
-  assert(_top_level_reactors.insert(reactor).second);
+  toggle_assert(_top_level_reactors.insert(reactor).second);
 }
 
 void recursive_assemble(Reactor* container) {

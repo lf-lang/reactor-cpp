@@ -22,6 +22,14 @@ constexpr bool kDoRuntimeValidation = false;
 #include <stdexcept>
 #include <string>
 
+constexpr inline void toggle_assert(bool condition) {
+  if constexpr (kDoRuntimeValidation){
+    UNUSED(condition);
+    assert(condition);
+  }
+}
+
+
 namespace reactor {
 
 class ValidationError : public std::runtime_error {
@@ -34,10 +42,10 @@ class ValidationError : public std::runtime_error {
 };
 
 
-constexpr void validate(bool condition, const std::string& message) {
-      if constexpr ( kDoRuntimeValidation && !condition) {
-        throw ValidationError(message);
-      }
+constexpr inline void validate(bool condition, const std::string& message) {
+  if constexpr ( kDoRuntimeValidation && !condition) {
+    throw ValidationError(message);
+  }
 }
 
 

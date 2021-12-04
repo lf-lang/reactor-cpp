@@ -10,8 +10,6 @@
 
 #include "reactor-cpp/assert.hh"
 
-#include <cassert>
-
 namespace reactor {
 bool operator==(const Tag& lhs, const Tag& rhs) {
   return lhs.time_point() == rhs.time_point() &&
@@ -39,7 +37,7 @@ Tag Tag::delay(Duration offset) const {
 }
 
 void LogicalTime::advance_to(const Tag& tag) {
-  assert(*this < tag);
+  toggle_assert(*this < tag);
   _time_point = tag.time_point();
   _micro_step = tag.micro_step();
 }

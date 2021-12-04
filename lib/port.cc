@@ -12,13 +12,11 @@
 #include "reactor-cpp/environment.hh"
 #include "reactor-cpp/reaction.hh"
 
-#include <cassert>
-
 namespace reactor {
 
 void BasePort::base_bind_to(BasePort* port) {
-  assert(port != nullptr);
-  assert(this->environment() == port->environment());
+  toggle_assert(port != nullptr);
+  toggle_assert(this->environment() == port->environment());
   reactor::validate(!port->has_inward_binding(), "Ports may only be connected once");
   reactor::validate(!this->has_dependencies(),
            "Ports with dependencies may not be connected to other ports");
@@ -49,12 +47,12 @@ void BasePort::base_bind_to(BasePort* port) {
   }
 
   port->_inward_binding = this;
-  assert(this->_outward_bindings.insert(port).second);
+  toggle_assert(this->_outward_bindings.insert(port).second);
 }
 
 void BasePort::register_dependency(Reaction* reaction, bool is_trigger) {
-  assert(reaction != nullptr);
-  assert(this->environment() == reaction->environment());
+  toggle_assert(reaction != nullptr);
+  toggle_assert(this->environment() == reaction->environment());
   reactor::validate(!this->has_outward_bindings(),
            "Dependencies may no be declared on ports with an outward binding!");
   reactor::validate(this->environment()->phase() == Environment::Phase::Assembly,
@@ -69,15 +67,15 @@ void BasePort::register_dependency(Reaction* reaction, bool is_trigger) {
              "Dependent output ports must belong to a contained reactor");
   }
 
-  assert(_dependencies.insert(reaction).second);
+  toggle_assert(_dependencies.insert(reaction).second);
   if (is_trigger) {
-    assert(_triggers.insert(reaction).second);
+    toggle_assert(_triggers.insert(reaction).second);
   }
 }
 
 void BasePort::register_antidependency(Reaction* reaction) {
-  assert(reaction != nullptr);
-  assert(this->environment() == reaction->environment());
+  toggle_assert(reaction != nullptr);
+  toggle_assert(this->environment() == reaction->environment());
   reactor::validate(
       !this->has_inward_binding(),
       "Antidependencies may no be declared on ports with an inward binding!");
@@ -93,7 +91,7 @@ void BasePort::register_antidependency(Reaction* reaction) {
              "Antidependent input ports must belong to a contained reactor");
   }
 
-  assert(_antidependencies.insert(reaction).second);
+  toggle_assert(_antidependencies.insert(reaction).second);
 }
 
 const std::set<Port<void>*>& Port<void>::typed_outward_bindings() const {
