@@ -28,9 +28,9 @@ Reaction::Reaction(const std::string& name,
 void Reaction::declare_trigger(BaseAction* action) {
   toggle_assert(action != nullptr);
   toggle_assert(this->environment() == action->environment());
-  reactor::validate(this->environment()->phase() == Environment::Phase::Assembly,
+  validate(this->environment()->phase() == Environment::Phase::Assembly,
            "Triggers may only be declared during assembly phase!");
-  reactor::validate(this->container() == action->container(),
+  validate(this->container() == action->container(),
            "Action triggers must belong to the same reactor as the triggered "
            "reaction");
 
@@ -41,9 +41,9 @@ void Reaction::declare_trigger(BaseAction* action) {
 void Reaction::declare_schedulable_action(BaseAction* action) {
   toggle_assert(action != nullptr);
   toggle_assert(this->environment() == action->environment());
-  reactor::validate(this->environment()->phase() == Environment::Phase::Assembly,
+  validate(this->environment()->phase() == Environment::Phase::Assembly,
            "Scheduable actions may only be declared during assembly phase!");
-  reactor::validate(this->container() == action->container(),
+  validate(this->container() == action->container(),
            "Scheduable actions must belong to the same reactor as the "
            "triggered reaction");
 
@@ -55,16 +55,16 @@ void Reaction::declare_trigger(BasePort* port) {
   toggle_assert(port != nullptr);
   toggle_assert(this->environment() == port->environment());
   toggle_assert(this->environment()->phase() == Environment::Phase::Assembly);
-  reactor::validate(this->environment()->phase() == Environment::Phase::Assembly,
+  validate(this->environment()->phase() == Environment::Phase::Assembly,
         "Triggers may only be declared during assembly phase!");
 
   if (port->is_input()) {
-    reactor::validate(
+    validate(
         this->container() == port->container(),
         "Input port triggers must belong to the same reactor as the triggered "
         "reaction");
   } else {
-    reactor::validate(this->container() == port->container()->container(),
+    validate(this->container() == port->container()->container(),
         "Output port triggers must belong to a contained reactor");
   }
 
@@ -76,15 +76,15 @@ void Reaction::declare_trigger(BasePort* port) {
 void Reaction::declare_dependency(BasePort* port) {
   toggle_assert(port != nullptr);
   toggle_assert(this->environment() == port->environment());
-  reactor::validate(this->environment()->phase() == Environment::Phase::Assembly,
+  validate(this->environment()->phase() == Environment::Phase::Assembly,
            "Dependencies may only be declared during assembly phase!");
 
   if (port->is_input()) {
-    reactor::validate(this->container() == port->container(),
+    validate(this->container() == port->container(),
              "Dependent input ports must belong to the same reactor as the "
              "reaction");
   } else {
-    reactor::validate(this->container() == port->container()->container(),
+    validate(this->container() == port->container()->container(),
              "Dependent output ports must belong to a contained reactor");
   }
 
@@ -95,15 +95,15 @@ void Reaction::declare_dependency(BasePort* port) {
 void Reaction::declare_antidependency(BasePort* port) {
   toggle_assert(port != nullptr);
   toggle_assert(this->environment() == port->environment());
-  reactor::validate(this->environment()->phase() == Environment::Phase::Assembly,
+  validate(this->environment()->phase() == Environment::Phase::Assembly,
            "Antidependencies may only be declared during assembly phase!");
 
   if (port->is_output()) {
-    reactor::validate(this->container() == port->container(),
+    validate(this->container() == port->container(),
              "Antidependent output ports must belong to the same reactor as "
              "the reaction");
   } else {
-    reactor::validate(this->container() == port->container()->container(),
+    validate(this->container() == port->container()->container(),
              "Antidependent input ports must belong to a contained reactor");
   }
 
@@ -134,7 +134,7 @@ void Reaction::set_deadline_impl(Duration dl,
 }
 
 void Reaction::set_index(unsigned index) {
-  reactor::validate(this->environment()->phase() == Environment::Phase::Assembly,
+  validate(this->environment()->phase() == Environment::Phase::Assembly,
            "Reaction indexes may only be set during assembly phase!");
   this->_index = index;
 }

@@ -9,9 +9,15 @@
 #pragma once
 
 #ifdef REACTOR_CPP_VALIDATE
-constexpr bool kDoRuntimeValidation = true;
+constexpr bool runtime_validation = REACTOR_CPP_VALIDATE;
 #else
-constexpr bool kDoRuntimeValidation = false;
+constexpr bool runtime_validation = false;
+#endif
+
+#ifdef NDEBUG
+constexpr bool runtime_assertion = NEDBUG;
+#else
+constexpr bool runtime_assertion = false;
 #endif
 
 // macro for silencing unused warnings my the compiler
@@ -22,14 +28,6 @@ constexpr bool kDoRuntimeValidation = false;
 #include <stdexcept>
 #include <string>
 
-constexpr inline void toggle_assert(bool condition) {
-  if constexpr (kDoRuntimeValidation){
-    UNUSED(condition);
-    assert(condition);
-  }
-}
-
-
 namespace reactor {
 
 class ValidationError : public std::runtime_error {
@@ -37,16 +35,21 @@ class ValidationError : public std::runtime_error {
   static std::string build_message(const std::string& msg);
 
  public:
-  ValidationError(const std::string& msg)
+  explicit ValidationError(const std::string& msg)
       : std::runtime_error(build_message(msg)) {}
 };
 
-
 constexpr inline void validate(bool condition, const std::string& message) {
-  if constexpr ( kDoRuntimeValidation && !condition) {
+  if constexpr (runtime_validation && !condition) {
     throw ValidationError(message);
   }
 }
 
+constexpr inline void toggle_assert(bool condition) {
+  if constexpr (runtime_assertion){
+    UNUSED(condition);
+    assert(condition);
+  }
+}
 
 }  // namespace reactor

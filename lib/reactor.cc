@@ -24,7 +24,7 @@ ReactorElement::ReactorElement(const std::string& name,
   toggle_assert(container != nullptr);
   this->_environment = container->environment();
   toggle_assert(this->_environment != nullptr);
-  reactor::validate(this->_environment->phase() == Environment::Phase::Construction,
+  validate(this->_environment->phase() == Environment::Phase::Construction,
            "Reactor elements can only be created during construction phase!");
   // We need a reinterpret_cast here as the derived class is not yet created
   // when this constructor is executed. dynamic_cast only works for
@@ -60,9 +60,9 @@ ReactorElement::ReactorElement(const std::string& name,
                                Environment* environment)
     : _name(name), _fqn(name), _container(nullptr), _environment(environment) {
   toggle_assert(environment != nullptr);
-  reactor::validate(type == Type::Reactor,
+  validate(type == Type::Reactor,
            "Only reactors can be owned by the environment!");
-  reactor::validate(this->_environment->phase() == Environment::Phase::Construction,
+  validate(this->_environment->phase() == Environment::Phase::Construction,
            "Reactor elements can only be created during construction phase!");
 }
 
@@ -93,14 +93,14 @@ void Reactor::register_port(BasePort* port) {
 void Reactor::register_reaction(Reaction* reaction) {
   UNUSED(reaction);
   toggle_assert(reaction != nullptr);
-  reactor::validate(this->environment()->phase() == Environment::Phase::Construction,
+  validate(this->environment()->phase() == Environment::Phase::Construction,
            "Reactions can only be registered during construction phase!");
   toggle_assert(_reactions.insert(reaction).second);
 }
 void Reactor::register_reactor(Reactor* reactor) {
   UNUSED(reactor);
   toggle_assert(reactor != nullptr);
-  reactor::validate(this->environment()->phase() == Environment::Phase::Construction,
+  validate(this->environment()->phase() == Environment::Phase::Construction,
            "Reactions can only be registered during construction phase!");
   toggle_assert(_reactors.insert(reactor).second);
 }

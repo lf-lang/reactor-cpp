@@ -20,7 +20,7 @@ namespace reactor {
 
 thread_local const Worker* Worker::current_worker{nullptr};
 
-Worker::Worker(Worker&& w) : scheduler{w.scheduler}, id{w.id}, thread{} {
+Worker::Worker(Worker&& w): scheduler{w.scheduler}, id{w.id}, thread{} {
   // Need to provide the move constructor in order to organize workers in a
   // std::vector. However, moving is not save if the thread is already running,
   // thus we throw an exception here if the the worker is moved but the

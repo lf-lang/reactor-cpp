@@ -17,9 +17,9 @@ namespace reactor {
 void BaseAction::register_trigger(Reaction* reaction) {
   toggle_assert(reaction != nullptr);
   toggle_assert(this->environment() == reaction->environment());
-  reactor::validate(this->environment()->phase() == Environment::Phase::Assembly,
+  validate(this->environment()->phase() == Environment::Phase::Assembly,
            "Triggers may only be registered during assembly phase!");
-  reactor::validate(this->container() == reaction->container(),
+  validate(this->container() == reaction->container(),
            "Action triggers must belong to the same reactor as the triggered "
            "reaction");
   toggle_assert(_triggers.insert(reaction).second);
@@ -28,12 +28,12 @@ void BaseAction::register_trigger(Reaction* reaction) {
 void BaseAction::register_scheduler(Reaction* reaction) {
   toggle_assert(reaction != nullptr);
   toggle_assert(this->environment() == reaction->environment());
-  reactor::validate(is_logical(), "only logical action can be scheduled by a reaction!");
-  reactor::validate(
+  validate(is_logical(), "only logical action can be scheduled by a reaction!");
+  validate(
       this->environment()->phase() == Environment::Phase::Assembly,
       "Schedulers for actions may only be registered during assembly phase!");
   // the reaction must belong to the same reactor as this action
-  reactor::validate(this->container() == reaction->container(),
+  validate(this->container() == reaction->container(),
            "Scheduable actions must belong to the same reactor as the "
            "triggered reaction");
   //auto r = _schedulers.insert(reaction);
