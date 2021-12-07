@@ -84,6 +84,41 @@ void Environment::build_dependency_graph(Reactor* reactor) {
   }
 }
 
+void dump_instance_to_yaml(std::ofstream& yaml, const Reactor& reactor) {
+  yaml << "  " << reactor.fqn() << ':' << std::endl;
+  yaml << "    name: " << reactor.name() << std::endl;
+  if (reactor.is_top_level()) {
+    yaml << "    container: null" << std::endl;
+  } else {
+    yaml << "    container: " << reactor.container()->fqn() << std::endl;
+  }
+  if (reactor.reactors().empty()) {
+    yaml << "    reactor_instances: null" << std::endl;
+  } else {
+    yaml << "    reactor_instances: " << std::endl;
+    for (const auto* r : reactor.reactors()) {
+      yaml << "      - " << r->fqn() << std::endl;
+    }
+  }
+
+  for (const auto* r : reactor.reactors()) {
+    dump_instance_to_yaml(yaml, *r);
+  }
+}
+
+void Environment::dump_to_yaml(const std::string& path) {
+  std::ofstream yaml(path);
+  yaml << "---" << std::endl;
+  yaml << "top_level_instances:" << std::endl;
+  for (const auto* r : _top_level_reactors) {
+    yaml << "  - " << r->fqn() << std::endl;
+  }
+  yaml << "all_reactor_instances:" << std::endl;
+  for (const auto* r : _top_level_reactors) {
+    dump_instance_to_yaml(yaml, *r);
+  }
+}
+
 std::thread Environment::startup() {
   VALIDATE(this->phase() == Phase::Assembly,
            "startup() may only be called during assembly phase!");
@@ -98,7 +133,7 @@ std::thread Environment::startup() {
   _phase = Phase::Startup;
 
   _start_time = get_physical_time();
-  // startupialize all reactors
+  // startup all reactors
   for (auto r : _top_level_reactors) {
     r->startup();
   }
