@@ -129,6 +129,20 @@ void dump_port_to_yaml(std::ofstream& yaml, const BasePort& port) {
   for (const auto d : port.outward_bindings()) {
     yaml << "          - " << d->fqn() << std::endl;
   }
+  yaml << "        trigger_of: " << std::endl;
+  for (const auto t : port.triggers()) {
+    yaml << "          - " << t->fqn() << std::endl;
+  }
+  yaml << "        source_of: " << std::endl;
+  for (const auto d : port.dependencies()) {
+    if (port.triggers().find(d) == port.triggers().end()) {
+      yaml << "          - " << d->fqn() << std::endl;
+    }
+  }
+  yaml << "        effect_of: " << std::endl;
+  for (const auto a : port.antidependencies()) {
+    yaml << "          - " << a->fqn() << std::endl;
+  }
 }
 
 void dump_instance_to_yaml(std::ofstream& yaml, const Reactor& reactor) {
