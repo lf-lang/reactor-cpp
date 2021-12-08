@@ -12,6 +12,7 @@
 #include <fstream>
 #include <map>
 
+#include "reactor-cpp/action.hh"
 #include "reactor-cpp/assert.hh"
 #include "reactor-cpp/logging.hh"
 #include "reactor-cpp/port.hh"
@@ -92,12 +93,31 @@ void dump_instance_to_yaml(std::ofstream& yaml, const Reactor& reactor) {
   } else {
     yaml << "    container: " << reactor.container()->fqn() << std::endl;
   }
-  if (reactor.reactors().empty()) {
-    yaml << "    reactor_instances: null" << std::endl;
-  } else {
-    yaml << "    reactor_instances: " << std::endl;
-    for (const auto* r : reactor.reactors()) {
-      yaml << "      - " << r->fqn() << std::endl;
+  yaml << "    reactor_instances:" << std::endl;
+  for (const auto* r : reactor.reactors()) {
+    yaml << "      - " << r->fqn() << std::endl;
+  }
+  yaml << "    inputs:" << std::endl;
+  for (const auto* i : reactor.inputs()) {
+    yaml << "      - " << i->name() << std::endl;
+  }
+  yaml << "    outputs:" << std::endl;
+  for (const auto* o : reactor.outputs()) {
+    yaml << "      - " << o->name() << std::endl;
+  }
+  yaml << "    triggers:" << std::endl;
+  for (const auto* a : reactor.actions()) {
+    yaml << "      - name: " << a->name() << std::endl;
+    if (dynamic_cast<const StartupAction*>(a)) {
+      yaml << "        type: startup" << std::endl;
+    } else if (dynamic_cast<const ShutdownAction*>(a)) {
+      yaml << "        type: shutdown" << std::endl;
+    } else if (dynamic_cast<const Timer*>(a)) {
+      yaml << "        type: timer" << std::endl;
+    } else if (a->is_logical()) {
+      yaml << "        type: logical action" << std::endl;
+    } else {
+      yaml << "        type: physical action" << std::endl;
     }
   }
 
