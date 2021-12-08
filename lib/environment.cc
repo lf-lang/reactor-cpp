@@ -44,6 +44,12 @@ void Environment::assemble() {
   for (auto r : _top_level_reactors) {
     recursive_assemble(r);
   }
+
+  // build the dependency graph
+  for (auto r : _top_level_reactors) {
+    build_dependency_graph(r);
+  }
+  calculate_indexes();
 }
 
 void Environment::build_dependency_graph(Reactor* reactor) {
@@ -88,7 +94,7 @@ void Environment::build_dependency_graph(Reactor* reactor) {
 void dump_reaction_to_yaml(std::ofstream& yaml, const Reaction& r) {
   yaml << "      - name: " << r.name() << std::endl;
   yaml << "        priority: " << r.priority() << std::endl;
-  yaml << "        level:" << r.index() << std::endl;
+  yaml << "        level: " << r.index() << std::endl;
   yaml << "        triggers:" << std::endl;
   for (const auto t : r.action_triggers()) {
     yaml << "          - " << t->fqn() << std::endl;
@@ -191,12 +197,6 @@ void Environment::dump_to_yaml(const std::string& path) {
 std::thread Environment::startup() {
   VALIDATE(this->phase() == Phase::Assembly,
            "startup() may only be called during assembly phase!");
-
-  // build the dependency graph
-  for (auto r : _top_level_reactors) {
-    build_dependency_graph(r);
-  }
-  calculate_indexes();
 
   log::Info() << "Starting the execution";
   _phase = Phase::Startup;
