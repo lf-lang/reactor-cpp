@@ -125,11 +125,30 @@ void dump_instance_to_yaml(std::ofstream& yaml, const Reactor& reactor) {
   }
   yaml << "    inputs:" << std::endl;
   for (const auto i : reactor.inputs()) {
-    yaml << "      - " << i->name() << std::endl;
+    yaml << "      " << i->name() << ':' << std::endl;
+    if (i->has_inward_binding()) {
+      yaml << "        upstream_port: " << i->inward_binding()->fqn() << std::endl;
+    } else {
+      yaml << "        upstream_port: null" << std::endl;
+    }
+    yaml << "        downstream_ports: " << std::endl;
+    for(const auto d : i->outward_bindings()) {
+      yaml << "          - " << d->fqn() << std::endl;
+    }
   }
   yaml << "    outputs:" << std::endl;
   for (const auto o : reactor.outputs()) {
-    yaml << "      - " << o->name() << std::endl;
+    yaml << "      " << o->name() << ':' << std::endl;
+    if (o->has_inward_binding()) {
+      yaml << "        upstream_port: " << o->inward_binding()->fqn()
+           << std::endl;
+    } else {
+      yaml << "        upstream_port: null" << std::endl;
+    }
+    yaml << "        downstream_ports: " << std::endl;
+    for (const auto d : o->outward_bindings()) {
+      yaml << "          - " << d->fqn() << std::endl;
+    }
   }
   yaml << "    triggers:" << std::endl;
   for (const auto a : reactor.actions()) {
