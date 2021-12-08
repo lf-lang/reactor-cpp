@@ -145,6 +145,29 @@ void dump_port_to_yaml(std::ofstream& yaml, const BasePort& port) {
   }
 }
 
+void dump_trigger_to_yaml(std::ofstream& yaml, const BaseAction& trigger) {
+  yaml << "      - name: " << trigger.name() << std::endl;
+  if (dynamic_cast<const StartupAction*>(&trigger)) {
+    yaml << "        type: startup" << std::endl;
+  } else if (dynamic_cast<const ShutdownAction*>(&trigger)) {
+    yaml << "        type: shutdown" << std::endl;
+  } else if (dynamic_cast<const Timer*>(&trigger)) {
+    yaml << "        type: timer" << std::endl;
+  } else if (trigger.is_logical()) {
+    yaml << "        type: logical action" << std::endl;
+  } else {
+    yaml << "        type: physical action" << std::endl;
+  }
+  yaml << "        trigger_of:" << std::endl;
+  for (const auto t : trigger.triggers()) {
+    yaml << "          - " << t->fqn() << std::endl;
+  }
+  yaml << "        effect_of:" << std::endl;
+  for (const auto s : trigger.schedulers()) {
+    yaml << "          - " << s->fqn() << std::endl;
+  }
+}
+
 void dump_instance_to_yaml(std::ofstream& yaml, const Reactor& reactor) {
   yaml << "  " << reactor.fqn() << ':' << std::endl;
   yaml << "    name: " << reactor.name() << std::endl;
@@ -167,18 +190,7 @@ void dump_instance_to_yaml(std::ofstream& yaml, const Reactor& reactor) {
   }
   yaml << "    triggers:" << std::endl;
   for (const auto a : reactor.actions()) {
-    yaml << "      - name: " << a->name() << std::endl;
-    if (dynamic_cast<const StartupAction*>(a)) {
-      yaml << "        type: startup" << std::endl;
-    } else if (dynamic_cast<const ShutdownAction*>(a)) {
-      yaml << "        type: shutdown" << std::endl;
-    } else if (dynamic_cast<const Timer*>(a)) {
-      yaml << "        type: timer" << std::endl;
-    } else if (a->is_logical()) {
-      yaml << "        type: logical action" << std::endl;
-    } else {
-      yaml << "        type: physical action" << std::endl;
-    }
+    dump_trigger_to_yaml(yaml, *a);
   }
   yaml << "    reactions:" << std::endl;
   for (const auto r : reactor.reactions()) {
