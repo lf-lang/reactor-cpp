@@ -85,6 +85,32 @@ void Environment::build_dependency_graph(Reactor* reactor) {
   }
 }
 
+void dump_reaction_to_yaml(std::ofstream& yaml, const Reaction& r) {
+  yaml << "      - name: " << r.name() << std::endl;
+  yaml << "        priority: " << r.priority() << std::endl;
+  yaml << "        level:" << r.index() << std::endl;
+  yaml << "        triggers:" << std::endl;
+  for (const auto t : r.action_triggers()) {
+    yaml << "          - " << t->fqn() << std::endl;
+  }
+  for (const auto t : r.port_triggers()) {
+    yaml << "          - " << t->fqn() << std::endl;
+  }
+  yaml << "        sources:" << std::endl;
+  for (auto d : r.dependencies()) {
+    if (r.port_triggers().find(d) == r.port_triggers().end()) {
+      yaml << "          - " << d->fqn() << std::endl;
+    }
+  }
+  yaml << "        effects:" << std::endl;
+  for (const auto a : r.antidependencies()) {
+    yaml << "          - " << a->fqn() << std::endl;
+  }
+  for (const auto a : r.scheduable_actions()) {
+    yaml << "          - " << a->fqn() << std::endl;
+  }
+}
+
 void dump_instance_to_yaml(std::ofstream& yaml, const Reactor& reactor) {
   yaml << "  " << reactor.fqn() << ':' << std::endl;
   yaml << "    name: " << reactor.name() << std::endl;
@@ -94,19 +120,19 @@ void dump_instance_to_yaml(std::ofstream& yaml, const Reactor& reactor) {
     yaml << "    container: " << reactor.container()->fqn() << std::endl;
   }
   yaml << "    reactor_instances:" << std::endl;
-  for (const auto* r : reactor.reactors()) {
+  for (const auto r : reactor.reactors()) {
     yaml << "      - " << r->fqn() << std::endl;
   }
   yaml << "    inputs:" << std::endl;
-  for (const auto* i : reactor.inputs()) {
+  for (const auto i : reactor.inputs()) {
     yaml << "      - " << i->name() << std::endl;
   }
   yaml << "    outputs:" << std::endl;
-  for (const auto* o : reactor.outputs()) {
+  for (const auto o : reactor.outputs()) {
     yaml << "      - " << o->name() << std::endl;
   }
   yaml << "    triggers:" << std::endl;
-  for (const auto* a : reactor.actions()) {
+  for (const auto a : reactor.actions()) {
     yaml << "      - name: " << a->name() << std::endl;
     if (dynamic_cast<const StartupAction*>(a)) {
       yaml << "        type: startup" << std::endl;
@@ -120,8 +146,12 @@ void dump_instance_to_yaml(std::ofstream& yaml, const Reactor& reactor) {
       yaml << "        type: physical action" << std::endl;
     }
   }
+  yaml << "    reactions:" << std::endl;
+  for (const auto r : reactor.reactions()) {
+    dump_reaction_to_yaml(yaml, *r);
+  }
 
-  for (const auto* r : reactor.reactors()) {
+  for (const auto r : reactor.reactors()) {
     dump_instance_to_yaml(yaml, *r);
   }
 }
