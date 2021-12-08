@@ -213,6 +213,11 @@ void Environment::dump_to_yaml(const std::string& path) {
   for (const auto* r : _top_level_reactors) {
     dump_instance_to_yaml(yaml, *r);
   }
+  yaml << "reaction_dependencies:" << std::endl;
+  for (auto& it : dependencies) {
+    yaml << "  - from: " << it.first->fqn() << std::endl;
+    yaml << "  - to: " << it.second->fqn() << std::endl;
+  }
 }
 
 std::thread Environment::startup() {
