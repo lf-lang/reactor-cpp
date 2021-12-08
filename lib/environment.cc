@@ -218,6 +218,8 @@ void Environment::dump_to_yaml(const std::string& path) {
     yaml << "  - from: " << it.first->fqn() << std::endl;
     yaml << "  - to: " << it.second->fqn() << std::endl;
   }
+
+  log::Info() << "Program structure was dumped to " << path;
 }
 
 std::thread Environment::startup() {
