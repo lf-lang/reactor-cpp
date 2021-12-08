@@ -117,6 +117,20 @@ void dump_reaction_to_yaml(std::ofstream& yaml, const Reaction& r) {
   }
 }
 
+void dump_port_to_yaml(std::ofstream& yaml, const BasePort& port) {
+  yaml << "      " << port.name() << ':' << std::endl;
+  if (port.has_inward_binding()) {
+    yaml << "        upstream_port: " << port.inward_binding()->fqn()
+         << std::endl;
+  } else {
+    yaml << "        upstream_port: null" << std::endl;
+  }
+  yaml << "        downstream_ports: " << std::endl;
+  for (const auto d : port.outward_bindings()) {
+    yaml << "          - " << d->fqn() << std::endl;
+  }
+}
+
 void dump_instance_to_yaml(std::ofstream& yaml, const Reactor& reactor) {
   yaml << "  " << reactor.fqn() << ':' << std::endl;
   yaml << "    name: " << reactor.name() << std::endl;
@@ -131,30 +145,11 @@ void dump_instance_to_yaml(std::ofstream& yaml, const Reactor& reactor) {
   }
   yaml << "    inputs:" << std::endl;
   for (const auto i : reactor.inputs()) {
-    yaml << "      " << i->name() << ':' << std::endl;
-    if (i->has_inward_binding()) {
-      yaml << "        upstream_port: " << i->inward_binding()->fqn() << std::endl;
-    } else {
-      yaml << "        upstream_port: null" << std::endl;
-    }
-    yaml << "        downstream_ports: " << std::endl;
-    for(const auto d : i->outward_bindings()) {
-      yaml << "          - " << d->fqn() << std::endl;
-    }
+    dump_port_to_yaml(yaml, *i);
   }
   yaml << "    outputs:" << std::endl;
   for (const auto o : reactor.outputs()) {
-    yaml << "      " << o->name() << ':' << std::endl;
-    if (o->has_inward_binding()) {
-      yaml << "        upstream_port: " << o->inward_binding()->fqn()
-           << std::endl;
-    } else {
-      yaml << "        upstream_port: null" << std::endl;
-    }
-    yaml << "        downstream_ports: " << std::endl;
-    for (const auto d : o->outward_bindings()) {
-      yaml << "          - " << d->fqn() << std::endl;
-    }
+    dump_port_to_yaml(yaml, *o);
   }
   yaml << "    triggers:" << std::endl;
   for (const auto a : reactor.actions()) {
