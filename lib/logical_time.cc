@@ -23,22 +23,22 @@ bool operator<(const Tag& lhs, const Tag& rhs) {
           lhs.micro_step() < rhs.micro_step());
 }
 
-Tag Tag::from_physical_time(TimePoint time_point) { return Tag(time_point, 0); }
+Tag Tag::from_physical_time(TimePoint time_point) { return Tag{time_point, 0}; }
 
 Tag Tag::from_logical_time(const LogicalTime& lt) {
-  return Tag(lt.time_point(), lt.micro_step());
+  return Tag{lt.time_point(), lt.micro_step()};
 }
 
 Tag Tag::delay(Duration offset) const {
   if (offset == Duration::zero()) {
-    return Tag(this->_time_point, this->_micro_step + 1);
+    return Tag{this->_time_point, this->_micro_step + 1};
   } else {
-    return Tag(this->_time_point + offset, 0);
+    return Tag{this->_time_point + offset, 0};
   }
 }
 
 void LogicalTime::advance_to(const Tag& tag) {
-  ASSERT(*this < tag);
+  toggle_assert(*this < tag);
   _time_point = tag.time_point();
   _micro_step = tag.micro_step();
 }
