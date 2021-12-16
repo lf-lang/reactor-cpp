@@ -193,9 +193,11 @@
 <li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1_1operators_1a279ac480746dbb8a6dcd71179df68032.html">Function operator&lt;&lt;(std::ostream&amp;, std::chrono::microseconds)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1_1operators_1ac12faa5aad6eda9a53865201264ea257.html">Function operator&lt;&lt;(std::ostream&amp;, std::chrono::nanoseconds)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a50e4996eb605ff7e10a26dcdbae25340.html">Function recursive_assemble</a></li>
-<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1afb17997129c7498eff1148813c8970d0.html">Function validate</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a1ed9b1cb411cbcb35a8a229005deb3a1.html">Function toggle_assert</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1aa751a610c79b176a25d5fa431a7354e1.html">Function validate</a></li>
 <li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a50e4996eb605ff7e10a26dcdbae25340.html">Function recursive_assemble</a></li>
-<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1afb17997129c7498eff1148813c8970d0.html">Function validate</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a1ed9b1cb411cbcb35a8a229005deb3a1.html">Function toggle_assert</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1aa751a610c79b176a25d5fa431a7354e1.html">Function validate</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="library_root.html#variables">Variables</a><ul>
@@ -207,17 +209,17 @@
 <li class="toctree-l4"><a class="reference internal" href="variable_namespacereactor_1_1log_1a3eb2fa07d2ccd17506a05aa3f2f14b2d.html">Variable info_enabled</a></li>
 <li class="toctree-l4"><a class="reference internal" href="variable_namespacereactor_1_1log_1a88a5f4b17305527201bcb473d079d49d.html">Variable warning_enabled</a></li>
 <li class="toctree-l4"><a class="reference internal" href="variable_namespacereactor_1a0edb3b5df7dd7992238566a2369c985b.html">Variable tracing_enabled</a></li>
+<li class="toctree-l4"><a class="reference internal" href="variable_assert_8hh_1afdf171950bedcdde8ef57ea8897535a2.html">Variable runtime_assertion</a></li>
+<li class="toctree-l4"><a class="reference internal" href="variable_assert_8hh_1a205d29e2ebaeda57283c3fe9c80888f0.html">Variable runtime_validation</a></li>
 <li class="toctree-l4"><a class="reference internal" href="variable_namespacereactor_1a0edb3b5df7dd7992238566a2369c985b.html">Variable tracing_enabled</a></li>
 <li class="toctree-l4"><a class="reference internal" href="variable_namespacereactor_1_1log_1a88a5f4b17305527201bcb473d079d49d.html">Variable warning_enabled</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="library_root.html#defines">Defines</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="define_trace_8hh_1a14f75d379403e3e8f3767e32aff0ebb6.html">Define _REACTOR_CPP_TRACE_H</a></li>
-<li class="toctree-l4"><a class="reference internal" href="define_assert_8hh_1aca68c0d4ac8df0838e209fb5300f7be3.html">Define ASSERT</a></li>
 <li class="toctree-l4"><a class="reference internal" href="define_trace_8hh_1aeae0efb071b08e657d36788eee20c1a7.html">Define tracepoint</a></li>
 <li class="toctree-l4"><a class="reference internal" href="define_trace_8cc_1aeb980b4a64d9b54d660780a30415b0bc.html">Define TRACEPOINT_CREATE_PROBES</a></li>
 <li class="toctree-l4"><a class="reference internal" href="define_trace_8cc_1a71ad37c54f22eb10bdfed4267d53bd79.html">Define TRACEPOINT_DEFINE</a></li>
-<li class="toctree-l4"><a class="reference internal" href="define_assert_8hh_1aa8944c5f0d4c2f0c3643c36ab4967a17.html">Define VALIDATE</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="library_root.html#typedefs">Typedefs</a><ul>
@@ -284,7 +286,7 @@
 
 <span class="k">thread_local</span> <span class="k">const</span> <span class="n">Worker</span><span class="o">*</span> <span class="n">Worker</span><span class="o">::</span><span class="n">current_worker</span><span class="p">{</span><span class="k">nullptr</span><span class="p">};</span>
 
-<span class="n">Worker</span><span class="o">::</span><span class="n">Worker</span><span class="p">(</span><span class="n">Worker</span><span class="o">&amp;&amp;</span> <span class="n">w</span><span class="p">)</span> <span class="o">:</span> <span class="n">scheduler</span><span class="p">{</span><span class="n">w</span><span class="p">.</span><span class="n">scheduler</span><span class="p">},</span> <span class="n">id</span><span class="p">{</span><span class="n">w</span><span class="p">.</span><span class="n">id</span><span class="p">},</span> <span class="kr">thread</span><span class="p">{}</span> <span class="p">{</span>
+<span class="n">Worker</span><span class="o">::</span><span class="n">Worker</span><span class="p">(</span><span class="n">Worker</span><span class="o">&amp;&amp;</span> <span class="n">w</span><span class="p">)</span><span class="o">:</span> <span class="n">scheduler</span><span class="p">{</span><span class="n">w</span><span class="p">.</span><span class="n">scheduler</span><span class="p">},</span> <span class="n">id</span><span class="p">{</span><span class="n">w</span><span class="p">.</span><span class="n">id</span><span class="p">},</span> <span class="kr">thread</span><span class="p">{}</span> <span class="p">{</span>
   <span class="c1">// Need to provide the move constructor in order to organize workers in a</span>
   <span class="c1">// std::vector. However, moving is not save if the thread is already running,</span>
   <span class="c1">// thus we throw an exception here if the the worker is moved but the</span>
@@ -616,7 +618,7 @@
 <span class="kt">void</span> <span class="n">Scheduler</span><span class="o">::</span><span class="n">schedule_sync</span><span class="p">(</span><span class="k">const</span> <span class="n">Tag</span><span class="o">&amp;</span> <span class="n">tag</span><span class="p">,</span>
                               <span class="n">BaseAction</span><span class="o">*</span> <span class="n">action</span><span class="p">,</span>
                               <span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">setup</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">ASSERT</span><span class="p">(</span><span class="n">_logical_time</span> <span class="o">&lt;</span> <span class="n">tag</span><span class="p">);</span>
+  <span class="n">toggle_assert</span><span class="p">(</span><span class="n">_logical_time</span> <span class="o">&lt;</span> <span class="n">tag</span><span class="p">);</span>
   <span class="c1">// TODO verify that the action is indeed allowed to be scheduled by the</span>
   <span class="c1">// current reaction</span>
   <span class="n">log</span><span class="o">::</span><span class="n">Debug</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Schedule action &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">action</span><span class="o">-&gt;</span><span class="n">fqn</span><span class="p">()</span>
@@ -661,7 +663,7 @@
 <span class="p">}</span>
 
 <span class="kt">void</span> <span class="n">Scheduler</span><span class="o">::</span><span class="n">set_port_helper</span><span class="p">(</span><span class="n">BasePort</span><span class="o">*</span> <span class="n">p</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">ASSERT</span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">has_outward_bindings</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">triggers</span><span class="p">().</span><span class="n">empty</span><span class="p">()));</span>
+  <span class="n">toggle_assert</span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">has_outward_bindings</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">triggers</span><span class="p">().</span><span class="n">empty</span><span class="p">()));</span>
   <span class="k">if</span> <span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">has_outward_bindings</span><span class="p">())</span> <span class="p">{</span>
     <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">binding</span> <span class="p">:</span> <span class="n">p</span><span class="o">-&gt;</span><span class="n">outward_bindings</span><span class="p">())</span> <span class="p">{</span>
       <span class="n">set_port_helper</span><span class="p">(</span><span class="n">binding</span><span class="p">);</span>

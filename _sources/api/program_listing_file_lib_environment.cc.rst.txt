@@ -32,13 +32,12 @@ Program Listing for File environment.cc
    namespace reactor {
    
    void Environment::register_reactor(Reactor* reactor) {
-     ASSERT(reactor != nullptr);
-     VALIDATE(this->phase() == Phase::Construction,
+     toggle_assert(reactor != nullptr);
+     validate(this->phase() == Phase::Construction,
               "Reactors may only be registered during construction phase!");
-     VALIDATE(reactor->is_top_level(),
+     validate(reactor->is_top_level(),
               "The environment may only contain top level reactors!");
-     auto r = _top_level_reactors.insert(reactor);
-     ASSERT(r.second);
+     toggle_assert(_top_level_reactors.insert(reactor).second);
    }
    
    void recursive_assemble(Reactor* container) {
@@ -49,7 +48,7 @@ Program Listing for File environment.cc
    }
    
    void Environment::assemble() {
-     VALIDATE(this->phase() == Phase::Construction,
+     validate(this->phase() == Phase::Construction,
               "assemble() may only be called during construction phase!");
      _phase = Phase::Assembly;
      for (auto r : _top_level_reactors) {
@@ -67,7 +66,7 @@ Program Listing for File environment.cc
      for (auto r : reactor->reactions()) {
        reactions.insert(r);
        auto result = priority_map.emplace(r->priority(), r);
-       VALIDATE(result.second,
+       validate(result.second,
                 "priorities must be unique for all reactions of the same reactor");
      }
    
@@ -79,7 +78,7 @@ Program Listing for File environment.cc
            source = source->inward_binding();
          }
          for (auto ad : source->antidependencies()) {
-           dependencies.push_back(std::make_pair(r, ad));
+           dependencies.emplace_back(r, ad);
          }
        }
      }
@@ -89,7 +88,7 @@ Program Listing for File environment.cc
        auto it = priority_map.begin();
        auto next = std::next(it);
        while (next != priority_map.end()) {
-         dependencies.push_back(std::make_pair(next->second, it->second));
+         dependencies.emplace_back(next->second, it->second);
          it++;
          next = std::next(it);
        }
@@ -97,7 +96,7 @@ Program Listing for File environment.cc
    }
    
    std::thread Environment::startup() {
-     VALIDATE(this->phase() == Phase::Assembly,
+     validate(this->phase() == Phase::Assembly,
               "startup() may only be called during assembly phase!");
    
      // build the dependency graph
@@ -110,7 +109,7 @@ Program Listing for File environment.cc
      _phase = Phase::Startup;
    
      _start_time = get_physical_time();
-     // startupialize all reactors
+     // start up initialize all reactors
      for (auto r : _top_level_reactors) {
        r->startup();
      }
@@ -121,7 +120,7 @@ Program Listing for File environment.cc
    }
    
    void Environment::sync_shutdown() {
-     VALIDATE(this->phase() == Phase::Execution,
+     validate(this->phase() == Phase::Execution,
               "sync_shutdown() may only be called during execution phase!");
      _phase = Phase::Shutdown;
    
@@ -132,7 +131,6 @@ Program Listing for File environment.cc
      }
    
      _phase = Phase::Deconstruction;
-   
      _scheduler.stop();
    }
    
@@ -218,7 +216,7 @@ Program Listing for File environment.cc
    
        if (degree_zero.size() == 0) {
          export_dependency_graph("/tmp/reactor_dependency_graph.dot");
-         throw reactor::ValidationError(
+         throw ValidationError(
              "There is a loop in the dependency graph. Graph was written to "
              "/tmp/reactor_dependency_graph.dot");
        }

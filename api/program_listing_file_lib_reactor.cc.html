@@ -193,9 +193,11 @@
 <li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1_1operators_1a279ac480746dbb8a6dcd71179df68032.html">Function operator&lt;&lt;(std::ostream&amp;, std::chrono::microseconds)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1_1operators_1ac12faa5aad6eda9a53865201264ea257.html">Function operator&lt;&lt;(std::ostream&amp;, std::chrono::nanoseconds)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a50e4996eb605ff7e10a26dcdbae25340.html">Function recursive_assemble</a></li>
-<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1afb17997129c7498eff1148813c8970d0.html">Function validate</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a1ed9b1cb411cbcb35a8a229005deb3a1.html">Function toggle_assert</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1aa751a610c79b176a25d5fa431a7354e1.html">Function validate</a></li>
 <li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a50e4996eb605ff7e10a26dcdbae25340.html">Function recursive_assemble</a></li>
-<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1afb17997129c7498eff1148813c8970d0.html">Function validate</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a1ed9b1cb411cbcb35a8a229005deb3a1.html">Function toggle_assert</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1aa751a610c79b176a25d5fa431a7354e1.html">Function validate</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="library_root.html#variables">Variables</a><ul>
@@ -207,17 +209,17 @@
 <li class="toctree-l4"><a class="reference internal" href="variable_namespacereactor_1_1log_1a3eb2fa07d2ccd17506a05aa3f2f14b2d.html">Variable info_enabled</a></li>
 <li class="toctree-l4"><a class="reference internal" href="variable_namespacereactor_1_1log_1a88a5f4b17305527201bcb473d079d49d.html">Variable warning_enabled</a></li>
 <li class="toctree-l4"><a class="reference internal" href="variable_namespacereactor_1a0edb3b5df7dd7992238566a2369c985b.html">Variable tracing_enabled</a></li>
+<li class="toctree-l4"><a class="reference internal" href="variable_assert_8hh_1afdf171950bedcdde8ef57ea8897535a2.html">Variable runtime_assertion</a></li>
+<li class="toctree-l4"><a class="reference internal" href="variable_assert_8hh_1a205d29e2ebaeda57283c3fe9c80888f0.html">Variable runtime_validation</a></li>
 <li class="toctree-l4"><a class="reference internal" href="variable_namespacereactor_1a0edb3b5df7dd7992238566a2369c985b.html">Variable tracing_enabled</a></li>
 <li class="toctree-l4"><a class="reference internal" href="variable_namespacereactor_1_1log_1a88a5f4b17305527201bcb473d079d49d.html">Variable warning_enabled</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="library_root.html#defines">Defines</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="define_trace_8hh_1a14f75d379403e3e8f3767e32aff0ebb6.html">Define _REACTOR_CPP_TRACE_H</a></li>
-<li class="toctree-l4"><a class="reference internal" href="define_assert_8hh_1aca68c0d4ac8df0838e209fb5300f7be3.html">Define ASSERT</a></li>
 <li class="toctree-l4"><a class="reference internal" href="define_trace_8hh_1aeae0efb071b08e657d36788eee20c1a7.html">Define tracepoint</a></li>
 <li class="toctree-l4"><a class="reference internal" href="define_trace_8cc_1aeb980b4a64d9b54d660780a30415b0bc.html">Define TRACEPOINT_CREATE_PROBES</a></li>
 <li class="toctree-l4"><a class="reference internal" href="define_trace_8cc_1a71ad37c54f22eb10bdfed4267d53bd79.html">Define TRACEPOINT_DEFINE</a></li>
-<li class="toctree-l4"><a class="reference internal" href="define_assert_8hh_1aa8944c5f0d4c2f0c3643c36ab4967a17.html">Define VALIDATE</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="library_root.html#typedefs">Typedefs</a><ul>
@@ -285,10 +287,10 @@
                                <span class="n">ReactorElement</span><span class="o">::</span><span class="n">Type</span> <span class="n">type</span><span class="p">,</span>
                                <span class="n">Reactor</span><span class="o">*</span> <span class="n">container</span><span class="p">)</span>
     <span class="o">:</span> <span class="n">_name</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="n">_container</span><span class="p">(</span><span class="n">container</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">ASSERT</span><span class="p">(</span><span class="n">container</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">);</span>
+  <span class="n">toggle_assert</span><span class="p">(</span><span class="n">container</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">);</span>
   <span class="k">this</span><span class="o">-&gt;</span><span class="n">_environment</span> <span class="o">=</span> <span class="n">container</span><span class="o">-&gt;</span><span class="n">environment</span><span class="p">();</span>
-  <span class="n">ASSERT</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">_environment</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">);</span>
-  <span class="n">VALIDATE</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">_environment</span><span class="o">-&gt;</span><span class="n">phase</span><span class="p">()</span> <span class="o">==</span> <span class="n">Environment</span><span class="o">::</span><span class="n">Phase</span><span class="o">::</span><span class="n">Construction</span><span class="p">,</span>
+  <span class="n">toggle_assert</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">_environment</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">);</span>
+  <span class="n">validate</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">_environment</span><span class="o">-&gt;</span><span class="n">phase</span><span class="p">()</span> <span class="o">==</span> <span class="n">Environment</span><span class="o">::</span><span class="n">Phase</span><span class="o">::</span><span class="n">Construction</span><span class="p">,</span>
            <span class="s">&quot;Reactor elements can only be created during construction phase!&quot;</span><span class="p">);</span>
   <span class="c1">// We need a reinterpret_cast here as the derived class is not yet created</span>
   <span class="c1">// when this constructor is executed. dynamic_cast only works for</span>
@@ -323,10 +325,10 @@
                                <span class="n">ReactorElement</span><span class="o">::</span><span class="n">Type</span> <span class="n">type</span><span class="p">,</span>
                                <span class="n">Environment</span><span class="o">*</span> <span class="n">environment</span><span class="p">)</span>
     <span class="o">:</span> <span class="n">_name</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="n">_fqn</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="n">_container</span><span class="p">(</span><span class="k">nullptr</span><span class="p">),</span> <span class="n">_environment</span><span class="p">(</span><span class="n">environment</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">ASSERT</span><span class="p">(</span><span class="n">environment</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">);</span>
-  <span class="n">VALIDATE</span><span class="p">(</span><span class="n">type</span> <span class="o">==</span> <span class="n">Type</span><span class="o">::</span><span class="n">Reactor</span><span class="p">,</span>
+  <span class="n">toggle_assert</span><span class="p">(</span><span class="n">environment</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">);</span>
+  <span class="n">validate</span><span class="p">(</span><span class="n">type</span> <span class="o">==</span> <span class="n">Type</span><span class="o">::</span><span class="n">Reactor</span><span class="p">,</span>
            <span class="s">&quot;Only reactors can be owned by the environment!&quot;</span><span class="p">);</span>
-  <span class="n">VALIDATE</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">_environment</span><span class="o">-&gt;</span><span class="n">phase</span><span class="p">()</span> <span class="o">==</span> <span class="n">Environment</span><span class="o">::</span><span class="n">Phase</span><span class="o">::</span><span class="n">Construction</span><span class="p">,</span>
+  <span class="n">validate</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">_environment</span><span class="o">-&gt;</span><span class="n">phase</span><span class="p">()</span> <span class="o">==</span> <span class="n">Environment</span><span class="o">::</span><span class="n">Phase</span><span class="o">::</span><span class="n">Construction</span><span class="p">,</span>
            <span class="s">&quot;Reactor elements can only be created during construction phase!&quot;</span><span class="p">);</span>
 <span class="p">}</span>
 
@@ -337,42 +339,37 @@
   <span class="n">environment</span><span class="o">-&gt;</span><span class="n">register_reactor</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
 <span class="p">}</span>
 
-<span class="kt">void</span> <span class="n">Reactor</span><span class="o">::</span><span class="n">register_action</span><span class="p">(</span><span class="n">BaseAction</span><span class="o">*</span> <span class="n">action</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">ASSERT</span><span class="p">(</span><span class="n">action</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">);</span>
-  <span class="n">VALIDATE</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">environment</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">phase</span><span class="p">()</span> <span class="o">==</span> <span class="n">Environment</span><span class="o">::</span><span class="n">Phase</span><span class="o">::</span><span class="n">Construction</span><span class="p">,</span>
+<span class="kt">void</span> <span class="n">Reactor</span><span class="o">::</span><span class="n">register_action</span><span class="p">([[</span><span class="n">maybe_unused</span><span class="p">]]</span><span class="n">BaseAction</span><span class="o">*</span> <span class="n">action</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">toggle_assert</span><span class="p">(</span><span class="n">action</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">);</span>
+  <span class="n">reactor</span><span class="o">::</span><span class="n">validate</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">environment</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">phase</span><span class="p">()</span> <span class="o">==</span> <span class="n">Environment</span><span class="o">::</span><span class="n">Phase</span><span class="o">::</span><span class="n">Construction</span><span class="p">,</span>
            <span class="s">&quot;Actions can only be registered during construction phase!&quot;</span><span class="p">);</span>
-  <span class="k">auto</span> <span class="n">result</span> <span class="o">=</span> <span class="n">_actions</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">action</span><span class="p">);</span>
-  <span class="n">ASSERT</span><span class="p">(</span><span class="n">result</span><span class="p">.</span><span class="n">second</span><span class="p">);</span>
+  <span class="n">toggle_assert</span><span class="p">(</span><span class="n">_actions</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">action</span><span class="p">).</span><span class="n">second</span><span class="p">);</span>
 <span class="p">}</span>
 <span class="kt">void</span> <span class="n">Reactor</span><span class="o">::</span><span class="n">register_port</span><span class="p">(</span><span class="n">BasePort</span><span class="o">*</span> <span class="n">port</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">ASSERT</span><span class="p">(</span><span class="n">port</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">);</span>
-  <span class="n">VALIDATE</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">environment</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">phase</span><span class="p">()</span> <span class="o">==</span> <span class="n">Environment</span><span class="o">::</span><span class="n">Phase</span><span class="o">::</span><span class="n">Construction</span><span class="p">,</span>
+  <span class="n">toggle_assert</span><span class="p">(</span><span class="n">port</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">);</span>
+  <span class="n">reactor</span><span class="o">::</span><span class="n">validate</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">environment</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">phase</span><span class="p">()</span> <span class="o">==</span> <span class="n">Environment</span><span class="o">::</span><span class="n">Phase</span><span class="o">::</span><span class="n">Construction</span><span class="p">,</span>
            <span class="s">&quot;Ports can only be registered during construction phase!&quot;</span><span class="p">);</span>
   <span class="k">if</span> <span class="p">(</span><span class="n">port</span><span class="o">-&gt;</span><span class="n">is_input</span><span class="p">())</span> <span class="p">{</span>
-    <span class="k">auto</span> <span class="n">result</span> <span class="o">=</span> <span class="n">_inputs</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">port</span><span class="p">);</span>
-    <span class="n">ASSERT</span><span class="p">(</span><span class="n">result</span><span class="p">.</span><span class="n">second</span><span class="p">);</span>
+    <span class="n">toggle_assert</span><span class="p">(</span><span class="n">_inputs</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">port</span><span class="p">).</span><span class="n">second</span><span class="p">);</span>
   <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-    <span class="k">auto</span> <span class="n">result</span> <span class="o">=</span> <span class="n">_outputs</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">port</span><span class="p">);</span>
-    <span class="n">ASSERT</span><span class="p">(</span><span class="n">result</span><span class="p">.</span><span class="n">second</span><span class="p">);</span>
+    <span class="n">toggle_assert</span><span class="p">(</span><span class="n">_outputs</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">port</span><span class="p">).</span><span class="n">second</span><span class="p">);</span>
   <span class="p">}</span>
 <span class="p">}</span>
-<span class="kt">void</span> <span class="n">Reactor</span><span class="o">::</span><span class="n">register_reaction</span><span class="p">(</span><span class="n">Reaction</span><span class="o">*</span> <span class="n">reaction</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">ASSERT</span><span class="p">(</span><span class="n">reaction</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">);</span>
-  <span class="n">VALIDATE</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">environment</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">phase</span><span class="p">()</span> <span class="o">==</span> <span class="n">Environment</span><span class="o">::</span><span class="n">Phase</span><span class="o">::</span><span class="n">Construction</span><span class="p">,</span>
+<span class="kt">void</span> <span class="n">Reactor</span><span class="o">::</span><span class="n">register_reaction</span><span class="p">([[</span><span class="n">maybe_unused</span><span class="p">]]</span><span class="n">Reaction</span><span class="o">*</span> <span class="n">reaction</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">toggle_assert</span><span class="p">(</span><span class="n">reaction</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">);</span>
+  <span class="n">validate</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">environment</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">phase</span><span class="p">()</span> <span class="o">==</span> <span class="n">Environment</span><span class="o">::</span><span class="n">Phase</span><span class="o">::</span><span class="n">Construction</span><span class="p">,</span>
            <span class="s">&quot;Reactions can only be registered during construction phase!&quot;</span><span class="p">);</span>
-  <span class="k">auto</span> <span class="n">result</span> <span class="o">=</span> <span class="n">_reactions</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">reaction</span><span class="p">);</span>
-  <span class="n">ASSERT</span><span class="p">(</span><span class="n">result</span><span class="p">.</span><span class="n">second</span><span class="p">);</span>
+  <span class="n">toggle_assert</span><span class="p">(</span><span class="n">_reactions</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">reaction</span><span class="p">).</span><span class="n">second</span><span class="p">);</span>
 <span class="p">}</span>
-<span class="kt">void</span> <span class="n">Reactor</span><span class="o">::</span><span class="n">register_reactor</span><span class="p">(</span><span class="n">Reactor</span><span class="o">*</span> <span class="n">reactor</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">ASSERT</span><span class="p">(</span><span class="n">reactor</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">);</span>
-  <span class="n">VALIDATE</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">environment</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">phase</span><span class="p">()</span> <span class="o">==</span> <span class="n">Environment</span><span class="o">::</span><span class="n">Phase</span><span class="o">::</span><span class="n">Construction</span><span class="p">,</span>
+<span class="kt">void</span> <span class="n">Reactor</span><span class="o">::</span><span class="n">register_reactor</span><span class="p">([[</span><span class="n">maybe_unused</span><span class="p">]]</span><span class="n">Reactor</span><span class="o">*</span> <span class="n">reactor</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">toggle_assert</span><span class="p">(</span><span class="n">reactor</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">);</span>
+  <span class="n">validate</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">environment</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">phase</span><span class="p">()</span> <span class="o">==</span> <span class="n">Environment</span><span class="o">::</span><span class="n">Phase</span><span class="o">::</span><span class="n">Construction</span><span class="p">,</span>
            <span class="s">&quot;Reactions can only be registered during construction phase!&quot;</span><span class="p">);</span>
-  <span class="k">auto</span> <span class="n">result</span> <span class="o">=</span> <span class="n">_reactors</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">reactor</span><span class="p">);</span>
-  <span class="n">ASSERT</span><span class="p">(</span><span class="n">result</span><span class="p">.</span><span class="n">second</span><span class="p">);</span>
+  <span class="n">toggle_assert</span><span class="p">(</span><span class="n">_reactors</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">reactor</span><span class="p">).</span><span class="n">second</span><span class="p">);</span>
 <span class="p">}</span>
 
 <span class="kt">void</span> <span class="n">Reactor</span><span class="o">::</span><span class="n">startup</span><span class="p">()</span> <span class="p">{</span>
-  <span class="n">ASSERT</span><span class="p">(</span><span class="n">environment</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">phase</span><span class="p">()</span> <span class="o">==</span> <span class="n">Environment</span><span class="o">::</span><span class="n">Phase</span><span class="o">::</span><span class="n">Startup</span><span class="p">);</span>
+  <span class="n">toggle_assert</span><span class="p">(</span><span class="n">environment</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">phase</span><span class="p">()</span> <span class="o">==</span> <span class="n">Environment</span><span class="o">::</span><span class="n">Phase</span><span class="o">::</span><span class="n">Startup</span><span class="p">);</span>
   <span class="n">log</span><span class="o">::</span><span class="n">Debug</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Starting up reactor &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">fqn</span><span class="p">();</span>
   <span class="c1">// call startup on all contained objects</span>
   <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">x</span> <span class="p">:</span> <span class="n">_actions</span><span class="p">)</span>
@@ -388,7 +385,7 @@
 <span class="p">}</span>
 
 <span class="kt">void</span> <span class="n">Reactor</span><span class="o">::</span><span class="n">shutdown</span><span class="p">()</span> <span class="p">{</span>
-  <span class="n">ASSERT</span><span class="p">(</span><span class="n">environment</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">phase</span><span class="p">()</span> <span class="o">==</span> <span class="n">Environment</span><span class="o">::</span><span class="n">Phase</span><span class="o">::</span><span class="n">Shutdown</span><span class="p">);</span>
+  <span class="n">toggle_assert</span><span class="p">(</span><span class="n">environment</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">phase</span><span class="p">()</span> <span class="o">==</span> <span class="n">Environment</span><span class="o">::</span><span class="n">Phase</span><span class="o">::</span><span class="n">Shutdown</span><span class="p">);</span>
   <span class="n">log</span><span class="o">::</span><span class="n">Debug</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Terminating reactor &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">fqn</span><span class="p">();</span>
   <span class="c1">// call shutdown on all contained objects</span>
   <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">x</span> <span class="p">:</span> <span class="n">_actions</span><span class="p">)</span>

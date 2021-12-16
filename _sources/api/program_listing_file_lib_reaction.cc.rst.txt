@@ -34,104 +34,98 @@ Program Listing for File reaction.cc
        : ReactorElement(name, ReactorElement::Type::Reaction, container)
        , _priority(priority)
        , body(body) {
-     ASSERT(priority != 0);
+     toggle_assert(priority != 0);
    }
    
    void Reaction::declare_trigger(BaseAction* action) {
-     ASSERT(action != nullptr);
-     ASSERT(this->environment() == action->environment());
-     VALIDATE(this->environment()->phase() == Environment::Phase::Assembly,
+     toggle_assert(action != nullptr);
+     toggle_assert(this->environment() == action->environment());
+     validate(this->environment()->phase() == Environment::Phase::Assembly,
               "Triggers may only be declared during assembly phase!");
-     VALIDATE(this->container() == action->container(),
+     validate(this->container() == action->container(),
               "Action triggers must belong to the same reactor as the triggered "
               "reaction");
    
-     auto r = _action_triggers.insert(action);
-     ASSERT(r.second);
+     toggle_assert(_action_triggers.insert(action).second);
      action->register_trigger(this);
    }
    
    void Reaction::declare_schedulable_action(BaseAction* action) {
-     ASSERT(action != nullptr);
-     ASSERT(this->environment() == action->environment());
-     VALIDATE(this->environment()->phase() == Environment::Phase::Assembly,
+     toggle_assert(action != nullptr);
+     toggle_assert(this->environment() == action->environment());
+     validate(this->environment()->phase() == Environment::Phase::Assembly,
               "Scheduable actions may only be declared during assembly phase!");
-     VALIDATE(this->container() == action->container(),
+     validate(this->container() == action->container(),
               "Scheduable actions must belong to the same reactor as the "
               "triggered reaction");
    
-     auto r = _scheduable_actions.insert(action);
-     ASSERT(r.second);
+     toggle_assert(_scheduable_actions.insert(action).second);
      action->register_scheduler(this);
    }
    
    void Reaction::declare_trigger(BasePort* port) {
-     ASSERT(port != nullptr);
-     ASSERT(this->environment() == port->environment());
-     ASSERT(this->environment()->phase() == Environment::Phase::Assembly);
-     VALIDATE(this->environment()->phase() == Environment::Phase::Assembly,
-              "Triggers may only be declared during assembly phase!");
+     toggle_assert(port != nullptr);
+     toggle_assert(this->environment() == port->environment());
+     toggle_assert(this->environment()->phase() == Environment::Phase::Assembly);
+     validate(this->environment()->phase() == Environment::Phase::Assembly,
+           "Triggers may only be declared during assembly phase!");
    
      if (port->is_input()) {
-       VALIDATE(
+       validate(
            this->container() == port->container(),
            "Input port triggers must belong to the same reactor as the triggered "
            "reaction");
      } else {
-       VALIDATE(this->container() == port->container()->container(),
-                "Output port triggers must belong to a contained reactor");
+       validate(this->container() == port->container()->container(),
+           "Output port triggers must belong to a contained reactor");
      }
    
-     auto r1 = _port_triggers.insert(port);
-     ASSERT(r1.second);
-     auto r2 = _dependencies.insert(port);
-     ASSERT(r2.second);
+     toggle_assert(_port_triggers.insert(port).second);
+     toggle_assert(_dependencies.insert(port).second);
      port->register_dependency(this, true);
    }
    
    void Reaction::declare_dependency(BasePort* port) {
-     ASSERT(port != nullptr);
-     ASSERT(this->environment() == port->environment());
-     VALIDATE(this->environment()->phase() == Environment::Phase::Assembly,
+     toggle_assert(port != nullptr);
+     toggle_assert(this->environment() == port->environment());
+     validate(this->environment()->phase() == Environment::Phase::Assembly,
               "Dependencies may only be declared during assembly phase!");
    
      if (port->is_input()) {
-       VALIDATE(this->container() == port->container(),
+       validate(this->container() == port->container(),
                 "Dependent input ports must belong to the same reactor as the "
                 "reaction");
      } else {
-       VALIDATE(this->container() == port->container()->container(),
+       validate(this->container() == port->container()->container(),
                 "Dependent output ports must belong to a contained reactor");
      }
    
-     auto r = _dependencies.insert(port);
-     ASSERT(r.second);
+     toggle_assert(_dependencies.insert(port).second);
      port->register_dependency(this, false);
    }
    
    void Reaction::declare_antidependency(BasePort* port) {
-     ASSERT(port != nullptr);
-     ASSERT(this->environment() == port->environment());
-     VALIDATE(this->environment()->phase() == Environment::Phase::Assembly,
+     toggle_assert(port != nullptr);
+     toggle_assert(this->environment() == port->environment());
+     validate(this->environment()->phase() == Environment::Phase::Assembly,
               "Antidependencies may only be declared during assembly phase!");
    
      if (port->is_output()) {
-       VALIDATE(this->container() == port->container(),
+       validate(this->container() == port->container(),
                 "Antidependent output ports must belong to the same reactor as "
                 "the reaction");
      } else {
-       VALIDATE(this->container() == port->container()->container(),
+       validate(this->container() == port->container()->container(),
                 "Antidependent input ports must belong to a contained reactor");
      }
    
-     auto r = _antidependencies.insert(port);
-     ASSERT(r.second);
+     toggle_assert(_antidependencies.insert(port).second);
      port->register_antidependency(this);
    }
    
    void Reaction::trigger() {
      if (has_deadline()) {
-       ASSERT(deadline_handler != nullptr);
+       toggle_assert(deadline_handler != nullptr);
        auto lag =
            container()->get_physical_time() - container()->get_logical_time();
        if (lag > deadline) {
@@ -145,14 +139,14 @@ Program Listing for File reaction.cc
    
    void Reaction::set_deadline_impl(Duration dl,
                                     std::function<void(void)> handler) {
-     ASSERT(!has_deadline());
-     ASSERT(handler != nullptr);
+     toggle_assert(!has_deadline());
+     toggle_assert(handler != nullptr);
      this->deadline = dl;
      this->deadline_handler = handler;
    }
    
    void Reaction::set_index(unsigned index) {
-     VALIDATE(this->environment()->phase() == Environment::Phase::Assembly,
+     validate(this->environment()->phase() == Environment::Phase::Assembly,
               "Reaction indexes may only be set during assembly phase!");
      this->_index = index;
    }

@@ -1,0 +1,13 @@
+.. _exhale_variable_assert_8hh_1a205d29e2ebaeda57283c3fe9c80888f0:
+
+Variable runtime_validation
+===========================
+
+- Defined in :ref:`file_include_reactor-cpp_assert.hh`
+
+
+Variable Documentation
+----------------------
+
+
+.. doxygenvariable:: runtime_validation
