@@ -20,9 +20,6 @@ constexpr bool runtime_assertion = NDEBUG;
 constexpr bool runtime_assertion = false;
 #endif
 
-// macro for silencing unused warnings my the compiler
-#define UNUSED(expr) do { (void)(expr); } while (0)
-
 #include <cassert>
 #include <sstream>
 #include <stdexcept>
@@ -45,9 +42,8 @@ constexpr inline void validate(bool condition, const std::string& message) {
   }
 }
 
-constexpr inline void toggle_assert(bool condition) {
+constexpr inline void toggle_assert([[maybe_unused]] bool condition) {
   if constexpr (runtime_assertion){
-    UNUSED(condition);
     assert(condition);
   }
 }

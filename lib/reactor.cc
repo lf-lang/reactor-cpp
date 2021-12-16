@@ -73,8 +73,7 @@ Reactor::Reactor(const std::string& name, Environment* environment)
   environment->register_reactor(this);
 }
 
-void Reactor::register_action(BaseAction* action) {
-  UNUSED(action);
+void Reactor::register_action([[maybe_unused]]BaseAction* action) {
   toggle_assert(action != nullptr);
   reactor::validate(this->environment()->phase() == Environment::Phase::Construction,
            "Actions can only be registered during construction phase!");
@@ -90,15 +89,13 @@ void Reactor::register_port(BasePort* port) {
     toggle_assert(_outputs.insert(port).second);
   }
 }
-void Reactor::register_reaction(Reaction* reaction) {
-  UNUSED(reaction);
+void Reactor::register_reaction([[maybe_unused]]Reaction* reaction) {
   toggle_assert(reaction != nullptr);
   validate(this->environment()->phase() == Environment::Phase::Construction,
            "Reactions can only be registered during construction phase!");
   toggle_assert(_reactions.insert(reaction).second);
 }
-void Reactor::register_reactor(Reactor* reactor) {
-  UNUSED(reactor);
+void Reactor::register_reactor([[maybe_unused]]Reactor* reactor) {
   toggle_assert(reactor != nullptr);
   validate(this->environment()->phase() == Environment::Phase::Construction,
            "Reactions can only be registered during construction phase!");
