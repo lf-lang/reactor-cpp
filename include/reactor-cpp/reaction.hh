@@ -16,58 +16,76 @@
 namespace reactor {
 
 class Reaction : public ReactorElement {
- private:
-  std::set<BaseAction*> _action_triggers;
-  std::set<BaseAction*> _scheduable_actions;
-  std::set<BasePort*> _port_triggers;
-  std::set<BasePort*> _antidependencies;
-  std::set<BasePort*> _dependencies;
+private:
+    std::set<BaseAction*> _action_triggers;
+    std::set<BaseAction*> _scheduable_actions;
+    std::set<BasePort*> _port_triggers;
+    std::set<BasePort*> _antidependencies;
+    std::set<BasePort*> _dependencies;
 
-  const int _priority;
-  unsigned _index;
+    const int _priority;
+    unsigned int _index;
 
-  std::function<void(void)> body;
+    std::function<void(void)> body;
 
-  Duration deadline{Duration::zero()};
-  std::function<void(void)> deadline_handler{nullptr};
+    Duration deadline{Duration::zero()};
+    std::function<void(void)> deadline_handler{nullptr};
 
-  void set_deadline_impl(Duration deadline, std::function<void(void)> handler);
+    void set_deadline_impl(Duration deadline, const std::function<void(void)>& handler);
 
- public:
-  Reaction(const std::string& name,
+public:
+    Reaction(const std::string& name,
            int priority,
            Reactor* container,
            std::function<void(void)> body);
 
-  virtual ~Reaction() {}
+    ~Reaction() override = default;
 
-  void declare_trigger(BaseAction* action);
-  void declare_trigger(BasePort* port);
-  void declare_schedulable_action(BaseAction* action);
-  void declare_antidependency(BasePort* port);
-  void declare_dependency(BasePort* port);
+    void declare_trigger(BaseAction* action);
+    void declare_trigger(BasePort* port);
+    void declare_schedulable_action(BaseAction* action);
+    void declare_antidependency(BasePort* port);
+    void declare_dependency(BasePort* port);
 
-  const auto& action_triggers() const { return _action_triggers; }
-  const auto& port_triggers() const { return _port_triggers; }
-  const auto& antidependencies() const { return _antidependencies; }
-  const auto& dependencies() const { return _dependencies; }
-  const auto& scheduable_actions() const { return _scheduable_actions; }
+    [[nodiscard]] auto action_triggers() const noexcept -> const auto& {
+          return _action_triggers;
+    }
 
-  int priority() const { return _priority; }
+    [[nodiscard]] auto port_triggers() const noexcept -> const auto& {
+          return _port_triggers;
+    }
 
-  void startup() override final {}
-  void shutdown() override final {}
+    [[maybe_unused]] [[nodiscard]] auto antidependencies() const noexcept -> const auto& {
+          return _antidependencies;
+    }
 
-  void trigger();
+    [[nodiscard]] auto dependencies() const noexcept -> const auto& {
+          return _dependencies;
+    }
 
-  template <class Dur>
-  void set_deadline(Dur dl, std::function<void(void)> handler) {
-    set_deadline_impl(std::chrono::duration_cast<Duration>(dl), handler);
-  }
-  bool has_deadline() const { return deadline != Duration::zero(); }
+    [[maybe_unused]] [[nodiscard]] auto scheduable_actions() const noexcept -> const auto& {
+          return _scheduable_actions;
+    }
 
-  void set_index(unsigned index);
-  unsigned index() const { return _index; }
+    [[nodiscard]] auto priority() const noexcept -> int { return _priority; }
+
+    void startup() final {}
+    void shutdown() final {}
+
+    void trigger();
+
+    template <class Dur>
+    void set_deadline(Dur dl, const std::function<void(void)>& handler) {
+        set_deadline_impl(std::chrono::duration_cast<Duration>(dl), handler);
+    }
+    [[nodiscard]] bool has_deadline() const {
+        return deadline != Duration::zero();
+    }
+
+    void set_index(unsigned index);
+    [[nodiscard]] auto index() const noexcept -> unsigned int {
+        return _index;
+    }
 };
 
 }  // namespace reactor

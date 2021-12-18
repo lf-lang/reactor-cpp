@@ -14,13 +14,13 @@ class LeftPedal : public Reactor {
   // actions
   PhysicalAction<void> req{"req", this};
 
-  // reactions
+  // reactions_
   Reaction r1{"1", 1, this, [this]() { reaction_1(); }};
 
   void reaction_1() {}
 
  public:
-  LeftPedal(Environment* env) : Reactor("LP", env) {}
+  explicit LeftPedal(Environment* env) : Reactor("LP", env) {}
 
   void assemble() override {
     r1.declare_trigger(&req);
@@ -47,7 +47,7 @@ class RightPedal : public Reactor {
   void reaction_2() {}
 
  public:
-  RightPedal(Environment* env) : Reactor("RP", env) {}
+  explicit RightPedal(Environment* env) : Reactor("RP", env) {}
 
   void assemble() override {
     r1.declare_trigger(&pol);
@@ -70,7 +70,7 @@ class BrakeControl : public Reactor {
   void reaction_1() {}
 
  public:
-  BrakeControl(Environment* env) : Reactor("BC", env) {}
+  explicit BrakeControl(Environment* env) : Reactor("BC", env) {}
 
   void assemble() override {
     r1.declare_trigger(&angle);
@@ -100,7 +100,7 @@ class EngineControl : public Reactor {
   void reaction_3() {}
 
  public:
-  EngineControl(Environment* env) : Reactor("EC", env) {}
+  explicit EngineControl(Environment* env) : Reactor("EC", env) {}
 
   void assemble() override {
     r1.declare_trigger(&on_off);
@@ -120,13 +120,13 @@ class Brake : public Reactor {
   Input<void> force{"force", this};
 
  private:
-  // reactions
+  // reactions_
   Reaction r1{"1", 1, this, [this]() { reaction_1(); }};
 
   void reaction_1() {}
 
  public:
-  Brake(Environment* env) : Reactor("B", env) {}
+  explicit Brake(Environment* env) : Reactor("B", env) {}
 
   void assemble() override { r1.declare_trigger(&force); }
 };
@@ -137,13 +137,13 @@ class Engine : public Reactor {
   Input<void> torque{"torque", this};
 
  private:
-  // reactions
+  // reactions_
   Reaction r1{"1", 1, this, [this]() { reaction_1(); }};
 
   void reaction_1() {}
 
  public:
-  Engine(Environment* env) : Reactor("E", env) {}
+  explicit Engine(Environment* env) : Reactor("E", env) {}
 
   void assemble() override { r1.declare_trigger(&torque); }
 };

@@ -15,159 +15,175 @@
 namespace reactor {
 
 class BaseAction : public ReactorElement {
- private:
-  std::set<Reaction*> _triggers;
-  std::set<Reaction*> _schedulers;
+private:
+    std::set<Reaction*> triggers_;
+    std::set<Reaction*> schedulers_;
 
-  const bool _logical;
+    const bool logical_;
 
- protected:
-  void register_trigger(Reaction* reaction);
-  void register_scheduler(Reaction* reaction);
+protected:
+    void register_trigger(Reaction* reaction);
+    void register_scheduler(Reaction* reaction);
 
-  virtual void cleanup() = 0;
+    virtual void cleanup() = 0;
 
-  const Duration min_delay;
+    const Duration min_delay;
 
- protected:
-  BaseAction(const std::string& name,
+    BaseAction(const std::string& name,
              Reactor* container,
              bool logical,
              Duration min_delay)
-      : ReactorElement(name, ReactorElement::Type::Action, container)
-      , _logical(logical)
-      , min_delay(min_delay) {}
+        : ReactorElement(name, ReactorElement::Type::Action, container)
+        , logical_(logical)
+        , min_delay(min_delay) {}
 
- public:
-  const auto& triggers() const { return _triggers; }
-  const auto& schedulers() const { return _schedulers; }
+public:
+    [[nodiscard]] auto triggers() const noexcept -> const auto& {
+        return triggers_;
+    }
 
-  bool is_logical() const { return _logical; }
-  bool is_physical() const { return !_logical; }
+    [[nodiscard]] auto schedulers() const noexcept -> const auto& {
+        return schedulers_;
+    }
 
-  friend class Reaction;
-  friend class Scheduler;
+    [[nodiscard]] auto is_logical() const noexcept -> bool {
+        return logical_;
+    }
+
+    [[nodiscard]] auto is_physical() const noexcept -> bool {
+        return !logical_;
+    }
+
+    friend class Reaction;
+    friend class Scheduler;
 };
 
 template <class T>
 class Action : public BaseAction {
- private:
-  ImmutableValuePtr<T> value_ptr{nullptr};
+private:
+    ImmutableValuePtr<T> value_ptr_{nullptr};
 
-  void cleanup() override final { value_ptr = nullptr; }
+    void cleanup() noexcept final { value_ptr_ = nullptr; }
 
- protected:
-  Action(const std::string& name,
+protected:
+    Action(const std::string& name,
          Reactor* container,
          bool logical,
          Duration min_delay)
-      : BaseAction(name, container, logical, min_delay) {}
+         : BaseAction(name, container, logical, min_delay) {}
 
- public:
-  void startup() override final {}
-  void shutdown() override final {}
+public:
+    void startup() final {}
+    void shutdown() final {}
 
-  template <class Dur = Duration>
-  void schedule(const ImmutableValuePtr<T>& value_ptr, Dur delay = Dur::zero());
-  template <class Dur = Duration>
-  void schedule(MutableValuePtr<T>&& value_ptr, Dur delay = Dur::zero()) {
-    schedule(ImmutableValuePtr<T>(std::forward<MutableValuePtr<T>>(value_ptr)),
-             delay);
-  }
-  template <class Dur = Duration>
-  void schedule(const T& value, Dur delay = Dur::zero()) {
-    schedule(make_immutable_value<T>(value), delay);
-  }
-  template <class Dur = Duration>
-  void schedule(T&& value, Dur delay = Dur::zero()) {
-    schedule(make_immutable_value<T>(std::forward<T>(value)), delay);
-  }
-  // Scheduling an action with nullptr value is not permitted.
-  template <class Dur = Duration>
-  void schedule(std::nullptr_t, Dur) = delete;
+    template <class Dur = Duration>
+    void schedule(const ImmutableValuePtr<T>& value_ptr, Dur delay = Dur::zero());
 
-  const ImmutableValuePtr<T>& get() const { return value_ptr; }
-  bool is_present() const { return value_ptr != nullptr; }
+    template <class Dur = Duration>
+    void schedule(MutableValuePtr<T>&& value_ptr, Dur delay = Dur::zero()) {
+        schedule(ImmutableValuePtr<T>(std::forward<MutableValuePtr<T>>(value_ptr)), delay);
+    }
+
+    template <class Dur = Duration>
+    void schedule(const T& value, Dur delay = Dur::zero()) {
+        schedule(make_immutable_value<T>(value), delay);
+    }
+
+    template <class Dur = Duration>
+    void schedule(T&& value, Dur delay = Dur::zero()) {
+        schedule(make_immutable_value<T>(std::forward<T>(value)), delay);
+    }
+
+    // Scheduling an action with nullptr value is not permitted.
+    template <class Dur = Duration>
+    void schedule(std::nullptr_t, Dur) = delete;
+
+    auto get() const noexcept -> const ImmutableValuePtr<T>&  {
+        return value_ptr_;
+    }
+
+    auto is_present() noexcept -> bool {
+        return value_ptr_ != nullptr;
+    }
 };
 
 template <>
 class Action<void> : public BaseAction {
- private:
-  bool present{false};
+private:
+    bool present_ = false;
 
-  void cleanup() override final { present = false; }
+    void cleanup() noexcept final { present_ = false; }
 
- protected:
-  Action(const std::string& name,
+protected:
+    Action(const std::string& name,
          Reactor* container,
          bool logical,
          Duration min_delay)
-      : BaseAction(name, container, logical, min_delay) {}
+         : BaseAction(name, container, logical, min_delay) {}
 
- public:
-  void startup() override final {}
-  void shutdown() override final {}
+public:
+    void startup() final {}
+    void shutdown() final {}
 
-  template <class Dur = Duration>
-  void schedule(Dur delay = Dur::zero());
-  bool is_present() const { return present; }
+    template <class Dur = Duration>
+    void schedule(Dur delay = Dur::zero()) noexcept;
+
+    [[nodiscard]] auto is_present() const noexcept -> bool{ return present_; }
 };
 
 template <class T>
 class PhysicalAction : public Action<T> {
- public:
-  PhysicalAction(const std::string& name, Reactor* container)
-      : Action<T>(name, container, false, Duration::zero()) {}
+public:
+    PhysicalAction(const std::string& name, Reactor* container)
+        : Action<T>(name, container, false, Duration::zero()) {}
 };
 
 template <class T>
 class LogicalAction : public Action<T> {
- public:
-  LogicalAction(const std::string& name,
+public:
+    LogicalAction(const std::string& name,
                 Reactor* container,
                 Duration min_delay = Duration::zero())
-      : Action<T>(name, container, true, min_delay) {}
+                : Action<T>(name, container, true, min_delay) {}
 };
 
 class Timer : public BaseAction {
- private:
-  const Duration _offset;
-  const Duration _period;
+private:
+    const Duration _offset;
+    const Duration _period;
 
-  void reschedule();
+    void cleanup() final;
 
-  void cleanup() override final;
-
- public:
-  Timer(const std::string& name,
+public:
+    Timer(const std::string& name,
         Reactor* container,
         Duration period = Duration::zero(),
         Duration offset = Duration::zero())
-      : BaseAction(name, container, true, Duration::zero())
-      , _offset(offset)
-      , _period(period) {}
+        : BaseAction(name, container, true, Duration::zero())
+        , _offset(offset)
+        , _period(period) {}
 
-  void startup() override final;
-  void shutdown() override final {}
+    void startup() final;
+    void shutdown() final {}
 
-  const Duration& offset() const { return _offset; }
-  const Duration& period() const { return _period; }
+    [[nodiscard]] auto offset() const noexcept -> const Duration& { return _offset; }
+    [[nodiscard]] auto period() const noexcept -> const Duration& { return _period; }
 };
 
 class StartupAction : public Timer {
- public:
-  StartupAction(const std::string& name, Reactor* container)
-      : Timer(name, container) {}
+public:
+    StartupAction(const std::string& name, Reactor* container)
+        : Timer(name, container) {}
 };
 
 class ShutdownAction : public BaseAction {
- public:
-  ShutdownAction(const std::string& name, Reactor* container)
-      : BaseAction(name, container, true, Duration::zero()) {}
+public:
+    ShutdownAction(const std::string& name, Reactor* container)
+        : BaseAction(name, container, true, Duration::zero()) {}
 
-  void cleanup() override final {}
-  void startup() override final {}
-  void shutdown() override final;
+    void cleanup() final {}
+    void startup() final {}
+    void shutdown() final;
 };
 
 }  // namespace reactor

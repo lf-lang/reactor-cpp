@@ -20,11 +20,11 @@ namespace reactor {
 ReactorElement::ReactorElement(const std::string& name,
                                ReactorElement::Type type,
                                Reactor* container)
-    : _name(name), _container(container) {
-  toggle_assert(container != nullptr);
-  this->_environment = container->environment();
-  toggle_assert(this->_environment != nullptr);
-  validate(this->_environment->phase() == Environment::Phase::Construction,
+    : name_(name), container_(container) {
+    reactor_assert(container != nullptr);
+  this->environment_ = container->environment();
+    reactor_assert(this->environment_ != nullptr);
+  validate(this->environment_->phase() == Environment::Phase::Construction,
            "Reactor elements can only be created during construction phase!");
   // We need a reinterpret_cast here as the derived class is not yet created
   // when this constructor is executed. dynamic_cast only works for
@@ -51,18 +51,18 @@ ReactorElement::ReactorElement(const std::string& name,
   }
 
   std::stringstream ss;
-  ss << _container->fqn() << '.' << name;
-  _fqn = ss.str();
+  ss << container_->fqn() << '.' << name;
+    fqn_ = ss.str();
 }
 
 ReactorElement::ReactorElement(const std::string& name,
                                ReactorElement::Type type,
                                Environment* environment)
-    : _name(name), _fqn(name), _container(nullptr), _environment(environment) {
-  toggle_assert(environment != nullptr);
+    : name_(name), fqn_(name), container_(nullptr), environment_(environment) {
+    reactor_assert(environment != nullptr);
   validate(type == Type::Reactor,
            "Only reactors can be owned by the environment!");
-  validate(this->_environment->phase() == Environment::Phase::Construction,
+  validate(this->environment_->phase() == Environment::Phase::Construction,
            "Reactor elements can only be created during construction phase!");
 }
 
@@ -74,79 +74,79 @@ Reactor::Reactor(const std::string& name, Environment* environment)
 }
 
 void Reactor::register_action([[maybe_unused]]BaseAction* action) {
-  toggle_assert(action != nullptr);
+    reactor_assert(action != nullptr);
   reactor::validate(this->environment()->phase() == Environment::Phase::Construction,
            "Actions can only be registered during construction phase!");
-  toggle_assert(_actions.insert(action).second);
+    reactor_assert(actions_.insert(action).second);
 }
 void Reactor::register_port(BasePort* port) {
-  toggle_assert(port != nullptr);
+    reactor_assert(port != nullptr);
   reactor::validate(this->environment()->phase() == Environment::Phase::Construction,
            "Ports can only be registered during construction phase!");
   if (port->is_input()) {
-    toggle_assert(_inputs.insert(port).second);
+      reactor_assert(inputs_.insert(port).second);
   } else {
-    toggle_assert(_outputs.insert(port).second);
+      reactor_assert(outputs_.insert(port).second);
   }
 }
 void Reactor::register_reaction([[maybe_unused]]Reaction* reaction) {
-  toggle_assert(reaction != nullptr);
+    reactor_assert(reaction != nullptr);
   validate(this->environment()->phase() == Environment::Phase::Construction,
            "Reactions can only be registered during construction phase!");
-  toggle_assert(_reactions.insert(reaction).second);
+    reactor_assert(reactions_.insert(reaction).second);
 }
 void Reactor::register_reactor([[maybe_unused]]Reactor* reactor) {
-  toggle_assert(reactor != nullptr);
+    reactor_assert(reactor != nullptr);
   validate(this->environment()->phase() == Environment::Phase::Construction,
            "Reactions can only be registered during construction phase!");
-  toggle_assert(_reactors.insert(reactor).second);
+    reactor_assert(reactors_.insert(reactor).second);
 }
 
 void Reactor::startup() {
-  toggle_assert(environment()->phase() == Environment::Phase::Startup);
+    reactor_assert(environment()->phase() == Environment::Phase::Startup);
   log::Debug() << "Starting up reactor " << fqn();
   // call startup on all contained objects
-  for (auto x : _actions)
+  for (auto x : actions_)
     x->startup();
-  for (auto x : _inputs)
+  for (auto x : inputs_)
     x->startup();
-  for (auto x : _outputs)
+  for (auto x : outputs_)
     x->startup();
-  for (auto x : _reactions)
+  for (auto x : reactions_)
     x->startup();
-  for (auto x : _reactors)
+  for (auto x : reactors_)
     x->startup();
 }
 
 void Reactor::shutdown() {
-  toggle_assert(environment()->phase() == Environment::Phase::Shutdown);
+    reactor_assert(environment()->phase() == Environment::Phase::Shutdown);
   log::Debug() << "Terminating reactor " << fqn();
   // call shutdown on all contained objects
-  for (auto x : _actions)
+  for (auto x : actions_)
     x->shutdown();
-  for (auto x : _inputs)
+  for (auto x : inputs_)
     x->shutdown();
-  for (auto x : _outputs)
+  for (auto x : outputs_)
     x->shutdown();
-  for (auto x : _reactions)
+  for (auto x : reactions_)
     x->shutdown();
-  for (auto x : _reactors)
+  for (auto x : reactors_)
     x->shutdown();
 }
 
-TimePoint Reactor::get_physical_time() const {
+auto Reactor::get_physical_time() noexcept -> TimePoint {
   return ::reactor::get_physical_time();
 }
 
-TimePoint Reactor::get_logical_time() const {
+auto Reactor::get_logical_time() const noexcept -> TimePoint {
   return environment()->scheduler()->logical_time().time_point();
 }
 
-Duration Reactor::get_elapsed_logical_time() const {
+auto Reactor::get_elapsed_logical_time() const noexcept -> Duration {
   return get_logical_time() - environment()->start_time();
 }
 
-Duration Reactor::get_elapsed_physical_time() const {
+auto Reactor::get_elapsed_physical_time() const noexcept -> Duration {
   return get_physical_time() - environment()->start_time();
 }
 

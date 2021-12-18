@@ -17,8 +17,8 @@ using TimePoint = std::chrono::time_point<std::chrono::system_clock,
                                           std::chrono::nanoseconds>;
 using Duration = std::chrono::nanoseconds;
 
-inline TimePoint get_physical_time() {
-  return std::chrono::system_clock::now();
+inline auto get_physical_time() noexcept -> TimePoint {
+    return std::chrono::system_clock::now();
 }
 
 inline namespace operators {

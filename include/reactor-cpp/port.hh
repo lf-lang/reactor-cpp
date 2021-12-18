@@ -18,120 +18,114 @@ namespace reactor {
 enum class PortType { Input, Output };
 
 class BasePort : public ReactorElement {
- private:
-  BasePort* _inward_binding = nullptr;
-  std::set<BasePort*> _outward_bindings;
-  const PortType type;
+private:
+    BasePort* inward_binding_ = nullptr;
+    std::set<BasePort*> outward_bindings_;
+    const PortType type_;
 
-  std::set<Reaction*> _dependencies;
-  std::set<Reaction*> _triggers;
-  std::set<Reaction*> _antidependencies;
+    std::set<Reaction*> dependencies_;
+    std::set<Reaction*> triggers_;
+    std::set<Reaction*> antidependencies_;
 
- protected:
-  BasePort(const std::string& name, PortType type, Reactor* container)
-      : ReactorElement(name, ReactorElement::Type::Port, container)
-      , type(type) {}
+protected:
 
-  void base_bind_to(BasePort* port);
-  void register_dependency(Reaction* reaction, bool is_trigger);
-  void register_antidependency(Reaction* reaction);
+    BasePort(const std::string &name, PortType type, Reactor *container)
+            : ReactorElement(name, ReactorElement::Type::Port, container), type_(type) {};
 
-  virtual void cleanup() = 0;
+    void base_bind_to(BasePort *port);
+    void register_dependency(Reaction *reaction, bool is_trigger);
+    void register_antidependency(Reaction *reaction);
+    virtual void cleanup() = 0;
 
- public:
-  bool is_input() const { return type == PortType::Input; }
-  bool is_output() const { return type == PortType::Output; }
+public:
+    [[nodiscard]] auto is_input() const noexcept -> bool { return type_ == PortType::Input; }
+    [[nodiscard]] auto is_output() const noexcept -> bool { return type_ == PortType::Output; }
 
-  bool has_inward_binding() const { return _inward_binding != nullptr; }
-  bool has_outward_bindings() const { return _outward_bindings.size() > 0; }
-  bool has_dependencies() const { return _dependencies.size() > 0; }
-  bool has_antidependencies() const { return _antidependencies.size() > 0; }
+    [[nodiscard]] auto has_inward_binding() const noexcept -> bool { return inward_binding_ != nullptr; }
+    [[nodiscard]] auto has_outward_bindings() const noexcept -> bool { return !outward_bindings_.empty(); }
+    [[nodiscard]] auto has_dependencies() const noexcept -> bool { return !dependencies_.empty(); }
+    [[nodiscard]] auto has_antidependencies() const noexcept -> bool { return !antidependencies_.empty(); }
 
-  BasePort* inward_binding() const { return _inward_binding; }
-  const auto& outward_bindings() const { return _outward_bindings; }
+    [[nodiscard]] auto inward_binding() const noexcept -> BasePort* { return inward_binding_; }
+    [[nodiscard]] auto outward_bindings() const noexcept -> const auto& { return outward_bindings_; }
 
-  const auto& triggers() const { return _triggers; }
-  const auto& dependencies() const { return _dependencies; }
-  const auto& antidependencies() const { return _antidependencies; }
+    [[nodiscard]] auto triggers() const noexcept -> const auto& { return triggers_; }
+    [[nodiscard]] auto dependencies() const noexcept -> const auto& { return dependencies_; }
+    [[nodiscard]] auto antidependencies() const noexcept -> const auto& { return antidependencies_; }
 
-  friend class Reaction;
-  friend class Scheduler;
+    friend class Reaction;
+    friend class Scheduler;
 };
 
 template <class T>
 class Port : public BasePort {
- private:
-  ImmutableValuePtr<T> value_ptr{nullptr};
+private:
+    ImmutableValuePtr<T> value_ptr{nullptr};
 
-  void cleanup() override final { value_ptr = nullptr; }
+    void cleanup() final { value_ptr = nullptr; }
+public:
+    using value_type = T;
 
- public:
-  using value_type = T;
+    Port(const std::string& name, PortType type, Reactor* container)
+        : BasePort(name, type, container) {}
 
-  Port(const std::string& name, PortType type, Reactor* container)
-      : BasePort(name, type, container) {}
+    void bind_to(Port<T>* port) { base_bind_to(port); }
+    auto typed_inward_binding() const noexcept -> Port<T>*;
+    auto typed_outward_bindings() const noexcept -> const std::set<Port<T>*>&;
 
-  void bind_to(Port<T>* port) { base_bind_to(port); }
-  Port<T>* typed_inward_binding() const;
-  const std::set<Port<T>*>& typed_outward_bindings() const;
+    void set(const ImmutableValuePtr<T>& value_ptr);
+    void set(MutableValuePtr<T>&& value_ptr) {
+        set(ImmutableValuePtr<T>(std::forward<MutableValuePtr<T>>(value_ptr)));
+    }
+    void set(const T& value) { set(make_immutable_value<T>(value)); }
+    void set(T&& value) { set(make_immutable_value<T>(std::forward<T>(value))); }
+    // Setting a port to nullptr is not permitted.
+    void set(std::nullptr_t) = delete;
 
-  void set(const ImmutableValuePtr<T>& value_ptr);
-  void set(MutableValuePtr<T>&& value_ptr) {
-    set(ImmutableValuePtr<T>(std::forward<MutableValuePtr<T>>(value_ptr)));
-  }
-  void set(const T& value) { set(make_immutable_value<T>(value)); }
-  void set(T&& value) { set(make_immutable_value<T>(std::forward<T>(value))); }
-  // Setting a port to nullptr is not permitted.
-  void set(std::nullptr_t) = delete;
+    void startup() final {}
+    void shutdown() final {}
 
-  void startup() override final {}
-  void shutdown() override final {}
-
-  const ImmutableValuePtr<T>& get() const;
-  bool is_present() const;
-
+    auto get() const noexcept -> const ImmutableValuePtr<T>&;
+    [[nodiscard]] auto is_present() const noexcept -> bool;
 };
 
 template <>
 class Port<void> : public BasePort {
- private:
-  bool present{false};
+private:
+    bool present_ = false;
 
-  void cleanup() override final { present = false; }
+    void cleanup() final {
+        present_ = false;
+    }
 
- public:
-  using value_type = void;
+public:
+    Port(const std::string& name, PortType type, Reactor* container) : BasePort(name, type, container) {}
 
-  Port(const std::string& name, PortType type, Reactor* container)
-      : BasePort(name, type, container) {}
+    void bind_to(Port<void>* port) {
+        base_bind_to(port);
+    }
+    [[nodiscard]] auto typed_inward_binding() const noexcept -> Port<void>*;
+    [[nodiscard]] auto typed_outward_bindings() const noexcept -> const auto&;
 
-  void bind_to(Port<void>* port) { base_bind_to(port); }
-  Port<void>* typed_inward_binding() const;
-  const std::set<Port<void>*>& typed_outward_bindings() const;
+    void set();
+    [[nodiscard]] bool is_present() const noexcept;
 
-  void set();
-  bool is_present() const;
-
-  void startup() override final {}
-  void shutdown() override final {}
+    void startup() final {}
+    void shutdown() final {}
 };
 
 template <class T>
 class Input : public Port<T> {
- public:
-  Input(const std::string& name, Reactor* container)
-      : Port<T>(name, PortType::Input, container) {}
-
-  Input(Input&&) = default;
+public:
+    Input(const std::string& name, Reactor* container) : Port<T>(name, PortType::Input, container) {}
+    Input(Input&&)  noexcept = default;
 };
 
 template <class T>
 class Output : public Port<T> {
- public:
-  Output(const std::string& name, Reactor* container)
-      : Port<T>(name, PortType::Output, container) {}
-
-  Output(Output&&) = default;
+public:
+    Output(const std::string& name, Reactor* container) : Port<T>(name, PortType::Output, container) {}
+    Output(Output&&)  noexcept = default;
 };
 
 }  // namespace reactor

@@ -20,7 +20,7 @@ void Action<T>::schedule(const ImmutableValuePtr<T>& value_ptr, Dur delay) {
   reactor::validate(value_ptr != nullptr,
            "Actions may not be scheduled with a nullptr value!");
   auto scheduler = environment()->scheduler();
-  auto setup = [value_ptr, this]() { this->value_ptr = std::move(value_ptr); };
+  auto setup = [value_ptr, this]() { this->value_ptr_ = std::move(value_ptr); };
   if (is_logical()) {
     d += this->min_delay;
     auto tag = Tag::from_logical_time(scheduler->logical_time()).delay(d);
@@ -32,12 +32,12 @@ void Action<T>::schedule(const ImmutableValuePtr<T>& value_ptr, Dur delay) {
 }
 
 template <class Dur>
-void Action<void>::schedule(Dur delay) {
+void Action<void>::schedule(Dur delay) noexcept {
   auto d = std::chrono::duration_cast<Duration>(delay);
   reactor::validate(d >= Duration::zero(),
            "Schedule cannot be called with a negative delay!");
   auto scheduler = environment()->scheduler();
-  auto setup = [this]() { this->present = true; };
+  auto setup = [this]() { this->present_ = true; };
   if (is_logical()) {
     d += this->min_delay;
     auto tag = Tag::from_logical_time(scheduler->logical_time()).delay(d);

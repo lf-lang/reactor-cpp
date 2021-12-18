@@ -81,7 +81,7 @@ class MutableValuePtr {
    * ownership and will own nothing.
    * @endrst
    */
-  MutableValuePtr(MutableValuePtr&& ptr) = default;
+  MutableValuePtr(MutableValuePtr&& ptr) noexcept = default;
   /**
    * Constuctor from ``nullptr``.
    * @rst
@@ -97,7 +97,7 @@ class MutableValuePtr {
    * instance. If this instance previously owned a value, the value is deleted.
    * @endrst
    */
-  MutableValuePtr& operator=(MutableValuePtr&& ptr) {
+  auto operator=(MutableValuePtr&& ptr) noexcept -> MutableValuePtr& {
     this->internal_ptr = std::move(ptr.internal_ptr);
     return *this;
   }
@@ -107,7 +107,7 @@ class MutableValuePtr {
    * Releases ownership. If this instance previously owned a value, the
    * value is deleted.
    */
-  MutableValuePtr& operator=(std::nullptr_t) {
+  auto operator=(std::nullptr_t) noexcept -> MutableValuePtr& {
     this->internal_ptr = nullptr;
     return *this;
   }
@@ -115,7 +115,7 @@ class MutableValuePtr {
   /**
    * Retrieve a raw pointer to the managed value.
    */
-  T* get() const { return internal_ptr.get(); }
+  auto get() const noexcept -> T* { return internal_ptr.get(); }
 
   /**
    * Cast to ``bool``. Checks if there is an associated value.
@@ -169,172 +169,172 @@ class MutableValuePtr {
  */
 template <class T>
 class ImmutableValuePtr {
- public:
-  /// A type alias that adds ``const`` to ``T``
-  using const_T = typename std::add_const<T>::type;
+public:
+    /// A type alias that adds ``const`` to ``T``
+    using const_T = typename std::add_const<T>::type;
 
- private:
-  /// The internal shared smart pointer that this class builds upon.
-  std::shared_ptr<T> internal_ptr;
+private:
+    /// The internal shared smart pointer that this class builds upon.
+    std::shared_ptr<T> internal_ptr;
 
-  /**
-   * Constructor from an existing raw pointer.
-   *
-   * @rst
-   * Constructs an :class:`ImutableValuePtr<T>` such that is obtains ownership
-   * of ``value``.  This is intended only for usage by the
-   * :func:`make_immutable_value()` factory function.
-   * @endrst
-   */
-  explicit ImmutableValuePtr(T* value) : internal_ptr(value) {}
+    /**
+     * Constructor from an existing raw pointer.
+     *
+     * @rst
+     * Constructs an :class:`ImutableValuePtr<T>` such that is obtains ownership
+     * of ``value``.  This is intended only for usage by the
+     * :func:`make_immutable_value()` factory function.
+     * @endrst
+     */
+    explicit ImmutableValuePtr(T* value) : internal_ptr(value) {}
 
- public:
-  /**
-   * Default constructor.
-   * @rst
-   * Constructs an :class:`ImmutableValuePtr<T>` that owns nothing.
-   * @endrst
-   */
-  constexpr ImmutableValuePtr() : internal_ptr(nullptr) {}
-  /**
-   * Copy constructor.
-   * @rst
-   * Constructs an :class:`ImutableValuePtr` by copying another
-   * :class:`ImutableValuePtr` instance ``ptr``. Both pointers have the same
-   * associated value and, therefore, share ownership.
-   * @endrst
-   */
-  ImmutableValuePtr(const ImmutableValuePtr& ptr) = default;
-  /**
-   * Move constructor.
-   * @rst
-   * Constructs an :class:`ImutableValuePtr` by transferring ownership from
-   * another :class:`ImmutableValuePtr` instance ``ptr``. ``ptr`` looses
-   * ownership and will own nothing.
-   * @endrst
-   */
-  ImmutableValuePtr(ImmutableValuePtr&& ptr) = default;
-  /**
-   * Constuctor from ``nullptr``.
-   * @rst
-   * Constructs an :class:`ImutableValuePtr<T>` that owns nothing.
-   * @endrst
-   */
-  explicit constexpr ImmutableValuePtr(std::nullptr_t)
-      : internal_ptr(nullptr) {}
-  /**
-   * @rst
-   * Move constructor from :class:`MutableValuePtr`.
-   *
-   * Constructs an :class:`ImmutableValuePtr` by transferring ownership from a
-   * :class:`MutableValuePtr` instance ``ptr``. ``ptr`` looses ownership and
-   * will own nothing. This effectively converts the mutable value initially
-   * associated with ``ptr`` to an immutable value.
-   * @endrst
-   */
-  explicit ImmutableValuePtr(MutableValuePtr<T>&& ptr)
-      : internal_ptr(std::move(ptr.internal_ptr)) {}
+public:
+    /**
+     * Default constructor.
+     * @rst
+     * Constructs an :class:`ImmutableValuePtr<T>` that owns nothing.
+     * @endrst
+     */
+    constexpr ImmutableValuePtr() : internal_ptr(nullptr) {}
+    /**
+     * Copy constructor.
+     * @rst
+     * Constructs an :class:`ImutableValuePtr` by copying another
+     * :class:`ImutableValuePtr` instance ``ptr``. Both pointers have the same
+     * associated value and, therefore, share ownership.
+     * @endrst
+     */
+    ImmutableValuePtr(const ImmutableValuePtr& ptr) = default;
+    /**
+     * Move constructor.
+     * @rst
+     * Constructs an :class:`ImutableValuePtr` by transferring ownership from
+     * another :class:`ImmutableValuePtr` instance ``ptr``. ``ptr`` looses
+     * ownership and will own nothing.
+     * @endrst
+     */
+    ImmutableValuePtr(ImmutableValuePtr&& ptr)  noexcept = default;
+    /**
+     * Constuctor from ``nullptr``.
+     * @rst
+     * Constructs an :class:`ImutableValuePtr<T>` that owns nothing.
+     * @endrst
+     */
+    explicit constexpr ImmutableValuePtr(std::nullptr_t) : internal_ptr(nullptr) {}
+    /**
+     * @rst
+     * Move constructor from :class:`MutableValuePtr`.
+     *
+     * Constructs an :class:`ImmutableValuePtr` by transferring ownership from a
+     * :class:`MutableValuePtr` instance ``ptr``. ``ptr`` looses ownership and
+     * will own nothing. This effectively converts the mutable value initially
+     * associated with ``ptr`` to an immutable value.
+     * @endrst
+     */
+    explicit ImmutableValuePtr(MutableValuePtr<T>&& ptr) : internal_ptr(std::move(ptr.internal_ptr)) {}
 
-  /**
-   * Assignment operator from ``nullptr``.
-   *
-   * @rst
-   * Releases ownership. If this instance previously owned a value that is not
-   * owned by any other instance of class:`ImmutableValuePtr`, the value is
-   * deleted.
-   * @endrst
-   */
-  ImmutableValuePtr& operator=(std::nullptr_t) {
-    this->internal_ptr = nullptr;
-    return *this;
-  }
-  /**
-   * @rst
-   * Assignment operator from another :class:`ImmutableValuePtr`.
-   *
-   * Replaces the managed value of this instance by the one managed by
-   * ``ptr``. Both instances share the ownership. If this instance previously
-   * owned a value that is not owned by any other instance of
-   * class:`ImmutableValuePtr`, the value is deleted.
-   * @endrst
-   */
-  ImmutableValuePtr& operator=(const ImmutableValuePtr& ptr) {
-    this->internal_ptr = ptr.internal_ptr;
-    return *this;
-  }
-  /**
-   * @rst
-   * Move assignment operator from another :class:`ImmutableValuePtr`.
-   *
-   * Replaces the managed value of this instance by the one managed by ``ptr``.
-   * This moves the ownership from ``ptr`` to this instance. If this instance
-   * previously owned a value that is not owned by any other instance of
-   * class:`ImmutableValuePtr`, the value is deleted.
-   * @endrst
-   */
-  ImmutableValuePtr& operator=(ImmutableValuePtr&& ptr) {
-    this->internal_ptr = std::move(ptr.internal_ptr);
-    return *this;
-  }
+    /**
+     * Assignment operator from ``nullptr``.
+     *
+     * @rst
+     * Releases ownership. If this instance previously owned a value that is not
+     * owned by any other instance of class:`ImmutableValuePtr`, the value is
+     * deleted.
+     * @endrst
+     */
+    auto operator=(std::nullptr_t) -> ImmutableValuePtr&{
+        this->internal_ptr = nullptr;
+        return *this;
+    }
+    /**
+     * @rst
+     * Assignment operator from another :class:`ImmutableValuePtr`.
+     *
+     * Replaces the managed value of this instance by the one managed by
+     * ``ptr``. Both instances share the ownership. If this instance previously
+     * owned a value that is not owned by any other instance of
+     * class:`ImmutableValuePtr`, the value is deleted.
+     * @endrst
+     */
+    auto operator=(const ImmutableValuePtr& ptr) -> ImmutableValuePtr& {
+        this->internal_ptr = ptr.internal_ptr;
+        return *this;
+    }
+    /**
+     * @rst
+     * Move assignment operator from another :class:`ImmutableValuePtr`.
+     *
+     * Replaces the managed value of this instance by the one managed by ``ptr``.
+     * This moves the ownership from ``ptr`` to this instance. If this instance
+     * previously owned a value that is not owned by any other instance of
+     * class:`ImmutableValuePtr`, the value is deleted.
+     * @endrst
+     */
+    auto operator=(ImmutableValuePtr&& ptr)  noexcept -> ImmutableValuePtr& {
+        this->internal_ptr = std::move(ptr.internal_ptr);
+        return *this;
+    }
 
-  /**
-   * Retrieve a raw pointer to the managed value.
-   *
-   * Since the associated value is immutable, this only provides const access
-   * to the value.
-   */
-  const_T* get() const { return internal_ptr.get(); }
+    /**
+     * Retrieve a raw pointer to the managed value.
+     *
+     * Since the associated value is immutable, this only provides const access
+     * to the value.
+     */
+    auto get() const -> const_T* { return internal_ptr.get(); }
 
-  /**
-   * Cast to ``bool``. Checks if there is an associated value.
-   *
-   * @return ``false`` if there is no associated value (``internal_ptr ==
-   *      nullptr``), ``true`` otherwise
-   */
-  explicit operator bool() const { return get() == nullptr; }
+    /**
+     * Cast to ``bool``. Checks if there is an associated value.
+     *
+     * @return ``false`` if there is no associated value (``internal_ptr ==
+     *      nullptr``), ``true`` otherwise
+     */
+    explicit operator bool() const { return get() == nullptr; }
 
-  /**
-   * Dereference the pointer to the managed value.
-   *
-   * Since the associated value is immutable, this only provides const access
-   * to the value.
-   *
-   * The behavior is undefined if ``get() == nullptr``.
-   */
-  const_T& operator*() const { return *get(); }
-  /**
-   * Dereference the pointer to the managed value.
-   *
-   * Since the associated value is immutable, this only provides const access
-   * to the value.
-   *
-   * Provides access to members of the associated value via ``->``. The
-   * behavior is undefined if ``get() == nullptr``.
-   */
-  const_T* operator->() const { return get(); }
+    /**
+     * Dereference the pointer to the managed value.
+     *
+     * Since the associated value is immutable, this only provides const access
+     * to the value.
+     *
+     * The behavior is undefined if ``get() == nullptr``.
+     */
+    auto operator*() const -> const_T& { return *get(); }
+    /**
+     * Dereference the pointer to the managed value.
+     *
+     * Since the associated value is immutable, this only provides const access
+     * to the value.
+     *
+     * Provides access to members of the associated value via ``->``. The
+     * behavior is undefined if ``get() == nullptr``.
+     */
+    auto operator->() const -> const_T* {
+        return get();
+    }
 
-  /**
-   * Create a mutable copy of the value associated with this instance.
-   *
-   * @rst
-   * This is the only allowed mechanism to convert a :class:`ImmutableValuePtr`
-   * to a :class:`MutableValuePtr`. In fact, it does not perform a conversion
-   * but copies the associated value of this instance and gives ownership of
-   * the copy to a newly created :class:`MutableValuePtr`.
-   * @endrst
-   *
-   * Requires that ``T`` is copy constructable. The behavior is undefined if
-   * ``get() == nullptr``.
-   * @return a mutable value pointer
-   */
-  MutableValuePtr<T> get_mutable_copy() const {
-    return MutableValuePtr<T>(new T(*internal_ptr));
-  }
+    /**
+     * Create a mutable copy of the value associated with this instance.
+     *
+     * @rst
+     * This is the only allowed mechanism to convert a :class:`ImmutableValuePtr`
+     * to a :class:`MutableValuePtr`. In fact, it does not perform a conversion
+     * but copies the associated value of this instance and gives ownership of
+     * the copy to a newly created :class:`MutableValuePtr`.
+     * @endrst
+     *
+     * Requires that ``T`` is copy constructable. The behavior is undefined if
+     * ``get() == nullptr``.
+     * @return a mutable value pointer
+     */
+    auto get_mutable_copy() const -> MutableValuePtr<T> {
+        return MutableValuePtr<T>(new T(*internal_ptr));
+    }
 
-  // Give the factory function make_mutable_value() access to the private
-  // constructor
-  template <class U, class... Args>
-  friend ImmutableValuePtr<U> make_immutable_value(Args&&... args);
+    // Give the factory function make_mutable_value() access to the private
+    // constructor
+    template <class U, class... Args>
+    friend ImmutableValuePtr<U> make_immutable_value(Args&&... args);
 };
 
 /**
@@ -353,8 +353,8 @@ class ImmutableValuePtr {
  * @return a new immutable value pointer
  */
 template <class T, class... Args>
-ImmutableValuePtr<T> make_immutable_value(Args&&... args) {
-  return ImmutableValuePtr<T>(new T(std::forward<Args>(args)...));
+auto make_immutable_value(Args&&... args) -> ImmutableValuePtr<T>  {
+    return ImmutableValuePtr<T>(new T(std::forward<Args>(args)...));
 }
 
 /**
@@ -373,76 +373,77 @@ ImmutableValuePtr<T> make_immutable_value(Args&&... args) {
  * @return a new mutable value pointer
  */
 template <class T, class... Args>
-MutableValuePtr<T> make_mutable_value(Args&&... args) {
-  return MutableValuePtr<T>(new T(std::forward<Args>(args)...));
+auto make_mutable_value(Args&&... args) -> MutableValuePtr<T> {
+    return MutableValuePtr<T>(new T(std::forward<Args>(args)...));
 }
 
 // Comparison operators
 
 template <class T, class U>
-bool operator==(const MutableValuePtr<T>& x, const MutableValuePtr<U>& y) {
-  return x.get() == y.get();
+auto operator==(const MutableValuePtr<T>& x, const MutableValuePtr<U>& y) noexcept -> bool {
+    return x.get() == y.get();
 }
 template <class T, class U>
-bool operator==(const ImmutableValuePtr<T>& x, const ImmutableValuePtr<U>& y) {
-  return x.get() == y.get();
+auto operator==(const ImmutableValuePtr<T>& x, const ImmutableValuePtr<U>& y) noexcept -> bool {
+    return x.get() == y.get();
 }
 template <class T, class U>
-bool operator==(const ImmutableValuePtr<T>& x, const MutableValuePtr<U>& y) {
-  return x.get() == y.get();
+auto operator==(const ImmutableValuePtr<T>& x, const MutableValuePtr<U>& y) noexcept -> bool {
+    return x.get() == y.get();
 }
 template <class T, class U>
-bool operator==(const MutableValuePtr<T>& x, const ImmutableValuePtr<U>& y) {
-  return x.get() == y.get();
+auto operator==(const MutableValuePtr<T>& x, const ImmutableValuePtr<U>& y) noexcept -> bool {
+    return x.get() == y.get();
 }
 template <class T>
-bool operator==(const MutableValuePtr<T>& x, std::nullptr_t) {
-  return x.get() == nullptr;
+auto operator==(const MutableValuePtr<T>& x, std::nullptr_t) noexcept -> bool {
+    return x.get() == nullptr;
 }
 template <class T>
-bool operator==(std::nullptr_t, const MutableValuePtr<T>& x) {
-  return x.get() == nullptr;
+auto operator==(std::nullptr_t, const MutableValuePtr<T>& x) noexcept -> bool {
+    return x.get() == nullptr;
 }
 template <class T>
-bool operator==(const ImmutableValuePtr<T>& x, std::nullptr_t) {
-  return x.get() == nullptr;
+auto operator==(const ImmutableValuePtr<T>& x, std::nullptr_t) noexcept -> bool {
+    return x.get() == nullptr;
 }
 template <class T>
-bool operator==(std::nullptr_t, const ImmutableValuePtr<T>& x) {
-  return x.get() == nullptr;
+auto operator==(std::nullptr_t, const ImmutableValuePtr<T>& x) noexcept -> bool {
+    return x.get() == nullptr;
 }
 
 template <class T, class U>
-bool operator!=(const MutableValuePtr<T>& x, const MutableValuePtr<U>& y) {
-  return x.get() != y.get();
+auto operator!=(const MutableValuePtr<T>& x, const MutableValuePtr<U>& y) noexcept -> bool {
+    return x.get() != y.get();
+}
+
+template <class T, class U>
+auto operator!=(const ImmutableValuePtr<T>& x, const ImmutableValuePtr<U>& y) -> bool {
+    return x.get() != y.get();
 }
 template <class T, class U>
-bool operator!=(const ImmutableValuePtr<T>& x, const ImmutableValuePtr<U>& y) {
-  return x.get() != y.get();
+auto operator!=(const ImmutableValuePtr<T>& x, const MutableValuePtr<U>& y) -> bool {
+    return x.get() != y.get();
 }
 template <class T, class U>
-bool operator!=(const ImmutableValuePtr<T>& x, const MutableValuePtr<U>& y) {
-  return x.get() != y.get();
-}
-template <class T, class U>
-bool operator!=(const MutableValuePtr<T>& x, const ImmutableValuePtr<U>& y) {
-  return x.get() != y.get();
+auto operator!=(const MutableValuePtr<T>& x, const ImmutableValuePtr<U>& y) -> bool {
+    return x.get() != y.get();
 }
 template <class T>
-bool operator!=(const MutableValuePtr<T>& x, std::nullptr_t) {
-  return x.get() != nullptr;
+auto operator!=(const MutableValuePtr<T>& x, std::nullptr_t) -> bool {
+    return x.get() != nullptr;
 }
 template <class T>
-bool operator!=(std::nullptr_t, const MutableValuePtr<T>& x) {
-  return x.get() != nullptr;
+auto operator!=(std::nullptr_t, const MutableValuePtr<T>& x) -> bool {
+    return x.get() != nullptr;
 }
 template <class T>
-bool operator!=(const ImmutableValuePtr<T>& x, std::nullptr_t) {
-  return x.get() != nullptr;
+auto operator!=(const ImmutableValuePtr<T>& x, std::nullptr_t) -> bool {
+    return x.get() != nullptr;
 }
 template <class T>
-bool operator!=(std::nullptr_t, const ImmutableValuePtr<T>& x) {
-  return x.get() != nullptr;
+auto operator!=(std::nullptr_t, const ImmutableValuePtr<T>& x) -> bool {
+    return x.get() != nullptr;
 }
 
 }  // namespace reactor

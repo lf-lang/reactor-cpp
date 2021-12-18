@@ -28,24 +28,23 @@ constexpr bool runtime_assertion = false;
 namespace reactor {
 
 class ValidationError : public std::runtime_error {
- private:
-  static std::string build_message(const std::string& msg);
+private:
+    static auto build_message(const std::string& msg) noexcept -> std::string;
 
- public:
-  explicit ValidationError(const std::string& msg)
-      : std::runtime_error(build_message(msg)) {}
+public:
+    explicit ValidationError(const std::string& msg) : std::runtime_error(build_message(msg)) {}
 };
 
-constexpr inline void validate(bool condition, const std::string& message) {
-  if constexpr (runtime_validation && !condition) {
-    throw ValidationError(message);
-  }
+constexpr inline void validate([[maybe_unused]]bool condition, [[maybe_unused]]const std::string& message) {
+    if constexpr (runtime_validation && !condition) {
+        throw ValidationError(message);
+    }
 }
 
-constexpr inline void toggle_assert([[maybe_unused]] bool condition) {
-  if constexpr (runtime_assertion){
-    assert(condition);
-  }
+constexpr inline void reactor_assert([[maybe_unused]] bool condition) {
+    if constexpr (runtime_assertion){
+        assert(condition);
+    }
 }
 
 }  // namespace reactor

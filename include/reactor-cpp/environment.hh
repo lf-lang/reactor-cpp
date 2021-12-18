@@ -18,68 +18,95 @@
 namespace reactor {
 
 class Environment {
- public:
-  enum class Phase {
-    Construction,
-    Assembly,
-    Startup,
-    Execution,
-    Shutdown,
-    Deconstruction
-  };
+public:
+    enum class Phase {
+        Construction,
+        Assembly,
+        Startup,
+        Execution,
+        Shutdown,
+        Deconstruction
+    };
 
- private:
-  const unsigned _num_workers;
-  Scheduler _scheduler;
-  const bool _run_forever;
-  const bool _fast_fwd_execution;
-  std::set<Reactor*> _top_level_reactors;
+private:
+    using Dependency = std::pair<Reaction*, Reaction*>;
+    const unsigned int num_workers_;
+    unsigned int max_reaction_index_ = 0;
+    const bool run_forever_;
+    const bool fast_fwd_execution_;
 
-  std::set<Reaction*> reactions;
-  using Dependency = std::pair<Reaction*, Reaction*>;
-  std::vector<Dependency> dependencies;
-  Phase _phase{Phase::Construction};
+    std::set<Reactor*> top_level_reactors_;
+    std::set<Reaction*> reactions_;
+    std::vector<Dependency> dependencies_;
 
-  void build_dependency_graph(Reactor* reactor);
-  void calculate_indexes();
+    Scheduler scheduler_;
+    Phase phase_{Phase::Construction};
+    TimePoint start_time_;
 
-  TimePoint _start_time;
+    void build_dependency_graph(Reactor* reactor);
+    void calculate_indexes();
 
-  unsigned _max_reaction_index;
+public:
+    explicit Environment(unsigned int num_workers,
+                            bool run_forever = false,
+                            bool fast_fwd_execution = false)
+     : num_workers_(num_workers)
+     , run_forever_(run_forever)
+     , fast_fwd_execution_(fast_fwd_execution)
+     , scheduler_(this) {}
 
- public:
-  Environment(unsigned num_workers,
-              bool run_forever = false,
-              bool fast_fwd_execution = false)
-      : _num_workers(num_workers)
-      , _scheduler(this)
-      , _run_forever(run_forever)
-      , _fast_fwd_execution(fast_fwd_execution) {}
 
-  void register_reactor(Reactor* reactor);
+    void register_reactor(Reactor* reactor);
+    void assemble();
+    auto startup() -> std::thread;
+    void sync_shutdown();
+    void async_shutdown();
 
-  const auto& top_level_reactors() const { return _top_level_reactors; }
+    void export_dependency_graph(const std::string& path);
 
-  void assemble();
-  std::thread startup();
-  void sync_shutdown();
-  void async_shutdown();
+    [[nodiscard]] auto top_level_reactors() const noexcept -> const auto& {
+        return top_level_reactors_;
+    }
 
-  void export_dependency_graph(const std::string& path);
+    [[nodiscard]] auto phase() const noexcept -> Phase {
+        return phase_;
+    }
 
-  Phase phase() const { return _phase; }
-  const Scheduler* scheduler() const { return &_scheduler; }
-  Scheduler* scheduler() { return &_scheduler; }
+    [[nodiscard]] auto scheduler() const noexcept -> const Scheduler* {
+        return &scheduler_;
+    }
 
-  const LogicalTime& logical_time() const { return _scheduler.logical_time(); }
-  const TimePoint& start_time() const { return _start_time; }
-  TimePoint physical_time() const { return get_physical_time(); }
+    auto scheduler() noexcept -> Scheduler* {
+        return &scheduler_;
+    }
 
-  unsigned num_workers() const { return _num_workers; }
-  bool fast_fwd_execution() const { return _fast_fwd_execution; }
-  bool run_forever() const { return _run_forever; }
+    [[nodiscard]] auto logical_time() const noexcept -> const LogicalTime& {
+        return scheduler_.logical_time();
+    }
 
-  unsigned max_reaction_index() const { return _max_reaction_index; }
+    [[nodiscard]] auto start_time() const noexcept -> const TimePoint& {
+        return start_time_;
+    }
+
+    static auto physical_time() noexcept -> TimePoint {
+        return get_physical_time();
+    }
+
+    [[nodiscard]] auto num_workers() const noexcept -> unsigned int {
+        return num_workers_;
+    }
+
+    [[nodiscard]] auto fast_fwd_execution() const noexcept -> bool {
+        return fast_fwd_execution_;
+    }
+
+    [[nodiscard]] auto run_forever() const noexcept -> bool {
+        return run_forever_;
+    }
+
+    [[nodiscard]] auto max_reaction_index() const noexcept -> unsigned int {
+        return max_reaction_index_;
+    }
 };
 
 }  // namespace reactor

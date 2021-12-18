@@ -11,12 +11,12 @@ class Count : public Reactor {
   Timer timer{"timer", this};
   LogicalAction<int> counter{"counter", this};
 
-  // reactions
+  // reactions_
   Reaction r_init{"r_init", 1, this, [this]() { init(); }};
   Reaction r_counter{"r_counter", 2, this, [this]() { print_count(); }};
 
  public:
-  Count(Environment* env) : Reactor("Count", env) {}
+  explicit Count(Environment* env) : Reactor("Count", env) {}
 
   void assemble() override {
     r_init.declare_trigger(&timer);

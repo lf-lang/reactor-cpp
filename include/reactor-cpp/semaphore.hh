@@ -13,27 +13,27 @@
 namespace reactor {
 
 class Semaphore {
- private:
-  int count;
-  std::mutex mutex;
-  std::condition_variable cv;
+private:
+    int count;
+    std::mutex mutex;
+    std::condition_variable cv;
 
- public:
-  Semaphore(int count) : count(count) {}
+public:
+    explicit Semaphore(int count) : count(count) {}
 
-  void release(int i) {
-    {
-      std::lock_guard<std::mutex> lg(mutex);
-      count += i;
+    void release(int i) {
+        {
+            std::lock_guard<std::mutex> lg(mutex);
+            count += i;
+        }
+        cv.notify_all();
     }
-    cv.notify_all();
-  }
 
-  void acquire() {
-    std::unique_lock<std::mutex> lg(mutex);
-    cv.wait(lg, [&]() { return count != 0; });
-    count--;
-  }
+    void acquire() {
+        std::unique_lock<std::mutex> lg(mutex);
+        cv.wait(lg, [&]() { return count != 0; });
+        count--;
+    }
 };
 
 }  // namespace reactor

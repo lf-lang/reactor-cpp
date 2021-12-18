@@ -99,7 +99,7 @@ TRACEPOINT_EVENT(
 #else
 
 #ifndef _REACTOR_CPP_TRACE_H
-#define _REACTOR_CPP_TRACE_H
+#define REACTOR_CPP_TRACE_H
 
 namespace reactor {
 constexpr bool tracing_enabled = false;
