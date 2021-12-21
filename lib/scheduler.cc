@@ -20,7 +20,7 @@ namespace reactor {
 
 thread_local const Worker* Worker::current_worker{nullptr};
 
-Worker::Worker(Worker&& w) : scheduler{w.scheduler}, id{w.id}, thread{} {
+Worker::Worker(Worker&& w): scheduler{w.scheduler}, id{w.id}, thread{} {
   // Need to provide the move constructor in order to organize workers in a
   // std::vector. However, moving is not save if the thread is already running,
   // thus we throw an exception here if the the worker is moved but the
@@ -352,7 +352,7 @@ Scheduler::~Scheduler() {}
 void Scheduler::schedule_sync(const Tag& tag,
                               BaseAction* action,
                               std::function<void(void)> setup) {
-  ASSERT(_logical_time < tag);
+  toggle_assert(_logical_time < tag);
   // TODO verify that the action is indeed allowed to be scheduled by the
   // current reaction
   log::Debug() << "Schedule action " << action->fqn()
@@ -397,7 +397,7 @@ void Scheduler::set_port(BasePort* p) {
 }
 
 void Scheduler::set_port_helper(BasePort* p) {
-  ASSERT(!(p->has_outward_bindings() && !p->triggers().empty()));
+  toggle_assert(!(p->has_outward_bindings() && !p->triggers().empty()));
   if (p->has_outward_bindings()) {
     for (auto binding : p->outward_bindings()) {
       set_port_helper(binding);

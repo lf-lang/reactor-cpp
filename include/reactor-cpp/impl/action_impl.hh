@@ -15,9 +15,9 @@ template <class T>
 template <class Dur>
 void Action<T>::schedule(const ImmutableValuePtr<T>& value_ptr, Dur delay) {
   auto d = std::chrono::duration_cast<Duration>(delay);
-  VALIDATE(d >= Duration::zero(),
+  reactor::validate(d >= Duration::zero(),
            "Schedule cannot be called with a negative delay!");
-  VALIDATE(value_ptr != nullptr,
+  reactor::validate(value_ptr != nullptr,
            "Actions may not be scheduled with a nullptr value!");
   auto scheduler = environment()->scheduler();
   auto setup = [value_ptr, this]() { this->value_ptr = std::move(value_ptr); };
@@ -34,7 +34,7 @@ void Action<T>::schedule(const ImmutableValuePtr<T>& value_ptr, Dur delay) {
 template <class Dur>
 void Action<void>::schedule(Dur delay) {
   auto d = std::chrono::duration_cast<Duration>(delay);
-  VALIDATE(d >= Duration::zero(),
+  reactor::validate(d >= Duration::zero(),
            "Schedule cannot be called with a negative delay!");
   auto scheduler = environment()->scheduler();
   auto setup = [this]() { this->present = true; };
