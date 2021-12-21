@@ -66,6 +66,7 @@ class Environment {
   void async_shutdown();
 
   void export_dependency_graph(const std::string& path);
+  void dump_to_yaml(const std::string& path);
 
   Phase phase() const { return _phase; }
   const Scheduler* scheduler() const { return &_scheduler; }

@@ -12,6 +12,7 @@
 #include <fstream>
 #include <map>
 
+#include "reactor-cpp/action.hh"
 #include "reactor-cpp/assert.hh"
 #include "reactor-cpp/logging.hh"
 #include "reactor-cpp/port.hh"
@@ -42,6 +43,12 @@ void Environment::assemble() {
   for (auto r : _top_level_reactors) {
     recursive_assemble(r);
   }
+
+  // build the dependency graph
+  for (auto r : _top_level_reactors) {
+    build_dependency_graph(r);
+  }
+  calculate_indexes();
 }
 
 void Environment::build_dependency_graph(Reactor* reactor) {
@@ -83,21 +90,147 @@ void Environment::build_dependency_graph(Reactor* reactor) {
   }
 }
 
+void dump_reaction_to_yaml(std::ofstream& yaml, const Reaction& r) {
+  yaml << "      - name: " << r.name() << std::endl;
+  yaml << "        priority: " << r.priority() << std::endl;
+  yaml << "        level: " << r.index() << std::endl;
+  yaml << "        triggers:" << std::endl;
+  for (const auto t : r.action_triggers()) {
+    yaml << "          - " << t->fqn() << std::endl;
+  }
+  for (const auto t : r.port_triggers()) {
+    yaml << "          - " << t->fqn() << std::endl;
+  }
+  yaml << "        sources:" << std::endl;
+  for (auto d : r.dependencies()) {
+    if (r.port_triggers().find(d) == r.port_triggers().end()) {
+      yaml << "          - " << d->fqn() << std::endl;
+    }
+  }
+  yaml << "        effects:" << std::endl;
+  for (const auto a : r.antidependencies()) {
+    yaml << "          - " << a->fqn() << std::endl;
+  }
+  for (const auto a : r.scheduable_actions()) {
+    yaml << "          - " << a->fqn() << std::endl;
+  }
+}
+
+void dump_port_to_yaml(std::ofstream& yaml, const BasePort& port) {
+  yaml << "      " << port.name() << ':' << std::endl;
+  if (port.has_inward_binding()) {
+    yaml << "        upstream_port: " << port.inward_binding()->fqn()
+         << std::endl;
+  } else {
+    yaml << "        upstream_port: null" << std::endl;
+  }
+  yaml << "        downstream_ports: " << std::endl;
+  for (const auto d : port.outward_bindings()) {
+    yaml << "          - " << d->fqn() << std::endl;
+  }
+  yaml << "        trigger_of: " << std::endl;
+  for (const auto t : port.triggers()) {
+    yaml << "          - " << t->fqn() << std::endl;
+  }
+  yaml << "        source_of: " << std::endl;
+  for (const auto d : port.dependencies()) {
+    if (port.triggers().find(d) == port.triggers().end()) {
+      yaml << "          - " << d->fqn() << std::endl;
+    }
+  }
+  yaml << "        effect_of: " << std::endl;
+  for (const auto a : port.antidependencies()) {
+    yaml << "          - " << a->fqn() << std::endl;
+  }
+}
+
+void dump_trigger_to_yaml(std::ofstream& yaml, const BaseAction& trigger) {
+  yaml << "      - name: " << trigger.name() << std::endl;
+  if (dynamic_cast<const StartupAction*>(&trigger)) {
+    yaml << "        type: startup" << std::endl;
+  } else if (dynamic_cast<const ShutdownAction*>(&trigger)) {
+    yaml << "        type: shutdown" << std::endl;
+  } else if (dynamic_cast<const Timer*>(&trigger)) {
+    yaml << "        type: timer" << std::endl;
+  } else if (trigger.is_logical()) {
+    yaml << "        type: logical action" << std::endl;
+  } else {
+    yaml << "        type: physical action" << std::endl;
+  }
+  yaml << "        trigger_of:" << std::endl;
+  for (const auto t : trigger.triggers()) {
+    yaml << "          - " << t->fqn() << std::endl;
+  }
+  yaml << "        effect_of:" << std::endl;
+  for (const auto s : trigger.schedulers()) {
+    yaml << "          - " << s->fqn() << std::endl;
+  }
+}
+
+void dump_instance_to_yaml(std::ofstream& yaml, const Reactor& reactor) {
+  yaml << "  " << reactor.fqn() << ':' << std::endl;
+  yaml << "    name: " << reactor.name() << std::endl;
+  if (reactor.is_top_level()) {
+    yaml << "    container: null" << std::endl;
+  } else {
+    yaml << "    container: " << reactor.container()->fqn() << std::endl;
+  }
+  yaml << "    reactor_instances:" << std::endl;
+  for (const auto r : reactor.reactors()) {
+    yaml << "      - " << r->fqn() << std::endl;
+  }
+  yaml << "    inputs:" << std::endl;
+  for (const auto i : reactor.inputs()) {
+    dump_port_to_yaml(yaml, *i);
+  }
+  yaml << "    outputs:" << std::endl;
+  for (const auto o : reactor.outputs()) {
+    dump_port_to_yaml(yaml, *o);
+  }
+  yaml << "    triggers:" << std::endl;
+  for (const auto a : reactor.actions()) {
+    dump_trigger_to_yaml(yaml, *a);
+  }
+  yaml << "    reactions:" << std::endl;
+  for (const auto r : reactor.reactions()) {
+    dump_reaction_to_yaml(yaml, *r);
+  }
+
+  for (const auto r : reactor.reactors()) {
+    dump_instance_to_yaml(yaml, *r);
+  }
+}
+
+void Environment::dump_to_yaml(const std::string& path) {
+  std::ofstream yaml(path);
+  yaml << "---" << std::endl;
+  yaml << "top_level_instances:" << std::endl;
+  for (const auto* r : _top_level_reactors) {
+    yaml << "  - " << r->fqn() << std::endl;
+  }
+  yaml << "all_reactor_instances:" << std::endl;
+  for (const auto* r : _top_level_reactors) {
+    dump_instance_to_yaml(yaml, *r);
+  }
+  yaml << "reaction_dependencies:" << std::endl;
+  for (auto& it : dependencies) {
+    yaml << "  - from: " << it.first->fqn() << std::endl;
+    yaml << "  - to: " << it.second->fqn() << std::endl;
+  }
+
+  log::Info() << "Program structure was dumped to " << path;
+}
+
 std::thread Environment::startup() {
   validate(this->phase() == Phase::Assembly,
            "startup() may only be called during assembly phase!");
-
-  // build the dependency graph
-  for (auto r : _top_level_reactors) {
-    build_dependency_graph(r);
-  }
-  calculate_indexes();
 
   log::Info() << "Starting the execution";
   _phase = Phase::Startup;
 
   _start_time = get_physical_time();
-  // start up initialize all reactors
+
+  // startup all reactors
   for (auto r : _top_level_reactors) {
     r->startup();
   }
