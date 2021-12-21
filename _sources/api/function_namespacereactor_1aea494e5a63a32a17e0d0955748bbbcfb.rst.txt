@@ -1,0 +1,13 @@
+.. _exhale_function_namespacereactor_1aea494e5a63a32a17e0d0955748bbbcfb:
+
+Function dump_port_to_yaml
+==========================
+
+- Defined in :ref:`file_lib_environment.cc`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: dump_port_to_yaml(std::ofstream&, const BasePort&)

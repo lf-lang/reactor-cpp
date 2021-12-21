@@ -45,6 +45,8 @@ Included By
 
 - :ref:`file_lib_action.cc`
 
+- :ref:`file_lib_environment.cc`
+
 - :ref:`file_lib_reaction.cc`
 
 - :ref:`file_lib_reactor.cc`

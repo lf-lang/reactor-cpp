@@ -92,6 +92,10 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="library_root.html#functions">Functions</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a3acae8d24d419d39f72ca08bccf13c94.html">Function dot_name</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a4f929802f68206ca5baa5173711aaee5.html">Function dump_instance_to_yaml</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1aea494e5a63a32a17e0d0955748bbbcfb.html">Function dump_port_to_yaml</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a46327f6f45836a7cedaeb1f4317820a5.html">Function dump_reaction_to_yaml</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a092d291f5f2ded95552ea2220d331387.html">Function dump_trigger_to_yaml</a></li>
 <li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a49facd170b623937b3e655518a66b868.html">Function get_physical_time</a></li>
 <li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a8757688a143832a418a763d3621b1c4d.html">Template Function make_immutable_value</a></li>
 <li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1ae4fe60384411a317f354245149b85dbc.html">Template Function make_mutable_value</a></li>
@@ -145,6 +149,10 @@
 <li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1aba36ee73a806348027f3a8468faa0dc4.html">Function operator&gt;=(const LogicalTime&amp;, const Tag&amp;)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1adb34cd1dff4f0af83c099efae8c2f0cc.html">Function operator&gt;=(const Tag&amp;, const LogicalTime&amp;)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a3acae8d24d419d39f72ca08bccf13c94.html">Function dot_name</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a4f929802f68206ca5baa5173711aaee5.html">Function dump_instance_to_yaml</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1aea494e5a63a32a17e0d0955748bbbcfb.html">Function dump_port_to_yaml</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a46327f6f45836a7cedaeb1f4317820a5.html">Function dump_reaction_to_yaml</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a092d291f5f2ded95552ea2220d331387.html">Function dump_trigger_to_yaml</a></li>
 <li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a49facd170b623937b3e655518a66b868.html">Function get_physical_time</a></li>
 <li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a8757688a143832a418a763d3621b1c4d.html">Template Function make_immutable_value</a></li>
 <li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1ae4fe60384411a317f354245149b85dbc.html">Template Function make_mutable_value</a></li>
@@ -278,6 +286,7 @@
 <span class="cp">#include</span> <span class="cpf">&lt;fstream&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;map&gt;</span><span class="cp"></span>
 
+<span class="cp">#include</span> <span class="cpf">&quot;reactor-cpp/action.hh&quot;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&quot;reactor-cpp/assert.hh&quot;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&quot;reactor-cpp/logging.hh&quot;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&quot;reactor-cpp/port.hh&quot;</span><span class="cp"></span>
@@ -308,6 +317,12 @@
   <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">r</span> <span class="p">:</span> <span class="n">_top_level_reactors</span><span class="p">)</span> <span class="p">{</span>
     <span class="n">recursive_assemble</span><span class="p">(</span><span class="n">r</span><span class="p">);</span>
   <span class="p">}</span>
+
+  <span class="c1">// build the dependency graph</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">r</span> <span class="p">:</span> <span class="n">_top_level_reactors</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">build_dependency_graph</span><span class="p">(</span><span class="n">r</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="n">calculate_indexes</span><span class="p">();</span>
 <span class="p">}</span>
 
 <span class="kt">void</span> <span class="n">Environment</span><span class="o">::</span><span class="n">build_dependency_graph</span><span class="p">(</span><span class="n">Reactor</span><span class="o">*</span> <span class="n">reactor</span><span class="p">)</span> <span class="p">{</span>
@@ -349,21 +364,147 @@
   <span class="p">}</span>
 <span class="p">}</span>
 
+<span class="kt">void</span> <span class="n">dump_reaction_to_yaml</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">ofstream</span><span class="o">&amp;</span> <span class="n">yaml</span><span class="p">,</span> <span class="k">const</span> <span class="n">Reaction</span><span class="o">&amp;</span> <span class="n">r</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">yaml</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;      - name: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">r</span><span class="p">.</span><span class="n">name</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">yaml</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;        priority: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">r</span><span class="p">.</span><span class="n">priority</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">yaml</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;        level: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">r</span><span class="p">.</span><span class="n">index</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">yaml</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;        triggers:&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span> <span class="nl">t</span> <span class="p">:</span> <span class="n">r</span><span class="p">.</span><span class="n">action_triggers</span><span class="p">())</span> <span class="p">{</span>
+    <span class="n">yaml</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;          - &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">t</span><span class="o">-&gt;</span><span class="n">fqn</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span> <span class="nl">t</span> <span class="p">:</span> <span class="n">r</span><span class="p">.</span><span class="n">port_triggers</span><span class="p">())</span> <span class="p">{</span>
+    <span class="n">yaml</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;          - &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">t</span><span class="o">-&gt;</span><span class="n">fqn</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="n">yaml</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;        sources:&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">d</span> <span class="p">:</span> <span class="n">r</span><span class="p">.</span><span class="n">dependencies</span><span class="p">())</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">r</span><span class="p">.</span><span class="n">port_triggers</span><span class="p">().</span><span class="n">find</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="o">==</span> <span class="n">r</span><span class="p">.</span><span class="n">port_triggers</span><span class="p">().</span><span class="n">end</span><span class="p">())</span> <span class="p">{</span>
+      <span class="n">yaml</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;          - &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">d</span><span class="o">-&gt;</span><span class="n">fqn</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="n">yaml</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;        effects:&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span> <span class="nl">a</span> <span class="p">:</span> <span class="n">r</span><span class="p">.</span><span class="n">antidependencies</span><span class="p">())</span> <span class="p">{</span>
+    <span class="n">yaml</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;          - &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">a</span><span class="o">-&gt;</span><span class="n">fqn</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span> <span class="nl">a</span> <span class="p">:</span> <span class="n">r</span><span class="p">.</span><span class="n">scheduable_actions</span><span class="p">())</span> <span class="p">{</span>
+    <span class="n">yaml</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;          - &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">a</span><span class="o">-&gt;</span><span class="n">fqn</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">dump_port_to_yaml</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">ofstream</span><span class="o">&amp;</span> <span class="n">yaml</span><span class="p">,</span> <span class="k">const</span> <span class="n">BasePort</span><span class="o">&amp;</span> <span class="n">port</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">yaml</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;      &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">port</span><span class="p">.</span><span class="n">name</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;:&#39;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">port</span><span class="p">.</span><span class="n">has_inward_binding</span><span class="p">())</span> <span class="p">{</span>
+    <span class="n">yaml</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;        upstream_port: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">port</span><span class="p">.</span><span class="n">inward_binding</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">fqn</span><span class="p">()</span>
+         <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="n">yaml</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;        upstream_port: null&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="n">yaml</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;        downstream_ports: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span> <span class="nl">d</span> <span class="p">:</span> <span class="n">port</span><span class="p">.</span><span class="n">outward_bindings</span><span class="p">())</span> <span class="p">{</span>
+    <span class="n">yaml</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;          - &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">d</span><span class="o">-&gt;</span><span class="n">fqn</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="n">yaml</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;        trigger_of: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span> <span class="nl">t</span> <span class="p">:</span> <span class="n">port</span><span class="p">.</span><span class="n">triggers</span><span class="p">())</span> <span class="p">{</span>
+    <span class="n">yaml</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;          - &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">t</span><span class="o">-&gt;</span><span class="n">fqn</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="n">yaml</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;        source_of: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span> <span class="nl">d</span> <span class="p">:</span> <span class="n">port</span><span class="p">.</span><span class="n">dependencies</span><span class="p">())</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">port</span><span class="p">.</span><span class="n">triggers</span><span class="p">().</span><span class="n">find</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="o">==</span> <span class="n">port</span><span class="p">.</span><span class="n">triggers</span><span class="p">().</span><span class="n">end</span><span class="p">())</span> <span class="p">{</span>
+      <span class="n">yaml</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;          - &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">d</span><span class="o">-&gt;</span><span class="n">fqn</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="n">yaml</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;        effect_of: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span> <span class="nl">a</span> <span class="p">:</span> <span class="n">port</span><span class="p">.</span><span class="n">antidependencies</span><span class="p">())</span> <span class="p">{</span>
+    <span class="n">yaml</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;          - &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">a</span><span class="o">-&gt;</span><span class="n">fqn</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">dump_trigger_to_yaml</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">ofstream</span><span class="o">&amp;</span> <span class="n">yaml</span><span class="p">,</span> <span class="k">const</span> <span class="n">BaseAction</span><span class="o">&amp;</span> <span class="n">trigger</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">yaml</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;      - name: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">trigger</span><span class="p">.</span><span class="n">name</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">dynamic_cast</span><span class="o">&lt;</span><span class="k">const</span> <span class="n">StartupAction</span><span class="o">*&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="n">trigger</span><span class="p">))</span> <span class="p">{</span>
+    <span class="n">yaml</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;        type: startup&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">dynamic_cast</span><span class="o">&lt;</span><span class="k">const</span> <span class="n">ShutdownAction</span><span class="o">*&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="n">trigger</span><span class="p">))</span> <span class="p">{</span>
+    <span class="n">yaml</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;        type: shutdown&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">dynamic_cast</span><span class="o">&lt;</span><span class="k">const</span> <span class="n">Timer</span><span class="o">*&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="n">trigger</span><span class="p">))</span> <span class="p">{</span>
+    <span class="n">yaml</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;        type: timer&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">trigger</span><span class="p">.</span><span class="n">is_logical</span><span class="p">())</span> <span class="p">{</span>
+    <span class="n">yaml</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;        type: logical action&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="n">yaml</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;        type: physical action&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="n">yaml</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;        trigger_of:&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span> <span class="nl">t</span> <span class="p">:</span> <span class="n">trigger</span><span class="p">.</span><span class="n">triggers</span><span class="p">())</span> <span class="p">{</span>
+    <span class="n">yaml</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;          - &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">t</span><span class="o">-&gt;</span><span class="n">fqn</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="n">yaml</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;        effect_of:&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span> <span class="nl">s</span> <span class="p">:</span> <span class="n">trigger</span><span class="p">.</span><span class="n">schedulers</span><span class="p">())</span> <span class="p">{</span>
+    <span class="n">yaml</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;          - &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">s</span><span class="o">-&gt;</span><span class="n">fqn</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">dump_instance_to_yaml</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">ofstream</span><span class="o">&amp;</span> <span class="n">yaml</span><span class="p">,</span> <span class="k">const</span> <span class="n">Reactor</span><span class="o">&amp;</span> <span class="n">reactor</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">yaml</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;  &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">reactor</span><span class="p">.</span><span class="n">fqn</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;:&#39;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">yaml</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;    name: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">reactor</span><span class="p">.</span><span class="n">name</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">reactor</span><span class="p">.</span><span class="n">is_top_level</span><span class="p">())</span> <span class="p">{</span>
+    <span class="n">yaml</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;    container: null&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="n">yaml</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;    container: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">reactor</span><span class="p">.</span><span class="n">container</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">fqn</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="n">yaml</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;    reactor_instances:&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span> <span class="nl">r</span> <span class="p">:</span> <span class="n">reactor</span><span class="p">.</span><span class="n">reactors</span><span class="p">())</span> <span class="p">{</span>
+    <span class="n">yaml</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;      - &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">r</span><span class="o">-&gt;</span><span class="n">fqn</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="n">yaml</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;    inputs:&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span> <span class="nl">i</span> <span class="p">:</span> <span class="n">reactor</span><span class="p">.</span><span class="n">inputs</span><span class="p">())</span> <span class="p">{</span>
+    <span class="n">dump_port_to_yaml</span><span class="p">(</span><span class="n">yaml</span><span class="p">,</span> <span class="o">*</span><span class="n">i</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="n">yaml</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;    outputs:&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span> <span class="nl">o</span> <span class="p">:</span> <span class="n">reactor</span><span class="p">.</span><span class="n">outputs</span><span class="p">())</span> <span class="p">{</span>
+    <span class="n">dump_port_to_yaml</span><span class="p">(</span><span class="n">yaml</span><span class="p">,</span> <span class="o">*</span><span class="n">o</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="n">yaml</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;    triggers:&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span> <span class="nl">a</span> <span class="p">:</span> <span class="n">reactor</span><span class="p">.</span><span class="n">actions</span><span class="p">())</span> <span class="p">{</span>
+    <span class="n">dump_trigger_to_yaml</span><span class="p">(</span><span class="n">yaml</span><span class="p">,</span> <span class="o">*</span><span class="n">a</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="n">yaml</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;    reactions:&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span> <span class="nl">r</span> <span class="p">:</span> <span class="n">reactor</span><span class="p">.</span><span class="n">reactions</span><span class="p">())</span> <span class="p">{</span>
+    <span class="n">dump_reaction_to_yaml</span><span class="p">(</span><span class="n">yaml</span><span class="p">,</span> <span class="o">*</span><span class="n">r</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span> <span class="nl">r</span> <span class="p">:</span> <span class="n">reactor</span><span class="p">.</span><span class="n">reactors</span><span class="p">())</span> <span class="p">{</span>
+    <span class="n">dump_instance_to_yaml</span><span class="p">(</span><span class="n">yaml</span><span class="p">,</span> <span class="o">*</span><span class="n">r</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">Environment</span><span class="o">::</span><span class="n">dump_to_yaml</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">path</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">ofstream</span> <span class="n">yaml</span><span class="p">(</span><span class="n">path</span><span class="p">);</span>
+  <span class="n">yaml</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;---&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">yaml</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;top_level_instances:&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span><span class="o">*</span> <span class="nl">r</span> <span class="p">:</span> <span class="n">_top_level_reactors</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">yaml</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;  - &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">r</span><span class="o">-&gt;</span><span class="n">fqn</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="n">yaml</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;all_reactor_instances:&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span><span class="o">*</span> <span class="nl">r</span> <span class="p">:</span> <span class="n">_top_level_reactors</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">dump_instance_to_yaml</span><span class="p">(</span><span class="n">yaml</span><span class="p">,</span> <span class="o">*</span><span class="n">r</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="n">yaml</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;reaction_dependencies:&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">auto</span><span class="o">&amp;</span> <span class="nl">it</span> <span class="p">:</span> <span class="n">dependencies</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">yaml</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;  - from: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">it</span><span class="p">.</span><span class="n">first</span><span class="o">-&gt;</span><span class="n">fqn</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="n">yaml</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;  - to: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">it</span><span class="p">.</span><span class="n">second</span><span class="o">-&gt;</span><span class="n">fqn</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="n">log</span><span class="o">::</span><span class="n">Info</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Program structure was dumped to &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">path</span><span class="p">;</span>
+<span class="p">}</span>
+
 <span class="n">std</span><span class="o">::</span><span class="kr">thread</span> <span class="n">Environment</span><span class="o">::</span><span class="n">startup</span><span class="p">()</span> <span class="p">{</span>
   <span class="n">validate</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">phase</span><span class="p">()</span> <span class="o">==</span> <span class="n">Phase</span><span class="o">::</span><span class="n">Assembly</span><span class="p">,</span>
            <span class="s">&quot;startup() may only be called during assembly phase!&quot;</span><span class="p">);</span>
-
-  <span class="c1">// build the dependency graph</span>
-  <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">r</span> <span class="p">:</span> <span class="n">_top_level_reactors</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">build_dependency_graph</span><span class="p">(</span><span class="n">r</span><span class="p">);</span>
-  <span class="p">}</span>
-  <span class="n">calculate_indexes</span><span class="p">();</span>
 
   <span class="n">log</span><span class="o">::</span><span class="n">Info</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Starting the execution&quot;</span><span class="p">;</span>
   <span class="n">_phase</span> <span class="o">=</span> <span class="n">Phase</span><span class="o">::</span><span class="n">Startup</span><span class="p">;</span>
 
   <span class="n">_start_time</span> <span class="o">=</span> <span class="n">get_physical_time</span><span class="p">();</span>
-  <span class="c1">// start up initialize all reactors</span>
+
+  <span class="c1">// startup all reactors</span>
   <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">r</span> <span class="p">:</span> <span class="n">_top_level_reactors</span><span class="p">)</span> <span class="p">{</span>
     <span class="n">r</span><span class="o">-&gt;</span><span class="n">startup</span><span class="p">();</span>
   <span class="p">}</span>
