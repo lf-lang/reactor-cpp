@@ -39,6 +39,6 @@ jobs:
   lf-tests-push:
     uses: lf-lang/lingua-franca/.github/workflows/cpp-tests.yml@master
     with:
-      runtime-ref: ${{github.ref}}
+      runtime-ref: ${{github.ref_name}}
       compiler-ref: master
     if: ${{ github.event_name == 'push' }}
