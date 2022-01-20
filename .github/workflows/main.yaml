@@ -1,6 +1,6 @@
 name: CI
 
-on: [ push ]
+on: [ pull_request, push ]
 
 jobs:
   build:
@@ -29,4 +29,4 @@ jobs:
     uses: lf-lang/lingua-franca/.github/workflows/cpp-tests.yml@master
     with:
       runtime-ref: ${{github.ref}}
-      compiler-ref: ci-fix
+      compiler-ref: ci-cpp
