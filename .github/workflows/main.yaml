@@ -32,7 +32,7 @@ jobs:
 
   lf-tests:
     needs: fetch-lf
-    uses: lf-lang/lingua-franca/.github/workflows/cpp-tests.yml@ci-cpp
+    uses: lf-lang/lingua-franca/.github/workflows/cpp-tests.yml@master
     with:
       runtime-ref: ${{github.ref}}
       compiler-ref: ${{ needs.fetch-lf.outputs.ref }}
