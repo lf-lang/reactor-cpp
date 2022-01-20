@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [ master ci-fix ]
+    branches: [ master ]
   pull_request:
     branches: [ master ]
 
@@ -31,7 +31,7 @@ jobs:
         cmake --build build --target examples
 
   lf-tests:
-    uses: lf-lang/lingua-franca/.github/workflows/cpp-tests.yml@ci-cpp
+    uses: lf-lang/lingua-franca/.github/workflows/cpp-tests.yml@master
     with:
       runtime-ref: ${{github.ref}}
-      compiler-ref: master
+      compiler-ref: ci-fix
