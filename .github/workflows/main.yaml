@@ -25,14 +25,8 @@ jobs:
       run:
         cmake --build build --target examples
 
-  fetch-lf:
-    uses: lf-lang/lingua-franca/.github/workflows/extract-ref.yml@master
-    with:
-      file: 'lingua-franca-ref.txt'
-
   lf-tests:
-    needs: fetch-lf
     uses: lf-lang/lingua-franca/.github/workflows/cpp-tests.yml@master
     with:
       runtime-ref: ${{github.ref}}
-      compiler-ref: ${{ needs.fetch-lf.outputs.ref }}
+      compiler-ref: master
