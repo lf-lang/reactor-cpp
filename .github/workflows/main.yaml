@@ -25,8 +25,16 @@ jobs:
       run:
         cmake --build build --target examples
 
-  lf-tests:
+  lf-tests-pull-request:
     uses: lf-lang/lingua-franca/.github/workflows/cpp-tests.yml@master
     with:
       runtime-ref: ${{github.ref}}
       compiler-ref: ci-cpp
+    if: ${{ github.event_name == 'pull_request' }}
+      
+  lf-tests-push:
+    uses: lf-lang/lingua-franca/.github/workflows/cpp-tests.yml@master
+    with:
+      runtime-ref: ${{github.ref}}
+      compiler-ref: ci-cpp
+    if: ${{ github.event_name == 'push' }}
