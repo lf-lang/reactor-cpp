@@ -62,25 +62,19 @@ public:
   static void dump_reaction_to_yaml(std::ofstream& yaml, const Reaction& reaction);
 
   [[nodiscard]] auto top_level_reactors() const noexcept -> const auto& { return top_level_reactors_; }
-
   [[nodiscard]] auto phase() const noexcept -> Phase { return phase_; }
-
   [[nodiscard]] auto scheduler() const noexcept -> const Scheduler* { return &scheduler_; }
 
   auto scheduler() noexcept -> Scheduler* { return &scheduler_; }
 
   [[nodiscard]] auto logical_time() const noexcept -> const LogicalTime& { return scheduler_.logical_time(); }
-
   [[nodiscard]] auto start_time() const noexcept -> const TimePoint& { return start_time_; }
 
   static auto physical_time() noexcept -> TimePoint { return get_physical_time(); }
 
   [[nodiscard]] auto num_workers() const noexcept -> unsigned int { return num_workers_; }
-
   [[nodiscard]] auto fast_fwd_execution() const noexcept -> bool { return fast_fwd_execution_; }
-
   [[nodiscard]] auto run_forever() const noexcept -> bool { return run_forever_; }
-
   [[nodiscard]] auto max_reaction_index() const noexcept -> unsigned int { return max_reaction_index_; }
 };
 } // namespace reactor
