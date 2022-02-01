@@ -10,10 +10,11 @@
 
 namespace reactor {
 
-auto ValidationError::build_message(const std::string& msg) noexcept -> std::string {
-    std::stringstream ss;
-    ss << "Validation Error! \"" << msg << "\"";
-    return ss.str();
+auto ValidationError::build_message(const std::string &msg) noexcept
+    -> std::string {
+  std::stringstream string_stream;
+  string_stream << "Validation Error! \"" << msg << "\"";
+  return string_stream.str();
 }
 
-}  // namespace reactor
+} // namespace reactor

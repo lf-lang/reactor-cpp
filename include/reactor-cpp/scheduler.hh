@@ -6,7 +6,8 @@
  *   Christian Menard
  */
 
-#pragma once
+#ifndef REACTOR_CPP_SCHEDULER_HH
+#define REACTOR_CPP_SCHEDULER_HH
 
 #include <condition_variable>
 #include <functional>
@@ -27,124 +28,117 @@ namespace reactor {
 class Scheduler;
 class Worker;
 
-class Worker {
+class Worker { // NOLINT
 public:
-    Scheduler& scheduler;
-    const unsigned int id = 0;
-    std::thread thread;
+  Scheduler& scheduler_;
+  const unsigned int identity_ = 0;
+  std::thread thread_{};
 
-    static thread_local const Worker* current_worker;
+  static thread_local const Worker* current_worker;
 
-    void work() const;
-    void execute_reaction(Reaction* reaction) const;
+  void work() const;
+  void execute_reaction(Reaction* reaction) const;
 
-public:
-    Worker(Scheduler& scheduler, unsigned id): scheduler{scheduler}, id{id}, thread{} {}
-    Worker(Worker&& w);
-    Worker(const Worker&) = delete;
+  Worker(Scheduler& scheduler, unsigned int identity)
+      : scheduler_{scheduler}
+      , identity_{identity} {}
+  Worker(Worker&& worker); // NOLINT
+  Worker(const Worker& worker) = delete;
 
-    void start_thread() { thread = std::thread(&Worker::work, this); }
-    void join_thread() { thread.join(); }
+  void start_thread() { thread_ = std::thread(&Worker::work, this); }
+  void join_thread() { thread_.join(); }
 
-    static unsigned current_worker_id() { return current_worker->id; }
+  static auto current_worker_id() -> unsigned { return current_worker->identity_; }
 };
 
 class ReadyQueue {
 private:
-    std::vector<Reaction*> queue{};
-    std::atomic<std::ptrdiff_t> size{0};
-    Semaphore sem{0};
-    std::ptrdiff_t waiting_workers{0};
-    const unsigned num_workers;
+  std::vector<Reaction*> queue_{};
+  std::atomic<std::ptrdiff_t> size_{0};
+  Semaphore sem_{0};
+  std::ptrdiff_t waiting_workers_{0};
+  const unsigned int num_workers_;
 
 public:
-    explicit ReadyQueue(unsigned num_workers) : num_workers(num_workers) {}
+  explicit ReadyQueue(unsigned num_workers)
+      : num_workers_(num_workers) {}
 
-    /**
-     * Retrieve a ready reaction from the queue.
-     *
-     * This method may be called concurrently. In case the queue is empty, the
-     * method blocks and waits until a ready reaction becomes available.
-    */
-    Reaction* pop();
+  /**
+   * Retrieve a ready reaction from the queue_.
+   *
+   * This method may be called concurrently. In case the queue_ is empty, the
+   * method blocks and waits until a ready reaction becomes available.
+   */
+  auto pop() -> Reaction*;
 
-    /**
-     * Fill the queue up with ready reactions_.
-     *
-     * This method assumes that the internal queue is empty. It moves all
-     * reactions_ from the provided `ready_reactions` vector to the internal queue,
-     * leaving `ready_reactions` empty.
-     *
-     * Note that this method is not thread-safe. The caller needs to ensure that
-     * no other thread will try to read from the queue during this operation.
-     */
-    void fill_up(std::vector<Reaction*>& ready_reactions);
+  /**
+   * Fill the queue_ up with ready reactions_.
+   *
+   * This method assumes that the internal queue_ is empty. It moves all
+   * reactions_ from the provided `ready_reactions` vector to the internal
+   * queue_, leaving `ready_reactions` empty.
+   *
+   * Note that this method is not thread-safe. The caller needs to ensure that
+   * no other thread will try to read from the queue_ during this operation.
+   */
+  void fill_up(std::vector<Reaction*>& ready_reactions);
 };
 
-class Scheduler {
-public:
-    using EventMap = std::map<BaseAction*, std::function<void(void)>>;
+using EventMap = std::map<BaseAction*, std::function<void(void)>>;
 
+class Scheduler { // NOLINT
 private:
-    const bool using_workers_;
-    LogicalTime logical_time_{};
+  const bool using_workers_;
+  LogicalTime logical_time_{};
 
-    Environment* environment_;
-    std::vector<Worker> workers_{};
+  Environment* environment_;
+  std::vector<Worker> workers_{};
 
-    std::mutex schedule_;
-    std::unique_lock<std::mutex> schedule_lock_{schedule_, std::defer_lock};
-    std::condition_variable cv_schedule_;
+  std::mutex schedule_;
+  std::unique_lock<std::mutex> schedule_lock_{schedule_, std::defer_lock};
+  std::condition_variable cv_schedule_;
 
-    std::mutex lock_event_queue_;
-    std::map<Tag, EventMap> event_queue_;
+  std::mutex lock_event_queue_;
+  std::map<Tag, EventMap> event_queue_;
 
-    std::vector<std::vector<BasePort*>> set_ports_;
-    std::vector<std::vector<Reaction*>> triggered_reactions_;
+  std::vector<std::vector<BasePort*>> set_ports_;
+  std::vector<std::vector<Reaction*>> triggered_reactions_;
 
-    std::vector<std::vector<Reaction*>> reaction_queue_;
-    unsigned int reaction_queue_pos_{std::numeric_limits<unsigned>::max()};
+  std::vector<std::vector<Reaction*>> reaction_queue_;
+  unsigned int reaction_queue_pos_ = std::numeric_limits<unsigned>::max();
 
-    ReadyQueue ready_queue_;
-    std::atomic<std::ptrdiff_t> reactions_to_process_ = 0;
+  ReadyQueue ready_queue_;
+  std::atomic<std::ptrdiff_t> reactions_to_process_ = 0; //NOLINT
 
-    std::atomic<bool> stop_ = false;
-    bool continue_execution_ = true;
+  std::atomic<bool> stop_ = false;
+  bool continue_execution_ = true;
 
-    void schedule();
-    bool schedule_ready_reactions();
-    void next();
-    void terminate_all_workers();
-    void set_port_helper(BasePort* p);
+  void schedule() noexcept;
+  auto schedule_ready_reactions() -> bool;
+  void next();
+  void terminate_all_workers();
+  void set_port_helper(BasePort* port);
 
 public:
-    explicit Scheduler(Environment* env);
-    ~Scheduler();
+  explicit Scheduler(Environment* env);
+  ~Scheduler();
 
-    void schedule_sync(const Tag& tag,
-                     BaseAction* action,
-                     std::function<void(void)> pre_handler);
-    void schedule_async(const Tag& tag,
-                      BaseAction* action,
-                      std::function<void(void)> pre_handler);
+  void schedule_sync(const Tag& tag, BaseAction* action, std::function<void(void)> pre_handler);
+  void schedule_async(const Tag& tag, BaseAction* action, std::function<void(void)> pre_handler);
 
-    void lock() noexcept {
-        schedule_lock_.lock();
-    }
-    void unlock() noexcept {
-        schedule_lock_.unlock();
-    }
+  void inline lock() noexcept { schedule_lock_.lock(); }
+  void inline unlock() noexcept { schedule_lock_.unlock(); }
 
-    void set_port(BasePort*);
+  void set_port(BasePort*);
 
-    [[nodiscard]] auto logical_time() const noexcept -> const auto& {
-        return logical_time_;
-    }
+  [[nodiscard]] inline auto logical_time() const noexcept -> const auto& { return logical_time_; }
 
-    void start();
-    void stop();
+  void start();
+  void stop();
 
-    friend Worker;
+  friend Worker;
 };
 
-}  // namespace reactor
+} // namespace reactor
+
+#endif // REACTOR_CPP_SCHEDULER_HH

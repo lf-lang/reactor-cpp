@@ -11,7 +11,7 @@ class Hello : public Reactor {
   Timer timer{"timer", this, 1s, 2s};
   ShutdownAction sa{"terminate", this};
 
-  // reactions_
+  // reactions
   Reaction r_hello{"r_hello", 1, this, [this]() { hello(); }};
   Reaction r_terminate{"r_terminate", 2, this, [this]() { terminate(); }};
 
@@ -29,29 +29,29 @@ class Hello : public Reactor {
 };
 
 class Timeout : public Reactor {
- private:
-  Timer timer;
+private:
+    Timer timer;
 
-  Reaction r_timer{"r_timer", 1, this,
+    Reaction r_timer{"r_timer", 1, this,
                    [this]() { environment()->sync_shutdown(); }};
 
- public:
-  Timeout(Environment* env, Duration timeout)
+public:
+    Timeout(Environment* env, Duration timeout)
       : Reactor("Timeout", env)
       , timer{"timer", this, Duration::zero(), timeout} {}
 
-  void assemble() override { r_timer.declare_trigger(&timer); }
+    void assemble() override { r_timer.declare_trigger(&timer); }
 };
 
 int main() {
-  Environment e{4};
+    Environment e{4};
 
-  Hello hello{&e};
-  Timeout timeout{&e, 5s};
-  e.assemble();
+    Hello hello{&e};
+    Timeout timeout{&e, 5s};
+    e.assemble();
 
-  auto t = e.startup();
-  t.join();
+    auto t = e.startup();
+    t.join();
 
-  return 0;
+    return 0;
 }

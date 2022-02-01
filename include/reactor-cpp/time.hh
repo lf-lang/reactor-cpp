@@ -6,30 +6,31 @@
  *   Christian Menard
  */
 
-#pragma once
+#ifndef REACTOR_CPP_TIME_HH
+#define REACTOR_CPP_TIME_HH
 
+#include "logging.hh"
 #include <chrono>
 #include <iostream>
 
 namespace reactor {
 
-using TimePoint = std::chrono::time_point<std::chrono::system_clock,
-                                          std::chrono::nanoseconds>;
+using TimePoint = std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds>;
 using Duration = std::chrono::nanoseconds;
 
-inline auto get_physical_time() noexcept -> TimePoint {
-    return std::chrono::system_clock::now();
-}
+inline auto get_physical_time() noexcept -> TimePoint { return std::chrono::system_clock::now(); }
 
 inline namespace operators {
 
-std::ostream& operator<<(std::ostream& os, TimePoint tp);
+auto operator<<(std::ostream &out_stream, [[maybe_unused]] TimePoint tp) noexcept -> std::ostream &;
 
-std::ostream& operator<<(std::ostream& os, std::chrono::seconds dur);
-std::ostream& operator<<(std::ostream& os, std::chrono::milliseconds dur);
-std::ostream& operator<<(std::ostream& os, std::chrono::microseconds dur);
-std::ostream& operator<<(std::ostream& os, std::chrono::nanoseconds dur);
+auto operator<<(std::ostream &out_stream, [[maybe_unused]] std::chrono::seconds dur) noexcept -> std::ostream &;
+auto operator<<(std::ostream &out_stream, [[maybe_unused]] std::chrono::milliseconds dur) noexcept -> std::ostream &;
+auto operator<<(std::ostream &out_stream, [[maybe_unused]] std::chrono::microseconds dur) noexcept -> std::ostream &;
+auto operator<<(std::ostream & out_stream, [[maybe_unused]] std::chrono::nanoseconds dur) noexcept -> std::ostream &;
 
-}  // namespace operators
+} // namespace operators
 
-}  // namespace reactor
+} // namespace reactor
+
+#endif // REACTOR_CPP_TIME_HH

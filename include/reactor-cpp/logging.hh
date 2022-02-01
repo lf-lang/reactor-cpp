@@ -6,56 +6,53 @@
  *   Christian Menard
  */
 
-#pragma once
+
+#ifndef REACTOR_CPP_LOGGING_HH
+#define REACTOR_CPP_LOGGING_HH
+
 
 #include <iostream>
 #include <memory>
 #include <mutex>
 
-#include "config.hh"
+#include "config.hh" //NOLINT
 
 namespace reactor::log {
 
-template <bool enabled>
-class BaseLogger {};
+template <bool enabled> class BaseLogger {};
 
-template <>
-class BaseLogger<true> {
+template <> class BaseLogger<true> { // NOLINT
 private:
-    using Lock = std::unique_lock<std::mutex>;
+  using Lock = std::unique_lock<std::mutex>;
 
-    const std::string log_prefix;
-    inline static std::mutex mutex{};
-    Lock lock;
+  const std::string log_prefix_{};
+  inline static std::mutex mutex_{}; //NOLINT
+  Lock lock_{};
 
 public:
+  explicit BaseLogger(const std::string& log_prefix)
+      : log_prefix_(log_prefix)
+      , lock_(mutex_) {
+    std::cerr << log_prefix;
+  }
 
-    explicit BaseLogger(const std::string& log_prefix): log_prefix(log_prefix), lock(mutex) {
-        std::cerr << log_prefix;
-    }
+  template <class T> auto operator<<(const T& msg) -> BaseLogger& {
+    std::cerr << msg;
+    return *this;
+  }
 
-    template <class T>
-    BaseLogger& operator<<(const T& msg) {
-        std::cerr << msg;
-        return *this;
-    }
-
-    ~BaseLogger() {
-        std::cerr << std::endl;
-    }
+  ~BaseLogger() { //NOLINT
+    std::cerr << std::endl;
+  }
 };
 
-template <>
-class BaseLogger<false> {
+template <> class BaseLogger<false> { // NOLINT
 public:
-    explicit BaseLogger(const std::string&) {}
+  explicit BaseLogger([[maybe_unused]] const std::string& /*unused*/) {}
 
-    template <class T>
-    const BaseLogger& operator<<(const T&) const {
-        return *this;
-    }
+  template <class T> auto operator<<(const T& /*unused*/) const -> const BaseLogger& { return *this; }
 
-    ~BaseLogger() = default;
+  ~BaseLogger() = default;
 };
 
 constexpr bool debug_enabled = 4 <= REACTOR_CPP_LOG_LEVEL;
@@ -64,19 +61,17 @@ constexpr bool warning_enabled = 2 <= REACTOR_CPP_LOG_LEVEL;
 constexpr bool error_enabled = 1 <= REACTOR_CPP_LOG_LEVEL;
 
 struct Debug : BaseLogger<debug_enabled> {
-    Debug() : BaseLogger<debug_enabled>("[DEBUG] ") {}
+  Debug() : BaseLogger<debug_enabled>("[DEBUG] ") {}; //NOLINT Update C++20
 };
-
 struct Info : BaseLogger<info_enabled> {
-    Info() : BaseLogger<info_enabled>("[INFO]  ") {}
+  Info() : BaseLogger<info_enabled>("[INFO]  ") {}; //NOLINT Update C++20
 };
-
 struct Warn : BaseLogger<warning_enabled> {
-    Warn() : BaseLogger<warning_enabled>("[WARN]  ") {}
+  Warn() : BaseLogger<warning_enabled>("[WARN]  ") {}; //NOLINT Update C++20
 };
-
 struct Error : BaseLogger<error_enabled> {
-    Error() : BaseLogger<error_enabled>("[ERROR] ") {}
+  Error() : BaseLogger<error_enabled>("[ERROR] ") {}; //NOLINT Update C++20
 };
+} // namespace reactor::log
 
-}  // namespace reactor
+#endif // REACTOR_CPP_LOGGING_HH

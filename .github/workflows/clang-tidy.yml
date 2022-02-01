@@ -1,0 +1,24 @@
+name: clang-tidy-review
+
+# You can be more specific, but it currently only works on pull requests
+on: [pull_request]
+
+jobs:
+  clang-tidy:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install clang-tidy
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang-tidy
+      - name: Prepare compile_commands.json
+        run: |
+          cmake -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+          ls -a build
+      - name: Create results directory
+        run: |
+          mkdir clang-tidy-result
+      - name: Analyze
+        run: |
+          clang-tidy -p build lib/*.cc

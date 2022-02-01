@@ -6,6 +6,9 @@
  *   Christian Menard
  */
 
+#ifndef REACTOR_CPP_SEMAPHORE_HH
+#define REACTOR_CPP_SEMAPHORE_HH
+
 #include <atomic>
 #include <condition_variable>
 #include <mutex>
@@ -14,26 +17,30 @@ namespace reactor {
 
 class Semaphore {
 private:
-    int count;
-    std::mutex mutex;
-    std::condition_variable cv;
+  int count_;
+  std::mutex mutex_{};
+  std::condition_variable cv_{};
 
 public:
-    explicit Semaphore(int count) : count(count) {}
+  explicit Semaphore(int count)
+      : count_(count) {}
 
-    void release(int i) {
-        {
-            std::lock_guard<std::mutex> lg(mutex);
-            count += i;
-        }
-        cv.notify_all();
+  void release(int increment) {
+    {
+      std::lock_guard<std::mutex> lock_guard(mutex_);
+      count_ += increment;
     }
+    cv_.notify_all();
+  }
 
-    void acquire() {
-        std::unique_lock<std::mutex> lg(mutex);
-        cv.wait(lg, [&]() { return count != 0; });
-        count--;
-    }
+  void acquire() {
+    std::unique_lock<std::mutex> lock_guard(mutex_);
+    cv_.wait(lock_guard, [&]() { return count_ != 0; });
+    count_--;
+  }
 };
 
-}  // namespace reactor
+} // namespace reactor
+
+
+#endif // REACTOR_CPP_SEMAPHORE_HH
