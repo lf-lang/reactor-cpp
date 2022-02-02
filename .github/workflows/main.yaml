@@ -1,6 +1,10 @@
 name: CI
 
-on: [push]
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
 
 jobs:
   build:
@@ -24,3 +28,17 @@ jobs:
     - name: build examples
       run:
         cmake --build build --target examples
+
+  lf-tests-pull-request:
+    uses: lf-lang/lingua-franca/.github/workflows/cpp-tests.yml@master
+    with:
+      runtime-ref: ${{github.ref}}
+      compiler-ref: master
+    if: ${{ github.event_name == 'pull_request' }}
+      
+  lf-tests-push:
+    uses: lf-lang/lingua-franca/.github/workflows/cpp-tests.yml@master
+    with:
+      runtime-ref: ${{github.ref_name}}
+      compiler-ref: master
+    if: ${{ github.event_name == 'push' }}

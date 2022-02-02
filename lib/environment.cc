@@ -91,30 +91,6 @@ void Environment::build_dependency_graph(Reactor *reactor) { //NOLINT
   }
 }
 
-auto Environment::startup() -> std::thread {
-  validate(this->phase() == Phase::Assembly,
-           "startup() may only be called during assembly phase!");
-
-  // build the dependency graph
-  for (auto *reactor : top_level_reactors_) {
-    build_dependency_graph(reactor);
-  }
-  calculate_indexes();
-
-  log::Info() << "Starting the execution";
-  phase_ = Phase::Startup;
-
-  start_time_ = get_physical_time();
-  // start up initialize all reactors
-  for (auto * reactor : top_level_reactors_) {
-    reactor->startup();
-  }
-
-  // start processing events
-  phase_ = Phase::Execution;
-  return std::thread([this]() { this->scheduler_.start(); });
-}
-
 void Environment::sync_shutdown() {
   validate(this->phase() == Phase::Execution,
            "sync_shutdown() may only be called during execution phase!");

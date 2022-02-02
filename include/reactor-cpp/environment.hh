@@ -56,6 +56,7 @@ public:
   // Debugging methods
   void export_dependency_graph(const std::string& path);
   void dump_to_yaml(const std::string& path);
+  
   static void dump_trigger_to_yaml(std::ofstream& yaml, const BaseAction& trigger);
   static void dump_instance_to_yaml(std::ofstream& yaml, const Reactor& reactor);
   static void dump_port_to_yaml(std::ofstream& yaml, const BasePort& port);
