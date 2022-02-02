@@ -235,6 +235,30 @@ void Environment::calculate_indexes() {
   max_reaction_index_ = index - 1;
 }
 
+auto Environment::startup() -> std::thread {
+   validate(this->phase() == Phase::Assembly,
+            "startup() may only be called during assembly phase!");
+
+   // build the dependency graph
+   for (auto *reactor : top_level_reactors_) {
+     build_dependency_graph(reactor);
+   }
+   calculate_indexes();
+
+   log::Info() << "Starting the execution";
+   phase_ = Phase::Startup;
+
+   start_time_ = get_physical_time();
+   // start up initialize all reactors
+   for (auto * reactor : top_level_reactors_) {
+     reactor->startup();
+   }
+
+   // start processing events
+   phase_ = Phase::Execution;
+   return std::thread([this]() { this->scheduler_.start(); });
+}
+
 void Environment::dump_trigger_to_yaml(std::ofstream &yaml,
                                        const BaseAction &trigger) {
   yaml << "      - name: " << trigger.name() << std::endl;
