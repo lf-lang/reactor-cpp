@@ -55,7 +55,7 @@ constexpr inline void reactor_assert([[maybe_unused]] bool condition) {
 }
 
 template<typename E>
-constexpr auto to_underlying_type(E enum_value) -> typename std::underlying_type<E>::type {
+constexpr auto extract_value(E enum_value) -> typename std::underlying_type<E>::type {
   return static_cast<typename std::underlying_type<E>::type>(enum_value);
 }
 
@@ -82,8 +82,11 @@ inline void assert_phase([[maybe_unused]] const ReactorElement* ptr, [[maybe_unu
             {EnvPhase::Deconstruction, "Deconstruction"}
         };
         // in C++20 use .contains()
-        return (conversation_map.find(phase) != conversation_map.end()) ? "Unknown Phase: Value: "
-            + std::to_string(to_underlying_type(phase)) : conversation_map.at(phase);
+        if( conversation_map.find(phase) != std::end(conversation_map)){
+          return conversation_map.at(phase);
+        } else {
+          return  "Unknown Phase: Value: " + std::to_string(extract_value(phase));
+        }
       };
       print_debug_backtrace();
 
