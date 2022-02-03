@@ -24,9 +24,11 @@ constexpr bool runtime_assertion = false;
 #include "environment.hh"
 
 #include <cassert>
+#include <execinfo.h>
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <unistd.h>
 
 namespace reactor {
 using EnvPhase = Environment::Phase;
@@ -57,6 +59,16 @@ constexpr auto to_underlying_type(E enum_value) -> typename std::underlying_type
   return static_cast<typename std::underlying_type<E>::type>(enum_value);
 }
 
+inline void print_debug_backtrace() {
+  void *array[10]; //NOLINT
+  std::size_t size;
+
+  // get void*'s for all entries on the stack
+  size = backtrace(array, 10);
+
+  backtrace_symbols_fd(array, size, STDERR_FILENO);
+}
+
 inline void assert_phase([[maybe_unused]] const ReactorElement* ptr, [[maybe_unused]] EnvPhase phase) {
   if constexpr (runtime_assertion) { // NOLINT
     if (ptr->environment()->phase() != phase) {
@@ -73,6 +85,8 @@ inline void assert_phase([[maybe_unused]] const ReactorElement* ptr, [[maybe_unu
         return (conversation_map.find(phase) != conversation_map.end()) ? "Unknown Phase: Value: "
             + std::to_string(to_underlying_type(phase)) : conversation_map.at(phase);
       };
+      print_debug_backtrace();
+
       // C++20 std::format
       throw ValidationError("Expected Phase: " + enum_value_to_name(phase) +
                             " Current Phase: " + enum_value_to_name(ptr->environment()->phase()));
