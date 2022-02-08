@@ -15,9 +15,9 @@ constexpr bool runtime_validation = false;
 #endif
 
 #ifdef NDEBUG
-constexpr bool runtime_assertion = NDEBUG;
-#else
 constexpr bool runtime_assertion = false;
+#else
+constexpr bool runtime_assertion = true;
 #endif
 
 #include <cassert>
