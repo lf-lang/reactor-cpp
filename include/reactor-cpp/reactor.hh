@@ -19,7 +19,7 @@ namespace reactor {
 
 class ReactorElement {
  public:
-  enum class Type { Action, Port, Reaction, Reactor };
+  enum class Type { Action, Input, Output, Reaction, Reactor };
 
  private:
   const std::string _name;
@@ -62,7 +62,8 @@ class Reactor : public ReactorElement {
   std::set<Reactor*> _reactors;
 
   void register_action(BaseAction* action);
-  void register_port(BasePort* port);
+  void register_input(BasePort* port);
+  void register_output(BasePort* port);
   void register_reaction(Reaction* reaction);
   void register_reactor(Reactor* reactor);
 

@@ -29,7 +29,10 @@ class BasePort : public ReactorElement {
 
  protected:
   BasePort(const std::string& name, PortType type, Reactor* container)
-      : ReactorElement(name, ReactorElement::Type::Port, container)
+      : ReactorElement(name,
+                       type == PortType::Input ? ReactorElement::Type::Input
+                                               : ReactorElement::Type::Output,
+                       container)
       , type(type) {}
 
   void base_bind_to(BasePort* port);
@@ -89,7 +92,6 @@ class Port : public BasePort {
 
   const ImmutableValuePtr<T>& get() const;
   bool is_present() const;
-
 };
 
 template <>
