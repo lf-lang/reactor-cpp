@@ -283,7 +283,7 @@
 <dt class="sig sig-object cpp" id="_CPPv4I0EN7reactor15MutableValuePtrE">
 <span id="_CPPv3I0EN7reactor15MutableValuePtrE"></span><span id="_CPPv2I0EN7reactor15MutableValuePtrE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="classreactor_1_1MutableValuePtr"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">reactor</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">MutableValuePtr</span></span></span><a class="headerlink" href="#_CPPv4I0EN7reactor15MutableValuePtrE" title="Permalink to this definition"></a><br /></dt>
 <dd><p>Smart pointer to a mutable value. </p>
-<p><p><p>Manages the lifetime of a value in conjunction with
+<p><p>Manages the lifetime of a value in conjunction with
 <a class="reference internal" href="classreactor_1_1ImmutableValuePtr.html#_CPPv4I0EN7reactor17ImmutableValuePtrE" title="reactor::ImmutableValuePtr"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">ImmutableValuePtr</span></code></a>. Implements ownership semantics and enforces
 unique ownership of a mutable value. <a class="reference internal" href="#_CPPv4I0EN7reactor15MutableValuePtrE" title="reactor::MutableValuePtr"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">MutableValuePtr</span></code></a> internally
 wraps around <a class="reference external" href="https://en.cppreference.com/w/cpp/memory/unique_ptr">std::unique_ptr</a>. The unique ownership ensures that no
@@ -291,17 +291,16 @@ other reactor can reference the value while it is allowed to change.  In
 order to share the associated value, an instance of <a class="reference internal" href="#_CPPv4I0EN7reactor15MutableValuePtrE" title="reactor::MutableValuePtr"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">MutableValuePtr</span></code></a>
 needs to be converted to an <a class="reference internal" href="classreactor_1_1ImmutableValuePtr.html#_CPPv4I0EN7reactor17ImmutableValuePtrE" title="reactor::ImmutableValuePtr"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">ImmutableValuePtr</span></code></a> making the associated
 value immutable.</p>
-</p>
  <dl class="simple">
 <dt><strong>Author</strong></dt><dd><p>Christian Menard </p>
 </dd>
 </dl>
+</p>
 <dl class="field-list simple">
-<dt class="field-odd">tparam T</dt>
-<dd class="field-odd"><p>type of the value managed by this class </p>
+<dt class="field-odd">Template Parameters</dt>
+<dd class="field-odd"><p><strong>T</strong> – type of the value managed by this class </p>
 </dd>
 </dl>
-</p>
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
 <dl class="cpp function">
@@ -397,7 +396,7 @@ instance. If this instance previously owned a value, the value is deleted.</p>
 <dd><p>Constructor from an existing raw pointer. </p>
 <p><p>Constructs a <a class="reference internal" href="#_CPPv4I0EN7reactor15MutableValuePtrE" title="reactor::MutableValuePtr"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">MutableValuePtr</span></code></a> such that is obtains ownership of
 <code class="docutils literal notranslate"><span class="pre">value</span></code>.  This is intended only for usage by the
-<code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">make_mutable_value()</span></code> factory function and the
+<a class="reference internal" href="#_CPPv4I0DpEN7reactor15MutableValuePtr18make_mutable_valueE15MutableValuePtrI1UEDpRR4Args" title="reactor::MutableValuePtr::make_mutable_value"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">make_mutable_value()</span></code></a> factory function and the
 <code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">make_immutable_copy()</span></code> method of <a class="reference internal" href="classreactor_1_1ImmutableValuePtr.html#_CPPv4I0EN7reactor17ImmutableValuePtrE" title="reactor::ImmutableValuePtr"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">ImmutableValuePtr</span></code></a>.</p>
  </p>
 </dd></dl>
@@ -420,8 +419,8 @@ instance. If this instance previously owned a value, the value is deleted.</p>
 </dl>
 
 <dl class="cpp function">
-<dt class="sig sig-object cpp">
-<span class="target" id="classreactor_1_1MutableValuePtr_1ace4c49f73d7fc11f60f4979c5b1efbd2"></span><span class="sig-name descname"><span class="pre">template&lt;class</span> <span class="pre">U,</span> <span class="pre">class...</span> <span class="pre">Args&gt;</span> <span class="pre">friend</span> <span class="pre">friend</span> <span class="pre">MutableValuePtr&lt;</span> <span class="pre">U</span> <span class="pre">&gt;</span> <span class="pre">make_mutable_value</span> <span class="pre">(Args</span> <span class="pre">&amp;&amp;...</span> <span class="pre">args)</span></span></dt>
+<dt class="sig sig-object cpp" id="_CPPv4I0DpEN7reactor15MutableValuePtr18make_mutable_valueE15MutableValuePtrI1UEDpRR4Args">
+<span id="_CPPv3I0DpEN7reactor15MutableValuePtr18make_mutable_valueEDpRR4Args"></span><span id="_CPPv2I0DpEN7reactor15MutableValuePtr18make_mutable_valueEDpRR4Args"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">U</span></span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="sig-name descname"><span class="n"><span class="pre">Args</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="classreactor_1_1MutableValuePtr_1ace4c49f73d7fc11f60f4979c5b1efbd2"></span><span class="k"><span class="pre">friend</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN7reactor15MutableValuePtrE" title="reactor::MutableValuePtr"><span class="n"><span class="pre">MutableValuePtr</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0DpEN7reactor15MutableValuePtr18make_mutable_valueE15MutableValuePtrI1UEDpRR4Args" title="reactor::MutableValuePtr::make_mutable_value::U"><span class="n"><span class="pre">U</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">make_mutable_value</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0DpEN7reactor15MutableValuePtr18make_mutable_valueE15MutableValuePtrI1UEDpRR4Args" title="reactor::MutableValuePtr::make_mutable_value::Args"><span class="n"><span class="pre">Args</span></span></a><span class="p"><span class="pre">&amp;</span></span><span class="p"><span class="pre">&amp;</span></span><span class="p"><span class="pre">...</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">args</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0DpEN7reactor15MutableValuePtr18make_mutable_valueE15MutableValuePtrI1UEDpRR4Args" title="Permalink to this definition"></a><br /></dt>
 <dd><p><p><p>Create an instance of <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">MmutableValuePtr</span></code>.</p>
 <p>Creates and initializes a new instance of <code class="docutils literal notranslate"><span class="pre">T</span></code> and returns a new
 <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">MmutableValuePtr</span></code> owning this value. This is analogues to

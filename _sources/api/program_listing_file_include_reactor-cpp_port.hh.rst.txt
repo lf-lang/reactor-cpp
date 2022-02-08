@@ -41,7 +41,10 @@ Program Listing for File port.hh
    
     protected:
      BasePort(const std::string& name, PortType type, Reactor* container)
-         : ReactorElement(name, ReactorElement::Type::Port, container)
+         : ReactorElement(name,
+                          type == PortType::Input ? ReactorElement::Type::Input
+                                                  : ReactorElement::Type::Output,
+                          container)
          , type(type) {}
    
      void base_bind_to(BasePort* port);
@@ -101,7 +104,6 @@ Program Listing for File port.hh
    
      const ImmutableValuePtr<T>& get() const;
      bool is_present() const;
-   
    };
    
    template <>
