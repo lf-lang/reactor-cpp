@@ -27,9 +27,9 @@ Program Listing for File assert.hh
    #endif
    
    #ifdef NDEBUG
-   constexpr bool runtime_assertion = NDEBUG;
-   #else
    constexpr bool runtime_assertion = false;
+   #else
+   constexpr bool runtime_assertion = true;
    #endif
    
    #include <cassert>

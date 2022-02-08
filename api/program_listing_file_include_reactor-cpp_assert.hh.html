@@ -289,9 +289,9 @@
 <span class="cp">#endif</span>
 
 <span class="cp">#ifdef NDEBUG</span>
-<span class="k">constexpr</span> <span class="kt">bool</span> <span class="n">runtime_assertion</span> <span class="o">=</span> <span class="n">NDEBUG</span><span class="p">;</span>
-<span class="cp">#else</span>
 <span class="k">constexpr</span> <span class="kt">bool</span> <span class="n">runtime_assertion</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+<span class="cp">#else</span>
+<span class="k">constexpr</span> <span class="kt">bool</span> <span class="n">runtime_assertion</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
 <span class="cp">#endif</span>
 
 <span class="cp">#include</span> <span class="cpf">&lt;cassert&gt;</span><span class="cp"></span>
