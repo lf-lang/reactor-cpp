@@ -10,15 +10,15 @@
 #define REACTOR_CPP_ASSERT_HH
 
 #ifdef REACTOR_CPP_VALIDATE
-constexpr bool runtime_validation = REACTOR_CPP_VALIDATE;
+constexpr bool runtime_validation = true;
 #else
 constexpr bool runtime_validation = false;
 #endif
 
 #ifdef NDEBUG
-constexpr bool runtime_assertion = NDEBUG;
-#else
 constexpr bool runtime_assertion = false;
+#else
+constexpr bool runtime_assertion = true;
 #endif
 
 #include "environment.hh"
@@ -43,8 +43,10 @@ public:
 };
 
 constexpr inline void validate([[maybe_unused]] bool condition, [[maybe_unused]] const std::string& message) {
-  if constexpr (runtime_validation && !condition) { // NOLINT
-    throw ValidationError(message);
+  if constexpr (runtime_validation) { // NOLINT
+    if(!condition){
+        throw ValidationError(message);
+    }
   }
 }
 

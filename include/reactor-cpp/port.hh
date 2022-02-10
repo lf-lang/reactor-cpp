@@ -58,7 +58,8 @@ public:
   friend class Scheduler;
 };
 
-template <class T> class Port : public BasePort {
+template <class T>
+class Port : public BasePort {
 private:
   ImmutableValuePtr<T> value_ptr_{nullptr};
 
@@ -88,7 +89,8 @@ public:
   [[nodiscard]] auto is_present() const noexcept -> bool;
 };
 
-template <> class Port<void> : public BasePort {
+template <> 
+class Port<void> : public BasePort {
 private:
   bool present_ = false;
 
@@ -109,18 +111,19 @@ public:
   void shutdown() final {}
 };
 
-template <class T> class Input : public Port<T> { // NOLINT
+template <class T> 
+class Input : public Port<T> { // NOLINT
 public:
   Input(const std::string& name, Reactor* container)
       : Port<T>(name, PortType::Input, container) {}
-  Input(Input&&) noexcept = default;
+  Input(Input&&) = default;
 };
 
 template <class T> class Output : public Port<T> { // NOLINT
 public:
   Output(const std::string& name, Reactor* container)
       : Port<T>(name, PortType::Output, container) {}
-  Output(Output&&) noexcept = default;
+  Output(Output&&) = default;
 };
 
 } // namespace reactor
