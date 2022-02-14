@@ -31,10 +31,9 @@ private:
 protected:
   BasePort(const std::string& name, PortType type, Reactor* container)
       : ReactorElement(name,
-                       type == PortType::Input ? ReactorElement::Type::Input
-                                               : ReactorElement::Type::Output,
+                       (type == PortType::Input) ? ReactorElement::Type::Input : ReactorElement::Type::Output,
                        container)
-      , type(type) {}
+      , type_(type) {}
 
   void base_bind_to(BasePort* port);
   void register_dependency(Reaction* reaction, bool is_trigger);

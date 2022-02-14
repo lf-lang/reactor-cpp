@@ -36,14 +36,11 @@ ReactorElement::ReactorElement(const std::string &name,
   case Type::Action:
     container->register_action(reinterpret_cast<BaseAction *>(this)); //NOLINT
     break;
-  case Type::Port:
-    container->register_port(reinterpret_cast<BasePort *>(this)); //NOLINT
-    break;
   case Type::Input:
-      container->register_input(reinterpret_cast<BasePort*>(this));
+      container->register_input(reinterpret_cast<BasePort *>(this));
       break;
   case Type::Output:
-      container->register_output(reinterpret_cast<BasePort*>(this));
+      container->register_output(reinterpret_cast<BasePort *>(this));
       break;
   case Type::Reaction:
     container->register_reaction(reinterpret_cast<Reaction *>(this)); //NOLINT
@@ -78,6 +75,9 @@ Reactor::Reactor(const std::string &name, Environment *environment)
   environment->register_reactor(this);
 }
 
+
+
+
 void Reactor::register_action([[maybe_unused]] BaseAction *action) {
   reactor_assert(action != nullptr);
   reactor::validate(
@@ -85,19 +85,23 @@ void Reactor::register_action([[maybe_unused]] BaseAction *action) {
       "Actions can only be registered during construction phase!");
   reactor_assert(actions_.insert(action).second);
 }
-  
-void Reactor::register_port(BasePort *port) {
+
+void Reactor::register_input(BasePort* port) {
   reactor_assert(port != nullptr);
-  reactor::validate(this->environment()->phase() ==
-                        Environment::Phase::Construction,
-                    "Ports can only be registered during construction phase!");
-  if (port->is_input()) {
-    reactor_assert(inputs_.insert(port).second);
-  } else {
-    reactor_assert(outputs_.insert(port).second);
-  }
+  reactor::validate(
+      this->environment()->phase() == Environment::Phase::Construction,
+      "Ports can only be registered during construction phase!");
+  reactor_assert(inputs_.insert(port).second);
 }
-  
+
+void Reactor::register_output(BasePort* port) {
+  reactor_assert(port != nullptr);
+  reactor::validate(
+      this->environment()->phase() == Environment::Phase::Construction,
+      "Ports can only be registered during construction phase!");
+  reactor_assert(outputs_.insert(port).second);
+}
+
 void Reactor::register_reaction([[maybe_unused]] Reaction *reaction) {
   reactor_assert(reaction != nullptr);
 
