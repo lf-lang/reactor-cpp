@@ -39,6 +39,12 @@ ReactorElement::ReactorElement(const std::string &name,
   case Type::Port:
     container->register_port(reinterpret_cast<BasePort *>(this)); //NOLINT
     break;
+  case Type::Input:
+      container->register_input(reinterpret_cast<BasePort*>(this));
+      break;
+  case Type::Output:
+      container->register_output(reinterpret_cast<BasePort*>(this));
+      break;
   case Type::Reaction:
     container->register_reaction(reinterpret_cast<Reaction *>(this)); //NOLINT
     break;
@@ -79,6 +85,7 @@ void Reactor::register_action([[maybe_unused]] BaseAction *action) {
       "Actions can only be registered during construction phase!");
   reactor_assert(actions_.insert(action).second);
 }
+  
 void Reactor::register_port(BasePort *port) {
   reactor_assert(port != nullptr);
   reactor::validate(this->environment()->phase() ==
@@ -90,12 +97,15 @@ void Reactor::register_port(BasePort *port) {
     reactor_assert(outputs_.insert(port).second);
   }
 }
+  
 void Reactor::register_reaction([[maybe_unused]] Reaction *reaction) {
   reactor_assert(reaction != nullptr);
+
   validate(this->environment()->phase() == Environment::Phase::Construction,
            "Reactions can only be registered during construction phase!");
   reactor_assert(reactions_.insert(reaction).second);
 }
+
 void Reactor::register_reactor([[maybe_unused]] Reactor *reactor) {
   reactor_assert(reactor != nullptr);
   validate(this->environment()->phase() == Environment::Phase::Construction,

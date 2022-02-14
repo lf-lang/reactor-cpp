@@ -17,7 +17,6 @@
 #include "time.hh"
 
 namespace reactor {
-
 class ReactorElement { // NOLINT
 private:
   const std::string name_{};
@@ -62,7 +61,8 @@ private:
   std::set<Reactor*> reactors_{};
 
   void register_action(BaseAction* action);
-  void register_port(BasePort* port);
+  void register_input(BasePort* port);
+  void register_output(BasePort* port);
   void register_reaction(Reaction* reaction);
   void register_reactor(Reactor* reactor);
 

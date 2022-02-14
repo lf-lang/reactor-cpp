@@ -30,8 +30,11 @@ private:
 
 protected:
   BasePort(const std::string& name, PortType type, Reactor* container)
-      : ReactorElement(name, ReactorElement::Type::Port, container)
-      , type_(type){};
+      : ReactorElement(name,
+                       type == PortType::Input ? ReactorElement::Type::Input
+                                               : ReactorElement::Type::Output,
+                       container)
+      , type(type) {}
 
   void base_bind_to(BasePort* port);
   void register_dependency(Reaction* reaction, bool is_trigger);
@@ -81,7 +84,6 @@ public:
   void set(T&& value) { set(make_immutable_value<T>(std::forward<T>(value))); }
   // Setting a port to nullptr is not permitted.
   void set(std::nullptr_t) = delete;
-
   void startup() final {}
   void shutdown() final {}
 
