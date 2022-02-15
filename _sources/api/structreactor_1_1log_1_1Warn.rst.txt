@@ -20,7 +20,7 @@ Struct Documentation
 
 
 .. doxygenstruct:: reactor::log::Warn
+   :project: reactor-cpp
    :members:
    :protected-members:
-   :private-members:
    :undoc-members:

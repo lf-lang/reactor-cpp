@@ -389,29 +389,6 @@ instance. If this instance previously owned a value, the value is deleted.</p>
 
 </div>
 <div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-functions">Private Functions</p>
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N7reactor15MutableValuePtr15MutableValuePtrEP1T">
-<span id="_CPPv3N7reactor15MutableValuePtr15MutableValuePtrEP1T"></span><span id="_CPPv2N7reactor15MutableValuePtr15MutableValuePtrEP1T"></span><span id="reactor::MutableValuePtr::MutableValuePtr__TP"></span><span class="target" id="classreactor_1_1MutableValuePtr_1a86a0d91410641caf787ecc1ad368e24a"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">explicit</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">MutableValuePtr</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0EN7reactor15MutableValuePtrE" title="reactor::MutableValuePtr::T"><span class="n"><span class="pre">T</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">value</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7reactor15MutableValuePtr15MutableValuePtrEP1T" title="Permalink to this definition"></a><br /></dt>
-<dd><p>Constructor from an existing raw pointer. </p>
-<p><p>Constructs a <a class="reference internal" href="#_CPPv4I0EN7reactor15MutableValuePtrE" title="reactor::MutableValuePtr"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">MutableValuePtr</span></code></a> such that is obtains ownership of
-<code class="docutils literal notranslate"><span class="pre">value</span></code>.  This is intended only for usage by the
-<a class="reference internal" href="#_CPPv4I0DpEN7reactor15MutableValuePtr18make_mutable_valueE15MutableValuePtrI1UEDpRR4Args" title="reactor::MutableValuePtr::make_mutable_value"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">make_mutable_value()</span></code></a> factory function and the
-<code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">make_immutable_copy()</span></code> method of <a class="reference internal" href="classreactor_1_1ImmutableValuePtr.html#_CPPv4I0EN7reactor17ImmutableValuePtrE" title="reactor::ImmutableValuePtr"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">ImmutableValuePtr</span></code></a>.</p>
- </p>
-</dd></dl>
-
-</div>
-<div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-members">Private Members</p>
-<dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N7reactor15MutableValuePtr12internal_ptrE">
-<span id="_CPPv3N7reactor15MutableValuePtr12internal_ptrE"></span><span id="_CPPv2N7reactor15MutableValuePtr12internal_ptrE"></span><span id="reactor::MutableValuePtr::internal_ptr__std::unique_ptr:T:"></span><span class="target" id="classreactor_1_1MutableValuePtr_1a34d113f41b52f7ab042f031b511d55be"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">unique_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0EN7reactor15MutableValuePtrE" title="reactor::MutableValuePtr::T"><span class="n"><span class="pre">T</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">internal_ptr</span></span></span><a class="headerlink" href="#_CPPv4N7reactor15MutableValuePtr12internal_ptrE" title="Permalink to this definition"></a><br /></dt>
-<dd><p>The internal unique smart pointer that this class builds upon. </p>
-</dd></dl>
-
-</div>
-<div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-friends">Friends</p>
 <dl>
 <dt class="sig sig-object cpp">

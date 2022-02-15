@@ -11,3 +11,4 @@ Function Documentation
 
 
 .. doxygenfunction:: dot_name(ReactorElement *)
+   :project: reactor-cpp

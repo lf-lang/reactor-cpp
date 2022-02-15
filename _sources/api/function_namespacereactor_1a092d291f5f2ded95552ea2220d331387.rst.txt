@@ -11,3 +11,4 @@ Function Documentation
 
 
 .. doxygenfunction:: dump_trigger_to_yaml(std::ofstream&, const BaseAction&)
+   :project: reactor-cpp

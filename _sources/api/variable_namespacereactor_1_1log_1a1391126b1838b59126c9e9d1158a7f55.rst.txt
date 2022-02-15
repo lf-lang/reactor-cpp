@@ -11,3 +11,4 @@ Variable Documentation
 
 
 .. doxygenvariable:: debug_enabled
+   :project: reactor-cpp

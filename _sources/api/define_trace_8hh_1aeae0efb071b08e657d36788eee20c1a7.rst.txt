@@ -11,3 +11,4 @@ Define Documentation
 
 
 .. doxygendefine:: tracepoint
+   :project: reactor-cpp

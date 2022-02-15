@@ -11,3 +11,4 @@ Variable Documentation
 
 
 .. doxygenvariable:: warning_enabled
+   :project: reactor-cpp

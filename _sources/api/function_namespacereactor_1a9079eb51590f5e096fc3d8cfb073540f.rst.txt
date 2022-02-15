@@ -11,3 +11,4 @@ Function Documentation
 
 
 .. doxygenfunction:: operator==(const MutableValuePtr<T>&, const ImmutableValuePtr<U>&)
+   :project: reactor-cpp

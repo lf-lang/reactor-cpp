@@ -11,3 +11,4 @@ Define Documentation
 
 
 .. doxygendefine:: _REACTOR_CPP_TRACE_H
+   :project: reactor-cpp

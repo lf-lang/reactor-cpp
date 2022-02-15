@@ -11,3 +11,4 @@ Define Documentation
 
 
 .. doxygendefine:: TRACEPOINT_CREATE_PROBES
+   :project: reactor-cpp

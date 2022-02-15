@@ -29,7 +29,7 @@ Class Documentation
 
 
 .. doxygenclass:: reactor::BaseAction
+   :project: reactor-cpp
    :members:
    :protected-members:
-   :private-members:
    :undoc-members:

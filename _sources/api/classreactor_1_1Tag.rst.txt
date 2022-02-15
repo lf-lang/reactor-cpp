@@ -11,7 +11,7 @@ Class Documentation
 
 
 .. doxygenclass:: reactor::Tag
+   :project: reactor-cpp
    :members:
    :protected-members:
-   :private-members:
    :undoc-members:

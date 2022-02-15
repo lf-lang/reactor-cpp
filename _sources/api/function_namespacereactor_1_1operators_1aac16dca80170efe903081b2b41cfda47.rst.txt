@@ -11,3 +11,4 @@ Function Documentation
 
 
 .. doxygenfunction:: operator<<(std::ostream&, std::chrono::seconds)
+   :project: reactor-cpp
