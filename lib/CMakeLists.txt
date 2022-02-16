@@ -37,7 +37,7 @@ set_target_properties(reactor-cpp PROPERTIES
     VERSION ${PROJECT_VERSION}
     SOVERSION 1)
 
-install(FILES "${CMAKE_BINARY_DIR}/include/reactor-cpp/config.hh" DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/reactor-cpp")
+install(FILES "${PROJECT_BINARY_DIR}/include/reactor-cpp/config.hh" DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/reactor-cpp")
 install(TARGETS reactor-cpp EXPORT reactor-cppConfig
     ARCHIVE  DESTINATION "${CMAKE_INSTALL_LIBDIR}"
     LIBRARY  DESTINATION "${CMAKE_INSTALL_LIBDIR}"
