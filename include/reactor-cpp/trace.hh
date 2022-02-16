@@ -8,8 +8,8 @@
 
 #include <string>
 
-#include "config.hh"
-#include "logical_time.hh"
+#include "reactor-cpp/config.hh"
+#include "reactor-cpp/logical_time.hh"
 
 #ifdef REACTOR_CPP_TRACE
 

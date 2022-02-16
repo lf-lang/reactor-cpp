@@ -17,7 +17,7 @@ endif()
 add_library(reactor-cpp SHARED ${SOURCE_FILES})
 target_include_directories(reactor-cpp PUBLIC
   "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>"
-  "$<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/include/reactor-cpp>"
+  "$<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>"
   "$<BUILD_INTERFACE:${LTTNGUST_INCLUDE_DIRS}>"
   "$<INSTALL_INTERFACE:include>"
   PRIVATE src)
