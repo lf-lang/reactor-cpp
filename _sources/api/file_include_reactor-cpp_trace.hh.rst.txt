@@ -29,9 +29,9 @@ Includes
 --------
 
 
-- ``config.hh``
+- ``reactor-cpp/config.hh``
 
-- ``logical_time.hh`` (:ref:`file_include_reactor-cpp_logical_time.hh`)
+- ``reactor-cpp/logical_time.hh`` (:ref:`file_include_reactor-cpp_logical_time.hh`)
 
 - ``string``
 

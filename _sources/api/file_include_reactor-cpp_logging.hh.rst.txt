@@ -29,13 +29,13 @@ Includes
 --------
 
 
-- ``config.hh``
-
 - ``iostream``
 
 - ``memory``
 
 - ``mutex``
+
+- ``reactor-cpp/config.hh``
 
 
 

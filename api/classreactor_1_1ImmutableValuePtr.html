@@ -448,6 +448,28 @@ the copy to a newly created <a class="reference internal" href="classreactor_1_1
 
 </div>
 <div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-functions">Private Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N7reactor17ImmutableValuePtr17ImmutableValuePtrEP1T">
+<span id="_CPPv3N7reactor17ImmutableValuePtr17ImmutableValuePtrEP1T"></span><span id="_CPPv2N7reactor17ImmutableValuePtr17ImmutableValuePtrEP1T"></span><span id="reactor::ImmutableValuePtr::ImmutableValuePtr__TP"></span><span class="target" id="classreactor_1_1ImmutableValuePtr_1ade7499c971c78272ee7934de4b7346ab"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">explicit</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ImmutableValuePtr</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0EN7reactor17ImmutableValuePtrE" title="reactor::ImmutableValuePtr::T"><span class="n"><span class="pre">T</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">value</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7reactor17ImmutableValuePtr17ImmutableValuePtrEP1T" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Constructor from an existing raw pointer. </p>
+<p><p>Constructs an <a class="reference internal" href="#_CPPv4I0EN7reactor17ImmutableValuePtrE" title="reactor::ImmutableValuePtr::T"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">ImutableValuePtr</span></code></a> such that is obtains ownership
+of <code class="docutils literal notranslate"><span class="pre">value</span></code>.  This is intended only for usage by the
+<a class="reference internal" href="#_CPPv4I0DpEN7reactor17ImmutableValuePtr20make_immutable_valueE17ImmutableValuePtrI1UEDpRR4Args" title="reactor::ImmutableValuePtr::make_immutable_value"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">make_immutable_value()</span></code></a> factory function.</p>
+ </p>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-members">Private Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N7reactor17ImmutableValuePtr12internal_ptrE">
+<span id="_CPPv3N7reactor17ImmutableValuePtr12internal_ptrE"></span><span id="_CPPv2N7reactor17ImmutableValuePtr12internal_ptrE"></span><span id="reactor::ImmutableValuePtr::internal_ptr__std::shared_ptr:T:"></span><span class="target" id="classreactor_1_1ImmutableValuePtr_1aa10e02d2a72fc4a0c5913413d0688321"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0EN7reactor17ImmutableValuePtrE" title="reactor::ImmutableValuePtr::T"><span class="n"><span class="pre">T</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">internal_ptr</span></span></span><a class="headerlink" href="#_CPPv4N7reactor17ImmutableValuePtr12internal_ptrE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>The internal shared smart pointer that this class builds upon. </p>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-friends">Friends</p>
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4I0DpEN7reactor17ImmutableValuePtr20make_immutable_valueE17ImmutableValuePtrI1UEDpRR4Args">

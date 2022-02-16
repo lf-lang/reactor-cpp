@@ -24,7 +24,7 @@ Program Listing for File logging.hh
    #include <memory>
    #include <mutex>
    
-   #include "config.hh"
+   #include "reactor-cpp/config.hh"
    
    namespace reactor {
    

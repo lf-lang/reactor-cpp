@@ -14,4 +14,5 @@ Class Documentation
    :project: reactor-cpp
    :members:
    :protected-members:
+   :private-members:
    :undoc-members:
