@@ -157,10 +157,6 @@ void Reactor::shutdown() {
   }
 }
 
-auto Reactor::get_physical_time() noexcept -> TimePoint {
-  return get_physical_time();
-}
-
 auto Reactor::get_logical_time() const noexcept -> TimePoint {
   return environment()->scheduler()->logical_time().time_point();
 }

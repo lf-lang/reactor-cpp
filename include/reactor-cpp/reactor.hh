@@ -82,7 +82,6 @@ public:
 
   virtual void assemble() = 0;
 
-  [[nodiscard]] static auto get_physical_time() noexcept -> TimePoint;
   [[nodiscard]] auto get_logical_time() const noexcept -> TimePoint;
   [[nodiscard]] auto get_elapsed_logical_time() const noexcept -> Duration;
   [[nodiscard]] auto get_elapsed_physical_time() const noexcept -> Duration;

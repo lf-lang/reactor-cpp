@@ -110,8 +110,7 @@ void Reaction::declare_antidependency(BasePort *port) {
 void Reaction::trigger() {
   if (has_deadline()) {
     reactor_assert(deadline_handler_ != nullptr);
-    auto lag = Reactor::get_physical_time() -
-               container()->get_logical_time();
+    auto lag = get_physical_time() - container()->get_logical_time();
     if (lag > deadline_) {
       deadline_handler_();
       return;

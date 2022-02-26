@@ -13,10 +13,16 @@
 #include <chrono>
 #include <iostream>
 
-//namespace reactor {
+namespace reactor {
 
 using TimePoint = std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds>;
 using Duration = std::chrono::nanoseconds;
+
+}
+
+using TimePoint = std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds>;
+using Duration = std::chrono::nanoseconds;
+
 
 inline auto get_physical_time() noexcept -> TimePoint { return std::chrono::system_clock::now(); }
 
