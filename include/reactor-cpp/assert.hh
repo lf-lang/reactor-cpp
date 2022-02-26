@@ -21,14 +21,18 @@ constexpr bool runtime_assertion = false;
 constexpr bool runtime_assertion = true;
 #endif
 
+#ifdef __linux__
+constexpr bool linux_system = true;
+#else
+constexpr bool linux_system = true;
+#endif
+
 #include "environment.hh"
 
 #include <cassert>
-#include <execinfo.h>
 #include <sstream>
 #include <stdexcept>
 #include <string>
-#include <unistd.h>
 
 namespace reactor {
 using EnvPhase = Environment::Phase;
@@ -42,9 +46,27 @@ public:
       : std::runtime_error(build_message(msg)) {}
 };
 
+#ifdef __linux__
+#include <execinfo.h>
+#include <unistd.h>
+
+inline void print_debug_backtrace() {
+  void *array[10]; //NOLINT
+  std::size_t size;
+
+  // get void*'s for all entries on the stack
+  size = backtrace(array, 10);
+
+  backtrace_symbols_fd(array, size, STDERR_FILENO);
+}
+#endif
+
 constexpr inline void validate([[maybe_unused]] bool condition, [[maybe_unused]] const std::string& message) {
   if constexpr (runtime_validation) { // NOLINT
     if(!condition){
+        #ifdef __linux__
+        print_debug_backtrace();
+        #endif
         throw ValidationError(message);
     }
   }
@@ -61,15 +83,6 @@ constexpr auto extract_value(E enum_value) -> typename std::underlying_type<E>::
   return static_cast<typename std::underlying_type<E>::type>(enum_value);
 }
 
-inline void print_debug_backtrace() {
-  void *array[10]; //NOLINT
-  std::size_t size;
-
-  // get void*'s for all entries on the stack
-  size = backtrace(array, 10);
-
-  backtrace_symbols_fd(array, size, STDERR_FILENO);
-}
 
 inline void assert_phase([[maybe_unused]] const ReactorElement* ptr, [[maybe_unused]] EnvPhase phase) {
   if constexpr (runtime_assertion) { // NOLINT
@@ -86,11 +99,13 @@ inline void assert_phase([[maybe_unused]] const ReactorElement* ptr, [[maybe_unu
         // in C++20 use .contains()
         if( conversation_map.find(phase) != std::end(conversation_map)){
           return conversation_map.at(phase);
-        } else {
-          return  "Unknown Phase: Value: " + std::to_string(extract_value(phase));
         }
+        return  "Unknown Phase: Value: " + std::to_string(extract_value(phase));
+
       };
+      #ifdef __linux__
       print_debug_backtrace();
+      #endif
 
       // C++20 std::format
       throw ValidationError("Expected Phase: " + enum_value_to_name(phase) +

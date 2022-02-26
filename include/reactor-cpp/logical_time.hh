@@ -51,7 +51,7 @@ auto inline operator>=(const Tag& lhs, const Tag& rhs) noexcept -> bool { return
 class LogicalTime {
 private:
   TimePoint time_point_{};
-  mstep_t micro_step_ = 0;
+  mstep_t micro_step_{0};
 
 public:
   void advance_to(const Tag& tag);

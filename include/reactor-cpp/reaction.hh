@@ -27,7 +27,7 @@ private:
   const int priority_;
   unsigned int index_{};
 
-  std::function<void(void)> body_;
+  std::function<void(void)> body_{nullptr};
 
   Duration deadline_{Duration::zero()};
   std::function<void(void)> deadline_handler_{nullptr};

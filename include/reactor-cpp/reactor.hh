@@ -23,7 +23,7 @@ private:
   std::string fqn_{};
 
   // The reactor owning this element
-  Reactor* const container_ = nullptr;
+  Reactor* const container_{nullptr};
   Environment* environment_{};
 
   auto fqn_detail(std::stringstream& string_stream) const noexcept -> std::stringstream&;

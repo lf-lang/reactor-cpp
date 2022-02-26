@@ -18,16 +18,21 @@
 
 namespace reactor {
 
+constexpr unsigned int default_number_worker = 1;
+constexpr unsigned int default_max_reaction_index = 0;
+constexpr bool default_run_forever = false;
+constexpr bool default_fast_fwd_execution = false;
+
 class Environment {
 public:
   enum class Phase { Construction = 0, Assembly = 1, Startup = 2, Execution = 3, Shutdown = 4, Deconstruction = 5 };
 
 private:
   using Dependency = std::pair<Reaction*, Reaction*>;
-  const unsigned int num_workers_ = 1;
-  unsigned int max_reaction_index_ = 0;
-  const bool run_forever_ = false;
-  const bool fast_fwd_execution_ = false;
+  const unsigned int num_workers_ {default_number_worker};
+  unsigned int max_reaction_index_{default_max_reaction_index};
+  const bool run_forever_{default_run_forever};
+  const bool fast_fwd_execution_{default_fast_fwd_execution};
 
   std::set<Reactor*> top_level_reactors_{};
   std::set<Reaction*> reactions_{};
@@ -41,7 +46,9 @@ private:
   void calculate_indexes();
 
 public:
-  explicit Environment(unsigned int num_workers, bool run_forever = false, bool fast_fwd_execution = false)
+  explicit Environment(unsigned int num_workers, 
+          bool run_forever = default_run_forever, 
+          bool fast_fwd_execution = default_fast_fwd_execution)
       : num_workers_(num_workers)
       , run_forever_(run_forever)
       , fast_fwd_execution_(fast_fwd_execution)

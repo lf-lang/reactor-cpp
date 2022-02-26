@@ -65,7 +65,7 @@ ReactorElement::ReactorElement(const std::string &name,
   validate(type == Type::Reactor,
            "Only reactors can be owned by the environment!");
   validate(environment_->phase() == Environment::Phase::Construction,
-           "Reactor elements can only be created during construction phase!");
+           "Wrong Phase");
 }
 
 Reactor::Reactor(const std::string &name, Reactor *container)
@@ -74,8 +74,6 @@ Reactor::Reactor(const std::string &name, Environment *environment)
     : ReactorElement(name, ReactorElement::Type::Reactor, environment) {
   environment->register_reactor(this);
 }
-
-
 
 
 void Reactor::register_action([[maybe_unused]] BaseAction *action) {
@@ -160,7 +158,7 @@ void Reactor::shutdown() {
 }
 
 auto Reactor::get_physical_time() noexcept -> TimePoint {
-  return ::reactor::get_physical_time();
+  return get_physical_time();
 }
 
 auto Reactor::get_logical_time() const noexcept -> TimePoint {

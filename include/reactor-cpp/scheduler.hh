@@ -31,7 +31,7 @@ class Worker;
 class Worker { // NOLINT
 public:
   Scheduler& scheduler_;
-  const unsigned int identity_ = 0;
+  const unsigned int identity_{0};
   std::thread thread_{};
 
   static thread_local const Worker* current_worker;
@@ -105,13 +105,13 @@ private:
   std::vector<std::vector<Reaction*>> triggered_reactions_;
 
   std::vector<std::vector<Reaction*>> reaction_queue_;
-  unsigned int reaction_queue_pos_ = std::numeric_limits<unsigned>::max();
+  unsigned int reaction_queue_pos_{std::numeric_limits<unsigned>::max()};
 
   ReadyQueue ready_queue_;
-  std::atomic<std::ptrdiff_t> reactions_to_process_ = 0; //NOLINT
+  std::atomic<std::ptrdiff_t> reactions_to_process_{0}; //NOLINT
 
-  std::atomic<bool> stop_ = false;
-  bool continue_execution_ = true;
+  std::atomic<bool> stop_{false};
+  bool continue_execution_ ={true};
 
   void schedule() noexcept;
   auto schedule_ready_reactions() -> bool;

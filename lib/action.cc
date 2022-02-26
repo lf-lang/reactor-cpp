@@ -27,7 +27,6 @@ void BaseAction::register_trigger(Reaction *reaction) {
 void BaseAction::register_scheduler(Reaction *reaction) {
   reactor_assert(reaction != nullptr);
   reactor_assert(this->environment() == reaction->environment());
-  validate(is_logical(), "only logical action can be scheduled by a reaction!");
   assert_phase(this, Environment::Phase::Assembly);
   // the reaction must belong to the same reactor as this action
   validate(this->container() == reaction->container(),

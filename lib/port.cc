@@ -32,9 +32,6 @@ void BasePort::base_bind_to(BasePort *port) {
     validate(this->container()->container() == port->container()->container(),
              "An output port can only be bound to an input port if both ports "
              "belong to reactors in the same hierarichal level");
-    validate(this->container() != port->container(),
-             "An output port can only be bound to an input port if both ports "
-             "belong to different reactors!");
   } else if (this->is_output() && port->is_output()) {
     validate(
         this->container()->container() == port->container(),

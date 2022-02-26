@@ -1,5 +1,13 @@
 cmake_minimum_required(VERSION 3.6)
-project(reactor-cpp LANGUAGES CXX VERSION 0.0.1)
+
+if (DEFINED LF_REACTOR_CPP_SUFFIX)
+  # the build is triggered from Lingua Franca
+  set(LIB_TARGET "reactor-cpp-${LF_REACTOR_CPP_SUFFIX}")
+else()
+  set(LIB_TARGET "reactor-cpp")
+endif()
+
+project(${LIB_TARGET} LANGUAGES CXX VERSION 0.0.1)
 
 # require C++17
 set(CMAKE_CXX_STANDARD 17)
@@ -35,4 +43,8 @@ include(GNUInstallDirs)
 add_subdirectory(lib)
 add_subdirectory(examples)
 
-install(DIRECTORY include/ DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
+if (DEFINED LF_REACTOR_CPP_SUFFIX)
+  install(DIRECTORY include/ DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${LIB_TARGET}")
+else()
+  install(DIRECTORY include/ DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
+endif()

@@ -10,18 +10,19 @@
 #ifndef REACTOR_CPP_LOGGING_HH
 #define REACTOR_CPP_LOGGING_HH
 
-
+#include <chrono>
 #include <iostream>
 #include <memory>
 #include <mutex>
-
-#include "config.hh" //NOLINT
+#include "reactor-cpp/config.hh" //NOLINT
+#include "reactor-cpp/time.hh"
 
 namespace reactor::log {
 
 template <bool enabled> class BaseLogger {};
 
-template <> class BaseLogger<true> { // NOLINT
+template <> 
+class BaseLogger<true> { // NOLINT
 private:
   using Lock = std::unique_lock<std::mutex>;
 
@@ -36,7 +37,8 @@ public:
     std::cerr << log_prefix;
   }
 
-  template <class T> auto operator<<(const T& msg) -> BaseLogger& {
+  template <class T> 
+  auto operator<<(const T& msg) -> BaseLogger& {
     std::cerr << msg;
     return *this;
   }
@@ -46,7 +48,8 @@ public:
   }
 };
 
-template <> class BaseLogger<false> { // NOLINT
+template <> 
+class BaseLogger<false> { // NOLINT
 public:
   explicit BaseLogger([[maybe_unused]] const std::string& /*unused*/) {}
 

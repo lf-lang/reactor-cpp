@@ -17,5 +17,6 @@
 #include "reaction.hh"
 #include "reactor.hh"
 #include "time.hh"
+#include "logging.hh"
 
-#endif // REACTOR_CPP_REACTOR_CPP_HH
+#endif // cppH

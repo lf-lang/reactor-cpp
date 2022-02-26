@@ -20,7 +20,7 @@ enum class PortType { Input, Output };
 
 class BasePort : public ReactorElement {
 private:
-  BasePort* inward_binding_ = nullptr;
+  BasePort* inward_binding_ {nullptr};
   std::set<BasePort*> outward_bindings_{};
   const PortType type_;
 
@@ -93,7 +93,7 @@ public:
 template <> 
 class Port<void> : public BasePort {
 private:
-  bool present_ = false;
+  bool present_{false};
 
   void cleanup() final { present_ = false; }
 

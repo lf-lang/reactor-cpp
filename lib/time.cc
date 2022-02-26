@@ -17,8 +17,8 @@
 #include <ctime>
 #include <iomanip>
 
-namespace reactor {
-inline namespace operators {
+//namespace reactor {
+//inline namespace operators {
 
 auto operator<<([[maybe_unused]]std::ostream &output_stream, [[maybe_unused]]TimePoint time_point) noexcept -> std::ostream &{
   constexpr std::size_t field_size = 20;
@@ -37,23 +37,23 @@ auto operator<<([[maybe_unused]]std::ostream &output_stream, [[maybe_unused]]Tim
   return output_stream;
 }
 
-auto operator<<(std::ostream &out_stream, [[maybe_unused]] std::chrono::seconds dur) noexcept -> std::ostream & {
+auto operator<<(std::ostream &out_stream, std::chrono::seconds dur) noexcept -> std::ostream & {
   out_stream << dur.count() << " secs";
   return out_stream;
 }
-auto operator<<(std::ostream &out_stream, [[maybe_unused]] std::chrono::milliseconds dur) noexcept -> std::ostream & {
+auto operator<<(std::ostream &out_stream, std::chrono::milliseconds dur) noexcept -> std::ostream & {
   out_stream << dur.count() << " msecs";
   return out_stream;
 }
-auto operator<<(std::ostream &out_stream, [[maybe_unused]] std::chrono::microseconds dur) noexcept -> std::ostream & {
+auto operator<<(std::ostream &out_stream, std::chrono::microseconds dur) noexcept -> std::ostream & {
   out_stream << dur.count() << " usecs";
   return out_stream;
 }
-auto operator<<(std::ostream & out_stream, [[maybe_unused]] std::chrono::nanoseconds dur) noexcept -> std::ostream & {
+auto operator<<(std::ostream &out_stream, std::chrono::nanoseconds dur) noexcept -> std::ostream & {
   out_stream << dur.count() << " nsecs";
   return out_stream;
 }
 
-} // namespace operators
+//} // namespace operators
 
-} // namespace reactor
+//} // namespace reactor

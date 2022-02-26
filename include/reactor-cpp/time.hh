@@ -13,24 +13,19 @@
 #include <chrono>
 #include <iostream>
 
-namespace reactor {
+//namespace reactor {
 
 using TimePoint = std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds>;
 using Duration = std::chrono::nanoseconds;
 
 inline auto get_physical_time() noexcept -> TimePoint { return std::chrono::system_clock::now(); }
 
-inline namespace operators {
+auto operator<<(std::ostream &out_stream, TimePoint tp) noexcept -> std::ostream &;
+auto operator<<(std::ostream &out_stream, std::chrono::seconds dur) noexcept -> std::ostream &;
+auto operator<<(std::ostream &out_stream, std::chrono::milliseconds dur) noexcept -> std::ostream &;
+auto operator<<(std::ostream &out_stream, std::chrono::microseconds dur) noexcept -> std::ostream &;
+auto operator<<(std::ostream & out_stream, std::chrono::nanoseconds dur) noexcept -> std::ostream &;
 
-auto operator<<(std::ostream &out_stream, [[maybe_unused]] TimePoint tp) noexcept -> std::ostream &;
-
-auto operator<<(std::ostream &out_stream, [[maybe_unused]] std::chrono::seconds dur) noexcept -> std::ostream &;
-auto operator<<(std::ostream &out_stream, [[maybe_unused]] std::chrono::milliseconds dur) noexcept -> std::ostream &;
-auto operator<<(std::ostream &out_stream, [[maybe_unused]] std::chrono::microseconds dur) noexcept -> std::ostream &;
-auto operator<<(std::ostream & out_stream, [[maybe_unused]] std::chrono::nanoseconds dur) noexcept -> std::ostream &;
-
-} // namespace operators
-
-} // namespace reactor
+//} // namespace reactor
 
 #endif // REACTOR_CPP_TIME_HH

@@ -20,7 +20,7 @@ private:
   std::set<Reaction*> triggers_{};
   std::set<Reaction*> schedulers_{};
   const Duration min_delay_{};
-  const bool logical_ = true;
+  const bool logical_{true};
 
 protected:
   void register_trigger(Reaction* reaction);
@@ -90,7 +90,7 @@ public:
 
 template <> class Action<void> : public BaseAction {
 private:
-  bool present_ = false;
+  bool present_{false};
 
   void cleanup() noexcept final { present_ = false; }
 
