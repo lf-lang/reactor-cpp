@@ -41,7 +41,9 @@ configure_file(include/reactor-cpp/config.hh.in include/reactor-cpp/config.hh @O
 include(GNUInstallDirs)
 
 add_subdirectory(lib)
-add_subdirectory(examples)
+if(NOT DEFINED LF_REACTOR_CPP_SUFFIX)
+  add_subdirectory(examples)
+endif()
 
 if (DEFINED LF_REACTOR_CPP_SUFFIX)
   install(DIRECTORY include/ DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${LIB_TARGET}")
