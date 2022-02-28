@@ -6,10 +6,11 @@
  *   Christian Menard
  */
 
-#pragma once
+#ifndef REACTOR_CPP_ASSERT_HH
+#define REACTOR_CPP_ASSERT_HH
 
 #ifdef REACTOR_CPP_VALIDATE
-constexpr bool runtime_validation = REACTOR_CPP_VALIDATE;
+constexpr bool runtime_validation = true;
 #else
 constexpr bool runtime_validation = false;
 #endif
@@ -20,32 +21,98 @@ constexpr bool runtime_assertion = false;
 constexpr bool runtime_assertion = true;
 #endif
 
+#ifdef __linux__
+constexpr bool linux_system = true;
+#else
+constexpr bool linux_system = true;
+#endif
+
+#include "environment.hh"
+
 #include <cassert>
 #include <sstream>
 #include <stdexcept>
 #include <string>
 
 namespace reactor {
+using EnvPhase = Environment::Phase;
 
 class ValidationError : public std::runtime_error {
- private:
-  static std::string build_message(const std::string& msg);
+private:
+  static auto build_message(const std::string& msg) noexcept -> std::string;
 
- public:
+public:
   explicit ValidationError(const std::string& msg)
       : std::runtime_error(build_message(msg)) {}
 };
 
-constexpr inline void validate(bool condition, const std::string& message) {
-  if constexpr (runtime_validation && !condition) {
-    throw ValidationError(message);
+#ifdef __linux__
+#include <execinfo.h>
+#include <unistd.h>
+
+inline void print_debug_backtrace() {
+  void *array[10]; //NOLINT
+  std::size_t size;
+
+  // get void*'s for all entries on the stack
+  size = backtrace(array, 10);
+
+  backtrace_symbols_fd(array, size, STDERR_FILENO);
+}
+#endif
+
+constexpr inline void validate([[maybe_unused]] bool condition, [[maybe_unused]] const std::string& message) {
+  if constexpr (runtime_validation) { // NOLINT
+    if(!condition){
+        #ifdef __linux__
+        print_debug_backtrace();
+        #endif
+        throw ValidationError(message);
+    }
   }
 }
 
-constexpr inline void toggle_assert([[maybe_unused]] bool condition) {
-  if constexpr (runtime_assertion){
-    assert(condition);
+constexpr inline void reactor_assert([[maybe_unused]] bool condition) {
+  if constexpr (runtime_assertion) { // NOLINT
+    assert(condition); //NOLINT
   }
 }
 
-}  // namespace reactor
+template<typename E>
+constexpr auto extract_value(E enum_value) -> typename std::underlying_type<E>::type {
+  return static_cast<typename std::underlying_type<E>::type>(enum_value);
+}
+
+
+inline void assert_phase([[maybe_unused]] const ReactorElement* ptr, [[maybe_unused]] EnvPhase phase) {
+  if constexpr (runtime_assertion) { // NOLINT
+    if (ptr->environment()->phase() != phase) {
+      auto enum_value_to_name = [](EnvPhase phase) -> std::string {
+        const std::map<EnvPhase, std::string> conversation_map = { //NOLINT
+            {EnvPhase::Construction, "Construction"},
+            {EnvPhase::Assembly, "Assembly"},
+            {EnvPhase::Startup, "Startup"},
+            {EnvPhase::Execution, "Execution"},
+            {EnvPhase::Shutdown, "Shutdown"},
+            {EnvPhase::Deconstruction, "Deconstruction"}
+        };
+        // in C++20 use .contains()
+        if( conversation_map.find(phase) != std::end(conversation_map)){
+          return conversation_map.at(phase);
+        }
+        return  "Unknown Phase: Value: " + std::to_string(extract_value(phase));
+
+      };
+      #ifdef __linux__
+      print_debug_backtrace();
+      #endif
+
+      // C++20 std::format
+      throw ValidationError("Expected Phase: " + enum_value_to_name(phase) +
+                            " Current Phase: " + enum_value_to_name(ptr->environment()->phase()));
+    }
+  }
+}
+} // namespace reactor
+
+#endif // REACTOR_CPP_ASSERT_HH

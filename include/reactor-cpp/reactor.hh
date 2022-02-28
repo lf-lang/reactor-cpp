@@ -6,7 +6,8 @@
  *   Christian Menard
  */
 
-#pragma once
+#ifndef REACTOR_CPP_REACTOR_HH
+#define REACTOR_CPP_REACTOR_HH
 
 #include <set>
 #include <sstream>
@@ -16,50 +17,48 @@
 #include "time.hh"
 
 namespace reactor {
+class ReactorElement { // NOLINT
+private:
+  const std::string name_{};
+  std::string fqn_{};
 
-class ReactorElement {
- public:
-  enum class Type { Action, Input, Output, Reaction, Reactor };
+  // The reactor owning this element
+  Reactor* const container_{nullptr};
+  Environment* environment_{};
 
- private:
-  const std::string _name;
-  std::string _fqn;
+  auto fqn_detail(std::stringstream& string_stream) const noexcept -> std::stringstream&;
 
-  /// The reactor owning this element
-  Reactor* const _container;
+public:
+  enum class Type { Action, Port, Reaction, Reactor, Input, Output};
 
-  Environment* _environment;
-
-  std::stringstream& fqn_detail(std::stringstream& ss) const;
-
- public:
   ReactorElement(const std::string& name, Type type, Reactor* container);
   ReactorElement(const std::string& name, Type type, Environment* environment);
-  virtual ~ReactorElement() {}
+  virtual ~ReactorElement() = default;
 
   // not copyable, but movable
   ReactorElement(const ReactorElement&) = delete;
   ReactorElement(ReactorElement&&) = default;
 
-  Reactor* container() const { return _container; }
+  [[nodiscard]] auto container() const noexcept -> Reactor* { return container_; }
 
-  const std::string& name() const { return _name; }
-  const std::string& fqn() const { return _fqn; }
-  Environment* environment() const { return _environment; }
+  [[nodiscard]] auto inline name() const noexcept -> const std::string& { return name_; }
+  [[nodiscard]] auto inline fqn() const noexcept -> const std::string& { return fqn_; }
+  [[nodiscard]] auto inline environment() noexcept -> Environment* { return environment_; }
+  [[nodiscard]] auto inline environment() const noexcept -> const Environment* { return environment_; }
 
-  bool is_top_level() const { return this->container() == nullptr; }
+  [[nodiscard]] auto inline is_top_level() const noexcept -> bool { return this->container() == nullptr; }
 
   virtual void startup() = 0;
   virtual void shutdown() = 0;
 };
 
-class Reactor : public ReactorElement {
- private:
-  std::set<BaseAction*> _actions;
-  std::set<BasePort*> _inputs;
-  std::set<BasePort*> _outputs;
-  std::set<Reaction*> _reactions;
-  std::set<Reactor*> _reactors;
+class Reactor : public ReactorElement { // NOLINT
+private:
+  std::set<BaseAction*> actions_{};
+  std::set<BasePort*> inputs_{};
+  std::set<BasePort*> outputs_{};
+  std::set<Reaction*> reactions_{};
+  std::set<Reactor*> reactors_{};
 
   void register_action(BaseAction* action);
   void register_input(BasePort* port);
@@ -67,28 +66,30 @@ class Reactor : public ReactorElement {
   void register_reaction(Reaction* reaction);
   void register_reactor(Reactor* reactor);
 
- public:
+public:
   Reactor(const std::string& name, Reactor* container);
   Reactor(const std::string& name, Environment* environment);
-  virtual ~Reactor() {}
+  ~Reactor() override = default;
 
-  const auto& actions() const { return _actions; }
-  const auto& inputs() const { return _inputs; }
-  const auto& outputs() const { return _outputs; }
-  const auto& reactions() const { return _reactions; }
-  const auto& reactors() const { return _reactors; }
+  [[nodiscard]] auto inline actions() const noexcept -> const auto& { return actions_; }
+  [[nodiscard]] auto inline inputs() const noexcept -> const auto& { return inputs_; }
+  [[nodiscard]] auto inline outputs() const noexcept -> const auto& { return outputs_; }
+  [[nodiscard]] auto inline reactions() const noexcept -> const auto& { return reactions_; }
+  [[nodiscard]] auto inline reactors() const noexcept -> const auto& { return reactors_; }
 
-  void startup() override final;
-  void shutdown() override final;
+  void startup() final;
+  void shutdown() final;
 
   virtual void assemble() = 0;
 
-  TimePoint get_physical_time() const;
-  TimePoint get_logical_time() const;
-  Duration get_elapsed_logical_time() const;
-  Duration get_elapsed_physical_time() const;
+  [[nodiscard]] static auto get_physical_time() noexcept -> TimePoint;
+  [[nodiscard]] auto get_logical_time() const noexcept -> TimePoint;
+  [[nodiscard]] auto get_elapsed_logical_time() const noexcept -> Duration;
+  [[nodiscard]] auto get_elapsed_physical_time() const noexcept -> Duration;
 
   friend ReactorElement;
 };
 
-}  // namespace reactor
+} // namespace reactor
+
+#endif // REACTOR_CPP_REACTOR_HH

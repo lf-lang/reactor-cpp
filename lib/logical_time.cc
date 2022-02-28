@@ -12,52 +12,50 @@
 
 namespace reactor {
 
-bool operator==(const Tag& lhs, const Tag& rhs) {
+auto operator==(const Tag &lhs, const Tag &rhs) noexcept -> bool {
   return lhs.time_point() == rhs.time_point() &&
          lhs.micro_step() == rhs.micro_step();
 }
 
-bool operator<(const Tag& lhs, const Tag& rhs) {
+auto operator<(const Tag &lhs, const Tag &rhs) noexcept -> bool {
   return lhs.time_point() < rhs.time_point() ||
          (lhs.time_point() == rhs.time_point() &&
           lhs.micro_step() < rhs.micro_step());
 }
 
-Tag Tag::from_physical_time(TimePoint time_point) { return Tag{time_point, 0}; }
-
-Tag Tag::from_logical_time(const LogicalTime& lt) {
-  return Tag{lt.time_point(), lt.micro_step()};
+auto Tag::from_physical_time(TimePoint time_point) noexcept -> Tag {
+  return Tag{time_point, 0};
 }
 
-Tag Tag::delay(Duration offset) const {
+auto Tag::from_logical_time(const LogicalTime &logical_time) noexcept -> Tag {
+  return Tag{logical_time.time_point(), logical_time.micro_step()};
+}
+
+auto Tag::delay(Duration offset) const noexcept -> Tag {
   if (offset == Duration::zero()) {
-    return Tag{this->_time_point, this->_micro_step + 1};
-  } else {
-    return Tag{this->_time_point + offset, 0};
+    return Tag{this->time_point_, this->micro_step_ + 1};
   }
+  return Tag{this->time_point_ + offset, 0};
 }
 
-void LogicalTime::advance_to(const Tag& tag) {
-  toggle_assert(*this < tag);
-  _time_point = tag.time_point();
-  _micro_step = tag.micro_step();
+void LogicalTime::advance_to(const Tag &tag) {
+  reactor_assert(*this < tag);
+  time_point_ = tag.time_point();
+  micro_step_ = tag.micro_step();
 }
 
-bool operator==(const LogicalTime& lhs, const Tag& rhs) {
-  return lhs.time_point() == rhs.time_point() &&
-         lhs.micro_step() == rhs.micro_step();
+auto operator==(const LogicalTime & logical_time, const Tag & tag) noexcept -> bool {
+  return logical_time.time_point() == tag.time_point() && logical_time.micro_step() == tag.micro_step();
 }
 
-bool operator<(const LogicalTime& lhs, const Tag& rhs) {
-  return lhs.time_point() < rhs.time_point() ||
-         (lhs.time_point() == rhs.time_point() &&
-          lhs.micro_step() < rhs.micro_step());
+auto operator<(const LogicalTime & logical_time, const Tag & tag) noexcept -> bool {
+  return logical_time.time_point() < tag.time_point() ||
+         (logical_time.time_point() == tag.time_point() && logical_time.micro_step() < tag.micro_step());
 }
 
-bool operator>(const LogicalTime& lhs, const Tag& rhs) {
-  return lhs.time_point() > rhs.time_point() ||
-         (lhs.time_point() == rhs.time_point() &&
-          lhs.micro_step() > rhs.micro_step());
+auto operator>(const LogicalTime & logical_time, const Tag & tag) noexcept -> bool {
+  return logical_time.time_point() > tag.time_point() ||
+         (logical_time.time_point() == tag.time_point() && logical_time.micro_step() > tag.micro_step());
 }
 
-}  // namespace reactor
+} // namespace reactor
