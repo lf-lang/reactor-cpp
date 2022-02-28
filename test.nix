@@ -20,15 +20,26 @@ extract_name = file: builtins.head (builtins.split ".lf" (builtins.head (lib.rev
 # given a set { name = ...; value = ... } it will retrun the derivation stored in value
 extract_derivation = (attribute_set: attribute_set.value );
 
-# given a lists of files it will create a list of derivations
-list_of_derivations = tests: (builtins.map extract_derivation (builtins.map buildDerivation tests));
-
 # list of special derivations which cannot be run
 keep_alive = [
   "Keepalive.lf"
   "AsyncCallback.lf"
   "AsyncCallback2.lf"
 ];
+
+# checks if a given file is in the unrunable file list
+is_executable =  file: !((lib.lists.count (x: x == file) keep_alive) > 0);
+
+# list of executable file names
+executables = ( builtins.map extract_name (builtins.filter is_executable tests ) );
+
+# executes all tests
+execute_all = (lib.strings.concatStringsSep "\n" (builtins.map (x: "./${x}") executables));
+
+# writes the execute command to file
+run_all = (pkgs.writeScriptBin "run-all" ''
+  #!${pkgs.runtimeShell}
+'' + execute_all);
 
 # downloading the cpp runtime
 cpp-runtime = mkDerivation {
@@ -73,7 +84,6 @@ buildDerivation = (test_file: {
     buildPhase = ''
       mkdir -p include/reactor-cpp/
       cp -r ${cpp-runtime}/include/reactor-cpp/* include/reactor-cpp/
-      pwd
       ${pkgs.lingua-franca}/bin/lfc --external-runtime-path ${cpp-runtime}/ --output ./ ${test_file}
     '';
 
@@ -84,12 +94,23 @@ buildDerivation = (test_file: {
   };
 } );
 
+# given a lists of files it will create a list of derivations
+list_of_derivations = builtins.map extract_derivation (builtins.map buildDerivation tests);
+
+# creates the copy command for every derivation
+create_install_command = (lib.strings.concatStringsSep "\n" (builtins.map (x: "cp -r ${x}/bin/* $out/bin/") list_of_derivations ));
+
 # package that triggers a build of every test file
 ci_package = mkDerivation {
     src = ./.;
     name = "all-tests";
-    buildInputs = list_of_derivations tests;
+    buildInputs = list_of_derivations;
+    installPhase = ''
+      ${pkgs.coreutils}/bin/mkdir -p $out/bin
+      ${pkgs.coreutils}/bin/cp -r ${run_all}/bin/run-all $out/bin/
+    '' + create_install_command;
 };
+
 
 in lib.listToAttrs ( (builtins.map buildDerivation tests) ++ [ {name = "all-tests"; value = ci_package; } ] )
 

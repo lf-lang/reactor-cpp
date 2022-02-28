@@ -4,7 +4,7 @@ on:
   push:
 jobs:
   tests:
-    runs-on: ubuntu-latest
+    runs-on: [ubuntu-latest]
     steps:
     - uses: actions/checkout@v2.4.0
     - uses: cachix/install-nix-action@v16
@@ -22,7 +22,6 @@ jobs:
         # If you chose API tokens for write access OR if you have a private cache
         #authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
     - run: nix flake update
-    - run: nix build .#packages.x86_64-linux.all-tests --override-input reactor-cpp github:lf-lang/reactor-cpp/${{ steps.extract_branch.outputs.branch }}
-    - run: nix-shell --run "echo OK"
+    - run: nix run .#packages.x86_64-linux.all-tests --override-input reactor-cpp github:lf-lang/reactor-cpp/${{ steps.extract_branch.outputs.branch }}
 
 
