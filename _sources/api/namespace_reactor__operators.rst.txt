@@ -17,12 +17,12 @@ Functions
 ---------
 
 
-- :ref:`exhale_function_namespacereactor_1_1operators_1aac16dca80170efe903081b2b41cfda47`
-
 - :ref:`exhale_function_namespacereactor_1_1operators_1a279ac480746dbb8a6dcd71179df68032`
 
 - :ref:`exhale_function_namespacereactor_1_1operators_1ac12faa5aad6eda9a53865201264ea257`
 
-- :ref:`exhale_function_namespacereactor_1_1operators_1a7bc089730a721df6047cd010af2501d2`
-
 - :ref:`exhale_function_namespacereactor_1_1operators_1a8ea55f33a5ed641face930e457c1f997`
+
+- :ref:`exhale_function_namespacereactor_1_1operators_1aac16dca80170efe903081b2b41cfda47`
+
+- :ref:`exhale_function_namespacereactor_1_1operators_1a7bc089730a721df6047cd010af2501d2`
