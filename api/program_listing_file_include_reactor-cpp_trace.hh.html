@@ -311,11 +311,15 @@
   <span class="n">reaction_execution_starts</span><span class="p">,</span>
   <span class="n">TP_ARGS</span><span class="p">(</span>
     <span class="kt">int</span><span class="p">,</span> <span class="n">worker_id_arg</span><span class="p">,</span>
-    <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="p">,</span> <span class="n">reaction_name_arg</span>
+    <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="p">,</span> <span class="n">reaction_name_arg</span><span class="p">,</span>
+    <span class="k">const</span> <span class="n">reactor</span><span class="o">::</span><span class="n">LogicalTime</span><span class="o">&amp;</span><span class="p">,</span> <span class="n">tag_arg</span>
   <span class="p">),</span>
   <span class="n">TP_FIELDS</span><span class="p">(</span>
     <span class="n">ctf_string</span><span class="p">(</span><span class="n">reaction_name</span><span class="p">,</span> <span class="n">reaction_name_arg</span><span class="p">.</span><span class="n">c_str</span><span class="p">())</span>
     <span class="n">ctf_integer</span><span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="n">worker_id</span><span class="p">,</span> <span class="n">worker_id_arg</span><span class="p">)</span>
+    <span class="n">ctf_integer</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="p">,</span> <span class="n">timestamp_ns</span><span class="p">,</span>
+                <span class="n">tag_arg</span><span class="p">.</span><span class="n">time_point</span><span class="p">().</span><span class="n">time_since_epoch</span><span class="p">().</span><span class="n">count</span><span class="p">())</span>
+    <span class="n">ctf_integer</span><span class="p">(</span><span class="kt">unsigned</span><span class="p">,</span> <span class="n">timestamp_microstep</span><span class="p">,</span> <span class="n">tag_arg</span><span class="p">.</span><span class="n">micro_step</span><span class="p">())</span>
   <span class="p">)</span>
 <span class="p">)</span>
 
@@ -324,11 +328,15 @@
   <span class="n">reaction_execution_finishes</span><span class="p">,</span>
   <span class="n">TP_ARGS</span><span class="p">(</span>
     <span class="kt">int</span><span class="p">,</span> <span class="n">worker_id_arg</span><span class="p">,</span>
-    <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="p">,</span> <span class="n">reaction_name_arg</span>
+    <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="p">,</span> <span class="n">reaction_name_arg</span><span class="p">,</span>
+    <span class="k">const</span> <span class="n">reactor</span><span class="o">::</span><span class="n">LogicalTime</span><span class="o">&amp;</span><span class="p">,</span> <span class="n">tag_arg</span>
   <span class="p">),</span>
   <span class="n">TP_FIELDS</span><span class="p">(</span>
     <span class="n">ctf_string</span><span class="p">(</span><span class="n">reaction_name</span><span class="p">,</span> <span class="n">reaction_name_arg</span><span class="p">.</span><span class="n">c_str</span><span class="p">())</span>
     <span class="n">ctf_integer</span><span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="n">worker_id</span><span class="p">,</span> <span class="n">worker_id_arg</span><span class="p">)</span>
+    <span class="n">ctf_integer</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="p">,</span> <span class="n">timestamp_ns</span><span class="p">,</span>
+                <span class="n">tag_arg</span><span class="p">.</span><span class="n">time_point</span><span class="p">().</span><span class="n">time_since_epoch</span><span class="p">().</span><span class="n">count</span><span class="p">())</span>
+    <span class="n">ctf_integer</span><span class="p">(</span><span class="kt">unsigned</span><span class="p">,</span> <span class="n">timestamp_microstep</span><span class="p">,</span> <span class="n">tag_arg</span><span class="p">.</span><span class="n">micro_step</span><span class="p">())</span>
   <span class="p">)</span>
 <span class="p">)</span>
 
