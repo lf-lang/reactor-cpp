@@ -70,9 +70,11 @@ void Worker::work() const {
 void Worker::execute_reaction(Reaction* reaction) const {
   log::Debug() << "(Worker " << id << ") "
                << "execute reaction " << reaction->fqn();
-  tracepoint(reactor_cpp, reaction_execution_starts, id, reaction->fqn());
+  tracepoint(reactor_cpp, reaction_execution_starts, id, reaction->fqn(),
+             scheduler.logical_time());
   reaction->trigger();
-  tracepoint(reactor_cpp, reaction_execution_finishes, id, reaction->fqn());
+  tracepoint(reactor_cpp, reaction_execution_finishes, id, reaction->fqn(),
+             scheduler.logical_time());
 }
 
 void Scheduler::schedule() {
