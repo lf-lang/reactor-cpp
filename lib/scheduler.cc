@@ -249,7 +249,7 @@ void Scheduler::next() { //NOLINT
   }
 
   {
-    std::unique_lock<std::mutex> lock{schedule_};
+    std::unique_lock<std::mutex> lock{scheduling_mutex_};
 
     // shutdown if there are no more events in the queue_
     if (event_queue_.empty() && !stop_) {
@@ -381,7 +381,7 @@ void Scheduler::schedule_sync(const Tag &tag, BaseAction *action,
 
 void Scheduler::schedule_async(const Tag &tag, BaseAction *action,
                                std::function<void(void)> pre_handler) {
-  std::lock_guard<std::mutex> lock_guard(schedule_);
+  std::lock_guard<std::mutex> lock_guard(scheduling_mutex_);
   schedule_sync(tag, action, std::move(pre_handler));
   cv_schedule_.notify_one();
 }

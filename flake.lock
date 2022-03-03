@@ -1,0 +1,77 @@
+{
+  "nodes": {
+    "lingua-franca": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1646313915,
+        "narHash": "sha256-O1WS7ROJLxxOLH8NHf1B7FA/tQIIWQaHDZbzPAJ6rFg=",
+        "owner": "lf-lang",
+        "repo": "lingua-franca",
+        "rev": "7e5cfe961875d6de38f197276e4ecdd7e606fec4",
+        "type": "github"
+      },
+      "original": {
+        "owner": "lf-lang",
+        "repo": "lingua-franca",
+        "type": "github"
+      }
+    },
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1646254136,
+        "narHash": "sha256-8nQx02tTzgYO21BP/dy5BCRopE8OwE8Drsw98j+Qoaw=",
+        "owner": "NixOs",
+        "repo": "nixpkgs",
+        "rev": "3e072546ea98db00c2364b81491b893673267827",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOs",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "reactor-cpp": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1646313857,
+        "narHash": "sha256-R5yGvscwhOdDcWj67Pv7/GCQ5SjCtKckbLklgpYBHyU=",
+        "owner": "lf-lang",
+        "repo": "reactor-cpp",
+        "rev": "fa3def521f13109e9677586ccf16d23af1e44196",
+        "type": "github"
+      },
+      "original": {
+        "owner": "lf-lang",
+        "repo": "reactor-cpp",
+        "type": "github"
+      }
+    },
+    "root": {
+      "inputs": {
+        "lingua-franca": "lingua-franca",
+        "nixpkgs": "nixpkgs",
+        "reactor-cpp": "reactor-cpp",
+        "utils": "utils"
+      }
+    },
+    "utils": {
+      "locked": {
+        "lastModified": 1644229661,
+        "narHash": "sha256-1YdnJAsNy69bpcjuoKdOYQX0YxZBiCYZo4Twxerqv7k=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "3cecb5b042f7f209c56ffd8371b2711a290ec797",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}
