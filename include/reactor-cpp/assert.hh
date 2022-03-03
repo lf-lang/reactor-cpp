@@ -21,12 +21,6 @@ constexpr bool runtime_assertion = false;
 constexpr bool runtime_assertion = true;
 #endif
 
-#ifdef __linux__
-constexpr bool linux_system = true;
-#else
-constexpr bool linux_system = true;
-#endif
-
 #include "environment.hh"
 
 #include <cassert>

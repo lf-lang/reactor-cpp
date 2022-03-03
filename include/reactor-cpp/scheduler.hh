@@ -72,10 +72,10 @@ public:
   auto pop() -> Reaction*;
 
   /**
-   * Fill the queue_ up with ready reactions_.
+   * Fill the queue_ up with ready reactions.
    *
    * This method assumes that the internal queue_ is empty. It moves all
-   * reactions_ from the provided `ready_reactions` vector to the internal
+   * reactions from the provided `ready_reactions` vector to the internal
    * queue_, leaving `ready_reactions` empty.
    *
    * Note that this method is not thread-safe. The caller needs to ensure that
@@ -94,8 +94,8 @@ private:
   Environment* environment_;
   std::vector<Worker> workers_{};
 
-  std::mutex schedule_;
-  std::unique_lock<std::mutex> schedule_lock_{schedule_, std::defer_lock};
+  std::mutex scheduling_mutex_;
+  std::unique_lock<std::mutex> scheduling_lock_{scheduling_mutex_, std::defer_lock};
   std::condition_variable cv_schedule_;
 
   std::mutex lock_event_queue_;
@@ -111,7 +111,7 @@ private:
   std::atomic<std::ptrdiff_t> reactions_to_process_{0}; //NOLINT
 
   std::atomic<bool> stop_{false};
-  bool continue_execution_ ={true};
+  bool continue_execution_{true};
 
   void schedule() noexcept;
   auto schedule_ready_reactions() -> bool;
@@ -126,8 +126,8 @@ public:
   void schedule_sync(const Tag& tag, BaseAction* action, std::function<void(void)> pre_handler);
   void schedule_async(const Tag& tag, BaseAction* action, std::function<void(void)> pre_handler);
 
-  void inline lock() noexcept { schedule_lock_.lock(); }
-  void inline unlock() noexcept { schedule_lock_.unlock(); }
+  void inline lock() noexcept { scheduling_lock_.lock(); }
+  void inline unlock() noexcept { scheduling_lock_.unlock(); }
 
   void set_port(BasePort*);
 

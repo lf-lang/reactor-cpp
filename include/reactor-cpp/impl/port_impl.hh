@@ -31,12 +31,12 @@ auto Port<T>::typed_inward_binding() const noexcept -> Port<T>* {
 
 template <class T>
 void Port<T>::set(const ImmutableValuePtr<T>& value_ptr) {
-  reactor::validate(!has_inward_binding(), "set() may only be called on a ports that do not have an inward "
+  reactor::validate(!has_inward_binding(), "set() may only be called on ports that do not have an inward "
                                            "binding!");
   reactor::validate(value_ptr != nullptr, "Ports may not be set to nullptr!");
-  auto current_scheduler = environment()->scheduler();
+  auto scheduler = environment()->scheduler();
   this->value_ptr_ = std::move(value_ptr);
-  current_scheduler->set_port(this);
+  scheduler->set_port(this);
 }
 
 template <class T>

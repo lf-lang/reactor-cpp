@@ -11,7 +11,7 @@
 #include "reactor-cpp/config.hh"
 #include "reactor-cpp/logical_time.hh"
 
-#ifdef REACTOR_CPP_TRACE_HH
+#ifdef REACTOR_CPP_TRACE
 
 #undef TRACEPOINT_PROVIDER
 #define TRACEPOINT_PROVIDER reactor_cpp
@@ -21,14 +21,14 @@
 
 // LTTng requires this header to be included multiple times. Therfore, we cannot
 // use `#praga once`, unfortunantely.
-#ifndef _REACTOR_CPP_TRACE_H
+#ifndef REACTOR_CPP_TRACE_HH
 namespace reactor {
 constexpr bool tracing_enabled = true;
 }
 #endif
 
-#if !defined(_REACTOR_CPP_TRACE_H) || defined(TRACEPOINT_HEADER_MULTI_READ)
-#define _REACTOR_CPP_TRACE_H
+#if !defined(REACTOR_CPP_TRACE_HH) || defined(TRACEPOINT_HEADER_MULTI_READ)
+#define REACTOR_CPP_TRACE_HH
 
 #include <lttng/tracepoint.h>
 
@@ -86,14 +86,14 @@ TRACEPOINT_EVENT(reactor_cpp, trigger_reaction,
                                ctf_integer(unsigned long, timestamp_ns, tag_arg.time_point().time_since_epoch().count())
                                    ctf_integer(unsigned, timestamp_microstep, tag_arg.micro_step())))
 
-#endif /* _REACTOR_CPP_TRACE_H */
+#endif /* REACTOR_CPP_TRACE_HH */
 
 #include <lttng/tracepoint-event.h>
 
 #else
 
-#ifndef _REACTOR_CPP_TRACE_H
-#define REACTOR_CPP_TRACE_H
+#ifndef REACTOR_CPP_TRACE_HH
+#define REACTOR_CPP_TRACE_HH
 
 namespace reactor {
 constexpr bool tracing_enabled = false;
@@ -102,6 +102,6 @@ constexpr bool tracing_enabled = false;
 // empty definition in case we compile without tracing
 #define tracepoint(...)
 
-#endif // _REACTOR_CPP_TRACE_H
-
 #endif // REACTOR_CPP_TRACE_HH
+
+#endif // REACTOR_CPP_TRACE

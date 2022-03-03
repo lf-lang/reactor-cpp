@@ -1,5 +1,5 @@
 {
-  description = "build script for the lingua-franca alarm clock";
+  description = "test and build script for the reactor-cpp runtime";
 
   inputs = {
     utils.url = "github:numtide/flake-utils";

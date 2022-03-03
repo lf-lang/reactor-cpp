@@ -68,7 +68,7 @@ private:
   void cleanup() final { value_ptr_ = nullptr; }
 
 public:
-  using value_type = T;
+  using value_type = void;
 
   Port(const std::string& name, PortType type, Reactor* container)
       : BasePort(name, type, container) {}

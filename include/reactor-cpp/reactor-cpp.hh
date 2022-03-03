@@ -19,4 +19,4 @@
 #include "time.hh"
 #include "logging.hh"
 
-#endif // cppH
+#endif // REACTOR_CPP_REACTOR_CPP_HH

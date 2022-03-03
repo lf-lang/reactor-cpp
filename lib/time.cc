@@ -20,7 +20,7 @@
 //namespace reactor {
 //inline namespace operators {
 
-auto operator<<([[maybe_unused]]std::ostream &output_stream, [[maybe_unused]]TimePoint time_point) noexcept -> std::ostream &{
+auto operator<<([[maybe_unused]]std::ostream &output_stream, [[maybe_unused]]reactor::TimePoint time_point) noexcept -> std::ostream &{
   constexpr std::size_t field_size = 20;
   constexpr int width = 9;
   constexpr auto max_value = 1'000'000'000UL;
@@ -30,7 +30,7 @@ auto operator<<([[maybe_unused]]std::ostream &output_stream, [[maybe_unused]]Tim
       std::chrono::time_point_cast<std::chrono::system_clock::duration>(time_point));
   std::strftime(buffer, field_size, "%Y-%m-%d %H:%M:%S", std::localtime(&time));
 
-  auto epoch = std::chrono::duration_cast<Duration>(time_point.time_since_epoch());
+  auto epoch = std::chrono::duration_cast<reactor::Duration>(time_point.time_since_epoch());
   output_stream << buffer << '.' << std::setw(width) << std::setfill('0')
      << epoch.count() % max_value;
 

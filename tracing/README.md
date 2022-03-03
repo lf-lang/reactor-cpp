@@ -43,8 +43,8 @@ within `LD_LIBRARY_PATH`.
 The trace can be viewed by opening `about://tracing` in Chrome (or
 Chromium). There you can load the previously generated json file which produces
 a visualization of the trace. In this visualization,  the top part (labeled *Execution*),
-shows the physical time at which reactions_ execute. The bottom part shows individual reactors and logical times at which
-actions are scheduled and reactions_ are triggered.
+shows the physical time at which reactions execute. The bottom part shows individual reactors and logical times at which
+actions are scheduled and reactions are triggered.
 
 ![Screenshot_20200512_165849](https://user-images.githubusercontent.com/6460123/81709144-fcb29a00-9471-11ea-9032-95cb6a368e98.png)
 
