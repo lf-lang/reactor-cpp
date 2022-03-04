@@ -17,8 +17,8 @@
 #include <ctime>
 #include <iomanip>
 
-//namespace reactor {
-//inline namespace operators {
+namespace reactor {
+inline namespace operators {
 
 auto operator<<([[maybe_unused]]std::ostream &output_stream, [[maybe_unused]]reactor::TimePoint time_point) -> std::ostream &{
   constexpr std::size_t field_size = 20;
@@ -54,6 +54,6 @@ auto operator<<(std::ostream &out_stream, std::chrono::nanoseconds dur) -> std::
   return out_stream;
 }
 
-//} // namespace operators
+} // namespace operators
 
-//} // namespace reactor
+} // namespace reactor

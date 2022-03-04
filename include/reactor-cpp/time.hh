@@ -20,14 +20,15 @@ using Duration = std::chrono::nanoseconds;
 
 inline auto get_physical_time() noexcept -> TimePoint { return std::chrono::system_clock::now(); }
 
-} // namespace reactor
 
-namespace reactor::operators {
+inline namespace operators {
 auto operator<<(std::ostream &out_stream, reactor::TimePoint tp) -> std::ostream &;
 auto operator<<(std::ostream &out_stream, std::chrono::seconds dur) -> std::ostream &;
 auto operator<<(std::ostream &out_stream, std::chrono::milliseconds dur) -> std::ostream &;
 auto operator<<(std::ostream &out_stream, std::chrono::microseconds dur) -> std::ostream &;
-auto operator<<(std::ostream & out_stream, std::chrono::nanoseconds dur) -> std::ostream &;
+auto operator<<(std::ostream &out_stream, std::chrono::nanoseconds dur) -> std::ostream &;
 } // namespace reactor::operators
+
+} // namespace reactor
 
 #endif // REACTOR_CPP_TIME_HH
