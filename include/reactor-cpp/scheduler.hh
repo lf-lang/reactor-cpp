@@ -95,7 +95,7 @@ private:
   std::vector<Worker> workers_{};
 
   std::mutex scheduling_mutex_;
-  std::unique_lock<std::mutex> schedule_lock_{scheduling_mutex_, std::defer_lock};
+  std::unique_lock<std::mutex> scheduling_lock_{scheduling_mutex_, std::defer_lock};
   std::condition_variable cv_schedule_;
 
   std::mutex lock_event_queue_;

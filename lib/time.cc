@@ -20,7 +20,7 @@
 //namespace reactor {
 //inline namespace operators {
 
-auto operator<<([[maybe_unused]]std::ostream &output_stream, [[maybe_unused]]TimePoint time_point) noexcept -> std::ostream &{
+auto operator<<([[maybe_unused]]std::ostream &output_stream, [[maybe_unused]]reactor::TimePoint time_point) -> std::ostream &{
   constexpr std::size_t field_size = 20;
   constexpr int width = 9;
   constexpr auto max_value = 1'000'000'000UL;
@@ -30,26 +30,26 @@ auto operator<<([[maybe_unused]]std::ostream &output_stream, [[maybe_unused]]Tim
       std::chrono::time_point_cast<std::chrono::system_clock::duration>(time_point));
   std::strftime(buffer, field_size, "%Y-%m-%d %H:%M:%S", std::localtime(&time));
 
-  auto epoch = std::chrono::duration_cast<Duration>(time_point.time_since_epoch());
+  auto epoch = std::chrono::duration_cast<reactor::Duration>(time_point.time_since_epoch());
   output_stream << buffer << '.' << std::setw(width) << std::setfill('0')
      << epoch.count() % max_value;
 
   return output_stream;
 }
 
-auto operator<<(std::ostream &out_stream, std::chrono::seconds dur) noexcept -> std::ostream & {
+auto operator<<(std::ostream &out_stream, std::chrono::seconds dur) -> std::ostream & {
   out_stream << dur.count() << " secs";
   return out_stream;
 }
-auto operator<<(std::ostream &out_stream, std::chrono::milliseconds dur) noexcept -> std::ostream & {
+auto operator<<(std::ostream &out_stream, std::chrono::milliseconds dur) -> std::ostream & {
   out_stream << dur.count() << " msecs";
   return out_stream;
 }
-auto operator<<(std::ostream &out_stream, std::chrono::microseconds dur) noexcept -> std::ostream & {
+auto operator<<(std::ostream &out_stream, std::chrono::microseconds dur) -> std::ostream & {
   out_stream << dur.count() << " usecs";
   return out_stream;
 }
-auto operator<<(std::ostream &out_stream, std::chrono::nanoseconds dur) noexcept -> std::ostream & {
+auto operator<<(std::ostream &out_stream, std::chrono::nanoseconds dur) -> std::ostream & {
   out_stream << dur.count() << " nsecs";
   return out_stream;
 }

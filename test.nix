@@ -126,6 +126,8 @@ in{
       cd test/Cpp/src
       mkdir -p include/reactor-cpp/
       cp -r ${cpp-runtime}/include/reactor-cpp/* include/reactor-cpp/
+      export CMAKE_CXX_COMPILER=${pkgs.clang_13}/bin/clang;
+      export CXX=${pkgs.clang_13}/bin/clang;
       ${pkgs.lingua-franca}/bin/lfc --external-runtime-path ${cpp-runtime}/ --output ./ ${test_file}
     '';
 

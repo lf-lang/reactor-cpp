@@ -23,11 +23,11 @@ inline auto get_physical_time() noexcept -> TimePoint { return std::chrono::syst
 } // namespace reactor
 
 namespace reactor::operators {
-auto operator<<(std::ostream &out_stream, reactor::TimePoint tp) noexcept -> std::ostream &;
-auto operator<<(std::ostream &out_stream, std::chrono::seconds dur) noexcept -> std::ostream &;
-auto operator<<(std::ostream &out_stream, std::chrono::milliseconds dur) noexcept -> std::ostream &;
-auto operator<<(std::ostream &out_stream, std::chrono::microseconds dur) noexcept -> std::ostream &;
-auto operator<<(std::ostream & out_stream, std::chrono::nanoseconds dur) noexcept -> std::ostream &;
+auto operator<<(std::ostream &out_stream, reactor::TimePoint tp) -> std::ostream &;
+auto operator<<(std::ostream &out_stream, std::chrono::seconds dur) -> std::ostream &;
+auto operator<<(std::ostream &out_stream, std::chrono::milliseconds dur) -> std::ostream &;
+auto operator<<(std::ostream &out_stream, std::chrono::microseconds dur) -> std::ostream &;
+auto operator<<(std::ostream & out_stream, std::chrono::nanoseconds dur) -> std::ostream &;
 } // namespace reactor::operators
 
 #endif // REACTOR_CPP_TIME_HH
