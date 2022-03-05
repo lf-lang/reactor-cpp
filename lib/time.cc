@@ -20,7 +20,7 @@
 namespace reactor {
 inline namespace operators {
 
-auto operator<<([[maybe_unused]]std::ostream &output_stream, [[maybe_unused]]reactor::TimePoint time_point) -> std::ostream &{
+auto operator<<(std::ostream &output_stream, reactor::TimePoint time_point) -> std::ostream &{
   constexpr std::size_t field_size = 20;
   constexpr int width = 9;
   constexpr auto max_value = 1'000'000'000UL;
