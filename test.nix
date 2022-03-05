@@ -44,21 +44,6 @@ keep_alive = [
   "AsyncCallback2.lf"
 ];
 
-# checks if a given file is in the unrunable file list
-is_executable =  file: !((lib.lists.count (x: x == file) keep_alive) > 0);
-
-# list of executable file names
-executables = ( builtins.map extract_name (builtins.filter is_executable tests ) );
-
-# executes all tests
-execute_all = (lib.strings.concatStringsSep "\n" (builtins.map (x: "./result/bin/${x}-${default_compiler.pname}-${fmt_version default_compiler.version}") executables));
-
-# writes the execute command to file
-run_all = (pkgs.writeScriptBin "all-tests" (''
-  #!${pkgs.runtimeShell}
-
-'' + execute_all));
-
 generate_package_name = (test: compiler: let 
   version = builtins.replaceStrings [ "." ] ["-"] "${compiler.version}";
   name = extract_name test;
@@ -110,9 +95,9 @@ let
   file_name = extract_name test_file;
   package_name = "${file_name}-${compiler.pname}-${package_version}";
 in{
-  name = "${file_name}-${compiler.pname}-${package_version}";
+  name = package_name;
   value = mkDerivation {
-    name = "${file_name}-${compiler.pname}-${package_version}";
+    name = package_name;
 
     src = lingua-franca-src;
 
@@ -138,6 +123,24 @@ in{
 
 # given a lists of files it will create a list of derivations
 list_of_derivations = builtins.map extract_derivation (builtins.map (test: buildDerivation test default_compiler) tests);
+
+# checks if a given file is in the unrunable file list
+is_executable =  file: !((lib.lists.count (x: x == file) keep_alive) > 0);
+
+# list of executable file names
+executables = (builtins.filter is_executable tests );
+
+executables_derivations = (builtins.map extract_derivation (builtins.map (test: buildDerivation test default_compiler) executables));
+
+# executes all tests
+execute_all = (lib.strings.concatStringsSep "\n" (builtins.map (x: "${x}/bin/${x.name}") executables_derivations));
+
+# writes the execute command to file
+run_all = (pkgs.writeScriptBin "all-tests" (''
+  #!${pkgs.runtimeShell}
+
+'' + execute_all));
+
 
 # creates the copy command for every derivation
 create_install_command = (lib.strings.concatStringsSep "\n" (builtins.map (x: "cp -r ${x}/bin/* $out/bin/") list_of_derivations ));
