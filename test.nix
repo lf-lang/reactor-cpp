@@ -51,10 +51,10 @@ is_executable =  file: !((lib.lists.count (x: x == file) keep_alive) > 0);
 executables = ( builtins.map extract_name (builtins.filter is_executable tests ) );
 
 # executes all tests
-execute_all = (lib.strings.concatStringsSep "\n" (builtins.map (x: "./${x}-${default_compiler.name}") executables));
+execute_all = (lib.strings.concatStringsSep "\n" (builtins.map (x: "./result/bin/${x}-${default_compiler.pname}-${fmt_version default_compiler.version}") executables));
 
 # writes the execute command to file
-run_all = (pkgs.writeScriptBin "run-all" (''
+run_all = (pkgs.writeScriptBin "all-tests" (''
   #!${pkgs.runtimeShell}
 
 '' + execute_all));
@@ -126,14 +126,12 @@ in{
       cd test/Cpp/src
       mkdir -p include/reactor-cpp/
       cp -r ${cpp-runtime}/include/reactor-cpp/* include/reactor-cpp/
-      export CMAKE_CXX_COMPILER=${pkgs.clang_13}/bin/clang;
-      export CXX=${pkgs.clang_13}/bin/clang;
       ${pkgs.lingua-franca}/bin/lfc --external-runtime-path ${cpp-runtime}/ --output ./ ${test_file}
     '';
 
     installPhase = ''
       mkdir -p $out/bin
-      cp -r ./bin/${file_name} $out/bin/${file_name}-${compiler.pname}
+      cp -r ./bin/${file_name} $out/bin/${package_name}
     '';
   };
 } );

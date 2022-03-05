@@ -11,7 +11,6 @@
 #pragma warning(disable : 4996)
 #endif
 
-#include "reactor-cpp/logging.hh"
 #include "reactor-cpp/time.hh"
 
 #include <ctime>
@@ -20,40 +19,36 @@
 namespace reactor {
 inline namespace operators {
 
-auto operator<<(std::ostream &output_stream, reactor::TimePoint time_point) -> std::ostream &{
-  constexpr std::size_t field_size = 20;
-  constexpr int width = 9;
-  constexpr auto max_value = 1'000'000'000UL;
-
-  char buffer[field_size];
+std::ostream& operator<<(std::ostream& os, TimePoint tp) {
+  char buf[20];
   time_t time = std::chrono::system_clock::to_time_t(
-      std::chrono::time_point_cast<std::chrono::system_clock::duration>(time_point));
-  std::strftime(buffer, field_size, "%Y-%m-%d %H:%M:%S", std::localtime(&time));
+      std::chrono::time_point_cast<std::chrono::system_clock::duration>(tp));
+  std::strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", std::localtime(&time));
 
-  auto epoch = std::chrono::duration_cast<reactor::Duration>(time_point.time_since_epoch());
-  output_stream << buffer << '.' << std::setw(width) << std::setfill('0')
-     << epoch.count() % max_value;
+  auto epoch = std::chrono::duration_cast<Duration>(tp.time_since_epoch());
+  os << buf << '.' << std::setw(9) << std::setfill('0')
+     << epoch.count() % 1'000'000'000UL;
 
-  return output_stream;
+  return os;
 }
 
-auto operator<<(std::ostream &out_stream, std::chrono::seconds dur) -> std::ostream & {
-  out_stream << dur.count() << " secs";
-  return out_stream;
+std::ostream& operator<<(std::ostream& os, std::chrono::seconds dur) {
+  os << dur.count() << " secs";
+  return os;
 }
-auto operator<<(std::ostream &out_stream, std::chrono::milliseconds dur) -> std::ostream & {
-  out_stream << dur.count() << " msecs";
-  return out_stream;
+std::ostream& operator<<(std::ostream& os, std::chrono::milliseconds dur) {
+  os << dur.count() << " msecs";
+  return os;
 }
-auto operator<<(std::ostream &out_stream, std::chrono::microseconds dur) -> std::ostream & {
-  out_stream << dur.count() << " usecs";
-  return out_stream;
+std::ostream& operator<<(std::ostream& os, std::chrono::microseconds dur) {
+  os << dur.count() << " usecs";
+  return os;
 }
-auto operator<<(std::ostream &out_stream, std::chrono::nanoseconds dur) -> std::ostream & {
-  out_stream << dur.count() << " nsecs";
-  return out_stream;
+std::ostream& operator<<(std::ostream& os, std::chrono::nanoseconds dur) {
+  os << dur.count() << " nsecs";
+  return os;
 }
 
-} // namespace operators
+}  // namespace operators
 
-} // namespace reactor
+}  // namespace reactor
