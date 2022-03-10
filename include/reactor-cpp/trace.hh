@@ -47,8 +47,8 @@ TRACEPOINT_EVENT(
                       ctf_integer(unsigned, timestamp_microstep, tag_arg.micro_step())))
 
 TRACEPOINT_EVENT(reactor_cpp, reaction_execution_finishes,
-    TP_ARGS(int, worker_id_arg, const std::string&, reaction_name_arg),
-    TP_FIELDS(ctf_string(reaction_name, reaction_name_arg.c_str())
+                 TP_ARGS(int, worker_id_arg, const std::string&, reaction_name_arg),
+                 TP_FIELDS(ctf_string(reaction_name, reaction_name_arg.c_str())
                                ctf_integer(int, worker_id, worker_id_arg)))
 
 TRACEPOINT_EVENT(

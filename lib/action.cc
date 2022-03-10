@@ -14,7 +14,7 @@
 
 namespace reactor {
 
-void BaseAction::register_trigger(Reaction *reaction) {
+void BaseAction::register_trigger(Reaction* reaction) {
   reactor_assert(reaction != nullptr);
   reactor_assert(this->environment() == reaction->environment());
   assert_phase(this, Environment::Phase::Assembly);
@@ -24,14 +24,13 @@ void BaseAction::register_trigger(Reaction *reaction) {
   reactor_assert(triggers_.insert(reaction).second);
 }
 
-void BaseAction::register_scheduler(Reaction *reaction) {
+void BaseAction::register_scheduler(Reaction* reaction) {
   reactor_assert(reaction != nullptr);
   reactor_assert(this->environment() == reaction->environment());
   assert_phase(this, Environment::Phase::Assembly);
   // the reaction must belong to the same reactor as this action
-  validate(this->container() == reaction->container(),
-           "Scheduable actions must belong to the same reactor as the "
-           "triggered reaction");
+  validate(this->container() == reaction->container(), "Scheduable actions must belong to the same reactor as the "
+                                                       "triggered reaction");
   reactor_assert(schedulers_.insert(reaction).second);
 }
 

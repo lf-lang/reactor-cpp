@@ -12,22 +12,18 @@
 
 namespace reactor {
 
-auto operator==(const Tag &lhs, const Tag &rhs) noexcept -> bool {
-  return lhs.time_point() == rhs.time_point() &&
-         lhs.micro_step() == rhs.micro_step();
+auto operator==(const Tag& lhs, const Tag& rhs) noexcept -> bool {
+  return lhs.time_point() == rhs.time_point() && lhs.micro_step() == rhs.micro_step();
 }
 
-auto operator<(const Tag &lhs, const Tag &rhs) noexcept -> bool {
+auto operator<(const Tag& lhs, const Tag& rhs) noexcept -> bool {
   return lhs.time_point() < rhs.time_point() ||
-         (lhs.time_point() == rhs.time_point() &&
-          lhs.micro_step() < rhs.micro_step());
+         (lhs.time_point() == rhs.time_point() && lhs.micro_step() < rhs.micro_step());
 }
 
-auto Tag::from_physical_time(TimePoint time_point) noexcept -> Tag {
-  return Tag{time_point, 0};
-}
+auto Tag::from_physical_time(TimePoint time_point) noexcept -> Tag { return Tag{time_point, 0}; }
 
-auto Tag::from_logical_time(const LogicalTime &logical_time) noexcept -> Tag {
+auto Tag::from_logical_time(const LogicalTime& logical_time) noexcept -> Tag {
   return Tag{logical_time.time_point(), logical_time.micro_step()};
 }
 
@@ -38,22 +34,22 @@ auto Tag::delay(Duration offset) const noexcept -> Tag {
   return Tag{this->time_point_ + offset, 0};
 }
 
-void LogicalTime::advance_to(const Tag &tag) {
+void LogicalTime::advance_to(const Tag& tag) {
   reactor_assert(*this < tag);
   time_point_ = tag.time_point();
   micro_step_ = tag.micro_step();
 }
 
-auto operator==(const LogicalTime & logical_time, const Tag & tag) noexcept -> bool {
+auto operator==(const LogicalTime& logical_time, const Tag& tag) noexcept -> bool {
   return logical_time.time_point() == tag.time_point() && logical_time.micro_step() == tag.micro_step();
 }
 
-auto operator<(const LogicalTime & logical_time, const Tag & tag) noexcept -> bool {
+auto operator<(const LogicalTime& logical_time, const Tag& tag) noexcept -> bool {
   return logical_time.time_point() < tag.time_point() ||
          (logical_time.time_point() == tag.time_point() && logical_time.micro_step() < tag.micro_step());
 }
 
-auto operator>(const LogicalTime & logical_time, const Tag & tag) noexcept -> bool {
+auto operator>(const LogicalTime& logical_time, const Tag& tag) noexcept -> bool {
   return logical_time.time_point() > tag.time_point() ||
          (logical_time.time_point() == tag.time_point() && logical_time.micro_step() > tag.micro_step());
 }
