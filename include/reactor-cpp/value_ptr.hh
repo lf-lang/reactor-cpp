@@ -37,8 +37,7 @@ template <class T> class ImmutableValuePtr;
  * @tparam T type of the value managed by this class
  * @author Christian Menard
  */
-template <class T>
-class MutableValuePtr { //NOLINT
+template <class T> class MutableValuePtr { // NOLINT
 private:
   /// The internal unique smart pointer that this class builds upon.
   std::unique_ptr<T> internal_ptr;
@@ -139,7 +138,7 @@ public:
    * Provides access to members of the associated value via ``->``. The
    * behavior is undefined if ``get() == nullptr``.
    */
-  auto operator->() const -> T* { return get(); }
+  auto operator-> () const -> T* { return get(); }
 
   // Give ImmutableValuePtr access to the private constructor. This is required
   // for creating a MutableValuePtr from an ImmutableValuePtr in
@@ -168,8 +167,7 @@ public:
  * @tparam T type of the value managed by this class
  * @author Christian Menard
  */
-template <class T>
-class ImmutableValuePtr { //NOLINT
+template <class T> class ImmutableValuePtr { // NOLINT
 public:
   /// A type alias that adds ``const`` to ``T``
   using const_T = typename std::add_const<T>::type;
@@ -415,21 +413,23 @@ template <class T, class U>
 auto operator!=(const ImmutableValuePtr<T>& ptr1, const ImmutableValuePtr<U>& ptr2) -> bool {
   return ptr1.get() != ptr2.get();
 }
-template <class T, class U>
-auto operator!=(const ImmutableValuePtr<T>& ptr1, const MutableValuePtr<U>& ptr2) -> bool {
+template <class T, class U> auto operator!=(const ImmutableValuePtr<T>& ptr1, const MutableValuePtr<U>& ptr2) -> bool {
   return ptr1.get() != ptr2.get();
 }
-template <class T, class U>
-auto operator!=(const MutableValuePtr<T>& ptr1, const ImmutableValuePtr<U>& ptr2) -> bool {
+template <class T, class U> auto operator!=(const MutableValuePtr<T>& ptr1, const ImmutableValuePtr<U>& ptr2) -> bool {
   return ptr1.get() != ptr2.get();
 }
-template <class T>
-auto operator!=(const MutableValuePtr<T>& ptr1, std::nullptr_t) -> bool { return ptr1.get() != nullptr; }
-template <class T>
-auto operator!=(std::nullptr_t, const MutableValuePtr<T>& ptr1) -> bool { return ptr1.get() != nullptr; }
-template <class T>
-auto operator!=(const ImmutableValuePtr<T>& ptr1, std::nullptr_t) -> bool { return ptr1.get() != nullptr; }
-template <class T>
-auto operator!=(std::nullptr_t, const ImmutableValuePtr<T>& ptr1) -> bool { return ptr1.get() != nullptr; }
+template <class T> auto operator!=(const MutableValuePtr<T>& ptr1, std::nullptr_t) -> bool {
+  return ptr1.get() != nullptr;
+}
+template <class T> auto operator!=(std::nullptr_t, const MutableValuePtr<T>& ptr1) -> bool {
+  return ptr1.get() != nullptr;
+}
+template <class T> auto operator!=(const ImmutableValuePtr<T>& ptr1, std::nullptr_t) -> bool {
+  return ptr1.get() != nullptr;
+}
+template <class T> auto operator!=(std::nullptr_t, const ImmutableValuePtr<T>& ptr1) -> bool {
+  return ptr1.get() != nullptr;
+}
 
 } // namespace reactor

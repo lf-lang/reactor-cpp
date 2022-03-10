@@ -62,19 +62,30 @@ public:
 
 // c++20 starship operator will save us this mess
 auto operator==(const LogicalTime& logical_time, const Tag& tag) noexcept -> bool;
-auto inline operator!=(const LogicalTime& logical_time, const Tag& tag) noexcept -> bool { return !(logical_time == tag); }
+auto inline operator!=(const LogicalTime& logical_time, const Tag& tag) noexcept -> bool {
+  return !(logical_time == tag);
+}
 auto operator<(const LogicalTime& logical_time, const Tag& tag) noexcept -> bool;
 auto operator>(const LogicalTime& logical_time, const Tag& tag) noexcept -> bool;
-auto inline operator<=(const LogicalTime& logical_time, const Tag& tag) noexcept -> bool { return !(logical_time > tag); }
-auto inline operator>=(const LogicalTime& logical_time, const Tag& tag) noexcept -> bool { return !(logical_time < tag); }
+auto inline operator<=(const LogicalTime& logical_time, const Tag& tag) noexcept -> bool {
+  return !(logical_time > tag);
+}
+auto inline operator>=(const LogicalTime& logical_time, const Tag& tag) noexcept -> bool {
+  return !(logical_time < tag);
+}
 auto inline operator==(const Tag& tag, const LogicalTime& logical_time) noexcept -> bool { return logical_time == tag; }
-auto inline operator!=(const Tag& tag, const LogicalTime& logical_time) noexcept -> bool { return !(logical_time == tag); }
+auto inline operator!=(const Tag& tag, const LogicalTime& logical_time) noexcept -> bool {
+  return !(logical_time == tag);
+}
 auto inline operator<(const Tag& tag, const LogicalTime& logical_time) noexcept -> bool { return logical_time > tag; }
 auto inline operator>(const Tag& tag, const LogicalTime& logical_time) noexcept -> bool { return logical_time < tag; }
-auto inline operator<=(const Tag& tag, const LogicalTime& logical_time) noexcept -> bool { return !(tag > logical_time); }
-auto inline operator>=(const Tag& tag, const LogicalTime& logical_time) noexcept -> bool { return !(tag < logical_time); }
+auto inline operator<=(const Tag& tag, const LogicalTime& logical_time) noexcept -> bool {
+  return !(tag > logical_time);
+}
+auto inline operator>=(const Tag& tag, const LogicalTime& logical_time) noexcept -> bool {
+  return !(tag < logical_time);
+}
 
 } // namespace reactor
-
 
 #endif // REACTOR_CPP_LOGICAL_TIME_HH

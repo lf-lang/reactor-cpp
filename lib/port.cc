@@ -22,7 +22,7 @@ void BasePort::base_bind_to(BasePort *port) {
            "Ports with dependencies may not be connected to other ports");
   validate(!port->has_antidependencies(),
            "Ports with antidependencies may not be connected to other ports");
-  assert_phase(this, Environment::Phase::Assembly); //TODO:
+  assert_phase(this, Environment::Phase::Assembly);
   if (this->is_input() && port->is_input()) {
     validate(
         this->container() == port->container()->container(),

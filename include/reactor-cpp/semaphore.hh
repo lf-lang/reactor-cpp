@@ -42,5 +42,4 @@ public:
 
 } // namespace reactor
 
-
 #endif // REACTOR_CPP_SEMAPHORE_HH

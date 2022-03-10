@@ -6,7 +6,7 @@ using namespace reactor;
 using namespace std::chrono_literals;
 
 class Hello : public Reactor {
- private:
+private:
   // actions
   Timer timer{"timer", this, 1s, 2s};
   ShutdownAction sa{"terminate", this};
@@ -15,8 +15,9 @@ class Hello : public Reactor {
   Reaction r_hello{"r_hello", 1, this, [this]() { hello(); }};
   Reaction r_terminate{"r_terminate", 2, this, [this]() { terminate(); }};
 
- public:
-  explicit Hello(Environment* env) : Reactor("Hello", env) {}
+public:
+  explicit Hello(Environment* env)
+      : Reactor("Hello", env) {}
 
   void assemble() override {
     r_hello.declare_trigger(&timer);
@@ -30,28 +31,27 @@ class Hello : public Reactor {
 
 class Timeout : public Reactor {
 private:
-    Timer timer;
+  Timer timer;
 
-    Reaction r_timer{"r_timer", 1, this,
-                   [this]() { environment()->sync_shutdown(); }};
+  Reaction r_timer{"r_timer", 1, this, [this]() { environment()->sync_shutdown(); }};
 
 public:
-    Timeout(Environment* env, Duration timeout)
+  Timeout(Environment* env, Duration timeout)
       : Reactor("Timeout", env)
       , timer{"timer", this, Duration::zero(), timeout} {}
 
-    void assemble() override { r_timer.declare_trigger(&timer); }
+  void assemble() override { r_timer.declare_trigger(&timer); }
 };
 
 int main() {
-    Environment e{4};
+  Environment e{4};
 
-    Hello hello{&e};
-    Timeout timeout{&e, 5s};
-    e.assemble();
+  Hello hello{&e};
+  Timeout timeout{&e, 5s};
+  e.assemble();
 
-    auto t = e.startup();
-    t.join();
+  auto t = e.startup();
+  t.join();
 
-    return 0;
+  return 0;
 }

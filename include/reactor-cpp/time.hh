@@ -13,13 +13,10 @@
 
 namespace reactor {
 
-using TimePoint = std::chrono::time_point<std::chrono::system_clock,
-                                          std::chrono::nanoseconds>;
+using TimePoint = std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds>;
 using Duration = std::chrono::nanoseconds;
 
-inline TimePoint get_physical_time() {
-  return std::chrono::system_clock::now();
-}
+inline TimePoint get_physical_time() { return std::chrono::system_clock::now(); }
 
 inline namespace operators {
 
@@ -30,6 +27,6 @@ std::ostream& operator<<(std::ostream& os, std::chrono::milliseconds dur);
 std::ostream& operator<<(std::ostream& os, std::chrono::microseconds dur);
 std::ostream& operator<<(std::ostream& os, std::chrono::nanoseconds dur);
 
-}  // namespace operators
+} // namespace operators
 
-}  // namespace reactor
+} // namespace reactor

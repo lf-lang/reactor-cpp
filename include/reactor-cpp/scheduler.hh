@@ -64,22 +64,22 @@ public:
       : num_workers_(num_workers) {}
 
   /**
-   * Retrieve a ready reaction from the queue_.
+   * Retrieve a ready reaction from the queue.
    *
-   * This method may be called concurrently. In case the queue_ is empty, the
+   * This method may be called concurrently. In case the queue is empty, the
    * method blocks and waits until a ready reaction becomes available.
    */
   auto pop() -> Reaction*;
 
   /**
-   * Fill the queue_ up with ready reactions.
+   * Fill the queue up with ready reactions.
    *
-   * This method assumes that the internal queue_ is empty. It moves all
+   * This method assumes that the internal queue is empty. It moves all
    * reactions from the provided `ready_reactions` vector to the internal
-   * queue_, leaving `ready_reactions` empty.
+   * queue, leaving `ready_reactions` empty.
    *
    * Note that this method is not thread-safe. The caller needs to ensure that
-   * no other thread will try to read from the queue_ during this operation.
+   * no other thread will try to read from the queue during this operation.
    */
   void fill_up(std::vector<Reaction*>& ready_reactions);
 };
@@ -108,7 +108,7 @@ private:
   unsigned int reaction_queue_pos_{std::numeric_limits<unsigned>::max()};
 
   ReadyQueue ready_queue_;
-  std::atomic<std::ptrdiff_t> reactions_to_process_{0}; //NOLINT
+  std::atomic<std::ptrdiff_t> reactions_to_process_{0}; // NOLINT
 
   std::atomic<bool> stop_{false};
   bool continue_execution_{true};

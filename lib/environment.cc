@@ -164,26 +164,6 @@ void Environment::export_dependency_graph(const std::string &path) {
   log::Info() << "Reaction graph was written to " << path;
 }
 
-void Environment::dump_to_yaml(const std::string &path) {
-  std::ofstream yaml(path);
-  yaml << "---" << std::endl;
-  yaml << "top_level_instances:" << std::endl;
-  for (const auto * reactors : top_level_reactors_) {
-    yaml << "  - " << reactors->fqn() << std::endl;
-  }
-  yaml << "all_reactor_instances:" << std::endl;
-  for (const auto * reactors : top_level_reactors_) {
-    dump_instance_to_yaml(yaml, *reactors);
-  }
-  yaml << "reaction_dependencies:" << std::endl;
-  for (auto &iterator : dependencies_) {
-    yaml << "  - from: " << iterator.first->fqn() << std::endl;
-    yaml << "  - to: " << iterator.second->fqn() << std::endl;
-  }
-
-  log::Info() << "Program structure was dumped to " << path;
-}
-
 void Environment::calculate_indexes() {
   // build the graph
   std::map<Reaction *, std::set<Reaction *>> graph;
@@ -372,4 +352,25 @@ void Environment::dump_reaction_to_yaml(std::ofstream &yaml,
     yaml << "          - " << scheduable_action->fqn() << std::endl;
   }
 }
+
+void Environment::dump_to_yaml(const std::string &path) {
+  std::ofstream yaml(path);
+  yaml << "---" << std::endl;
+  yaml << "top_level_instances:" << std::endl;
+  for (const auto * reactors : top_level_reactors_) {
+    yaml << "  - " << reactors->fqn() << std::endl;
+  }
+  yaml << "all_reactor_instances:" << std::endl;
+  for (const auto * reactors : top_level_reactors_) {
+    dump_instance_to_yaml(yaml, *reactors);
+  }
+  yaml << "reaction_dependencies:" << std::endl;
+  for (auto &iterator : dependencies_) {
+    yaml << "  - from: " << iterator.first->fqn() << std::endl;
+    yaml << "  - to: " << iterator.second->fqn() << std::endl;
+  }
+
+  log::Info() << "Program structure was dumped to " << path;
+}
+
 } // namespace reactor

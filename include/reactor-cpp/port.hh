@@ -20,7 +20,7 @@ enum class PortType { Input, Output };
 
 class BasePort : public ReactorElement {
 private:
-  BasePort* inward_binding_ {nullptr};
+  BasePort* inward_binding_{nullptr};
   std::set<BasePort*> outward_bindings_{};
   const PortType type_;
 
@@ -30,8 +30,7 @@ private:
 
 protected:
   BasePort(const std::string& name, PortType type, Reactor* container)
-      : ReactorElement(name,
-                       (type == PortType::Input) ? ReactorElement::Type::Input : ReactorElement::Type::Output,
+      : ReactorElement(name, (type == PortType::Input) ? ReactorElement::Type::Input : ReactorElement::Type::Output,
                        container)
       , type_(type) {}
 
@@ -60,8 +59,7 @@ public:
   friend class Scheduler;
 };
 
-template <class T>
-class Port : public BasePort {
+template <class T> class Port : public BasePort {
 private:
   ImmutableValuePtr<T> value_ptr_{nullptr};
 
@@ -90,8 +88,7 @@ public:
   [[nodiscard]] auto is_present() const noexcept -> bool;
 };
 
-template <> 
-class Port<void> : public BasePort {
+template <> class Port<void> : public BasePort {
 private:
   bool present_{false};
 
@@ -112,8 +109,7 @@ public:
   void shutdown() final {}
 };
 
-template <class T> 
-class Input : public Port<T> { // NOLINT
+template <class T> class Input : public Port<T> { // NOLINT
 public:
   Input(const std::string& name, Reactor* container)
       : Port<T>(name, PortType::Input, container) {}

@@ -61,27 +61,22 @@ public:
   void startup() final {}
   void shutdown() final {}
 
-  template <class Dur = Duration>
-  void schedule(const ImmutableValuePtr<T>& value_ptr, Dur delay = Dur::zero());
+  template <class Dur = Duration> void schedule(const ImmutableValuePtr<T>& value_ptr, Dur delay = Dur::zero());
 
-  template <class Dur = Duration>
-  void schedule(MutableValuePtr<T>&& value_ptr, Dur delay = Dur::zero()) {
+  template <class Dur = Duration> void schedule(MutableValuePtr<T>&& value_ptr, Dur delay = Dur::zero()) {
     schedule(ImmutableValuePtr<T>(std::forward<MutableValuePtr<T>>(value_ptr)), delay);
   }
 
-  template <class Dur = Duration>
-  void schedule(const T& value, Dur delay = Dur::zero()) {
+  template <class Dur = Duration> void schedule(const T& value, Dur delay = Dur::zero()) {
     schedule(make_immutable_value<T>(value), delay);
   }
 
-  template <class Dur = Duration>
-  void schedule(T&& value, Dur delay = Dur::zero()) {
+  template <class Dur = Duration> void schedule(T&& value, Dur delay = Dur::zero()) {
     schedule(make_immutable_value<T>(std::forward<T>(value)), delay);
   }
 
   // Scheduling an action with nullptr value is not permitted.
-  template <class Dur = Duration>
-  void schedule(std::nullptr_t, Dur) = delete;
+  template <class Dur = Duration> void schedule(std::nullptr_t, Dur) = delete;
 
   auto get() const noexcept -> const ImmutableValuePtr<T>& { return value_ptr_; }
 
@@ -102,8 +97,7 @@ public:
   void startup() final {}
   void shutdown() final {}
 
-  template <class Dur = Duration>
-  void schedule(Dur delay = Dur::zero());
+  template <class Dur = Duration> void schedule(Dur delay = Dur::zero());
 
   [[nodiscard]] auto is_present() const noexcept -> bool { return present_; }
 };

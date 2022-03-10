@@ -45,7 +45,7 @@ public:
 #include <unistd.h>
 
 inline void print_debug_backtrace() {
-  void *array[10]; //NOLINT
+  void* array[10]; // NOLINT
   std::size_t size;
 
   // get void*'s for all entries on the stack
@@ -57,49 +57,43 @@ inline void print_debug_backtrace() {
 
 constexpr inline void validate([[maybe_unused]] bool condition, [[maybe_unused]] const std::string& message) {
   if constexpr (runtime_validation) { // NOLINT
-    if(!condition){
-        #ifdef __linux__
-        print_debug_backtrace();
-        #endif
-        throw ValidationError(message);
+    if (!condition) {
+#ifdef __linux__
+      print_debug_backtrace();
+#endif
+      throw ValidationError(message);
     }
   }
 }
 
 constexpr inline void reactor_assert([[maybe_unused]] bool condition) {
   if constexpr (runtime_assertion) { // NOLINT
-    assert(condition); //NOLINT
+    assert(condition);               // NOLINT
   }
 }
 
-template<typename E>
-constexpr auto extract_value(E enum_value) -> typename std::underlying_type<E>::type {
+template <typename E> constexpr auto extract_value(E enum_value) -> typename std::underlying_type<E>::type {
   return static_cast<typename std::underlying_type<E>::type>(enum_value);
 }
-
 
 inline void assert_phase([[maybe_unused]] const ReactorElement* ptr, [[maybe_unused]] EnvPhase phase) {
   if constexpr (runtime_assertion) { // NOLINT
     if (ptr->environment()->phase() != phase) {
       auto enum_value_to_name = [](EnvPhase phase) -> std::string {
-        const std::map<EnvPhase, std::string> conversation_map = { //NOLINT
-            {EnvPhase::Construction, "Construction"},
-            {EnvPhase::Assembly, "Assembly"},
-            {EnvPhase::Startup, "Startup"},
-            {EnvPhase::Execution, "Execution"},
-            {EnvPhase::Shutdown, "Shutdown"},
-            {EnvPhase::Deconstruction, "Deconstruction"}
-        };
+        const std::map<EnvPhase, std::string> conversation_map = {
+            // NOLINT
+            {EnvPhase::Construction, "Construction"}, {EnvPhase::Assembly, "Assembly"},
+            {EnvPhase::Startup, "Startup"},           {EnvPhase::Execution, "Execution"},
+            {EnvPhase::Shutdown, "Shutdown"},         {EnvPhase::Deconstruction, "Deconstruction"}};
         // in C++20 use .contains()
-        if( conversation_map.find(phase) != std::end(conversation_map)){
+        if (conversation_map.find(phase) != std::end(conversation_map)) {
           return conversation_map.at(phase);
         }
-        return  "Unknown Phase: Value: " + std::to_string(extract_value(phase));
-
+        return "Unknown Phase: Value: " + std::to_string(extract_value(phase));
       };
-      #ifdef __linux__
+#ifdef __linux__
       print_debug_backtrace();
-      #endif
+#endif
 
       // C++20 std::format
       throw ValidationError("Expected Phase: " + enum_value_to_name(phase) +

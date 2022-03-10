@@ -8,8 +8,6 @@
 
 #include <utility>
 
-#include <utility>
-
 #include "reactor-cpp/reaction.hh"
 
 #include "reactor-cpp/action.hh"

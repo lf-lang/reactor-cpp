@@ -33,42 +33,22 @@ constexpr bool tracing_enabled = true;
 #include <lttng/tracepoint.h>
 
 TRACEPOINT_EVENT(
-  reactor_cpp,
-  reaction_execution_starts,
-  TP_ARGS(
-    int, worker_id_arg,
-    const std::string&, reaction_name_arg,
-    const reactor::LogicalTime&, tag_arg
-  ),
-  TP_FIELDS(
-    ctf_string(reaction_name, reaction_name_arg.c_str())
-    ctf_integer(int, worker_id, worker_id_arg)
-    ctf_integer(unsigned long, timestamp_ns,
-                tag_arg.time_point().time_since_epoch().count())
-    ctf_integer(unsigned, timestamp_microstep, tag_arg.micro_step())
-  )
-)
+    reactor_cpp, reaction_execution_starts,
+    TP_ARGS(int, worker_id_arg, const std::string&, reaction_name_arg, const reactor::LogicalTime&, tag_arg),
+    TP_FIELDS(ctf_string(reaction_name, reaction_name_arg.c_str()) ctf_integer(int, worker_id, worker_id_arg)
+                  ctf_integer(unsigned long, timestamp_ns, tag_arg.time_point().time_since_epoch().count())
+                      ctf_integer(unsigned, timestamp_microstep, tag_arg.micro_step())))
 
 TRACEPOINT_EVENT(
-  reactor_cpp,
-  reaction_execution_finishes,
-  TP_ARGS(
-    int, worker_id_arg,
-    const std::string&, reaction_name_arg,
-    const reactor::LogicalTime&, tag_arg
-  ),
-  TP_FIELDS(
-    ctf_string(reaction_name, reaction_name_arg.c_str())
-    ctf_integer(int, worker_id, worker_id_arg)
-    ctf_integer(unsigned long, timestamp_ns,
-                tag_arg.time_point().time_since_epoch().count())
-    ctf_integer(unsigned, timestamp_microstep, tag_arg.micro_step())
-  )
-)
+    reactor_cpp, reaction_execution_finishes,
+    TP_ARGS(int, worker_id_arg, const std::string&, reaction_name_arg, const reactor::LogicalTime&, tag_arg),
+    TP_FIELDS(ctf_string(reaction_name, reaction_name_arg.c_str()) ctf_integer(int, worker_id, worker_id_arg)
+                  ctf_integer(unsigned long, timestamp_ns, tag_arg.time_point().time_since_epoch().count())
+                      ctf_integer(unsigned, timestamp_microstep, tag_arg.micro_step())))
 
 TRACEPOINT_EVENT(reactor_cpp, reaction_execution_finishes,
-                 TP_ARGS(int, worker_id_arg, const std::string&, reaction_name_arg),
-                 TP_FIELDS(ctf_string(reaction_name, reaction_name_arg.c_str())
+    TP_ARGS(int, worker_id_arg, const std::string&, reaction_name_arg),
+    TP_FIELDS(ctf_string(reaction_name, reaction_name_arg.c_str())
                                ctf_integer(int, worker_id, worker_id_arg)))
 
 TRACEPOINT_EVENT(

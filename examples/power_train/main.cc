@@ -6,170 +6,176 @@ using namespace reactor;
 
 class LeftPedal : public Reactor {
 public:
-    // ports
-    Output<void> angle{"angle", this};
-    Output<void> on_off{"on_off", this};
+  // ports
+  Output<void> angle{"angle", this};
+  Output<void> on_off{"on_off", this};
 
 private:
-    // actions
-    PhysicalAction<void> req{"req", this};
+  // actions
+  PhysicalAction<void> req{"req", this};
 
-    // reactions
-    Reaction r1{"1", 1, this, [this]() { reaction_1(); }};
+  // reactions
+  Reaction r1{"1", 1, this, [this]() { reaction_1(); }};
 
-    void reaction_1() {}
+  void reaction_1() {}
 
 public:
-    explicit LeftPedal(Environment* env) : Reactor("LP", env) {}
+  explicit LeftPedal(Environment* env)
+      : Reactor("LP", env) {}
 
-    void assemble() override {
-        r1.declare_trigger(&req);
-        r1.declare_antidependency(&angle);
-        r1.declare_antidependency(&on_off);
-    }
+  void assemble() override {
+    r1.declare_trigger(&req);
+    r1.declare_antidependency(&angle);
+    r1.declare_antidependency(&on_off);
+  }
 };
 
 class RightPedal : public Reactor {
 public:
-    // ports
-    Output<void> angle{"angle", this};
-    Input<void> check{"check", this};
+  // ports
+  Output<void> angle{"angle", this};
+  Input<void> check{"check", this};
 
 private:
-    // actions
-    PhysicalAction<void> pol{"pol", this};
+  // actions
+  PhysicalAction<void> pol{"pol", this};
 
-    // reactions
-    Reaction r1{"1", 1, this, [this]() { reaction_1(); }};
-    Reaction r2{"2", 2, this, [this]() { reaction_2(); }};
+  // reactions
+  Reaction r1{"1", 1, this, [this]() { reaction_1(); }};
+  Reaction r2{"2", 2, this, [this]() { reaction_2(); }};
 
-    void reaction_1() {};
-    void reaction_2() {}
+  void reaction_1(){};
+  void reaction_2() {}
 
 public:
-    explicit RightPedal(Environment* env) : Reactor("RP", env) {}
+  explicit RightPedal(Environment* env)
+      : Reactor("RP", env) {}
 
-    void assemble() override {
-        r1.declare_trigger(&pol);
-        r1.declare_antidependency(&angle);
+  void assemble() override {
+    r1.declare_trigger(&pol);
+    r1.declare_antidependency(&angle);
 
-        r2.declare_trigger(&check);
-        r2.declare_schedulable_action(&pol);
-    }
+    r2.declare_trigger(&check);
+    r2.declare_schedulable_action(&pol);
+  }
 };
 
 class BrakeControl : public Reactor {
 public:
-    // ports
-    Input<void> angle{"angle", this};
-    Output<void> force{"force", this};
+  // ports
+  Input<void> angle{"angle", this};
+  Output<void> force{"force", this};
 
 private:
-    Reaction r1{"1", 1, this, [this]() { reaction_1(); }};
+  Reaction r1{"1", 1, this, [this]() { reaction_1(); }};
 
-    void reaction_1() {}
+  void reaction_1() {}
 
 public:
-    explicit BrakeControl(Environment* env) : Reactor("BC", env) {}
+  explicit BrakeControl(Environment* env)
+      : Reactor("BC", env) {}
 
-    void assemble() override {
-        r1.declare_trigger(&angle);
-        r1.declare_antidependency(&force);
-    }
+  void assemble() override {
+    r1.declare_trigger(&angle);
+    r1.declare_antidependency(&force);
+  }
 };
 
 class EngineControl : public Reactor {
 public:
-    // ports
-    Input<void> angle{"angle", this};
-    Input<void> on_off{"on_off", this};
-    Output<void> check{"check", this};
-    Output<void> torque{"torque", this};
+  // ports
+  Input<void> angle{"angle", this};
+  Input<void> on_off{"on_off", this};
+  Output<void> check{"check", this};
+  Output<void> torque{"torque", this};
 
 private:
-    // actions
-    PhysicalAction<void> rev{"rev", this};
+  // actions
+  PhysicalAction<void> rev{"rev", this};
 
-    // reactions
-    Reaction r1{"1", 1, this, [this]() { reaction_1(); }};
-    Reaction r2{"2", 2, this, [this]() { reaction_2(); }};
-    Reaction r3{"3", 3, this, [this]() { reaction_3(); }};
+  // reactions
+  Reaction r1{"1", 1, this, [this]() { reaction_1(); }};
+  Reaction r2{"2", 2, this, [this]() { reaction_2(); }};
+  Reaction r3{"3", 3, this, [this]() { reaction_3(); }};
 
-    void reaction_1() {}
-    void reaction_2() {}
-    void reaction_3() {}
+  void reaction_1() {}
+  void reaction_2() {}
+  void reaction_3() {}
 
 public:
-    explicit EngineControl(Environment* env) : Reactor("EC", env) {}
+  explicit EngineControl(Environment* env)
+      : Reactor("EC", env) {}
 
-    void assemble() override {
-        r1.declare_trigger(&on_off);
-        r1.declare_antidependency(&torque);
+  void assemble() override {
+    r1.declare_trigger(&on_off);
+    r1.declare_antidependency(&torque);
 
-        r2.declare_trigger(&angle);
-        r2.declare_antidependency(&torque);
+    r2.declare_trigger(&angle);
+    r2.declare_antidependency(&torque);
 
-        r3.declare_trigger(&rev);
-        r3.declare_antidependency(&check);
-    }
+    r3.declare_trigger(&rev);
+    r3.declare_antidependency(&check);
+  }
 };
 
 class Brake : public Reactor {
 public:
-    // ports
-    Input<void> force{"force", this};
+  // ports
+  Input<void> force{"force", this};
 
 private:
-    // reactions_
-    Reaction r1{"1", 1, this, [this]() { reaction_1(); }};
+  // reactions_
+  Reaction r1{"1", 1, this, [this]() { reaction_1(); }};
 
-    void reaction_1() {}
+  void reaction_1() {}
 
 public:
-    explicit Brake(Environment* env) : Reactor("B", env) {}
+  explicit Brake(Environment* env)
+      : Reactor("B", env) {}
 
-    void assemble() override { r1.declare_trigger(&force); }
+  void assemble() override { r1.declare_trigger(&force); }
 };
 
 class Engine : public Reactor {
 public:
-    // ports
-    Input<void> torque{"torque", this};
+  // ports
+  Input<void> torque{"torque", this};
 
 private:
-    // reactions_
-    Reaction r1{"1", 1, this, [this]() { reaction_1(); }};
+  // reactions_
+  Reaction r1{"1", 1, this, [this]() { reaction_1(); }};
 
-    void reaction_1() {}
+  void reaction_1() {}
 
 public:
-    explicit Engine(Environment* env) : Reactor("E", env) {}
+  explicit Engine(Environment* env)
+      : Reactor("E", env) {}
 
-    void assemble() override { r1.declare_trigger(&torque); }
+  void assemble() override { r1.declare_trigger(&torque); }
 };
 
 int main() {
-    Environment e{4};
+  Environment e{4};
 
-    LeftPedal left_pedal{&e};
-    RightPedal right_pedal{&e};
-    BrakeControl brake_control{&e};
-    EngineControl engine_control{&e};
-    Brake brakes{&e};
-    Engine engine{&e};
+  LeftPedal left_pedal{&e};
+  RightPedal right_pedal{&e};
+  BrakeControl brake_control{&e};
+  EngineControl engine_control{&e};
+  Brake brakes{&e};
+  Engine engine{&e};
 
-    e.assemble();
-    left_pedal.angle.bind_to(&brake_control.angle);
-    left_pedal.on_off.bind_to(&engine_control.on_off);
-    brake_control.force.bind_to(&brakes.force);
-    right_pedal.angle.bind_to(&engine_control.angle);
-    engine_control.check.bind_to(&right_pedal.check);
-    engine_control.torque.bind_to(&engine.torque);
+  e.assemble();
+  left_pedal.angle.bind_to(&brake_control.angle);
+  left_pedal.on_off.bind_to(&engine_control.on_off);
+  brake_control.force.bind_to(&brakes.force);
+  right_pedal.angle.bind_to(&engine_control.angle);
+  engine_control.check.bind_to(&right_pedal.check);
+  engine_control.torque.bind_to(&engine.torque);
 
-    e.export_dependency_graph("graph.dot");
+  e.export_dependency_graph("graph.dot");
 
-    auto t = e.startup();
-    t.join();
+  auto t = e.startup();
+  t.join();
 
-    return 0;
+  return 0;
 }

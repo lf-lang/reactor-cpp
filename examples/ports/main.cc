@@ -7,71 +7,73 @@ using namespace std::chrono_literals;
 
 class Trigger : public Reactor {
 private:
-    Timer timer;
-    Reaction r_timer{"r_timer", 1, this, [this]() { on_timer(); }};
+  Timer timer;
+  Reaction r_timer{"r_timer", 1, this, [this]() { on_timer(); }};
 
 public:
-    Trigger(const std::string& name, Environment* env, Duration period)
-        : Reactor(name, env), timer{"timer", this, period, Duration::zero()} {}
+  Trigger(const std::string& name, Environment* env, Duration period)
+      : Reactor(name, env)
+      , timer{"timer", this, period, Duration::zero()} {}
 
-    Output<void> trigger{"trigger", this};
+  Output<void> trigger{"trigger", this};
 
-    void assemble() override {
-        r_timer.declare_trigger(&timer);
-        r_timer.declare_antidependency(&trigger);
-    }
+  void assemble() override {
+    r_timer.declare_trigger(&timer);
+    r_timer.declare_antidependency(&trigger);
+  }
 
-    void on_timer() { trigger.set(); }
+  void on_timer() { trigger.set(); }
 };
 
 class Counter : public Reactor {
 private:
-    unsigned int value_{0};
-    Reaction r_trigger{"r_trigger", 1, this, [this]() { on_trigger(); }};
+  unsigned int value_{0};
+  Reaction r_trigger{"r_trigger", 1, this, [this]() { on_trigger(); }};
 
 public:
-    Counter(const std::string& name, Environment* env) : Reactor(name, env) {}
+  Counter(const std::string& name, Environment* env)
+      : Reactor(name, env) {}
 
-    Input<void> trigger{"trigger", this};
-    Output<int> count{"count", this};
+  Input<void> trigger{"trigger", this};
+  Output<int> count{"count", this};
 
-    void assemble() override {
-        r_trigger.declare_trigger(&trigger);
-        r_trigger.declare_antidependency(&count);
-    }
+  void assemble() override {
+    r_trigger.declare_trigger(&trigger);
+    r_trigger.declare_antidependency(&count);
+  }
 
-    void on_trigger() {
-        value_ += 1;
-        count.set(value_);
-    }
+  void on_trigger() {
+    value_ += 1;
+    count.set(value_);
+  }
 };
 
 class Printer : public Reactor {
 private:
-    Reaction r_value{"r_value", 1, this, [this]() { on_value(); }};
+  Reaction r_value{"r_value", 1, this, [this]() { on_value(); }};
 
 public:
-    Input<int> value{"value", this};
+  Input<int> value{"value", this};
 
-    Printer(const std::string& name, Environment* env) : Reactor(name, env) {}
+  Printer(const std::string& name, Environment* env)
+      : Reactor(name, env) {}
 
-    void assemble() override { r_value.declare_trigger(&value); }
+  void assemble() override { r_value.declare_trigger(&value); }
 
-    void on_value() {
-        std::cout << this->name() << ": " << *value.get() << std::endl;
-    }
+  void on_value() { std::cout << this->name() << ": " << *value.get() << std::endl; }
 };
 
 class Adder : public Reactor {
- private:
+private:
   Reaction r_add{"r_add", 1, this, [this]() { add(); }};
 
- public:
+public:
   Input<int> i1{"i1", this};
   Input<int> i2{"i1", this};
   Output<int> sum{"sum", this};
 
-  Adder(const std::string& name, Environment* env) : Reactor(name, env) {}
+  Adder(const std::string& name, Environment* env)
+      : Reactor(name, env) {}
 
   void assemble() override {
     r_add.declare_trigger(&i1);

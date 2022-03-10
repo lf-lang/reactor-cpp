@@ -29,7 +29,7 @@ public:
 
 private:
   using Dependency = std::pair<Reaction*, Reaction*>;
-  const unsigned int num_workers_ {default_number_worker};
+  const unsigned int num_workers_{default_number_worker};
   unsigned int max_reaction_index_{default_max_reaction_index};
   const bool run_forever_{default_run_forever};
   const bool fast_fwd_execution_{default_fast_fwd_execution};
@@ -46,9 +46,8 @@ private:
   void calculate_indexes();
 
 public:
-  explicit Environment(unsigned int num_workers, 
-          bool run_forever = default_run_forever, 
-          bool fast_fwd_execution = default_fast_fwd_execution)
+  explicit Environment(unsigned int num_workers, bool run_forever = default_run_forever,
+                       bool fast_fwd_execution = default_fast_fwd_execution)
       : num_workers_(num_workers)
       , run_forever_(run_forever)
       , fast_fwd_execution_(fast_fwd_execution)
@@ -63,7 +62,7 @@ public:
   // Debugging methods
   void export_dependency_graph(const std::string& path);
   void dump_to_yaml(const std::string& path);
-  
+
   static void dump_trigger_to_yaml(std::ofstream& yaml, const BaseAction& trigger);
   static void dump_instance_to_yaml(std::ofstream& yaml, const Reactor& reactor);
   static void dump_port_to_yaml(std::ofstream& yaml, const BasePort& port);

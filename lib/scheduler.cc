@@ -22,14 +22,16 @@ namespace reactor {
 
 thread_local const Worker* Worker::current_worker = nullptr; //NOLINT
 
-Worker::Worker(Worker &&work) : scheduler_{work.scheduler_}, identity_{work.identity_} { //NOLINT
-  // Need to provide the move constructor in order to organize workers_ in a
+Worker::Worker(Worker &&work) 
+    : scheduler_{work.scheduler_}, 
+    identity_{work.identity_} { //NOLINT
+  // Need to provide the move constructor in order to organize workers in a
   // std::vector. However, moving is not save if the thread is already running,
   // thus we throw an exception here if the the worker is moved but the
   // internal thread is already running.
 
   if (work.thread_.joinable()) {
-    throw std::runtime_error{"Running workers_ cannot be moved!"};
+    throw std::runtime_error{"Running workers cannot be moved!"};
   }
 }
 
@@ -91,7 +93,7 @@ void Scheduler::schedule() noexcept {
     found_ready_reactions = schedule_ready_reactions();
 
     if (!continue_execution_ && !found_ready_reactions) {
-      // let all workers_ know that they should terminate
+      // let all workers know that they should terminate
       terminate_all_workers();
       break;
     }
@@ -116,7 +118,7 @@ auto ReadyQueue::pop() -> Reaction * {
 }
 
 void ReadyQueue::fill_up(std::vector<Reaction *> &ready_reactions) {
-  // clear the internal queue_ and swap contents
+  // clear the internal queue and swap contents
   queue_.clear();
   queue_.swap(ready_reactions);
 
@@ -125,15 +127,15 @@ void ReadyQueue::fill_up(std::vector<Reaction *> &ready_reactions) {
   auto new_size = static_cast<std::ptrdiff_t>(queue_.size());
   auto old_size = size_.exchange(new_size, std::memory_order_acq_rel);
 
-  // calculate how many workers_ to wake up. -old_size indicates the number of
-  // workers_ who started waiting since the last update.
-  // We want to wake up at most all the waiting workers_. If we would release
-  // more, other workers_ that are out of work would not block when acquiring
+  // calculate how many workers to wake up. -old_size indicates the number of
+  // workers who started waiting since the last update.
+  // We want to wake up at most all the waiting workers. If we would release
+  // more, other workers that are out of work would not block when acquiring
   // the semaphore.
-  // Also, we do not want to wake up more workers_ than there is work. new_size
-  // indicates the number of ready reactions_. Since there is always at least
+  // Also, we do not want to wake up more workers than there is work. new_size
+  // indicates the number of ready reactions. Since there is always at least
   // one worker running running, new_size - running_workers indicates the
-  // number of additional workers_ needed to process all reactions_.
+  // number of additional workers needed to process all reactions.
   waiting_workers_ += -old_size;
   auto running_workers = num_workers_ - waiting_workers_;
   auto workers_to_wakeup =
@@ -142,13 +144,13 @@ void ReadyQueue::fill_up(std::vector<Reaction *> &ready_reactions) {
   // wakeup other workers_
   if (workers_to_wakeup > 0) {
     waiting_workers_ -= workers_to_wakeup;
-    log::Debug() << "Wakeup " << workers_to_wakeup << " workers_";
+    log::Debug() << "Wakeup " << workers_to_wakeup << " workers";
     sem_.release(static_cast<int>(workers_to_wakeup));
   }
 }
 
 void Scheduler::terminate_all_workers() {
-  log::Debug() << "(Scheduler) Send termination signal to all workers_";
+  log::Debug() << "(Scheduler) Send termination signal to all workers";
   auto num_workers = environment_->num_workers();
   std::vector<Reaction *> null_reactions{num_workers, nullptr};
   log::Debug() << null_reactions.size();
@@ -156,7 +158,7 @@ void Scheduler::terminate_all_workers() {
 }
 
 auto Scheduler::schedule_ready_reactions() -> bool {
-  // insert any triggered reactions_ into the reaction queue_
+  // insert any triggered reactions_ into the reaction queue
   for (auto &vec_reaction : triggered_reactions_) {
     for (auto *reaction : vec_reaction) {
       reaction_queue_[reaction->index()].push_back(reaction);
@@ -165,15 +167,15 @@ auto Scheduler::schedule_ready_reactions() -> bool {
   }
 
   log::Debug()
-      << "(Scheduler) Scanning the reaction queue_ for ready reactions_";
+      << "(Scheduler) Scanning the reaction queue for ready reactions";
 
-  // continue iterating over the reaction queue_
+  // continue iterating over the reaction queue
   for (; reaction_queue_pos_ < reaction_queue_.size(); reaction_queue_pos_++) {
     auto &reactions = reaction_queue_[reaction_queue_pos_];
 
-    // any ready reactions_ of current priority?
+    // any ready reactions of current priority?
     if (!reactions.empty()) {
-      log::Debug() << "(Scheduler) Process reactions_ of priority "
+      log::Debug() << "(Scheduler) Process reactions of priority "
                    << reaction_queue_pos_;
 
       // Make sure that any reaction is only executed once even if it
@@ -199,7 +201,7 @@ auto Scheduler::schedule_ready_reactions() -> bool {
     }
   }
 
-  log::Debug() << "(Scheduler) Reached end of reaction queue_";
+  log::Debug() << "(Scheduler) Reached end of reaction queue";
   return false;
 }
 
@@ -207,14 +209,14 @@ void Scheduler::start() {
   log::Debug() << "Starting the scheduler...";
 
   auto num_workers = environment_->num_workers();
-  // initialize the reaction queue_, set ports vector, and triggered reactions_
+  // initialize the reaction queue, set ports vector, and triggered reactions
   // vector
   reaction_queue_.resize(environment_->max_reaction_index() + 1);
   set_ports_.resize(num_workers);
   triggered_reactions_.resize(num_workers);
 
-  // Initialize and start the workers_. By resizing the workers_ vector first,
-  // we make sure that there is sufficient space for all the workers_ and non of
+  // Initialize and start the workers. By resizing the workers vector first,
+  // we make sure that there is sufficient space for all the workers and non of
   // them needs to be moved. This is important because a running worker may not
   // be moved.
   workers_.reserve(num_workers);
@@ -251,7 +253,7 @@ void Scheduler::next() { //NOLINT
   {
     std::unique_lock<std::mutex> lock{scheduling_mutex_};
 
-    // shutdown if there are no more events in the queue_
+    // shutdown if there are no more events in the queue
     if (event_queue_.empty() && !stop_) {
       if (environment_->run_forever()) {
         // wait for a new asynchronous event
@@ -270,8 +272,8 @@ void Scheduler::next() { //NOLINT
         log::Debug() << "Shutting down the scheduler";
         Tag t_next = Tag::from_logical_time(logical_time_).delay();
         if (t_next == event_queue_.begin()->first) {
-          log::Debug() << "Schedule the last round of reactions_ including all "
-                          "termination reactions_";
+          log::Debug() << "Schedule the last round of reactions including all "
+                          "termination reactions";
           events = std::move(event_queue_.begin()->second);
           event_queue_.erase(event_queue_.begin());
           log::Debug() << "advance logical time to tag [" << t_next.time_point()
@@ -299,10 +301,10 @@ void Scheduler::next() { //NOLINT
 
           // If physical time is still smaller than the next logical time
           // point, then wait until the next tag or until a new event is
-          // inserted asynchronously into the queue_
+          // inserted asynchronously into the queue
           if (physical_time < t_next.time_point()) {
             auto status = cv_schedule_.wait_until(lock, t_next.time_point());
-            // Start over if the event queue_ was modified
+            // Start over if the event queue was modified
             if (status == std::cv_status::no_timeout) {
               continue;
             }
@@ -312,7 +314,7 @@ void Scheduler::next() { //NOLINT
         }
 
         // retrieve all events with tag equal to current logical time from the
-        // queue_
+        // queue
         events = std::move(event_queue_.begin()->second);
         event_queue_.erase(event_queue_.begin());
 
@@ -338,7 +340,7 @@ void Scheduler::next() { //NOLINT
     log::Debug() << "Action " << vec_reactor.first->fqn();
     for (auto *reaction: vec_reactor.first->triggers()) {
       // There is no need to acquire the mutex. At this point the scheduler
-      // should be the only thread accessing the reaction queue_ as none of the
+      // should be the only thread accessing the reaction queue as none of the
       // workers_ are running
       log::Debug() << "insert reaction " << reaction->fqn() << " with index "
                    << reaction->index();
@@ -394,7 +396,7 @@ void Scheduler::set_port(BasePort * port) {
   // clean() multiple time is not harmful and more efficient then checking if
   set_ports_[Worker::current_worker_id()].push_back(port);
 
-  // recursively search for triggered reactions_
+  // recursively search for triggered reactions
   set_port_helper(port);
 }
 

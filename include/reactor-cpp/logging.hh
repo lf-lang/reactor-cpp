@@ -6,28 +6,26 @@
  *   Christian Menard
  */
 
-
 #ifndef REACTOR_CPP_LOGGING_HH
 #define REACTOR_CPP_LOGGING_HH
 
+#include "reactor-cpp/config.hh" //NOLINT
+#include "reactor-cpp/time.hh"
 #include <chrono>
 #include <iostream>
 #include <memory>
 #include <mutex>
-#include "reactor-cpp/config.hh" //NOLINT
-#include "reactor-cpp/time.hh"
 
 namespace reactor::log {
 
 template <bool enabled> class BaseLogger {};
 
-template <> 
-class BaseLogger<true> { // NOLINT
+template <> class BaseLogger<true> { // NOLINT
 private:
   using Lock = std::unique_lock<std::mutex>;
 
   const std::string log_prefix_{};
-  inline static std::mutex mutex_{}; //NOLINT
+  inline static std::mutex mutex_{}; // NOLINT
   Lock lock_{};
 
 public:
@@ -37,19 +35,17 @@ public:
     std::cerr << log_prefix;
   }
 
-  template <class T> 
-  auto operator<<(const T& msg) -> BaseLogger& {
+  template <class T> auto operator<<(const T& msg) -> BaseLogger& {
     std::cerr << msg;
     return *this;
   }
 
-  ~BaseLogger() { //NOLINT
+  ~BaseLogger() { // NOLINT
     std::cerr << std::endl;
   }
 };
 
-template <> 
-class BaseLogger<false> { // NOLINT
+template <> class BaseLogger<false> { // NOLINT
 public:
   explicit BaseLogger([[maybe_unused]] const std::string& /*unused*/) {}
 
@@ -64,16 +60,20 @@ constexpr bool warning_enabled = 2 <= REACTOR_CPP_LOG_LEVEL;
 constexpr bool error_enabled = 1 <= REACTOR_CPP_LOG_LEVEL;
 
 struct Debug : BaseLogger<debug_enabled> {
-  Debug() : BaseLogger<debug_enabled>("[DEBUG] ") {}; //NOLINT Update C++20
+  Debug()
+      : BaseLogger<debug_enabled>("[DEBUG] "){}; // NOLINT Update C++20
 };
 struct Info : BaseLogger<info_enabled> {
-  Info() : BaseLogger<info_enabled>("[INFO]  ") {}; //NOLINT Update C++20
+  Info()
+      : BaseLogger<info_enabled>("[INFO]  "){}; // NOLINT Update C++20
 };
 struct Warn : BaseLogger<warning_enabled> {
-  Warn() : BaseLogger<warning_enabled>("[WARN]  ") {}; //NOLINT Update C++20
+  Warn()
+      : BaseLogger<warning_enabled>("[WARN]  "){}; // NOLINT Update C++20
 };
 struct Error : BaseLogger<error_enabled> {
-  Error() : BaseLogger<error_enabled>("[ERROR] ") {}; //NOLINT Update C++20
+  Error()
+      : BaseLogger<error_enabled>("[ERROR] "){}; // NOLINT Update C++20
 };
 } // namespace reactor::log
 
