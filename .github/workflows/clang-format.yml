@@ -1,10 +1,10 @@
-name: clang-formatt-review
+name: clang-format-review
 
 # You can be more specific, but it currently only works on pull requests
 on: [pull_request]
 
 jobs:
-  clang-tidy:
+  clang-format:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
