@@ -11,7 +11,7 @@ Please make sure you subbmitted code follows the .clang-tidy and .clang-format f
 There are CI Tests which automatically check your code. If you want to perform the tests manually take a look
 at this [guide](https://github.com/lf-lang/lingua-franca/wiki/Regression-Tests).
 
-## Building with Nix
+## Building and Testing with Nix
 
 **Listing Compilers**
 ```
