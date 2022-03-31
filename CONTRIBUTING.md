@@ -18,15 +18,25 @@ at this [guide](https://github.com/lf-lang/lingua-franca/wiki/Regression-Tests).
     $ nix run .#packages.x86_64-linux.list-compilers
 ```
 
-**Building a speical Package**
+**Listing all available Tests**
+```
+    $  nix run .#packages.x86_64-linux.list-tests
+```
+
+**Building a special Package**
 ```
     $ nix build .#packages.x86_64-linux.ActionDelay-gcc-wrapper-10-3-0 --override-input reactor-cpp github:lf-lang/reactor-cpp/cpp-core-guidelines
 ```
 
+The important thing to note is that the `--override-input` flag can take literally any source. In this example it takes the `cpp-core-guidleines` branch 
+but you maybe also want to use your fork then the argument would look like this `--override-input reactor-cpp github:revol-xut/reactor-cpp`.
+
 **Building all Packages**
 ```
-    $ nix build .#packages.x86_64-linux.all-tests --override-input reactor-cpp github:lf-lang/reactor-cpp/cpp-core-guidelines
+    $ nix run .#packages.x86_64-linux.all-tests
 ```
+
+This will build and run every test.
 
 
 ### Benchmarking
@@ -35,7 +45,7 @@ If youre changes are performance critically it is adviced to run the test from [
 
 ## Git
 
-
+There are no strict conventions on how your git messages need to be formatted just know they should be informative and summersing on your changes. 
 
 
 

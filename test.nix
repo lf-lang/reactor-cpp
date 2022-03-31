@@ -62,6 +62,7 @@ all-compilers-script = (pkgs.writeScriptBin "all-compilers" (''
 
 '' + list_of_compilers));
 
+
 # downloading the cpp runtime
 cpp-runtime = mkDerivation {
   name = "cpp-lingua-franca-runtime";
@@ -157,6 +158,7 @@ ci_package = mkDerivation {
     '' + create_install_command;
 };
 
+# derivation which holds the script to list all available compilers
 list-compilers = mkDerivation {
   src = ./.;
   name = "list-compilers";
@@ -166,10 +168,28 @@ list-compilers = mkDerivation {
   '';
 };
 
+# string of all tests
+list_of_tests = (lib.strings.concatStringsSep "\n" (builtins.map extract_name tests));
+
+# script of all tests
+all-tests-script = (pkgs.writeScriptBin "all-tests" (list_of_tests + "\n"));
+
+# derivation which hold the script
+list-tests = mkDerivation {
+  src = ./.;
+  name = "list-tests";
+  installPhase = ''
+    mkdir -p $out/bin
+    echo "cat ${all-tests-script}/bin/all-tests" > $out/bin/list-tests
+    chmod +x $out/bin/list-tests
+  '';
+};
+
 
 in lib.listToAttrs ((double_map tests compilers buildDerivation) ++ 
 [ 
   {name = "all-tests"; value = ci_package; } 
   {name = "list-compilers"; value = list-compilers;}
+  {name = "list-tests"; value = list-tests;}
 ] )
 
