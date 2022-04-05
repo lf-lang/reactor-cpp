@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Function operator&gt;(const Tag&amp;, const LogicalTime&amp;) &mdash; reactor-cpp  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Function operator&gt;=(const Tag&amp;, const Tag&amp;)" href="function_namespacereactor_1aca3ed3cc50a88e62ae74bb1b956da1b0.html" />
+    <link rel="prev" title="Function operator&gt;(const LogicalTime&amp;, const Tag&amp;)" href="function_namespacereactor_1acef30c904eae278a8b4fb913d14e6ac7.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> reactor-cpp
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="library_root.html">Library API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="library_root.html#class-hierarchy">Class Hierarchy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="library_root.html#file-hierarchy">File Hierarchy</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="library_root.html#full-api">Full API</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="library_root.html#namespaces">Namespaces</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="namespace_reactor.html">Namespace reactor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="namespace_reactor__log.html">Namespace reactor::log</a></li>
+<li class="toctree-l4"><a class="reference internal" href="namespace_reactor__operators.html">Namespace reactor::operators</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="library_root.html#classes-and-structs">Classes and Structs</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="structreactor_1_1log_1_1Debug.html">Struct Debug</a></li>
+<li class="toctree-l4"><a class="reference internal" href="structreactor_1_1log_1_1Error.html">Struct Error</a></li>
+<li class="toctree-l4"><a class="reference internal" href="structreactor_1_1log_1_1Info.html">Struct Info</a></li>
+<li class="toctree-l4"><a class="reference internal" href="structreactor_1_1log_1_1Warn.html">Struct Warn</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Action.html">Template Class Action</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Action_3_01void_01_4.html">Template Class Action&lt; void &gt;</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classreactor_1_1BaseAction.html">Class BaseAction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classreactor_1_1BasePort.html">Class BasePort</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Environment.html">Class Environment</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classreactor_1_1ImmutableValuePtr.html">Template Class ImmutableValuePtr</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Input.html">Template Class Input</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classreactor_1_1log_1_1BaseLogger.html">Template Class BaseLogger</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classreactor_1_1log_1_1BaseLogger_3_01false_01_4.html">Template Class BaseLogger&lt; false &gt;</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classreactor_1_1log_1_1BaseLogger_3_01true_01_4.html">Template Class BaseLogger&lt; true &gt;</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classreactor_1_1LogicalAction.html">Template Class LogicalAction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classreactor_1_1LogicalTime.html">Class LogicalTime</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classreactor_1_1MutableValuePtr.html">Template Class MutableValuePtr</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Output.html">Template Class Output</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classreactor_1_1PhysicalAction.html">Template Class PhysicalAction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Port.html">Template Class Port</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Port_3_01void_01_4.html">Template Class Port&lt; void &gt;</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Reaction.html">Class Reaction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Reactor.html">Class Reactor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classreactor_1_1ReactorElement.html">Class ReactorElement</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classreactor_1_1ReadyQueue.html">Class ReadyQueue</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Scheduler.html">Class Scheduler</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Semaphore.html">Class Semaphore</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classreactor_1_1ShutdownAction.html">Class ShutdownAction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classreactor_1_1StartupAction.html">Class StartupAction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Tag.html">Class Tag</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Timer.html">Class Timer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classreactor_1_1ValidationError.html">Class ValidationError</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Worker.html">Class Worker</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="library_root.html#enums">Enums</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="enum_namespacereactor_1a08c8e2d85e5bc706b1af8a87e40eec6d.html">Enum PortType</a></li>
+<li class="toctree-l4"><a class="reference internal" href="enum_namespacereactor_1a08c8e2d85e5bc706b1af8a87e40eec6d.html">Enum PortType</a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="library_root.html#functions">Functions</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a3c6f0cc5edbbcfdb7b4fc079833c6e57.html">Function assert_phase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a802dd0a731f49a2b6e3faa684c1ad073.html">Function dot_name</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a22cd1a801f1f06fb87c907e57bb15275.html">Template Function extract_value</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a49facd170b623937b3e655518a66b868.html">Function get_physical_time</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1acbe803639c9b25417767814a5887a2cb.html">Template Function make_immutable_value</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a423923d74709265265a52445c1bfd35c.html">Template Function make_mutable_value</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1ab9346e38e75455cc64fba42e503898a2.html">Function operator!=(const Tag&amp;, const Tag&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1ae21f869bafee79852a3b478981282224.html">Function operator!=(const LogicalTime&amp;, const Tag&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a409562272b6acf4e6db4f8c8227a1e85.html">Function operator!=(const Tag&amp;, const LogicalTime&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1ac0edb361b709120291c4541f38b3398a.html">Template Function operator!=(const MutableValuePtr&lt;T&gt;&amp;, const MutableValuePtr&lt;U&gt;&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1ac9f29488c533b424daa5d5650c94f172.html">Template Function operator!=(const ImmutableValuePtr&lt;T&gt;&amp;, const ImmutableValuePtr&lt;U&gt;&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1ae8dfa7a6c011677b3d37494952fbe751.html">Template Function operator!=(const ImmutableValuePtr&lt;T&gt;&amp;, const MutableValuePtr&lt;U&gt;&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a842facc8caa135327413c4a47a45ae2e.html">Template Function operator!=(const MutableValuePtr&lt;T&gt;&amp;, const ImmutableValuePtr&lt;U&gt;&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a9abf744286d6ecb0a23346dfe1def44a.html">Template Function operator!=(const MutableValuePtr&lt;T&gt;&amp;, std::nullptr_t)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a7ed1378bb8c01236b59b6e1e22223e0e.html">Template Function operator!=(std::nullptr_t, const MutableValuePtr&lt;T&gt;&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1ae28f31e6cace572d829c81ef6facba64.html">Template Function operator!=(const ImmutableValuePtr&lt;T&gt;&amp;, std::nullptr_t)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a5383c6edf696c4a4178f4aee118e996d.html">Template Function operator!=(std::nullptr_t, const ImmutableValuePtr&lt;T&gt;&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a97a41d457d5536c9e5735a8bfd3861a7.html">Function operator&lt;(const Tag&amp;, const Tag&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a5fadb428da64568d42500638a9d89f8c.html">Function operator&lt;(const LogicalTime&amp;, const Tag&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a38dfb24af014e43f056cc7d15aa8f3c2.html">Function operator&lt;(const Tag&amp;, const LogicalTime&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a97a41d457d5536c9e5735a8bfd3861a7.html">Function operator&lt;(const Tag&amp;, const Tag&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a5fadb428da64568d42500638a9d89f8c.html">Function operator&lt;(const LogicalTime&amp;, const Tag&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1_1operators_1a8ea55f33a5ed641face930e457c1f997.html">Function operator&lt;&lt;(std::ostream&amp;, TimePoint)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1_1operators_1aac16dca80170efe903081b2b41cfda47.html">Function operator&lt;&lt;(std::ostream&amp;, std::chrono::seconds)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1_1operators_1a7bc089730a721df6047cd010af2501d2.html">Function operator&lt;&lt;(std::ostream&amp;, std::chrono::milliseconds)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1_1operators_1a279ac480746dbb8a6dcd71179df68032.html">Function operator&lt;&lt;(std::ostream&amp;, std::chrono::microseconds)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1_1operators_1ac12faa5aad6eda9a53865201264ea257.html">Function operator&lt;&lt;(std::ostream&amp;, std::chrono::nanoseconds)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1_1operators_1a8ea55f33a5ed641face930e457c1f997.html">Function operator&lt;&lt;(std::ostream&amp;, TimePoint)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1_1operators_1aac16dca80170efe903081b2b41cfda47.html">Function operator&lt;&lt;(std::ostream&amp;, std::chrono::seconds)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1_1operators_1a7bc089730a721df6047cd010af2501d2.html">Function operator&lt;&lt;(std::ostream&amp;, std::chrono::milliseconds)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1_1operators_1a279ac480746dbb8a6dcd71179df68032.html">Function operator&lt;&lt;(std::ostream&amp;, std::chrono::microseconds)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1_1operators_1ac12faa5aad6eda9a53865201264ea257.html">Function operator&lt;&lt;(std::ostream&amp;, std::chrono::nanoseconds)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a41d4c10a2ad05bf2175d9794ce67d609.html">Function operator&lt;=(const Tag&amp;, const Tag&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1aecc419d0e216b4962db2b8f4b3b77dc5.html">Function operator&lt;=(const LogicalTime&amp;, const Tag&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a811a15b092501a2da229d87b18cedd13.html">Function operator&lt;=(const Tag&amp;, const LogicalTime&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1acfe15dcb3841300d555abce8e27ca04d.html">Function operator==(const Tag&amp;, const Tag&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a027dcf34ad33002738bf617920d4eac2.html">Function operator==(const LogicalTime&amp;, const Tag&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a6d563483d60684e446e9331f9b434804.html">Function operator==(const Tag&amp;, const LogicalTime&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a5778cc8f6a62e1c0c382d535b47daa95.html">Template Function operator==(const MutableValuePtr&lt;T&gt;&amp;, const MutableValuePtr&lt;U&gt;&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a4fcfbb5731c36115484d5cf4d89043f7.html">Template Function operator==(const ImmutableValuePtr&lt;T&gt;&amp;, const ImmutableValuePtr&lt;U&gt;&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1addeb5a9fd0b4ded0a0a5b586d88ce447.html">Template Function operator==(const ImmutableValuePtr&lt;T&gt;&amp;, const MutableValuePtr&lt;U&gt;&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1af5416e608b92050f7588ac769c41b726.html">Template Function operator==(const MutableValuePtr&lt;T&gt;&amp;, const ImmutableValuePtr&lt;U&gt;&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1ae9812a13207521d1f890d05898a3d915.html">Template Function operator==(const MutableValuePtr&lt;T&gt;&amp;, std::nullptr_t)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1af62e616bf709f0f8845a65e1670cc15c.html">Template Function operator==(std::nullptr_t, const MutableValuePtr&lt;T&gt;&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a67782e18adb2c48110108582a1afd68b.html">Template Function operator==(const ImmutableValuePtr&lt;T&gt;&amp;, std::nullptr_t)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a681bfde16a0a0e82e3c5d73bd0b773bb.html">Template Function operator==(std::nullptr_t, const ImmutableValuePtr&lt;T&gt;&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1acfe15dcb3841300d555abce8e27ca04d.html">Function operator==(const Tag&amp;, const Tag&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a027dcf34ad33002738bf617920d4eac2.html">Function operator==(const LogicalTime&amp;, const Tag&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a76e90493829fb5fefdf96ac4643dc122.html">Function operator&gt;(const Tag&amp;, const Tag&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1acef30c904eae278a8b4fb913d14e6ac7.html">Function operator&gt;(const LogicalTime&amp;, const Tag&amp;)</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Function operator&gt;(const Tag&amp;, const LogicalTime&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1acef30c904eae278a8b4fb913d14e6ac7.html">Function operator&gt;(const LogicalTime&amp;, const Tag&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1aca3ed3cc50a88e62ae74bb1b956da1b0.html">Function operator&gt;=(const Tag&amp;, const Tag&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a7ed8c52a2453697f091737fd4f0f4e2c.html">Function operator&gt;=(const LogicalTime&amp;, const Tag&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a866ad9ecbb2d89966cbc60366d98ee27.html">Function operator&gt;=(const Tag&amp;, const LogicalTime&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a3c6f0cc5edbbcfdb7b4fc079833c6e57.html">Function assert_phase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a802dd0a731f49a2b6e3faa684c1ad073.html">Function dot_name</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a22cd1a801f1f06fb87c907e57bb15275.html">Template Function extract_value</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a49facd170b623937b3e655518a66b868.html">Function get_physical_time</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1acbe803639c9b25417767814a5887a2cb.html">Template Function make_immutable_value</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a423923d74709265265a52445c1bfd35c.html">Template Function make_mutable_value</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1ab9346e38e75455cc64fba42e503898a2.html">Function operator!=(const Tag&amp;, const Tag&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1ae21f869bafee79852a3b478981282224.html">Function operator!=(const LogicalTime&amp;, const Tag&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a409562272b6acf4e6db4f8c8227a1e85.html">Function operator!=(const Tag&amp;, const LogicalTime&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1ac0edb361b709120291c4541f38b3398a.html">Template Function operator!=(const MutableValuePtr&lt;T&gt;&amp;, const MutableValuePtr&lt;U&gt;&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1ac9f29488c533b424daa5d5650c94f172.html">Template Function operator!=(const ImmutableValuePtr&lt;T&gt;&amp;, const ImmutableValuePtr&lt;U&gt;&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1ae8dfa7a6c011677b3d37494952fbe751.html">Template Function operator!=(const ImmutableValuePtr&lt;T&gt;&amp;, const MutableValuePtr&lt;U&gt;&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a842facc8caa135327413c4a47a45ae2e.html">Template Function operator!=(const MutableValuePtr&lt;T&gt;&amp;, const ImmutableValuePtr&lt;U&gt;&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a9abf744286d6ecb0a23346dfe1def44a.html">Template Function operator!=(const MutableValuePtr&lt;T&gt;&amp;, std::nullptr_t)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a7ed1378bb8c01236b59b6e1e22223e0e.html">Template Function operator!=(std::nullptr_t, const MutableValuePtr&lt;T&gt;&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1ae28f31e6cace572d829c81ef6facba64.html">Template Function operator!=(const ImmutableValuePtr&lt;T&gt;&amp;, std::nullptr_t)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a5383c6edf696c4a4178f4aee118e996d.html">Template Function operator!=(std::nullptr_t, const ImmutableValuePtr&lt;T&gt;&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a97a41d457d5536c9e5735a8bfd3861a7.html">Function operator&lt;(const Tag&amp;, const Tag&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a5fadb428da64568d42500638a9d89f8c.html">Function operator&lt;(const LogicalTime&amp;, const Tag&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a38dfb24af014e43f056cc7d15aa8f3c2.html">Function operator&lt;(const Tag&amp;, const LogicalTime&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1_1operators_1a8ea55f33a5ed641face930e457c1f997.html">Function operator&lt;&lt;(std::ostream&amp;, TimePoint)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1_1operators_1aac16dca80170efe903081b2b41cfda47.html">Function operator&lt;&lt;(std::ostream&amp;, std::chrono::seconds)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1_1operators_1a7bc089730a721df6047cd010af2501d2.html">Function operator&lt;&lt;(std::ostream&amp;, std::chrono::milliseconds)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1_1operators_1a279ac480746dbb8a6dcd71179df68032.html">Function operator&lt;&lt;(std::ostream&amp;, std::chrono::microseconds)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1_1operators_1ac12faa5aad6eda9a53865201264ea257.html">Function operator&lt;&lt;(std::ostream&amp;, std::chrono::nanoseconds)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a41d4c10a2ad05bf2175d9794ce67d609.html">Function operator&lt;=(const Tag&amp;, const Tag&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1aecc419d0e216b4962db2b8f4b3b77dc5.html">Function operator&lt;=(const LogicalTime&amp;, const Tag&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a811a15b092501a2da229d87b18cedd13.html">Function operator&lt;=(const Tag&amp;, const LogicalTime&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1acfe15dcb3841300d555abce8e27ca04d.html">Function operator==(const Tag&amp;, const Tag&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a027dcf34ad33002738bf617920d4eac2.html">Function operator==(const LogicalTime&amp;, const Tag&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a6d563483d60684e446e9331f9b434804.html">Function operator==(const Tag&amp;, const LogicalTime&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a5778cc8f6a62e1c0c382d535b47daa95.html">Template Function operator==(const MutableValuePtr&lt;T&gt;&amp;, const MutableValuePtr&lt;U&gt;&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a4fcfbb5731c36115484d5cf4d89043f7.html">Template Function operator==(const ImmutableValuePtr&lt;T&gt;&amp;, const ImmutableValuePtr&lt;U&gt;&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1addeb5a9fd0b4ded0a0a5b586d88ce447.html">Template Function operator==(const ImmutableValuePtr&lt;T&gt;&amp;, const MutableValuePtr&lt;U&gt;&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1af5416e608b92050f7588ac769c41b726.html">Template Function operator==(const MutableValuePtr&lt;T&gt;&amp;, const ImmutableValuePtr&lt;U&gt;&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1ae9812a13207521d1f890d05898a3d915.html">Template Function operator==(const MutableValuePtr&lt;T&gt;&amp;, std::nullptr_t)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1af62e616bf709f0f8845a65e1670cc15c.html">Template Function operator==(std::nullptr_t, const MutableValuePtr&lt;T&gt;&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a67782e18adb2c48110108582a1afd68b.html">Template Function operator==(const ImmutableValuePtr&lt;T&gt;&amp;, std::nullptr_t)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a681bfde16a0a0e82e3c5d73bd0b773bb.html">Template Function operator==(std::nullptr_t, const ImmutableValuePtr&lt;T&gt;&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1acef30c904eae278a8b4fb913d14e6ac7.html">Function operator&gt;(const LogicalTime&amp;, const Tag&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a76e90493829fb5fefdf96ac4643dc122.html">Function operator&gt;(const Tag&amp;, const Tag&amp;)</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Function operator&gt;(const Tag&amp;, const LogicalTime&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1aca3ed3cc50a88e62ae74bb1b956da1b0.html">Function operator&gt;=(const Tag&amp;, const Tag&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a7ed8c52a2453697f091737fd4f0f4e2c.html">Function operator&gt;=(const LogicalTime&amp;, const Tag&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a866ad9ecbb2d89966cbc60366d98ee27.html">Function operator&gt;=(const Tag&amp;, const LogicalTime&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1_1operators_1a8ea55f33a5ed641face930e457c1f997.html">Function operator&lt;&lt;(std::ostream&amp;, TimePoint)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1_1operators_1aac16dca80170efe903081b2b41cfda47.html">Function operator&lt;&lt;(std::ostream&amp;, std::chrono::seconds)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1_1operators_1a7bc089730a721df6047cd010af2501d2.html">Function operator&lt;&lt;(std::ostream&amp;, std::chrono::milliseconds)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1_1operators_1a279ac480746dbb8a6dcd71179df68032.html">Function operator&lt;&lt;(std::ostream&amp;, std::chrono::microseconds)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1_1operators_1ac12faa5aad6eda9a53865201264ea257.html">Function operator&lt;&lt;(std::ostream&amp;, std::chrono::nanoseconds)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1afd5cbaf8947a4e2d0f32f341da69a089.html">Function reactor_assert</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a50e4996eb605ff7e10a26dcdbae25340.html">Function recursive_assemble</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1af326245a887bf46d8e861383306c71f1.html">Function validate</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1afd5cbaf8947a4e2d0f32f341da69a089.html">Function reactor_assert</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a50e4996eb605ff7e10a26dcdbae25340.html">Function recursive_assemble</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1af326245a887bf46d8e861383306c71f1.html">Function validate</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="library_root.html#variables">Variables</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="variable_namespacereactor_1_1log_1a1391126b1838b59126c9e9d1158a7f55.html">Variable debug_enabled</a></li>
+<li class="toctree-l4"><a class="reference internal" href="variable_namespacereactor_1a1060edfb9f42e3694cab76b388c16572.html">Variable default_fast_fwd_execution</a></li>
+<li class="toctree-l4"><a class="reference internal" href="variable_namespacereactor_1a845fc33e8edf7af8a8119bbf74bee725.html">Variable default_max_reaction_index</a></li>
+<li class="toctree-l4"><a class="reference internal" href="variable_namespacereactor_1a2c52d1ea4c1def36c5ac68e716fd1f69.html">Variable default_number_worker</a></li>
+<li class="toctree-l4"><a class="reference internal" href="variable_namespacereactor_1a1d636667bfe2acfcc5e0b2b7b98a7c4b.html">Variable default_run_forever</a></li>
+<li class="toctree-l4"><a class="reference internal" href="variable_namespacereactor_1_1log_1a1985bfad8d1269e6d3d5e119ce846eef.html">Variable error_enabled</a></li>
+<li class="toctree-l4"><a class="reference internal" href="variable_namespacereactor_1_1log_1a3eb2fa07d2ccd17506a05aa3f2f14b2d.html">Variable info_enabled</a></li>
+<li class="toctree-l4"><a class="reference internal" href="variable_namespacereactor_1a1060edfb9f42e3694cab76b388c16572.html">Variable default_fast_fwd_execution</a></li>
+<li class="toctree-l4"><a class="reference internal" href="variable_namespacereactor_1a845fc33e8edf7af8a8119bbf74bee725.html">Variable default_max_reaction_index</a></li>
+<li class="toctree-l4"><a class="reference internal" href="variable_namespacereactor_1a2c52d1ea4c1def36c5ac68e716fd1f69.html">Variable default_number_worker</a></li>
+<li class="toctree-l4"><a class="reference internal" href="variable_namespacereactor_1a1d636667bfe2acfcc5e0b2b7b98a7c4b.html">Variable default_run_forever</a></li>
+<li class="toctree-l4"><a class="reference internal" href="variable_namespacereactor_1_1log_1a1391126b1838b59126c9e9d1158a7f55.html">Variable debug_enabled</a></li>
+<li class="toctree-l4"><a class="reference internal" href="variable_namespacereactor_1_1log_1a1985bfad8d1269e6d3d5e119ce846eef.html">Variable error_enabled</a></li>
+<li class="toctree-l4"><a class="reference internal" href="variable_namespacereactor_1_1log_1a3eb2fa07d2ccd17506a05aa3f2f14b2d.html">Variable info_enabled</a></li>
+<li class="toctree-l4"><a class="reference internal" href="variable_namespacereactor_1_1log_1a88a5f4b17305527201bcb473d079d49d.html">Variable warning_enabled</a></li>
+<li class="toctree-l4"><a class="reference internal" href="variable_namespacereactor_1a0edb3b5df7dd7992238566a2369c985b.html">Variable tracing_enabled</a></li>
+<li class="toctree-l4"><a class="reference internal" href="variable_assert_8hh_1afdf171950bedcdde8ef57ea8897535a2.html">Variable runtime_assertion</a></li>
+<li class="toctree-l4"><a class="reference internal" href="variable_assert_8hh_1a205d29e2ebaeda57283c3fe9c80888f0.html">Variable runtime_validation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="variable_namespacereactor_1a0edb3b5df7dd7992238566a2369c985b.html">Variable tracing_enabled</a></li>
+<li class="toctree-l4"><a class="reference internal" href="variable_namespacereactor_1_1log_1a88a5f4b17305527201bcb473d079d49d.html">Variable warning_enabled</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="library_root.html#defines">Defines</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="define_trace_8hh_1a266ae7d3b9f30b05a13074d2964bd9d4.html">Define REACTOR_CPP_TRACE_HH</a></li>
+<li class="toctree-l4"><a class="reference internal" href="define_trace_8hh_1aeae0efb071b08e657d36788eee20c1a7.html">Define tracepoint</a></li>
+<li class="toctree-l4"><a class="reference internal" href="define_trace_8cc_1aeb980b4a64d9b54d660780a30415b0bc.html">Define TRACEPOINT_CREATE_PROBES</a></li>
+<li class="toctree-l4"><a class="reference internal" href="define_trace_8cc_1a71ad37c54f22eb10bdfed4267d53bd79.html">Define TRACEPOINT_DEFINE</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="library_root.html#typedefs">Typedefs</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1aa8375b807a80703545664096c5b5b779.html">Typedef Duration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1ab072f327f9d4a517d5960d6ac2c674f6.html">Typedef EnvPhase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1aacd4ccaa9524924d88b5e8031f3f8569.html">Typedef EventMap</a></li>
+<li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1aaea1189d617982457b74127ba74a7340.html">Typedef mstep_t</a></li>
+<li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1aa8375b807a80703545664096c5b5b779.html">Typedef Duration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1ab072f327f9d4a517d5960d6ac2c674f6.html">Typedef EnvPhase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1aacd4ccaa9524924d88b5e8031f3f8569.html">Typedef EventMap</a></li>
+<li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1aaea1189d617982457b74127ba74a7340.html">Typedef mstep_t</a></li>
+<li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1ad950f8d1a46612500286a4af0f167080.html">Typedef TimePoint</a></li>
+<li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1ad950f8d1a46612500286a4af0f167080.html">Typedef TimePoint</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">reactor-cpp</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="library_root.html">Library API</a> &raquo;</li>
+      <li>Function operator&gt;(const Tag&amp;, const LogicalTime&amp;)</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/function_namespacereactor_1abb343ef13ea60cd76e357c909f0d0f06.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="function-operator-const-tag-const-logicaltime">
+<span id="exhale-function-namespacereactor-1abb343ef13ea60cd76e357c909f0d0f06"></span><h1>Function operator&gt;(const Tag&amp;, const LogicalTime&amp;)<a class="headerlink" href="#function-operator-const-tag-const-logicaltime" title="Permalink to this headline"></a></h1>
+<ul class="simple">
+<li><p>Defined in <a class="reference internal" href="file_include_reactor-cpp_logical_time.hh.html#file-include-reactor-cpp-logical-time-hh"><span class="std std-ref">File logical_time.hh</span></a></p></li>
+</ul>
+<section id="function-documentation">
+<h2>Function Documentation<a class="headerlink" href="#function-documentation" title="Permalink to this headline"></a></h2>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>doxygenfunction: Unable to resolve function “operator&gt;” with arguments (const Tag&amp;, const LogicalTime&amp;) in doxygen xml output for project “reactor-cpp” from directory: ../doxygen/xml.
+Potential matches:
+</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="k">auto</span> <span class="k">operator</span><span class="o">&gt;</span><span class="p">(</span><span class="k">const</span> <span class="n">LogicalTime</span> <span class="o">&amp;</span><span class="n">logical_time</span><span class="p">,</span> <span class="k">const</span> <span class="n">Tag</span> <span class="o">&amp;</span><span class="n">tag</span><span class="p">)</span> <span class="k">noexcept</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
+<span class="o">-</span> <span class="k">auto</span> <span class="k">operator</span><span class="o">&gt;</span><span class="p">(</span><span class="k">const</span> <span class="n">LogicalTime</span> <span class="o">&amp;</span><span class="n">logical_time</span><span class="p">,</span> <span class="k">const</span> <span class="n">Tag</span> <span class="o">&amp;</span><span class="n">tag</span><span class="p">)</span> <span class="k">noexcept</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
+<span class="o">-</span> <span class="k">auto</span> <span class="k">operator</span><span class="o">&gt;</span><span class="p">(</span><span class="k">const</span> <span class="n">Tag</span> <span class="o">&amp;</span><span class="n">lhs</span><span class="p">,</span> <span class="k">const</span> <span class="n">Tag</span> <span class="o">&amp;</span><span class="n">rhs</span><span class="p">)</span> <span class="k">noexcept</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
+<span class="o">-</span> <span class="k">auto</span> <span class="k">operator</span><span class="o">&gt;</span><span class="p">(</span><span class="k">const</span> <span class="n">Tag</span> <span class="o">&amp;</span><span class="n">lhs</span><span class="p">,</span> <span class="k">const</span> <span class="n">Tag</span> <span class="o">&amp;</span><span class="n">rhs</span><span class="p">)</span> <span class="k">noexcept</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
+<span class="o">-</span> <span class="k">auto</span> <span class="k">operator</span><span class="o">&gt;</span><span class="p">(</span><span class="k">const</span> <span class="n">Tag</span> <span class="o">&amp;</span><span class="n">tag</span><span class="p">,</span> <span class="k">const</span> <span class="n">LogicalTime</span> <span class="o">&amp;</span><span class="n">logical_time</span><span class="p">)</span> <span class="k">noexcept</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
+<span class="o">-</span> <span class="k">auto</span> <span class="k">operator</span><span class="o">&gt;</span><span class="p">(</span><span class="k">const</span> <span class="n">Tag</span> <span class="o">&amp;</span><span class="n">tag</span><span class="p">,</span> <span class="k">const</span> <span class="n">LogicalTime</span> <span class="o">&amp;</span><span class="n">logical_time</span><span class="p">)</span> <span class="k">noexcept</span> <span class="o">-&gt;</span> <span class="kt">bool</span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="function_namespacereactor_1acef30c904eae278a8b4fb913d14e6ac7.html" class="btn btn-neutral float-left" title="Function operator&gt;(const LogicalTime&amp;, const Tag&amp;)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="function_namespacereactor_1aca3ed3cc50a88e62ae74bb1b956da1b0.html" class="btn btn-neutral float-right" title="Function operator&gt;=(const Tag&amp;, const Tag&amp;)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Christian Menard.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -39,6 +39,8 @@ Includes
 
 - ``reactor-cpp/reaction.hh`` (:ref:`file_include_reactor-cpp_reaction.hh`)
 
+- ``utility``
+
 
 
 

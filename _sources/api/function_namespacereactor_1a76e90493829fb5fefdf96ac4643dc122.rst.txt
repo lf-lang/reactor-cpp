@@ -1,0 +1,14 @@
+.. _exhale_function_namespacereactor_1a76e90493829fb5fefdf96ac4643dc122:
+
+Function operator>(const Tag&, const Tag&)
+==========================================
+
+- Defined in :ref:`file_include_reactor-cpp_logical_time.hh`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: operator>(const Tag&, const Tag&)
+   :project: reactor-cpp

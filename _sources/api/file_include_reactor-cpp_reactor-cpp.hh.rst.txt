@@ -33,6 +33,8 @@ Includes
 
 - ``environment.hh`` (:ref:`file_include_reactor-cpp_environment.hh`)
 
+- ``logging.hh`` (:ref:`file_include_reactor-cpp_logging.hh`)
+
 - ``logical_time.hh`` (:ref:`file_include_reactor-cpp_logical_time.hh`)
 
 - ``port.hh`` (:ref:`file_include_reactor-cpp_port.hh`)

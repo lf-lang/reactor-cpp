@@ -31,6 +31,8 @@ Includes
 
 - ``cassert``
 
+- ``environment.hh`` (:ref:`file_include_reactor-cpp_environment.hh`)
+
 - ``sstream``
 
 - ``stdexcept``
@@ -84,9 +86,20 @@ Functions
 ---------
 
 
-- :ref:`exhale_function_namespacereactor_1a1ed9b1cb411cbcb35a8a229005deb3a1`
+- :ref:`exhale_function_namespacereactor_1a3c6f0cc5edbbcfdb7b4fc079833c6e57`
 
-- :ref:`exhale_function_namespacereactor_1aa751a610c79b176a25d5fa431a7354e1`
+- :ref:`exhale_function_namespacereactor_1a22cd1a801f1f06fb87c907e57bb15275`
+
+- :ref:`exhale_function_namespacereactor_1afd5cbaf8947a4e2d0f32f341da69a089`
+
+- :ref:`exhale_function_namespacereactor_1af326245a887bf46d8e861383306c71f1`
+
+
+Typedefs
+--------
+
+
+- :ref:`exhale_typedef_namespacereactor_1ab072f327f9d4a517d5960d6ac2c674f6`
 
 
 Variables

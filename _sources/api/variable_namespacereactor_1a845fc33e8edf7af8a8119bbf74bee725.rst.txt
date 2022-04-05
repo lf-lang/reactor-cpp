@@ -1,0 +1,14 @@
+.. _exhale_variable_namespacereactor_1a845fc33e8edf7af8a8119bbf74bee725:
+
+Variable default_max_reaction_index
+===================================
+
+- Defined in :ref:`file_include_reactor-cpp_environment.hh`
+
+
+Variable Documentation
+----------------------
+
+
+.. doxygenvariable:: default_max_reaction_index
+   :project: reactor-cpp

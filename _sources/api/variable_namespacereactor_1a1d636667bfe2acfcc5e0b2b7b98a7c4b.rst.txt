@@ -1,0 +1,14 @@
+.. _exhale_variable_namespacereactor_1a1d636667bfe2acfcc5e0b2b7b98a7c4b:
+
+Variable default_run_forever
+============================
+
+- Defined in :ref:`file_include_reactor-cpp_environment.hh`
+
+
+Variable Documentation
+----------------------
+
+
+.. doxygenvariable:: default_run_forever
+   :project: reactor-cpp

@@ -1,0 +1,14 @@
+.. _exhale_function_namespacereactor_1a423923d74709265265a52445c1bfd35c:
+
+Template Function make_mutable_value
+====================================
+
+- Defined in :ref:`file_include_reactor-cpp_value_ptr.hh`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: make_mutable_value(Args&&...)
+   :project: reactor-cpp

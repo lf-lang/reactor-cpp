@@ -45,6 +45,8 @@ Includes
 
 - ``reactor-cpp/trace.hh`` (:ref:`file_include_reactor-cpp_trace.hh`)
 
+- ``utility``
+
 
 
 

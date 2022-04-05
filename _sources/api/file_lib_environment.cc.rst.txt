@@ -63,15 +63,7 @@ Functions
 ---------
 
 
-- :ref:`exhale_function_namespacereactor_1a3acae8d24d419d39f72ca08bccf13c94`
-
-- :ref:`exhale_function_namespacereactor_1a4f929802f68206ca5baa5173711aaee5`
-
-- :ref:`exhale_function_namespacereactor_1aea494e5a63a32a17e0d0955748bbbcfb`
-
-- :ref:`exhale_function_namespacereactor_1a46327f6f45836a7cedaeb1f4317820a5`
-
-- :ref:`exhale_function_namespacereactor_1a092d291f5f2ded95552ea2220d331387`
+- :ref:`exhale_function_namespacereactor_1a802dd0a731f49a2b6e3faa684c1ad073`
 
 - :ref:`exhale_function_namespacereactor_1a50e4996eb605ff7e10a26dcdbae25340`
 

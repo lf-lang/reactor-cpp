@@ -1,0 +1,14 @@
+.. _exhale_define_trace_8hh_1a266ae7d3b9f30b05a13074d2964bd9d4:
+
+Define REACTOR_CPP_TRACE_HH
+===========================
+
+- Defined in :ref:`file_include_reactor-cpp_trace.hh`
+
+
+Define Documentation
+--------------------
+
+
+.. doxygendefine:: REACTOR_CPP_TRACE_HH
+   :project: reactor-cpp

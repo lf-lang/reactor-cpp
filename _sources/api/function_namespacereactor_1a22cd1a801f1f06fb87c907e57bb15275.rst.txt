@@ -1,0 +1,14 @@
+.. _exhale_function_namespacereactor_1a22cd1a801f1f06fb87c907e57bb15275:
+
+Template Function extract_value
+===============================
+
+- Defined in :ref:`file_include_reactor-cpp_assert.hh`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: extract_value(E)
+   :project: reactor-cpp

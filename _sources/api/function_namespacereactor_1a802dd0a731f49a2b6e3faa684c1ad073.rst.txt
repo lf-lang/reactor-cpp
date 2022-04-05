@@ -1,0 +1,14 @@
+.. _exhale_function_namespacereactor_1a802dd0a731f49a2b6e3faa684c1ad073:
+
+Function dot_name
+=================
+
+- Defined in :ref:`file_lib_environment.cc`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: dot_name(] ReactorElement *)
+   :project: reactor-cpp

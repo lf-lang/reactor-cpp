@@ -1,0 +1,14 @@
+.. _exhale_typedef_namespacereactor_1aacd4ccaa9524924d88b5e8031f3f8569:
+
+Typedef EventMap
+================
+
+- Defined in :ref:`file_include_reactor-cpp_scheduler.hh`
+
+
+Typedef Documentation
+---------------------
+
+
+.. doxygentypedef:: EventMap
+   :project: reactor-cpp

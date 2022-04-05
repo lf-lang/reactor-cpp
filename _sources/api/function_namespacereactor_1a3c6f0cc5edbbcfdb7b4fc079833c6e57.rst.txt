@@ -1,0 +1,14 @@
+.. _exhale_function_namespacereactor_1a3c6f0cc5edbbcfdb7b4fc079833c6e57:
+
+Function assert_phase
+=====================
+
+- Defined in :ref:`file_include_reactor-cpp_assert.hh`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: assert_phase(] const ReactorElement *, ] EnvPhase)
+   :project: reactor-cpp

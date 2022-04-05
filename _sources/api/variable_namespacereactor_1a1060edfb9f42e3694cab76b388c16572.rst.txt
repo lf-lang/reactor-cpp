@@ -1,0 +1,14 @@
+.. _exhale_variable_namespacereactor_1a1060edfb9f42e3694cab76b388c16572:
+
+Variable default_fast_fwd_execution
+===================================
+
+- Defined in :ref:`file_include_reactor-cpp_environment.hh`
+
+
+Variable Documentation
+----------------------
+
+
+.. doxygenvariable:: default_fast_fwd_execution
+   :project: reactor-cpp

@@ -18,7 +18,8 @@ Program Listing for File action.hh
     *   Christian Menard
     */
    
-   #pragma once
+   #ifndef REACTOR_CPP_ACTION_HH
+   #define REACTOR_CPP_ACTION_HH
    
    #include "logical_time.hh"
    #include "reactor.hh"
@@ -27,161 +28,144 @@ Program Listing for File action.hh
    namespace reactor {
    
    class BaseAction : public ReactorElement {
-    private:
-     std::set<Reaction*> _triggers;
-     std::set<Reaction*> _schedulers;
+   private:
+     std::set<Reaction*> triggers_{};
+     std::set<Reaction*> schedulers_{};
+     const Duration min_delay_{};
+     const bool logical_{true};
    
-     const bool _logical;
-   
-    protected:
+   protected:
      void register_trigger(Reaction* reaction);
      void register_scheduler(Reaction* reaction);
-   
      virtual void cleanup() = 0;
    
-     const Duration min_delay;
-   
-    protected:
-     BaseAction(const std::string& name,
-                Reactor* container,
-                bool logical,
-                Duration min_delay)
+     BaseAction(const std::string& name, Reactor* container, bool logical, Duration min_delay)
          : ReactorElement(name, ReactorElement::Type::Action, container)
-         , _logical(logical)
-         , min_delay(min_delay) {}
+         , min_delay_(min_delay)
+         , logical_(logical) {}
    
-    public:
-     const auto& triggers() const { return _triggers; }
-     const auto& schedulers() const { return _schedulers; }
+   public:
+     [[nodiscard]] auto inline triggers() const noexcept -> const auto& { return triggers_; }
    
-     bool is_logical() const { return _logical; }
-     bool is_physical() const { return !_logical; }
+     [[nodiscard]] auto inline schedulers() const noexcept -> const auto& { return schedulers_; }
+   
+     [[nodiscard]] auto inline is_logical() const noexcept -> bool { return logical_; }
+   
+     [[nodiscard]] auto inline is_physical() const noexcept -> bool { return !logical_; }
+   
+     [[nodiscard]] auto inline min_delay() const noexcept -> Duration { return min_delay_; }
    
      friend class Reaction;
      friend class Scheduler;
    };
    
-   template <class T>
-   class Action : public BaseAction {
-    private:
-     ImmutableValuePtr<T> value_ptr{nullptr};
+   template <class T> class Action : public BaseAction {
+   private:
+     ImmutableValuePtr<T> value_ptr_{nullptr};
    
-     void cleanup() override final { value_ptr = nullptr; }
+     void cleanup() noexcept final { value_ptr_ = nullptr; }
    
-    protected:
-     Action(const std::string& name,
-            Reactor* container,
-            bool logical,
-            Duration min_delay)
+   protected:
+     Action(const std::string& name, Reactor* container, bool logical, Duration min_delay)
          : BaseAction(name, container, logical, min_delay) {}
    
-    public:
-     void startup() override final {}
-     void shutdown() override final {}
+   public:
+     void startup() final {}
+     void shutdown() final {}
    
-     template <class Dur = Duration>
-     void schedule(const ImmutableValuePtr<T>& value_ptr, Dur delay = Dur::zero());
-     template <class Dur = Duration>
-     void schedule(MutableValuePtr<T>&& value_ptr, Dur delay = Dur::zero()) {
-       schedule(ImmutableValuePtr<T>(std::forward<MutableValuePtr<T>>(value_ptr)),
-                delay);
+     template <class Dur = Duration> void schedule(const ImmutableValuePtr<T>& value_ptr, Dur delay = Dur::zero());
+   
+     template <class Dur = Duration> void schedule(MutableValuePtr<T>&& value_ptr, Dur delay = Dur::zero()) {
+       schedule(ImmutableValuePtr<T>(std::forward<MutableValuePtr<T>>(value_ptr)), delay);
      }
-     template <class Dur = Duration>
-     void schedule(const T& value, Dur delay = Dur::zero()) {
+   
+     template <class Dur = Duration> void schedule(const T& value, Dur delay = Dur::zero()) {
        schedule(make_immutable_value<T>(value), delay);
      }
-     template <class Dur = Duration>
-     void schedule(T&& value, Dur delay = Dur::zero()) {
+   
+     template <class Dur = Duration> void schedule(T&& value, Dur delay = Dur::zero()) {
        schedule(make_immutable_value<T>(std::forward<T>(value)), delay);
      }
-     // Scheduling an action with nullptr value is not permitted.
-     template <class Dur = Duration>
-     void schedule(std::nullptr_t, Dur) = delete;
    
-     const ImmutableValuePtr<T>& get() const { return value_ptr; }
-     bool is_present() const { return value_ptr != nullptr; }
+     // Scheduling an action with nullptr value is not permitted.
+     template <class Dur = Duration> void schedule(std::nullptr_t, Dur) = delete;
+   
+     auto get() const noexcept -> const ImmutableValuePtr<T>& { return value_ptr_; }
+   
+     [[nodiscard]] auto is_present() const noexcept -> bool { return value_ptr_ != nullptr; }
    };
    
-   template <>
-   class Action<void> : public BaseAction {
-    private:
-     bool present{false};
+   template <> class Action<void> : public BaseAction {
+   private:
+     bool present_{false};
    
-     void cleanup() override final { present = false; }
+     void cleanup() noexcept final { present_ = false; }
    
-    protected:
-     Action(const std::string& name,
-            Reactor* container,
-            bool logical,
-            Duration min_delay)
+   protected:
+     Action(const std::string& name, Reactor* container, bool logical, Duration min_delay)
          : BaseAction(name, container, logical, min_delay) {}
    
-    public:
-     void startup() override final {}
-     void shutdown() override final {}
+   public:
+     void startup() final {}
+     void shutdown() final {}
    
-     template <class Dur = Duration>
-     void schedule(Dur delay = Dur::zero());
-     bool is_present() const { return present; }
+     template <class Dur = Duration> void schedule(Dur delay = Dur::zero());
+   
+     [[nodiscard]] auto is_present() const noexcept -> bool { return present_; }
    };
    
-   template <class T>
-   class PhysicalAction : public Action<T> {
-    public:
+   template <class T> class PhysicalAction : public Action<T> {
+   public:
      PhysicalAction(const std::string& name, Reactor* container)
          : Action<T>(name, container, false, Duration::zero()) {}
    };
    
-   template <class T>
-   class LogicalAction : public Action<T> {
-    public:
-     LogicalAction(const std::string& name,
-                   Reactor* container,
-                   Duration min_delay = Duration::zero())
+   template <class T> class LogicalAction : public Action<T> {
+   public:
+     LogicalAction(const std::string& name, Reactor* container, Duration min_delay = Duration::zero())
          : Action<T>(name, container, true, min_delay) {}
    };
    
    class Timer : public BaseAction {
-    private:
-     const Duration _offset;
-     const Duration _period;
+   private:
+     const Duration offset_{};
+     const Duration period_{};
    
-     void reschedule();
+     void cleanup() final;
    
-     void cleanup() override final;
-   
-    public:
-     Timer(const std::string& name,
-           Reactor* container,
-           Duration period = Duration::zero(),
+   public:
+     Timer(const std::string& name, Reactor* container, Duration period = Duration::zero(),
            Duration offset = Duration::zero())
          : BaseAction(name, container, true, Duration::zero())
-         , _offset(offset)
-         , _period(period) {}
+         , offset_(offset)
+         , period_(period) {}
    
-     void startup() override final;
-     void shutdown() override final {}
+     void startup() final;
+     void shutdown() final {}
    
-     const Duration& offset() const { return _offset; }
-     const Duration& period() const { return _period; }
+     [[nodiscard]] auto offset() const noexcept -> const Duration& { return offset_; }
+   
+     [[nodiscard]] auto period() const noexcept -> const Duration& { return period_; }
    };
    
    class StartupAction : public Timer {
-    public:
+   public:
      StartupAction(const std::string& name, Reactor* container)
          : Timer(name, container) {}
    };
    
    class ShutdownAction : public BaseAction {
-    public:
+   public:
      ShutdownAction(const std::string& name, Reactor* container)
          : BaseAction(name, container, true, Duration::zero()) {}
    
-     void cleanup() override final {}
-     void startup() override final {}
-     void shutdown() override final;
+     void cleanup() final {}
+     void startup() final {}
+     void shutdown() final;
    };
    
-   }  // namespace reactor
+   } // namespace reactor
    
    #include "impl/action_impl.hh"
+   
+   #endif // REACTOR_CPP_ACTION_HH

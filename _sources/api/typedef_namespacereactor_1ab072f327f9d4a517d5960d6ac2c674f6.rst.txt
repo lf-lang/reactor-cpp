@@ -1,0 +1,14 @@
+.. _exhale_typedef_namespacereactor_1ab072f327f9d4a517d5960d6ac2c674f6:
+
+Typedef EnvPhase
+================
+
+- Defined in :ref:`file_include_reactor-cpp_assert.hh`
+
+
+Typedef Documentation
+---------------------
+
+
+.. doxygentypedef:: EnvPhase
+   :project: reactor-cpp

@@ -81,3 +81,10 @@ Classes
 
 - :ref:`exhale_class_classreactor_1_1Worker`
 
+
+Typedefs
+--------
+
+
+- :ref:`exhale_typedef_namespacereactor_1aacd4ccaa9524924d88b5e8031f3f8569`
+

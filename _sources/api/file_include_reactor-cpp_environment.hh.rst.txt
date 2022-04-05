@@ -57,6 +57,8 @@ Included By
 
 - :ref:`file_lib_scheduler.cc`
 
+- :ref:`file_include_reactor-cpp_assert.hh`
+
 - :ref:`file_include_reactor-cpp_impl_action_impl.hh`
 
 - :ref:`file_include_reactor-cpp_impl_port_impl.hh`
@@ -76,4 +78,17 @@ Classes
 
 
 - :ref:`exhale_class_classreactor_1_1Environment`
+
+
+Variables
+---------
+
+
+- :ref:`exhale_variable_namespacereactor_1a1060edfb9f42e3694cab76b388c16572`
+
+- :ref:`exhale_variable_namespacereactor_1a845fc33e8edf7af8a8119bbf74bee725`
+
+- :ref:`exhale_variable_namespacereactor_1a2c52d1ea4c1def36c5ac68e716fd1f69`
+
+- :ref:`exhale_variable_namespacereactor_1a1d636667bfe2acfcc5e0b2b7b98a7c4b`
 

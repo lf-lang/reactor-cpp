@@ -29,6 +29,8 @@ Includes
 --------
 
 
+- ``chrono``
+
 - ``iostream``
 
 - ``memory``
@@ -36,6 +38,8 @@ Includes
 - ``mutex``
 
 - ``reactor-cpp/config.hh``
+
+- ``reactor-cpp/time.hh`` (:ref:`file_include_reactor-cpp_time.hh`)
 
 
 

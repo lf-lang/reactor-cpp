@@ -18,59 +18,52 @@ Program Listing for File logging.hh
     *   Christian Menard
     */
    
-   #pragma once
+   #ifndef REACTOR_CPP_LOGGING_HH
+   #define REACTOR_CPP_LOGGING_HH
    
+   #include "reactor-cpp/config.hh" //NOLINT
+   #include "reactor-cpp/time.hh"
+   #include <chrono>
    #include <iostream>
    #include <memory>
    #include <mutex>
    
-   #include "reactor-cpp/config.hh"
+   namespace reactor::log {
    
-   namespace reactor {
+   template <bool enabled> class BaseLogger {};
    
-   namespace log {
-   
-   template <bool enabled>
-   class BaseLogger {};
-   
-   template <>
-   class BaseLogger<true> {
-    private:
+   template <> class BaseLogger<true> { // NOLINT
+   private:
      using Lock = std::unique_lock<std::mutex>;
    
-     const std::string log_prefix;
-     inline static std::mutex mutex{};
-     Lock lock;
+     const std::string log_prefix_{};
+     inline static std::mutex mutex_{}; // NOLINT
+     Lock lock_{};
    
-    public:
-     BaseLogger(const std::string& log_prefix)
-         : log_prefix(log_prefix), lock(mutex) {
+   public:
+     explicit BaseLogger(const std::string& log_prefix)
+         : log_prefix_(log_prefix)
+         , lock_(mutex_) {
        std::cerr << log_prefix;
      }
    
-     template <class T>
-     BaseLogger& operator<<(const T& msg) {
+     template <class T> auto operator<<(const T& msg) -> BaseLogger& {
        std::cerr << msg;
        return *this;
      }
    
-     ~BaseLogger() {
+     ~BaseLogger() { // NOLINT
        std::cerr << std::endl;
-       // this automatically releases the lock
      }
    };
    
-   template <>
-   class BaseLogger<false> {
-    public:
-     BaseLogger(const std::string&) {}
+   template <> class BaseLogger<false> { // NOLINT
+   public:
+     explicit BaseLogger([[maybe_unused]] const std::string& /*unused*/) {}
    
-     template <class T>
-     const BaseLogger& operator<<(const T&) const {
-       return *this;
-     }
+     template <class T> auto operator<<(const T& /*unused*/) const -> const BaseLogger& { return *this; }
    
-     ~BaseLogger() {}
+     ~BaseLogger() = default;
    };
    
    constexpr bool debug_enabled = 4 <= REACTOR_CPP_LOG_LEVEL;
@@ -79,20 +72,21 @@ Program Listing for File logging.hh
    constexpr bool error_enabled = 1 <= REACTOR_CPP_LOG_LEVEL;
    
    struct Debug : BaseLogger<debug_enabled> {
-     Debug() : BaseLogger<debug_enabled>("[DEBUG] ") {}
+     Debug()
+         : BaseLogger<debug_enabled>("[DEBUG] "){}; // NOLINT Update C++20
    };
-   
    struct Info : BaseLogger<info_enabled> {
-     Info() : BaseLogger<info_enabled>("[INFO]  ") {}
+     Info()
+         : BaseLogger<info_enabled>("[INFO]  "){}; // NOLINT Update C++20
    };
-   
    struct Warn : BaseLogger<warning_enabled> {
-     Warn() : BaseLogger<warning_enabled>("[WARN]  ") {}
+     Warn()
+         : BaseLogger<warning_enabled>("[WARN]  "){}; // NOLINT Update C++20
    };
-   
    struct Error : BaseLogger<error_enabled> {
-     Error() : BaseLogger<error_enabled>("[ERROR] ") {}
+     Error()
+         : BaseLogger<error_enabled>("[ERROR] "){}; // NOLINT Update C++20
    };
+   } // namespace reactor::log
    
-   }  // namespace log
-   }  // namespace reactor
+   #endif // REACTOR_CPP_LOGGING_HH

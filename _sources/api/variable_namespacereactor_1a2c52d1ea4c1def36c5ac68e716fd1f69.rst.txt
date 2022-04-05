@@ -1,0 +1,14 @@
+.. _exhale_variable_namespacereactor_1a2c52d1ea4c1def36c5ac68e716fd1f69:
+
+Variable default_number_worker
+==============================
+
+- Defined in :ref:`file_include_reactor-cpp_environment.hh`
+
+
+Variable Documentation
+----------------------
+
+
+.. doxygenvariable:: default_number_worker
+   :project: reactor-cpp
