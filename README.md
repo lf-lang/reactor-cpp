@@ -12,6 +12,7 @@ have a look at the [DEAR framework](https://github.com/tud-ccc/dear), which in
 conjunction with reactor-cpp allows to implement AP Services using the reactor
 model.
 
+
 ## Build
 
 ```sh
@@ -27,9 +28,15 @@ The examples need to be built explicitly.
 make examples
 ```
 
+Alternatively take a look at the [CONTRIBUTING.md](CONTRIBUTING.md) for building with nix package manager.
+
 ## Extras
 
 reactor-cpp can be build with [tracing support](https://github.com/lf-lang/reactor-cpp/tree/master/tracing). This provides a powerful tool for analyzing and debugging reactor applications.
+
+## Contributing
+
+The best place to start contributing to this repo is probally the [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ## Documentation
 

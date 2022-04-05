@@ -6,14 +6,14 @@ using namespace reactor;
 using namespace std::chrono_literals;
 
 class Trigger : public Reactor {
- private:
+private:
   Timer timer;
-
   Reaction r_timer{"r_timer", 1, this, [this]() { on_timer(); }};
 
- public:
+public:
   Trigger(const std::string& name, Environment* env, Duration period)
-      : Reactor(name, env), timer{"timer", this, period, Duration::zero()} {}
+      : Reactor(name, env)
+      , timer{"timer", this, period, Duration::zero()} {}
 
   Output<void> trigger{"trigger", this};
 
@@ -26,13 +26,13 @@ class Trigger : public Reactor {
 };
 
 class Counter : public Reactor {
- private:
-  unsigned value{0};
-
+private:
+  unsigned int value_{0};
   Reaction r_trigger{"r_trigger", 1, this, [this]() { on_trigger(); }};
 
- public:
-  Counter(const std::string& name, Environment* env) : Reactor(name, env) {}
+public:
+  Counter(const std::string& name, Environment* env)
+      : Reactor(name, env) {}
 
   Input<void> trigger{"trigger", this};
   Output<int> count{"count", this};
@@ -43,37 +43,37 @@ class Counter : public Reactor {
   }
 
   void on_trigger() {
-    value += 1;
-    count.set(value);
+    value_ += 1;
+    count.set(value_);
   }
 };
 
 class Printer : public Reactor {
- private:
+private:
   Reaction r_value{"r_value", 1, this, [this]() { on_value(); }};
 
- public:
+public:
   Input<int> value{"value", this};
 
-  Printer(const std::string& name, Environment* env) : Reactor(name, env) {}
+  Printer(const std::string& name, Environment* env)
+      : Reactor(name, env) {}
 
   void assemble() override { r_value.declare_trigger(&value); }
 
-  void on_value() {
-    std::cout << this->name() << ": " << *value.get() << std::endl;
-  }
+  void on_value() { std::cout << this->name() << ": " << *value.get() << std::endl; }
 };
 
 class Adder : public Reactor {
- private:
+private:
   Reaction r_add{"r_add", 1, this, [this]() { add(); }};
 
- public:
+public:
   Input<int> i1{"i1", this};
   Input<int> i2{"i1", this};
   Output<int> sum{"sum", this};
 
-  Adder(const std::string& name, Environment* env) : Reactor(name, env) {}
+  Adder(const std::string& name, Environment* env)
+      : Reactor(name, env) {}
 
   void assemble() override {
     r_add.declare_trigger(&i1);

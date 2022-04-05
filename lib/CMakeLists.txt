@@ -1,14 +1,14 @@
 set(SOURCE_FILES
-  action.cc
-  assert.cc
-  environment.cc
-  logical_time.cc
-  port.cc
-  reaction.cc
-  reactor.cc
-  scheduler.cc
-  time.cc
-  )
+    action.cc
+    assert.cc
+    environment.cc
+    logical_time.cc
+    port.cc
+    reaction.cc
+    reactor.cc
+    scheduler.cc
+    time.cc
+    )
 
 if(REACTOR_CPP_TRACE)
   set(SOURCE_FILES ${SOURCE_FILES} trace.cc)
@@ -38,6 +38,9 @@ target_link_libraries(${LIB_TARGET} ${CMAKE_THREAD_LIBS_INIT})
 if(REACTOR_CPP_TRACE)
   target_link_libraries(${LIB_TARGET} LTTng::UST)
 endif()
+
+# Generates Compilation Database for clang-tidy
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set_target_properties(${LIB_TARGET} PROPERTIES
     VERSION ${PROJECT_VERSION}

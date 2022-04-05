@@ -6,7 +6,8 @@
  *   Christian Menard
  */
 
-#pragma once
+#ifndef REACTOR_CPP_FWD_HH
+#define REACTOR_CPP_FWD_HH
 
 namespace reactor {
 
@@ -18,9 +19,9 @@ class Reactor;
 class Scheduler;
 class Tag;
 
-template <class T>
-class Action;
-template <class T>
-class Port;
+template <class T> class Action;
+template <class T> class Port;
 
-}  // namespace reactor
+} // namespace reactor
+
+#endif // REACTOR_CPP_FWD_HH

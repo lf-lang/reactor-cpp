@@ -1,0 +1,18 @@
+name: clang-format-review
+
+# You can be more specific, but it currently only works on pull requests
+on: [pull_request]
+
+jobs:
+  clang-format:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install clang-tidy
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang-tidy
+      - name: Analyze
+        run: |
+          clang-format --dry-run --Werror -style=file $(find ./ -name '*.cc' -print)
+          clang-format --dry-run --Werror -style=file $(find ./ -name '*.hh' -print)

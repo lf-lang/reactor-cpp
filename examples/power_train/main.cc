@@ -5,12 +5,12 @@
 using namespace reactor;
 
 class LeftPedal : public Reactor {
- public:
+public:
   // ports
   Output<void> angle{"angle", this};
   Output<void> on_off{"on_off", this};
 
- private:
+private:
   // actions
   PhysicalAction<void> req{"req", this};
 
@@ -19,8 +19,9 @@ class LeftPedal : public Reactor {
 
   void reaction_1() {}
 
- public:
-  LeftPedal(Environment* env) : Reactor("LP", env) {}
+public:
+  explicit LeftPedal(Environment* env)
+      : Reactor("LP", env) {}
 
   void assemble() override {
     r1.declare_trigger(&req);
@@ -30,24 +31,25 @@ class LeftPedal : public Reactor {
 };
 
 class RightPedal : public Reactor {
- public:
+public:
   // ports
   Output<void> angle{"angle", this};
   Input<void> check{"check", this};
 
- private:
+private:
   // actions
   PhysicalAction<void> pol{"pol", this};
 
-  // reactionns
+  // reactions
   Reaction r1{"1", 1, this, [this]() { reaction_1(); }};
   Reaction r2{"2", 2, this, [this]() { reaction_2(); }};
 
-  void reaction_1() {}
+  void reaction_1(){};
   void reaction_2() {}
 
- public:
-  RightPedal(Environment* env) : Reactor("RP", env) {}
+public:
+  explicit RightPedal(Environment* env)
+      : Reactor("RP", env) {}
 
   void assemble() override {
     r1.declare_trigger(&pol);
@@ -59,18 +61,19 @@ class RightPedal : public Reactor {
 };
 
 class BrakeControl : public Reactor {
- public:
+public:
   // ports
   Input<void> angle{"angle", this};
   Output<void> force{"force", this};
 
- private:
+private:
   Reaction r1{"1", 1, this, [this]() { reaction_1(); }};
 
   void reaction_1() {}
 
- public:
-  BrakeControl(Environment* env) : Reactor("BC", env) {}
+public:
+  explicit BrakeControl(Environment* env)
+      : Reactor("BC", env) {}
 
   void assemble() override {
     r1.declare_trigger(&angle);
@@ -79,18 +82,18 @@ class BrakeControl : public Reactor {
 };
 
 class EngineControl : public Reactor {
- public:
+public:
   // ports
   Input<void> angle{"angle", this};
   Input<void> on_off{"on_off", this};
   Output<void> check{"check", this};
   Output<void> torque{"torque", this};
 
- private:
+private:
   // actions
   PhysicalAction<void> rev{"rev", this};
 
-  // reactionns
+  // reactions
   Reaction r1{"1", 1, this, [this]() { reaction_1(); }};
   Reaction r2{"2", 2, this, [this]() { reaction_2(); }};
   Reaction r3{"3", 3, this, [this]() { reaction_3(); }};
@@ -99,8 +102,9 @@ class EngineControl : public Reactor {
   void reaction_2() {}
   void reaction_3() {}
 
- public:
-  EngineControl(Environment* env) : Reactor("EC", env) {}
+public:
+  explicit EngineControl(Environment* env)
+      : Reactor("EC", env) {}
 
   void assemble() override {
     r1.declare_trigger(&on_off);
@@ -115,35 +119,37 @@ class EngineControl : public Reactor {
 };
 
 class Brake : public Reactor {
- public:
+public:
   // ports
   Input<void> force{"force", this};
 
- private:
-  // reactions
+private:
+  // reactions_
   Reaction r1{"1", 1, this, [this]() { reaction_1(); }};
 
   void reaction_1() {}
 
- public:
-  Brake(Environment* env) : Reactor("B", env) {}
+public:
+  explicit Brake(Environment* env)
+      : Reactor("B", env) {}
 
   void assemble() override { r1.declare_trigger(&force); }
 };
 
 class Engine : public Reactor {
- public:
+public:
   // ports
   Input<void> torque{"torque", this};
 
- private:
-  // reactions
+private:
+  // reactions_
   Reaction r1{"1", 1, this, [this]() { reaction_1(); }};
 
   void reaction_1() {}
 
- public:
-  Engine(Environment* env) : Reactor("E", env) {}
+public:
+  explicit Engine(Environment* env)
+      : Reactor("E", env) {}
 
   void assemble() override { r1.declare_trigger(&torque); }
 };
