@@ -16,6 +16,22 @@
         "type": "github"
       }
     },
+    "lingua-franca-benchmarks": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1649148080,
+        "narHash": "sha256-Gr4krm7EYOzue2WPjV7KrGlCCRKpMyQS9ZsD4P8foQo=",
+        "owner": "lf-lang",
+        "repo": "benchmarks-lingua-franca",
+        "rev": "69d8758fa636314523201547419fe4e1feea46b1",
+        "type": "github"
+      },
+      "original": {
+        "owner": "lf-lang",
+        "repo": "benchmarks-lingua-franca",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1646254136,
@@ -51,6 +67,7 @@
     "root": {
       "inputs": {
         "lingua-franca": "lingua-franca",
+        "lingua-franca-benchmarks": "lingua-franca-benchmarks",
         "nixpkgs": "nixpkgs",
         "reactor-cpp": "reactor-cpp",
         "utils": "utils"
