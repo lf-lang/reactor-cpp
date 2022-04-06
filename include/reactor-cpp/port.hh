@@ -95,9 +95,11 @@ private:
   void cleanup() final { present_ = false; }
 
 public:
+  using value_type = void;
+
   Port(const std::string& name, PortType type, Reactor* container)
       : BasePort(name, type, container) {}
-
+  
   void bind_to(Port<void>* port) { base_bind_to(port); }
   [[nodiscard]] auto typed_inward_binding() const noexcept -> Port<void>*;
   [[nodiscard]] auto typed_outward_bindings() const noexcept -> const auto&;

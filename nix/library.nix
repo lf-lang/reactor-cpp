@@ -6,6 +6,10 @@
 , stdenv
 }:
 let
+  lingua-franca = pkgs.callPackage ./lfc.nix {
+    lingua-franca-src = lingua-franca-src;
+    mkDerivation = stdenv.mkDerivation;
+  };
 
   cpp-runtime = pkgs.callPackage ./reactor-cpp.nix {
     reactor-cpp-src = reactor-cpp-src;
@@ -62,21 +66,24 @@ let
       value = mkDerivation {
         name = package_name;
 
-        src = lingua-franca-src;
-
-        buildInputs = with pkgs; [ lingua-franca which cmake git boost ] ++ [ compiler ];
+        src = ./.;
+        #src = lingua-franca-src;
+        
+        # libgmp-dev is only required here because there is some special snowflake benchmark
+        buildInputs = with pkgs; [ lingua-franca which cmake git boost gmp ] ++ [ compiler ];
 
         configurePhase = ''
           echo "+++++ CURRENT TEST: ${test_file} +++++";
         '';
 
         buildPhase = ''
-          ${pkgs.lingua-franca}/bin/lfc --external-runtime-path ${cpp-runtime}/ --output ./ ${test_file}
+          ${lingua-franca}/bin/lfc --external-runtime-path ${cpp-runtime}/ --output ./ ${test_file}
         '';
 
         installPhase = ''
           mkdir -p $out/bin
           cp -r ./bin/${file_name} $out/bin/${file_name}-${compiler.pname}
+          cp -r ./bin/${file_name} $out/bin/${package_name}
         '';
       };
     });
@@ -86,6 +93,7 @@ in
   compilers = compilers;
   buildDerivation = buildDerivation;
   mkDerivation = mkDerivation;
+  has_file_extensions_lf = has_file_extensions_lf;
 
   # extracts the name of the file without the .lf ending from a given file name
   extract_name = file: builtins.head (lib.strings.splitString ".lf" (builtins.head (lib.reverseList (builtins.split "/" file))));

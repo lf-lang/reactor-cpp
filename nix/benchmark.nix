@@ -1,10 +1,10 @@
 { fetchFromGitHub
-, reactor-cpp-src
-, lingua-franca-src
-, lingua-franca-benchmark-src
 , pkgs
 , lib
 , stdenv
+, reactor-cpp-src
+, lingua-franca-src
+, lingua-franca-benchmarks
 }:
 let
 
@@ -16,8 +16,20 @@ let
 
   mkDerivation = library.mkDerivation;
 
+  # Borked Benchmarks or not even Benchmarks
+  borked_benchmarks = [
+    "BenchmarkRunner.lf"
+  ];
+  
+  # filter out name
+  extract_name = (file: builtins.head (lib.reverseList (builtins.split "/" file)));
+
+  borked_benchmarks_filter = (file: !(lib.lists.elem (extract_name file) borked_benchmarks));
+  
+  filter_function = (file: (borked_benchmarks_filter file) && (library.has_file_extensions_lf file));
+
   # searches all lingua-franca files in that repo
-  benchmarks = (library.search_files "${lingua-franca-benchmark-src}/Cpp/Savina/src");
+  benchmarks = (lib.filter filter_function (library.search_files "${lingua-franca-benchmarks}/Cpp/Savina/src"));
 
   list_of_derivations = (library.create_derivations benchmarks);
 

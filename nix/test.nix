@@ -1,9 +1,10 @@
 { fetchFromGitHub
-, reactor-cpp-src
-, lingua-franca-src
 , pkgs
 , lib
 , stdenv
+, reactor-cpp-src
+, lingua-franca-src
+, lingua-franca-tests
 }:
 let
 
@@ -29,7 +30,7 @@ let
 
 
   #  searches all lingua-franca files in that repo
-  tests = (library.search_files "${lingua-franca-src}/test/Cpp/src");
+  tests = (library.search_files "${lingua-franca-tests}/test/Cpp/src");
 
   # checks if a given file is in the unrunable file list
   is_executable = file: !((lib.lists.count (x: x == file) keep_alive) > 0);
