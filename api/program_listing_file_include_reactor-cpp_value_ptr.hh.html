@@ -327,7 +327,7 @@
   <span class="k">explicit</span> <span class="k">operator</span> <span class="kt">bool</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">get</span><span class="p">()</span> <span class="o">==</span> <span class="k">nullptr</span><span class="p">;</span> <span class="p">}</span>
 
   <span class="k">auto</span> <span class="k">operator</span><span class="o">*</span><span class="p">()</span> <span class="k">const</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="o">&amp;</span> <span class="p">{</span> <span class="k">return</span> <span class="o">*</span><span class="n">get</span><span class="p">();</span> <span class="p">}</span>
-  <span class="k">auto</span> <span class="k">operator</span><span class="o">-&gt;</span><span class="p">()</span> <span class="k">const</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="o">*</span> <span class="p">{</span> <span class="k">return</span> <span class="n">get</span><span class="p">();</span> <span class="p">}</span>
+  <span class="k">auto</span> <span class="k">operator</span><span class="o">-&gt;</span><span class="p">()</span> <span class="k">const</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="o">*</span> <span class="p">{</span> <span class="k">return</span> <span class="n">get</span><span class="p">();</span> <span class="p">}</span> <span class="c1">// NOLINT</span>
 
   <span class="c1">// Give ImmutableValuePtr access to the private constructor. This is required</span>
   <span class="c1">// for creating a MutableValuePtr from an ImmutableValuePtr in</span>

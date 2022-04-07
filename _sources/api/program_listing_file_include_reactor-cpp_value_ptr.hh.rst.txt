@@ -57,7 +57,7 @@ Program Listing for File value_ptr.hh
      explicit operator bool() const { return get() == nullptr; }
    
      auto operator*() const -> T& { return *get(); }
-     auto operator->() const -> T* { return get(); }
+     auto operator->() const -> T* { return get(); } // NOLINT
    
      // Give ImmutableValuePtr access to the private constructor. This is required
      // for creating a MutableValuePtr from an ImmutableValuePtr in

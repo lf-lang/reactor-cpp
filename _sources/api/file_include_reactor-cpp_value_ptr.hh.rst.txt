@@ -88,11 +88,11 @@ Functions
 
 - :ref:`exhale_function_namespacereactor_1a681bfde16a0a0e82e3c5d73bd0b773bb`
 
+- :ref:`exhale_function_namespacereactor_1af62e616bf709f0f8845a65e1670cc15c`
+
 - :ref:`exhale_function_namespacereactor_1a5778cc8f6a62e1c0c382d535b47daa95`
 
 - :ref:`exhale_function_namespacereactor_1af5416e608b92050f7588ac769c41b726`
-
-- :ref:`exhale_function_namespacereactor_1af62e616bf709f0f8845a65e1670cc15c`
 
 - :ref:`exhale_function_namespacereactor_1addeb5a9fd0b4ded0a0a5b586d88ce447`
 
