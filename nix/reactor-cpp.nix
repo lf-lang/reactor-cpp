@@ -8,10 +8,11 @@ mkDerivation {
   configurePhase = ''
     echo "Configuration"
   '';
-
+  
+  #TODO: remove debug build here
   buildPhase = ''
     mkdir -p build && cd build
-    cmake -DCMAKE_INSTALL_PREFIX=./ ../
+    cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=./ ../
     make install
   '';
 
