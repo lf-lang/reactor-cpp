@@ -20,12 +20,12 @@ let
   borked_benchmarks = [
     "BenchmarkRunner.lf"
   ];
-  
+
   # filter out name
   extract_name = (file: builtins.head (lib.reverseList (builtins.split "/" file)));
 
   borked_benchmarks_filter = (file: !(lib.lists.elem (extract_name file) borked_benchmarks));
-  
+
   filter_function = (file: (borked_benchmarks_filter file) && (library.has_file_extensions_lf file));
 
   # searches all lingua-franca files in that repo

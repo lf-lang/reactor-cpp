@@ -13,7 +13,7 @@
 
     # source for the lingu franca compiler
     lingua-franca-src = {
-      url = "https://github.com/lf-lang/lingua-franca/releases/download/nightly/lfc_nightly_20220406-050300.tar.gz";
+      url = "https://github.com/lf-lang/lingua-franca/releases/download/v0.1.0-beta/lfc_0.1.0-beta.tar.gz";
       flake = false;
     };
 
@@ -30,22 +30,25 @@
     };
   };
 
-  outputs = inputs@{self, utils, nixpkgs, reactor-cpp, lingua-franca-src, lingua-franca-tests, lingua-franca-benchmarks, ...}: 
-    utils.lib.eachDefaultSystem (system: let 
-      pkgs = nixpkgs.legacyPackages.${system};
-      allTests = (pkgs.callPackage ./nix/test.nix {
-        reactor-cpp-src = reactor-cpp;
-        lingua-franca-src = lingua-franca-src;
-        lingua-franca-tests = lingua-franca-tests;
-      });
-      allBenchmarks = pkgs.callPackage ./nix/benchmark.nix {
-        reactor-cpp-src = reactor-cpp;
-        lingua-franca-src = lingua-franca-src;
-        lingua-franca-benchmarks = lingua-franca-benchmarks;
-      };
-      in rec {
+  outputs = inputs@{ self, utils, nixpkgs, reactor-cpp, lingua-franca-src, lingua-franca-tests, lingua-franca-benchmarks, ... }:
+    utils.lib.eachDefaultSystem (system:
+      let
+        pkgs = nixpkgs.legacyPackages.${system};
+        allTests = (pkgs.callPackage ./nix/test.nix {
+          reactor-cpp-src = reactor-cpp;
+          lingua-franca-src = lingua-franca-src;
+          lingua-franca-tests = lingua-franca-tests;
+        });
+        allBenchmarks = pkgs.callPackage ./nix/benchmark.nix {
+          reactor-cpp-src = reactor-cpp;
+          lingua-franca-src = lingua-franca-src;
+          lingua-franca-benchmarks = lingua-franca-benchmarks;
+        };
+        customPackages = pkgs.lib.mergeAttrs allTests allBenchmarks;
+      in
+      rec {
         checks = allTests;
-        packages = pkgs.lib.mergeAttrs (pkgs.lib.mergeAttrs pkgs allTests) allBenchmarks;
+        packages = pkgs.lib.mergeAttrs pkgs customPackages;
       }
     );
 }

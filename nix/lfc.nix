@@ -1,5 +1,4 @@
-{
-  pkgs
+{ pkgs
 , config
 , lib
 , mkDerivation
@@ -13,7 +12,8 @@ let
   # filter out name
   extracted_name = (builtins.head (lib.reverseList (builtins.split "/" jar_path)));
 
-in mkDerivation {
+in
+mkDerivation {
   pname = "lfc";
   version = "0.1.0";
 
@@ -23,9 +23,7 @@ in mkDerivation {
 
   _JAVA_HOME = "${jdk11_headless}/";
 
-  # TODO: this copy will ptententially brake someday
   postPatch = ''
-    echo "FOUND FILE: ${extracted_name}"
     substituteInPlace bin/lfc \
       --replace 'base=`dirname $(dirname ''${abs_path})`' "base='$out'" \
       --replace "run_lfc_with_args" "${jdk11_headless}/bin/java -jar $out/lib/jars/${extracted_name}"

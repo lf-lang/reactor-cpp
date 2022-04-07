@@ -6,11 +6,13 @@
 , stdenv
 }:
 let
+  # lingua-franca compiler package
   lingua-franca = pkgs.callPackage ./lfc.nix {
     lingua-franca-src = lingua-franca-src;
     mkDerivation = stdenv.mkDerivation;
   };
 
+  # reactor-cpp runtime package 
   cpp-runtime = pkgs.callPackage ./reactor-cpp.nix {
     reactor-cpp-src = reactor-cpp-src;
     mkDerivation = stdenv.mkDerivation;
@@ -67,8 +69,7 @@ let
         name = package_name;
 
         src = ./.;
-        #src = lingua-franca-src;
-        
+
         # libgmp-dev is only required here because there is some special snowflake benchmark
         buildInputs = with pkgs; [ lingua-franca which cmake git boost gmp ] ++ [ compiler ];
 

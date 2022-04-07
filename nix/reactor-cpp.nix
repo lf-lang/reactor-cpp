@@ -1,9 +1,9 @@
-{ pkgs, mkDerivation, cmake, gcc, lingua-franca, reactor-cpp-src }:
+{ pkgs, mkDerivation, cmake, gcc, reactor-cpp-src }:
 mkDerivation {
   name = "cpp-lingua-franca-runtime";
   src = reactor-cpp-src;
 
-  nativeBuildInputs = with pkgs; [ cmake gcc lingua-franca ];
+  nativeBuildInputs = with pkgs; [ cmake gcc ];
 
   configurePhase = ''
     echo "Configuration"

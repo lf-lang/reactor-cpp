@@ -30,7 +30,7 @@ at this [guide](https://github.com/lf-lang/lingua-franca/wiki/Regression-Tests).
 
 **Building a special Package**
 ```
-    $ nix build .#packages.x86_64-linux.ActionDelay-gcc-wrapper-10-3-0 --override-input reactor-cpp github:lf-lang/reactor-cpp/cpp-core-guidelines
+    $ nix build .#packages.x86_64-linux.ActionDelay-gcc-wrapper-10-3-0 --override-input reactor-cpp github:lf-lang/reactor-cpp/<revision - branch>
 ```
 
 The important thing to note is that the `--override-input` flag can take literally any source. In this example it takes the `cpp-core-guidleines` branch 
@@ -47,6 +47,19 @@ This will build and run every tests.
 ```
     $ nix run .#packages.x86_64-linux.all-benchmarks
 ```
+
+
+**Locally integration testing**
+
+Lets assume you have the following folder structure:
+ - reactor-cpp/
+ - lingua-franca/
+    - build/your_lfc_build.tar.gz folder that contains your local build of lfc
+
+```
+    $ nix run .#packages.x86_64-linux.all-tests --override-input reactor-cpp "./." lingua-franca-src "../lingua-franca/build/your_lfc_build.tar.gz"
+```
+
 
 ### Benchmarking
 If youre changes are performance critically it is adviced to run the test from [here](https://github.com/lf-lang/lingua-franca/wiki/Running-Benchmarks)
