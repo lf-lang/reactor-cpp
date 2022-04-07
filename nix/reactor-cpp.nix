@@ -1,5 +1,9 @@
-{ pkgs, mkDerivation, cmake, gcc, reactor-cpp-src }:
-mkDerivation {
+{ pkgs, mkDerivation, cmake, gcc, reactor-cpp-src, debug}:
+let
+
+  buildMode = if debug then "Debug" else "Release";
+
+in mkDerivation {
   name = "cpp-lingua-franca-runtime";
   src = reactor-cpp-src;
 
@@ -12,7 +16,7 @@ mkDerivation {
   #TODO: remove debug build here
   buildPhase = ''
     mkdir -p build && cd build
-    cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=./ ../
+    cmake -DCMAKE_BUILD_TYPE=${buildMode} -DCMAKE_INSTALL_PREFIX=./ ../
     make install
   '';
 
