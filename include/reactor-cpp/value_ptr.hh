@@ -138,7 +138,7 @@ public:
    * Provides access to members of the associated value via ``->``. The
    * behavior is undefined if ``get() == nullptr``.
    */
-  auto operator->() const -> T* { return get(); }
+  auto operator->() const -> T* { return get(); } // NOLINT
 
   // Give ImmutableValuePtr access to the private constructor. This is required
   // for creating a MutableValuePtr from an ImmutableValuePtr in
