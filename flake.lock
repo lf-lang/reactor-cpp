@@ -1,13 +1,41 @@
 {
   "nodes": {
-    "lingua-franca": {
+    "lingua-franca-benchmarks": {
       "flake": false,
       "locked": {
-        "lastModified": 1646313915,
-        "narHash": "sha256-O1WS7ROJLxxOLH8NHf1B7FA/tQIIWQaHDZbzPAJ6rFg=",
+        "lastModified": 1649148080,
+        "narHash": "sha256-Gr4krm7EYOzue2WPjV7KrGlCCRKpMyQS9ZsD4P8foQo=",
+        "owner": "lf-lang",
+        "repo": "benchmarks-lingua-franca",
+        "rev": "69d8758fa636314523201547419fe4e1feea46b1",
+        "type": "github"
+      },
+      "original": {
+        "owner": "lf-lang",
+        "repo": "benchmarks-lingua-franca",
+        "type": "github"
+      }
+    },
+    "lingua-franca-src": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-mP+MQSTSUeqELGR6KJJCg943p6uw+XSn6/3tmhnCc4s=",
+        "type": "tarball",
+        "url": "https://github.com/lf-lang/lingua-franca/releases/download/v0.1.0-beta/lfc_0.1.0-beta.tar.gz"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://github.com/lf-lang/lingua-franca/releases/download/v0.1.0-beta/lfc_0.1.0-beta.tar.gz"
+      }
+    },
+    "lingua-franca-tests": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1649178626,
+        "narHash": "sha256-EHLjal7wjF/Au+8jemyciQ5q8rMgiHHOT0QzwyToNfo=",
         "owner": "lf-lang",
         "repo": "lingua-franca",
-        "rev": "7e5cfe961875d6de38f197276e4ecdd7e606fec4",
+        "rev": "e4639438ed2ec3ecb0d1346791188d96a2594c1f",
         "type": "github"
       },
       "original": {
@@ -18,11 +46,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1646254136,
-        "narHash": "sha256-8nQx02tTzgYO21BP/dy5BCRopE8OwE8Drsw98j+Qoaw=",
+        "lastModified": 1649225869,
+        "narHash": "sha256-u1zLtPmQzhT9mNXyM8Ey9pk7orDrIKdwooeGDEXm5xM=",
         "owner": "NixOs",
         "repo": "nixpkgs",
-        "rev": "3e072546ea98db00c2364b81491b893673267827",
+        "rev": "b6966d911da89e5a7301aaef8b4f0a44c77e103c",
         "type": "github"
       },
       "original": {
@@ -35,11 +63,11 @@
     "reactor-cpp": {
       "flake": false,
       "locked": {
-        "lastModified": 1646313857,
-        "narHash": "sha256-R5yGvscwhOdDcWj67Pv7/GCQ5SjCtKckbLklgpYBHyU=",
+        "lastModified": 1649143902,
+        "narHash": "sha256-5kZfT7yzJXTcHPwBcsMZXQMvC3LT81IAhex0tjbXknk=",
         "owner": "lf-lang",
         "repo": "reactor-cpp",
-        "rev": "fa3def521f13109e9677586ccf16d23af1e44196",
+        "rev": "aef18b98047039fc7875daa8fceda370bff17a17",
         "type": "github"
       },
       "original": {
@@ -50,7 +78,9 @@
     },
     "root": {
       "inputs": {
-        "lingua-franca": "lingua-franca",
+        "lingua-franca-benchmarks": "lingua-franca-benchmarks",
+        "lingua-franca-src": "lingua-franca-src",
+        "lingua-franca-tests": "lingua-franca-tests",
         "nixpkgs": "nixpkgs",
         "reactor-cpp": "reactor-cpp",
         "utils": "utils"
@@ -58,11 +88,11 @@
     },
     "utils": {
       "locked": {
-        "lastModified": 1644229661,
-        "narHash": "sha256-1YdnJAsNy69bpcjuoKdOYQX0YxZBiCYZo4Twxerqv7k=",
+        "lastModified": 1648297722,
+        "narHash": "sha256-W+qlPsiZd8F3XkzXOzAoR+mpFqzm3ekQkJNa+PIh1BQ=",
         "owner": "numtide",
         "repo": "flake-utils",
-        "rev": "3cecb5b042f7f209c56ffd8371b2711a290ec797",
+        "rev": "0f8662f1319ad6abf89b3380dd2722369fc51ade",
         "type": "github"
       },
       "original": {

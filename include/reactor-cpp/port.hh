@@ -40,20 +40,20 @@ protected:
   virtual void cleanup() = 0;
 
 public:
-  [[nodiscard]] auto is_input() const noexcept -> bool { return type_ == PortType::Input; }
-  [[nodiscard]] auto is_output() const noexcept -> bool { return type_ == PortType::Output; }
+  [[nodiscard]] inline auto is_input() const noexcept -> bool { return type_ == PortType::Input; }
+  [[nodiscard]] inline auto is_output() const noexcept -> bool { return type_ == PortType::Output; }
 
-  [[nodiscard]] auto has_inward_binding() const noexcept -> bool { return inward_binding_ != nullptr; }
-  [[nodiscard]] auto has_outward_bindings() const noexcept -> bool { return !outward_bindings_.empty(); }
-  [[nodiscard]] auto has_dependencies() const noexcept -> bool { return !dependencies_.empty(); }
-  [[nodiscard]] auto has_antidependencies() const noexcept -> bool { return !antidependencies_.empty(); }
+  [[nodiscard]] inline auto has_inward_binding() const noexcept -> bool { return inward_binding_ != nullptr; }
+  [[nodiscard]] inline auto has_outward_bindings() const noexcept -> bool { return !outward_bindings_.empty(); }
+  [[nodiscard]] inline auto has_dependencies() const noexcept -> bool { return !dependencies_.empty(); }
+  [[nodiscard]] inline auto has_antidependencies() const noexcept -> bool { return !antidependencies_.empty(); }
 
-  [[nodiscard]] auto inward_binding() const noexcept -> BasePort* { return inward_binding_; }
-  [[nodiscard]] auto outward_bindings() const noexcept -> const auto& { return outward_bindings_; }
+  [[nodiscard]] inline auto inward_binding() const noexcept -> BasePort* { return inward_binding_; }
+  [[nodiscard]] inline auto outward_bindings() const noexcept -> const auto& { return outward_bindings_; }
 
-  [[nodiscard]] auto triggers() const noexcept -> const auto& { return triggers_; }
-  [[nodiscard]] auto dependencies() const noexcept -> const auto& { return dependencies_; }
-  [[nodiscard]] auto antidependencies() const noexcept -> const auto& { return antidependencies_; }
+  [[nodiscard]] inline auto triggers() const noexcept -> const auto& { return triggers_; }
+  [[nodiscard]] inline auto dependencies() const noexcept -> const auto& { return dependencies_; }
+  [[nodiscard]] inline auto antidependencies() const noexcept -> const auto& { return antidependencies_; }
 
   friend class Reaction;
   friend class Scheduler;
@@ -95,6 +95,8 @@ private:
   void cleanup() final { present_ = false; }
 
 public:
+  using value_type = void;
+
   Port(const std::string& name, PortType type, Reactor* container)
       : BasePort(name, type, container) {}
 
