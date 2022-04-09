@@ -3,7 +3,7 @@
     "lf-benchmark-runner": {
       "inputs": {
         "naersk": "naersk",
-        "nixpkgs": "nixpkgs",
+        "nixpkgs": "nixpkgs_2",
         "utils": "utils"
       },
       "locked": {
@@ -66,10 +66,7 @@
     },
     "naersk": {
       "inputs": {
-        "nixpkgs": [
-          "lf-benchmark-runner",
-          "nixpkgs"
-        ]
+        "nixpkgs": "nixpkgs"
       },
       "locked": {
         "lastModified": 1649096192,
@@ -87,6 +84,20 @@
     },
     "nixpkgs": {
       "locked": {
+        "lastModified": 1648219316,
+        "narHash": "sha256-Ctij+dOi0ZZIfX5eMhgwugfvB+WZSrvVNAyAuANOsnQ=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "30d3d79b7d3607d56546dd2a6b49e156ba0ec634",
+        "type": "github"
+      },
+      "original": {
+        "id": "nixpkgs",
+        "type": "indirect"
+      }
+    },
+    "nixpkgs_2": {
+      "locked": {
         "lastModified": 1649368816,
         "narHash": "sha256-lVzCpg2xfTUrfcankjlym/mrh/7F/gpWQ7CYQM6BcPY=",
         "owner": "NixOS",
@@ -101,7 +112,7 @@
         "type": "github"
       }
     },
-    "nixpkgs_2": {
+    "nixpkgs_3": {
       "locked": {
         "lastModified": 1649225869,
         "narHash": "sha256-u1zLtPmQzhT9mNXyM8Ey9pk7orDrIKdwooeGDEXm5xM=",
@@ -139,7 +150,7 @@
         "lingua-franca-benchmarks": "lingua-franca-benchmarks",
         "lingua-franca-src": "lingua-franca-src",
         "lingua-franca-tests": "lingua-franca-tests",
-        "nixpkgs": "nixpkgs_2",
+        "nixpkgs": "nixpkgs_3",
         "reactor-cpp": "reactor-cpp",
         "utils": "utils_2"
       }
