@@ -122,7 +122,7 @@ in
 
   # creates the copy command for every derivation
   create_install_command = (list_of_derivations: (lib.strings.concatStringsSep "\n" (builtins.map (x: "cp -r ${x}/bin/* $out/bin/") list_of_derivations)));
-  
+
   # checks the given package for memory leaks and exports a the result
   memtest = (package:
     {
@@ -146,7 +146,7 @@ in
         '';
       };
     }
-    );
+  );
 
 
 }

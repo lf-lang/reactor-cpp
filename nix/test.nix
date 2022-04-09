@@ -68,6 +68,7 @@ let
     '';
   };
 
+  # copies all the binaries
   install_command = (library.create_install_command (library.create_derivations tests));
 
   # package that triggers a build of every test file
@@ -80,16 +81,22 @@ let
       ${pkgs.coreutils}/bin/cp ${run_all}/bin/* $out/bin/
     '' + install_command;
   };
-  
+
+  # function that takes a list of attributes [ { name = "a"; value = "b";}] and transforms it into
+  # a list with all the values which are derivations in that case: e.g. ["b"]
   extract_derivations = (list: lib.attrValues (lib.listToAttrs list));
+
+  # takes the cartisean product of packages and compilers
   attribute_set_derivations = (library.double_map tests library.compilers library.buildDerivation);
-  attribute_set_memory = (builtins.map library.memtest (extract_derivations attribute_set_derivations) );
+
+  # creates for every package a memtest version for debug purposes
+  attribute_set_memory = (builtins.map library.memtest (extract_derivations attribute_set_derivations));
 in
-  lib.listToAttrs (attribute_set_derivations
+lib.listToAttrs (attribute_set_derivations
   ++ attribute_set_memory
   ++ [
-    { name = "all-tests"; value = all-tests; }
-    { name = "list-tests"; value = list-tests; }
-    { name = "list-compilers"; value = library.list-compilers; }
-  ])
+  { name = "all-tests"; value = all-tests; }
+  { name = "list-tests"; value = list-tests; }
+  { name = "list-compilers"; value = library.list-compilers; }
+])
 
