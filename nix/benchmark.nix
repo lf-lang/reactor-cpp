@@ -2,9 +2,11 @@
 , pkgs
 , lib
 , stdenv
+, lf-benchmark-runner
 , reactor-cpp-src
 , lingua-franca-src
 , lingua-franca-benchmarks
+, valgrind
 }:
 let
 
@@ -72,11 +74,55 @@ let
       ${pkgs.coreutils}/bin/cp ${run_all}/bin/* $out/bin/
     '' + install_command;
   };
+  benchmark_command = (benchmark: "${lf-benchmark-runner}/bin/lf-benchmark-runner --target lf-cpp --binary ${benchmark}/bin/${benchmark.name} --file ./result.csv");
+
+  benchmark_commands = lib.strings.concatStringsSep "\n" (builtins.map benchmark_command list_of_derivations);
+
+  make-benchmark = mkDerivation {
+    src = ./.;
+    name = "make-benchmark";
+
+    buildPhase = benchmark_commands;
+
+    installPhase = ''
+      mkdir -p $out/data/
+      cp result.csv $out/data/
+    '';
+  };
+
+  profiler = (package: valgrind_check:
+    {
+      name = "${valgrind_check}-${package.name}";
+      value = mkDerivation {
+        name = "${valgrind_check}-${package.name}";
+        src = ./.;
+        nativeBuildInputs = [ valgrind ];
+
+        buildPhase = ''
+          ${valgrind}/bin/valgrind --tool=${valgrind_check} ${package}/bin/${package.name} 
+        '';
+        installPhase = ''
+          mkdir -p $out/data
+          cp callgrind.out.* $out/data/${package.name}-callgrind.out
+        '';
+      };
+    }
+    );
+
+  extract_derivations = (list: lib.attrValues (lib.listToAttrs list));
+  attribute_set_derivations = (library.double_map benchmarks library.compilers library.buildDerivation);
+  attribute_set_cachegrind = (builtins.map (x: profiler x "cachegrind") (extract_derivations attribute_set_derivations) );
+  attribute_set_callgrind = (builtins.map (x: profiler x "callgrind") (extract_derivations attribute_set_derivations) );
+  attribute_set_memory = (builtins.map library.memtest (extract_derivations attribute_set_derivations) );
 in
-lib.listToAttrs ((library.double_map benchmarks library.compilers library.buildDerivation) ++
-  [
+  lib.listToAttrs (attribute_set_derivations 
+  ++ attribute_set_cachegrind 
+  ++ attribute_set_callgrind 
+  ++ attribute_set_memory
+  ++ [
     { name = "all-benchmarks"; value = all-benchmarks; }
     { name = "list-benchmarks"; value = list-benchmarks; }
     { name = "list-compilers"; value = library.list-compilers; }
+    { name = "make-benchmark"; value = make-benchmark; }
   ])
 

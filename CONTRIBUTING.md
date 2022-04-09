@@ -48,7 +48,6 @@ This will build and run every tests.
     $ nix run .#packages.x86_64-linux.all-benchmarks
 ```
 
-
 **Locally integration testing**
 
 Lets assume you have the following folder structure:
@@ -59,6 +58,15 @@ Lets assume you have the following folder structure:
 ```
     $ nix run .#packages.x86_64-linux.all-tests --override-input reactor-cpp "./." lingua-franca-src "../lingua-franca/build/your_lfc_build.tar.gz"
 ```
+
+
+**Running all Benchmarks and collect results**
+
+```
+    $ nix build .\#packages.x86_64-linux.make-benchmark
+```
+
+This will generate a data/result.csv with all the times of the various benchmarks.
 
 
 ### Benchmarking

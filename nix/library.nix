@@ -1,6 +1,7 @@
 { fetchFromGitHub
 , lingua-franca-src
 , reactor-cpp-src
+, valgrind
 , pkgs
 , lib
 , stdenv
@@ -121,5 +122,31 @@ in
 
   # creates the copy command for every derivation
   create_install_command = (list_of_derivations: (lib.strings.concatStringsSep "\n" (builtins.map (x: "cp -r ${x}/bin/* $out/bin/") list_of_derivations)));
+  
+  # checks the given package for memory leaks and exports a the result
+  memtest = (package:
+    {
+      name = "MLeaks-${package.name}";
+      value = mkDerivation {
+        name = "MLeaks-${package.name}";
+        src = ./.;
+        nativeBuildInputs = [ valgrind ];
+
+        buildPhase = ''
+          ${valgrind}/bin/valgrind --leak-check=full \
+            --show-leak-kinds=all \
+            --track-origins=yes \
+            --verbose \
+            --log-file=valgrind-out.txt \
+            ${package}/bin/${package.name} 
+        '';
+        installPhase = ''
+          mkdir -p $out/data
+          cp valgrind-out.txt $out/data/${package.name}-memtest.out
+        '';
+      };
+    }
+    );
+
 
 }

@@ -80,9 +80,14 @@ let
       ${pkgs.coreutils}/bin/cp ${run_all}/bin/* $out/bin/
     '' + install_command;
   };
+  
+  extract_derivations = (list: lib.attrValues (lib.listToAttrs list));
+  attribute_set_derivations = (library.double_map tests library.compilers library.buildDerivation);
+  attribute_set_memory = (builtins.map library.memtest (extract_derivations attribute_set_derivations) );
 in
-lib.listToAttrs ((library.double_map tests library.compilers library.buildDerivation) ++
-  [
+  lib.listToAttrs (attribute_set_derivations
+  ++ attribute_set_memory
+  ++ [
     { name = "all-tests"; value = all-tests; }
     { name = "list-tests"; value = list-tests; }
     { name = "list-compilers"; value = library.list-compilers; }
