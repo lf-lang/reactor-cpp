@@ -14,11 +14,6 @@ let
     reactor-cpp-src = reactor-cpp-src;
   };
 
-  borked_tests = [
-    "StructAsState.lf"
-    "StructAsType.lf"
-  ];
-
   # list of special derivations which cannot be run
   keep_alive = [
     "Keepalive.lf"

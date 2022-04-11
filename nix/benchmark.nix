@@ -108,7 +108,7 @@ let
         '';
         installPhase = ''
           mkdir -p $out/data
-          cp callgrind.out.* $out/data/${package.name}-callgrind.out
+          cp ${valgrind_check}.out.* $out/data/${package.name}-${valgrind_check}.out
         '';
       };
     }
@@ -120,7 +120,6 @@ let
 
   attribute_set_cachegrind = (builtins.map (x: profiler x "cachegrind") (extract_derivations attribute_set_derivations));
   attribute_set_callgrind = (builtins.map (x: profiler x "callgrind") (extract_derivations attribute_set_derivations));
-
   attribute_set_memory = (builtins.map library.memtest (extract_derivations attribute_set_derivations));
 in
 lib.listToAttrs (attribute_set_derivations

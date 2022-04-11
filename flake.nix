@@ -31,7 +31,7 @@
     };
   };
 
-  outputs = inputs@{ self, utils, nixpkgs, lf-benchmark-runner, reactor-cpp, lingua-franca-src, lingua-franca-tests, lingua-franca-benchmarks, ... }:
+  outputs = {utils, nixpkgs, lf-benchmark-runner, reactor-cpp, lingua-franca-src, lingua-franca-tests, lingua-franca-benchmarks, ... }:
     utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
