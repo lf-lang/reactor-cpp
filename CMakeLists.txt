@@ -16,6 +16,8 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
+set(CMAKE_CXX_CLANG_TIDY clang-tidy; -header-filter=reactor-cpp/.;)
+
 find_package (Threads)
 
 set(DEFAULT_BUILD_TYPE "Release")
