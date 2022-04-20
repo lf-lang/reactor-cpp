@@ -14,7 +14,7 @@
 #include <string>
 
 #include "fwd.hh"
-#include "time.hh"
+#include "logical_time.hh"
 
 namespace reactor {
 class ReactorElement { // NOLINT
@@ -84,6 +84,8 @@ public:
 
   [[nodiscard]] static auto get_physical_time() noexcept -> TimePoint;
   [[nodiscard]] auto get_logical_time() const noexcept -> TimePoint;
+  [[nodiscard]] auto get_microstep() const noexcept -> mstep_t;
+  [[nodiscard]] auto get_tag() const noexcept -> Tag;
   [[nodiscard]] auto get_elapsed_logical_time() const noexcept -> Duration;
   [[nodiscard]] auto get_elapsed_physical_time() const noexcept -> Duration;
 

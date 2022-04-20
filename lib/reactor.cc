@@ -157,6 +157,14 @@ auto Reactor::get_logical_time() const noexcept -> TimePoint {
   return environment()->scheduler()->logical_time().time_point();
 }
 
+auto Reactor::get_microstep() const noexcept -> mstep_t {
+  return environment()->scheduler()->logical_time().micro_step();
+}
+
+auto Reactor::get_tag() const noexcept -> Tag {
+  return Tag::from_logical_time(environment()->scheduler()->logical_time());
+}
+
 auto Reactor::get_elapsed_logical_time() const noexcept -> Duration {
   return get_logical_time() - environment()->start_time();
 }
