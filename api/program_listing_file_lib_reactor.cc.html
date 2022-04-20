@@ -439,6 +439,14 @@
   <span class="k">return</span> <span class="n">environment</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">scheduler</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">logical_time</span><span class="p">().</span><span class="n">time_point</span><span class="p">();</span>
 <span class="p">}</span>
 
+<span class="k">auto</span> <span class="n">Reactor</span><span class="o">::</span><span class="n">get_microstep</span><span class="p">()</span> <span class="k">const</span> <span class="k">noexcept</span> <span class="o">-&gt;</span> <span class="n">mstep_t</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">environment</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">scheduler</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">logical_time</span><span class="p">().</span><span class="n">micro_step</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="k">auto</span> <span class="n">Reactor</span><span class="o">::</span><span class="n">get_tag</span><span class="p">()</span> <span class="k">const</span> <span class="k">noexcept</span> <span class="o">-&gt;</span> <span class="n">Tag</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">Tag</span><span class="o">::</span><span class="n">from_logical_time</span><span class="p">(</span><span class="n">environment</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">scheduler</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">logical_time</span><span class="p">());</span>
+<span class="p">}</span>
+
 <span class="k">auto</span> <span class="n">Reactor</span><span class="o">::</span><span class="n">get_elapsed_logical_time</span><span class="p">()</span> <span class="k">const</span> <span class="k">noexcept</span> <span class="o">-&gt;</span> <span class="n">Duration</span> <span class="p">{</span>
   <span class="k">return</span> <span class="n">get_logical_time</span><span class="p">()</span> <span class="o">-</span> <span class="n">environment</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">start_time</span><span class="p">();</span>
 <span class="p">}</span>

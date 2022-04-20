@@ -296,7 +296,7 @@
 <span class="cp">#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp"></span>
 
 <span class="cp">#include</span> <span class="cpf">&quot;fwd.hh&quot;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&quot;time.hh&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;logical_time.hh&quot;</span><span class="cp"></span>
 
 <span class="k">namespace</span> <span class="n">reactor</span> <span class="p">{</span>
 <span class="k">class</span> <span class="nc">ReactorElement</span> <span class="p">{</span> <span class="c1">// NOLINT</span>
@@ -366,6 +366,8 @@
 
   <span class="p">[[</span><span class="n">nodiscard</span><span class="p">]]</span> <span class="k">static</span> <span class="k">auto</span> <span class="n">get_physical_time</span><span class="p">()</span> <span class="k">noexcept</span> <span class="o">-&gt;</span> <span class="n">TimePoint</span><span class="p">;</span>
   <span class="p">[[</span><span class="n">nodiscard</span><span class="p">]]</span> <span class="k">auto</span> <span class="n">get_logical_time</span><span class="p">()</span> <span class="k">const</span> <span class="k">noexcept</span> <span class="o">-&gt;</span> <span class="n">TimePoint</span><span class="p">;</span>
+  <span class="p">[[</span><span class="n">nodiscard</span><span class="p">]]</span> <span class="k">auto</span> <span class="n">get_microstep</span><span class="p">()</span> <span class="k">const</span> <span class="k">noexcept</span> <span class="o">-&gt;</span> <span class="n">mstep_t</span><span class="p">;</span>
+  <span class="p">[[</span><span class="n">nodiscard</span><span class="p">]]</span> <span class="k">auto</span> <span class="n">get_tag</span><span class="p">()</span> <span class="k">const</span> <span class="k">noexcept</span> <span class="o">-&gt;</span> <span class="n">Tag</span><span class="p">;</span>
   <span class="p">[[</span><span class="n">nodiscard</span><span class="p">]]</span> <span class="k">auto</span> <span class="n">get_elapsed_logical_time</span><span class="p">()</span> <span class="k">const</span> <span class="k">noexcept</span> <span class="o">-&gt;</span> <span class="n">Duration</span><span class="p">;</span>
   <span class="p">[[</span><span class="n">nodiscard</span><span class="p">]]</span> <span class="k">auto</span> <span class="n">get_elapsed_physical_time</span><span class="p">()</span> <span class="k">const</span> <span class="k">noexcept</span> <span class="o">-&gt;</span> <span class="n">Duration</span><span class="p">;</span>
 
