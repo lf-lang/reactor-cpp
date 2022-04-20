@@ -16,7 +16,10 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
-set(CMAKE_CXX_CLANG_TIDY clang-tidy; -header-filter=reactor-cpp/.;)
+find_program(CLANG_TIDY clang-tidy)
+if (CLANG_TIDY)
+  set(CMAKE_CXX_CLANG_TIDY clang-tidy; -header-filter=reactor-cpp/.;)
+endif()
 
 find_package (Threads)
 
