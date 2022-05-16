@@ -31,7 +31,7 @@
     };
   };
 
-  outputs = {utils, nixpkgs, lf-benchmark-runner, reactor-cpp, lingua-franca-src, lingua-franca-tests, lingua-franca-benchmarks, ... }:
+  outputs = { utils, nixpkgs, lf-benchmark-runner, reactor-cpp, lingua-franca-src, lingua-franca-tests, lingua-franca-benchmarks, ... }:
     utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
@@ -46,11 +46,11 @@
           lingua-franca-benchmarks = lingua-franca-benchmarks;
           lf-benchmark-runner = lf-benchmark-runner.packages."${system}".lf-benchmark-runner;
         };
-        customPackages = pkgs.lib.mergeAttrs allTests allBenchmarks;
+        customPackages = pkgs.lib.mergeAttrs allBenchmarks allTests;
       in
       rec {
-        checks = allTests;
-        packages = pkgs.lib.mergeAttrs pkgs customPackages;
+        checks = packages;
+        packages = customPackages;
       }
     );
 }
