@@ -14,7 +14,7 @@
 
     # source for the lingu franca compiler
     lingua-franca-src = {
-      url = "https://github.com/lf-lang/lingua-franca/releases/download/v0.1.0-beta/lfc_0.1.0-beta.tar.gz";
+      url = "https://github.com/lf-lang/lingua-franca/releases/download/nightly/lfc_nightly_20220517-050749.tar.gz";
       flake = false;
     };
 
