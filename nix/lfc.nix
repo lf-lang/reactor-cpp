@@ -2,7 +2,7 @@
 , config
 , lib
 , mkDerivation
-, jdk11_headless
+, jdk17_headless
 , lingua-franca-src
 }:
 let
@@ -19,14 +19,14 @@ mkDerivation {
 
   src = lingua-franca-src;
 
-  buildInputs = [ jdk11_headless ];
+  buildInputs = [ jdk17_headless ];
 
-  _JAVA_HOME = "${jdk11_headless}/";
+  _JAVA_HOME = "${jdk17_headless}/";
 
   postPatch = ''
     substituteInPlace bin/lfc \
       --replace 'base=`dirname $(dirname ''${abs_path})`' "base='$out'" \
-      --replace "run_lfc_with_args" "${jdk11_headless}/bin/java -jar $out/lib/jars/${extracted_name}"
+      --replace "run_lfc_with_args" "${jdk17_headless}/bin/java -jar $out/lib/jars/${extracted_name}"
   '';
 
   buildPhase = ''

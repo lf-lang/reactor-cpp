@@ -1,13 +1,33 @@
 {
   "nodes": {
+    "lf-benchmark-runner": {
+      "inputs": {
+        "naersk": "naersk",
+        "nixpkgs": "nixpkgs",
+        "utils": "utils"
+      },
+      "locked": {
+        "lastModified": 1650028179,
+        "narHash": "sha256-p8jQBiVwk0GQQjsK4gS1wk76bwPqr6J5Jn1UDlAWxjc=",
+        "owner": "revol-xut",
+        "repo": "lf-benchmark-runner",
+        "rev": "7317490b9e4407c90b9bf51cd56d00b726a20aaf",
+        "type": "github"
+      },
+      "original": {
+        "owner": "revol-xut",
+        "repo": "lf-benchmark-runner",
+        "type": "github"
+      }
+    },
     "lingua-franca-benchmarks": {
       "flake": false,
       "locked": {
-        "lastModified": 1649148080,
-        "narHash": "sha256-Gr4krm7EYOzue2WPjV7KrGlCCRKpMyQS9ZsD4P8foQo=",
+        "lastModified": 1652281421,
+        "narHash": "sha256-n2IQbbFBG6TncL8fTxkGgNdRNhoecG49yC+Aohpob40=",
         "owner": "lf-lang",
         "repo": "benchmarks-lingua-franca",
-        "rev": "69d8758fa636314523201547419fe4e1feea46b1",
+        "rev": "285a3fe33f126e3d73b917ad774d76a1be8b5301",
         "type": "github"
       },
       "original": {
@@ -19,23 +39,23 @@
     "lingua-franca-src": {
       "flake": false,
       "locked": {
-        "narHash": "sha256-mP+MQSTSUeqELGR6KJJCg943p6uw+XSn6/3tmhnCc4s=",
+        "narHash": "sha256-Zyl79dbIR2oTcS1icEoyII8Jk9JEPfMtT40Dw4DDd2A=",
         "type": "tarball",
-        "url": "https://github.com/lf-lang/lingua-franca/releases/download/v0.1.0-beta/lfc_0.1.0-beta.tar.gz"
+        "url": "https://github.com/lf-lang/lingua-franca/releases/download/nightly/lfc_nightly_20220517-050749.tar.gz"
       },
       "original": {
         "type": "tarball",
-        "url": "https://github.com/lf-lang/lingua-franca/releases/download/v0.1.0-beta/lfc_0.1.0-beta.tar.gz"
+        "url": "https://github.com/lf-lang/lingua-franca/releases/download/nightly/lfc_nightly_20220517-050749.tar.gz"
       }
     },
     "lingua-franca-tests": {
       "flake": false,
       "locked": {
-        "lastModified": 1649178626,
-        "narHash": "sha256-EHLjal7wjF/Au+8jemyciQ5q8rMgiHHOT0QzwyToNfo=",
+        "lastModified": 1652757344,
+        "narHash": "sha256-m+ZE5bpguTMmaHzT1T1br+qBLuon6QUNqWuhEelD7ks=",
         "owner": "lf-lang",
         "repo": "lingua-franca",
-        "rev": "e4639438ed2ec3ecb0d1346791188d96a2594c1f",
+        "rev": "90b09afe305db2ca66a8f30eb1a1779ce27ebded",
         "type": "github"
       },
       "original": {
@@ -44,13 +64,50 @@
         "type": "github"
       }
     },
+    "naersk": {
+      "inputs": {
+        "nixpkgs": [
+          "lf-benchmark-runner",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1649096192,
+        "narHash": "sha256-7O8e+eZEYeU+ET98u/zW5epuoN/xYx9G+CIh4DjZVzY=",
+        "owner": "nix-community",
+        "repo": "naersk",
+        "rev": "d626f73332a8f587b613b0afe7293dd0777be07d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "naersk",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1649225869,
-        "narHash": "sha256-u1zLtPmQzhT9mNXyM8Ey9pk7orDrIKdwooeGDEXm5xM=",
+        "lastModified": 1649368816,
+        "narHash": "sha256-lVzCpg2xfTUrfcankjlym/mrh/7F/gpWQ7CYQM6BcPY=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "29abf698b384258b540e39a86b53ea980495ac4c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-21.11",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_2": {
+      "locked": {
+        "lastModified": 1652659998,
+        "narHash": "sha256-FqNrXC1EE6U2RACwXBlsAvg1lqQGLYpuYb6+W3DL9vA=",
         "owner": "NixOs",
         "repo": "nixpkgs",
-        "rev": "b6966d911da89e5a7301aaef8b4f0a44c77e103c",
+        "rev": "1d7db1b9e4cf1ee075a9f52e5c36f7b9f4207502",
         "type": "github"
       },
       "original": {
@@ -63,11 +120,11 @@
     "reactor-cpp": {
       "flake": false,
       "locked": {
-        "lastModified": 1649143902,
-        "narHash": "sha256-5kZfT7yzJXTcHPwBcsMZXQMvC3LT81IAhex0tjbXknk=",
+        "lastModified": 1650459345,
+        "narHash": "sha256-onjwP1FEJYBq9p8gqm+Jh7Kmsmpb0ocBT6AIK4VyNAs=",
         "owner": "lf-lang",
         "repo": "reactor-cpp",
-        "rev": "aef18b98047039fc7875daa8fceda370bff17a17",
+        "rev": "46a618c01e494b7b476707c30dd6067ad66759d6",
         "type": "github"
       },
       "original": {
@@ -78,12 +135,13 @@
     },
     "root": {
       "inputs": {
+        "lf-benchmark-runner": "lf-benchmark-runner",
         "lingua-franca-benchmarks": "lingua-franca-benchmarks",
         "lingua-franca-src": "lingua-franca-src",
         "lingua-franca-tests": "lingua-franca-tests",
-        "nixpkgs": "nixpkgs",
+        "nixpkgs": "nixpkgs_2",
         "reactor-cpp": "reactor-cpp",
-        "utils": "utils"
+        "utils": "utils_2"
       }
     },
     "utils": {
@@ -93,6 +151,21 @@
         "owner": "numtide",
         "repo": "flake-utils",
         "rev": "0f8662f1319ad6abf89b3380dd2722369fc51ade",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
+    "utils_2": {
+      "locked": {
+        "lastModified": 1652776076,
+        "narHash": "sha256-gzTw/v1vj4dOVbpBSJX4J0DwUR6LIyXo7/SuuTJp1kM=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "04c1b180862888302ddfb2e3ad9eaa63afc60cf8",
         "type": "github"
       },
       "original": {
