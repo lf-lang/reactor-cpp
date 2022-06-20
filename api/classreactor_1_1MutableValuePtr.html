@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Template Class MutableValuePtr &mdash; reactor-cpp  documentation</title>
@@ -15,6 +15,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
         <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
@@ -281,12 +282,12 @@
            <div itemprop="articleBody">
              
   <section id="template-class-mutablevalueptr">
-<span id="exhale-class-classreactor-1-1mutablevalueptr"></span><h1>Template Class MutableValuePtr<a class="headerlink" href="#template-class-mutablevalueptr" title="Permalink to this headline"></a></h1>
+<span id="exhale-class-classreactor-1-1mutablevalueptr"></span><h1>Template Class MutableValuePtr<a class="headerlink" href="#template-class-mutablevalueptr" title="Permalink to this heading"></a></h1>
 <ul class="simple">
 <li><p>Defined in <a class="reference internal" href="file_include_reactor-cpp_value_ptr.hh.html#file-include-reactor-cpp-value-ptr-hh"><span class="std std-ref">File value_ptr.hh</span></a></p></li>
 </ul>
 <section id="class-documentation">
-<h2>Class Documentation<a class="headerlink" href="#class-documentation" title="Permalink to this headline"></a></h2>
+<h2>Class Documentation<a class="headerlink" href="#class-documentation" title="Permalink to this heading"></a></h2>
 <dl class="cpp class">
 <dt class="sig sig-object cpp" id="_CPPv4I0EN7reactor15MutableValuePtrE">
 <span id="_CPPv3I0EN7reactor15MutableValuePtrE"></span><span id="_CPPv2I0EN7reactor15MutableValuePtrE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="classreactor_1_1MutableValuePtr"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">reactor</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">MutableValuePtr</span></span></span><a class="headerlink" href="#_CPPv4I0EN7reactor15MutableValuePtrE" title="Permalink to this definition"></a><br /></dt>
@@ -305,7 +306,7 @@ value immutable.</p>
 </dl>
 </p>
 <dl class="field-list simple">
-<dt class="field-odd">Template Parameters</dt>
+<dt class="field-odd">Template Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>T</strong> – type of the value managed by this class </p>
 </dd>
 </dl>
@@ -375,7 +376,7 @@ instance. If this instance previously owned a value, the value is deleted.</p>
 <dd><p>Cast to <code class="docutils literal notranslate"><span class="pre">bool</span></code>. </p>
 <p>Checks if there is an associated value.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">false</span></code> if there is no associated value (<code class="docutils literal notranslate"><span class="pre">internal_ptr</span> <span class="pre">==</span> <span class="pre">nullptr</span></code>), <code class="docutils literal notranslate"><span class="pre">true</span></code> otherwise </p>
 </dd>
 </dl>
@@ -436,16 +437,16 @@ instance. If this instance previously owned a value, the value is deleted.</p>
 </p>
  </p>
 <dl class="field-list simple">
-<dt class="field-odd">Template Parameters</dt>
+<dt class="field-odd">Template Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>T</strong> – type of the value to be created </p></li>
 <li><p><strong>Args</strong> – types of <code class="docutils literal notranslate"><span class="pre">T</span></code>’s constructor arguments. Usually, this does not need to be given explicitly and will be inferred automatically from the given <code class="docutils literal notranslate"><span class="pre">args</span></code>. </p></li>
 </ul>
 </dd>
-<dt class="field-even">Parameters</dt>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>args</strong> – Arguments to be forwarded to <code class="docutils literal notranslate"><span class="pre">T</span></code>’s constructor </p>
 </dd>
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>a new mutable value pointer </p>
 </dd>
 </dl>
