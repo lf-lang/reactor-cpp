@@ -28,6 +28,11 @@ constexpr bool runtime_assertion = true;
 #include <stdexcept>
 #include <string>
 
+#ifdef __linux__
+#include <execinfo.h>
+#include <unistd.h>
+#endif
+
 namespace reactor {
 using EnvPhase = Environment::Phase;
 
@@ -41,8 +46,6 @@ public:
 };
 
 #ifdef __linux__
-#include <execinfo.h>
-#include <unistd.h>
 
 inline void print_debug_backtrace() {
   void* array[10]; // NOLINT

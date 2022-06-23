@@ -1,9 +1,10 @@
-{ pkgs, mkDerivation, cmake, gcc, reactor-cpp-src, debug}:
+{ pkgs, mkDerivation, cmake, gcc, reactor-cpp-src, debug }:
 let
 
   buildMode = if debug then "Debug" else "Release";
 
-in mkDerivation {
+in
+mkDerivation {
   name = "cpp-lingua-franca-runtime";
   src = reactor-cpp-src;
 
@@ -12,7 +13,7 @@ in mkDerivation {
   configurePhase = ''
     echo "Configuration"
   '';
-  
+
   #TODO: remove debug build here
   buildPhase = ''
     mkdir -p build && cd build
