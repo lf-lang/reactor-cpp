@@ -15,7 +15,7 @@ public:
       : Reactor(name, env)
       , timer{"timer", this, period, Duration::zero()} {}
 
-  Output<void> trigger{"trigger", this};
+  Output<void> trigger{"trigger", this}; // NOLINT
 
   void assemble() override {
     r_timer.declare_trigger(&timer);
@@ -27,15 +27,15 @@ public:
 
 class Counter : public Reactor {
 private:
-  unsigned int value_{0};
+  int value_{0};
   Reaction r_trigger{"r_trigger", 1, this, [this]() { on_trigger(); }};
 
 public:
   Counter(const std::string& name, Environment* env)
       : Reactor(name, env) {}
 
-  Input<void> trigger{"trigger", this};
-  Output<int> count{"count", this};
+  Input<void> trigger{"trigger", this}; // NOLINT
+  Output<int> count{"count", this};     // NOLINT
 
   void assemble() override {
     r_trigger.declare_trigger(&trigger);
@@ -53,7 +53,7 @@ private:
   Reaction r_value{"r_value", 1, this, [this]() { on_value(); }};
 
 public:
-  Input<int> value{"value", this};
+  Input<int> value{"value", this}; // NOLINT
 
   Printer(const std::string& name, Environment* env)
       : Reactor(name, env) {}
@@ -68,9 +68,9 @@ private:
   Reaction r_add{"r_add", 1, this, [this]() { add(); }};
 
 public:
-  Input<int> i1{"i1", this};
-  Input<int> i2{"i1", this};
-  Output<int> sum{"sum", this};
+  Input<int> i1{"i1", this};    // NOLINT
+  Input<int> i2{"i1", this};    // NOLINT
+  Output<int> sum{"sum", this}; // NOLINT
 
   Adder(const std::string& name, Environment* env)
       : Reactor(name, env) {}
@@ -88,7 +88,7 @@ public:
   }
 };
 
-int main() {
+auto main() -> int {
   Environment e{4};
 
   Trigger t1{"t1", &e, 1s};

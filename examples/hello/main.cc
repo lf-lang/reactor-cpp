@@ -43,7 +43,7 @@ public:
   void assemble() override { r_timer.declare_trigger(&timer); }
 };
 
-int main() {
+auto main() -> int {
   Environment e{4};
 
   Hello hello{&e};
