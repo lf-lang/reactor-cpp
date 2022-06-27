@@ -72,8 +72,8 @@ public:
       : BasePort(name, type, container) {}
 
   void bind_to(Port<T>* port) { base_bind_to(port); }
-  auto typed_inward_binding() const noexcept -> Port<T>*;
-  auto typed_outward_bindings() const noexcept -> const std::set<Port<T>*>&;
+  [[nodiscard]] auto typed_inward_binding() const noexcept -> Port<T>*;
+  [[nodiscard]] auto typed_outward_bindings() const noexcept -> const std::set<Port<T>*>&;
 
   void set(const ImmutableValuePtr<T>& value_ptr);
   void set(MutableValuePtr<T>&& value_ptr) { set(ImmutableValuePtr<T>(std::forward<MutableValuePtr<T>>(value_ptr))); }

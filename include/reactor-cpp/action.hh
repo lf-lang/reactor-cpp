@@ -78,7 +78,7 @@ public:
   // Scheduling an action with nullptr value is not permitted.
   template <class Dur = Duration> void schedule(std::nullptr_t, Dur) = delete;
 
-  auto get() const noexcept -> const ImmutableValuePtr<T>& { return value_ptr_; }
+  [[nodiscard]] auto get() const noexcept -> const ImmutableValuePtr<T>& { return value_ptr_; }
 
   [[nodiscard]] auto is_present() const noexcept -> bool { return value_ptr_ != nullptr; }
 };

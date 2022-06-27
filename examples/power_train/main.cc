@@ -7,8 +7,8 @@ using namespace reactor;
 class LeftPedal : public Reactor {
 public:
   // ports
-  Output<void> angle{"angle", this};
-  Output<void> on_off{"on_off", this};
+  Output<void> angle{"angle", this};   // NOLINT
+  Output<void> on_off{"on_off", this}; // NOLINT
 
 private:
   // actions
@@ -33,8 +33,8 @@ public:
 class RightPedal : public Reactor {
 public:
   // ports
-  Output<void> angle{"angle", this};
-  Input<void> check{"check", this};
+  Output<void> angle{"angle", this}; // NOLINT
+  Input<void> check{"check", this};  // NOLINT
 
 private:
   // actions
@@ -63,8 +63,8 @@ public:
 class BrakeControl : public Reactor {
 public:
   // ports
-  Input<void> angle{"angle", this};
-  Output<void> force{"force", this};
+  Input<void> angle{"angle", this};  // NOLINT
+  Output<void> force{"force", this}; // NOLINT
 
 private:
   Reaction r1{"1", 1, this, [this]() { reaction_1(); }};
@@ -84,10 +84,10 @@ public:
 class EngineControl : public Reactor {
 public:
   // ports
-  Input<void> angle{"angle", this};
-  Input<void> on_off{"on_off", this};
-  Output<void> check{"check", this};
-  Output<void> torque{"torque", this};
+  Input<void> angle{"angle", this};    // NOLINT
+  Input<void> on_off{"on_off", this};  // NOLINT
+  Output<void> check{"check", this};   // NOLINT
+  Output<void> torque{"torque", this}; // NOLINT
 
 private:
   // actions
@@ -121,7 +121,7 @@ public:
 class Brake : public Reactor {
 public:
   // ports
-  Input<void> force{"force", this};
+  Input<void> force{"force", this}; // NOLINT
 
 private:
   // reactions_
@@ -139,7 +139,7 @@ public:
 class Engine : public Reactor {
 public:
   // ports
-  Input<void> torque{"torque", this};
+  Input<void> torque{"torque", this}; // NOLINT
 
 private:
   // reactions_
@@ -154,7 +154,7 @@ public:
   void assemble() override { r1.declare_trigger(&torque); }
 };
 
-int main() {
+auto main() -> int {
   Environment e{4};
 
   LeftPedal left_pedal{&e};

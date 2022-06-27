@@ -117,7 +117,7 @@ public:
   /**
    * Retrieve a raw pointer to the managed value.
    */
-  auto get() const noexcept -> T* { return internal_ptr.get(); }
+  [[nodiscard]] auto get() const noexcept -> T* { return internal_ptr.get(); }
 
   /**
    * Cast to ``bool``. Checks if there is an associated value.
@@ -148,6 +148,7 @@ public:
 
   // Give the factory function make_mutable_value() access to the private
   // constructor
+  // NOLINTNEXTLINE(readability-redundant-declaration)
   template <class U, class... Args> friend auto make_mutable_value(Args&&... args) -> MutableValuePtr<U>;
 };
 
@@ -285,7 +286,7 @@ public:
    * Since the associated value is immutable, this only provides const access
    * to the value.
    */
-  auto get() const -> const_T* { return internal_ptr.get(); }
+  [[nodiscard]] auto get() const -> const_T* { return internal_ptr.get(); }
 
   /**
    * Cast to ``bool``. Checks if there is an associated value.
@@ -329,10 +330,11 @@ public:
    * ``get() == nullptr``.
    * @return a mutable value pointer
    */
-  auto get_mutable_copy() const -> MutableValuePtr<T> { return MutableValuePtr<T>(new T(*internal_ptr)); }
+  [[nodiscard]] auto get_mutable_copy() const -> MutableValuePtr<T> { return MutableValuePtr<T>(new T(*internal_ptr)); }
 
   // Give the factory function make_mutable_value() access to the private
   // constructor
+  // NOLINTNEXTLINE(readability-redundant-declaration)
   template <class U, class... Args> friend auto make_immutable_value(Args&&... args) -> ImmutableValuePtr<U>;
 };
 

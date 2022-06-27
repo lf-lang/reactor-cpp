@@ -25,7 +25,7 @@ public:
   }
 
   void print_count() {
-    auto& value = *(counter.get());
+    const auto& value = *(counter.get());
     std::cout << "Count: " << value << std::endl;
     counter.schedule(value + 1, 1s);
   }
@@ -36,7 +36,7 @@ public:
   }
 };
 
-int main() {
+auto main() -> int {
   Environment e{4, true};
 
   Count count{&e};
