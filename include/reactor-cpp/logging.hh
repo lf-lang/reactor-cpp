@@ -40,9 +40,7 @@ public:
     return *this;
   }
 
-  ~BaseLogger() {
-    std::cerr << std::endl;
-  }
+  ~BaseLogger() { std::cerr << std::endl; }
 };
 
 template <> class BaseLogger<false> { // NOLINT
