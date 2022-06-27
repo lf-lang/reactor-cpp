@@ -6,8 +6,8 @@
  *   Christian Menard
  */
 
-#ifndef REACTOR_CPP_ACTION_IMPL_HH
-#define REACTOR_CPP_ACTION_IMPL_HH
+#ifndef REACTOR_CPP_IMPL_ACTION_IMPL_HH
+#define REACTOR_CPP_IMPL_ACTION_IMPL_HH
 
 #include "../assert.hh"
 #include "../environment.hh"

@@ -36,11 +36,11 @@ public:
   }
 
   template <class T> auto operator<<(const T& msg) -> BaseLogger& {
-    std::cerr << msg;
+    std::cerr << msg; // NOLINT
     return *this;
   }
 
-  ~BaseLogger() { // NOLINT
+  ~BaseLogger() {
     std::cerr << std::endl;
   }
 };

@@ -34,6 +34,7 @@ public:
   const unsigned int identity_{0};
   std::thread thread_{};
 
+  // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
   static thread_local const Worker* current_worker;
 
   void work() const;
@@ -42,7 +43,7 @@ public:
   Worker(Scheduler& scheduler, unsigned int identity)
       : scheduler_{scheduler}
       , identity_{identity} {}
-  Worker(Worker&& worker); // NOLINT
+  Worker(Worker&& worker); // NOLINT(performance-noexcept-move-constructor)
   Worker(const Worker& worker) = delete;
 
   void start_thread() { thread_ = std::thread(&Worker::work, this); }
@@ -129,7 +130,7 @@ public:
   void inline lock() noexcept { scheduling_lock_.lock(); }
   void inline unlock() noexcept { scheduling_lock_.unlock(); }
 
-  void set_port(BasePort*);
+  void set_port(BasePort* port);
 
   [[nodiscard]] inline auto logical_time() const noexcept -> const auto& { return logical_time_; }
 

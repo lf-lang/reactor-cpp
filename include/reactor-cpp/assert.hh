@@ -46,15 +46,13 @@ public:
 };
 
 #ifdef __linux__
+constexpr std::size_t MAX_STACK_SIZE{10};
 
 inline void print_debug_backtrace() {
   void* array[10]; // NOLINT
-  std::size_t size;
-
   // get void*'s for all entries on the stack
-  size = backtrace(array, 10);
-
-  backtrace_symbols_fd(array, size, STDERR_FILENO);
+  int size = backtrace((void**)array, MAX_STACK_SIZE);
+  backtrace_symbols_fd((void**)array, size, STDERR_FILENO);
 }
 #endif
 

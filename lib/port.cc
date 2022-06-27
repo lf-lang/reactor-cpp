@@ -85,9 +85,9 @@ auto Port<void>::typed_outward_bindings() const noexcept -> const auto& {
 }
 
 auto Port<void>::typed_inward_binding() const noexcept -> Port<void>* {
-  // we can use a static cast here since we know that this port is always
+  // we can use a reinterpret cast here since we know that this port is always
   // connected with another Port<T>.
-  return static_cast<Port<void>*>(inward_binding());
+  return reinterpret_cast<Port<void>*>(inward_binding()); // NOLINT
 }
 
 void Port<void>::set() {
