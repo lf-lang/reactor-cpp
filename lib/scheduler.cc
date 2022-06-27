@@ -20,14 +20,15 @@
 
 namespace reactor {
 
-thread_local const Worker* Worker::current_worker = nullptr; // NOLINT
+// NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
+thread_local const Worker* Worker::current_worker = nullptr;
 
-Worker::Worker(Worker&& work)
+Worker::Worker(Worker&& work) // NOLINT(performance-noexcept-move-constructor)
     : scheduler_{work.scheduler_}
-    , identity_{work.identity_} { // NOLINT
+    , identity_{work.identity_} {
   // Need to provide the move constructor in order to organize workers in a
   // std::vector. However, moving is not save if the thread is already running,
-  // thus we throw an exception here if the the worker is moved but the
+  // thus we throw an exception here if the worker is moved but the
   // internal thread is already running.
 
   if (work.thread_.joinable()) {

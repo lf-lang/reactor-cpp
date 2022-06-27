@@ -73,6 +73,7 @@ TRACEPOINT_EVENT(reactor_cpp, trigger_reaction,
 #else
 
 #ifndef REACTOR_CPP_TRACE_HH
+// NOLINTNEXTLINE
 #define REACTOR_CPP_TRACE_HH
 
 namespace reactor {

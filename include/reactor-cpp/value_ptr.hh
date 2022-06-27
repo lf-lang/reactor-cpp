@@ -11,7 +11,8 @@
  * operators and factory functions.
  */
 
-#pragma once
+#ifndef REACTOR_CPP_VALUE_PTR_HH
+#define REACTOR_CPP_VALUE_PTR_HH
 
 #include <memory>
 #include <type_traits>
@@ -259,7 +260,7 @@ public:
    * class:`ImmutableValuePtr`, the value is deleted.
    * @endrst
    */
-  auto operator=(const ImmutableValuePtr& ptr) -> ImmutableValuePtr& {
+  auto operator=(const ImmutableValuePtr& ptr) -> ImmutableValuePtr& { // NOLINT(cert-oop54-cpp)
     this->internal_ptr = ptr.internal_ptr;
     return *this;
   }
@@ -433,3 +434,5 @@ template <class T> auto operator!=(std::nullptr_t, const ImmutableValuePtr<T>& p
 }
 
 } // namespace reactor
+
+#endif
