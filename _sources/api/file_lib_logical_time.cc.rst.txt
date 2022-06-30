@@ -49,9 +49,9 @@ Functions
 ---------
 
 
-- :ref:`exhale_function_namespacereactor_1a5fadb428da64568d42500638a9d89f8c`
-
 - :ref:`exhale_function_namespacereactor_1a97a41d457d5536c9e5735a8bfd3861a7`
+
+- :ref:`exhale_function_namespacereactor_1a5fadb428da64568d42500638a9d89f8c`
 
 - :ref:`exhale_function_namespacereactor_1a027dcf34ad33002738bf617920d4eac2`
 
