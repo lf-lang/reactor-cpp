@@ -115,14 +115,14 @@ template <class T> class Input : public Port<T> { // NOLINT
 public:
   Input(const std::string& name, Reactor* container)
       : Port<T>(name, PortType::Input, container) {}
-  Input(Input&&) noexcept = default;
+  Input(Input&&) = default; // NOLINT(performance-noexcept-move-constructor)
 };
 
 template <class T> class Output : public Port<T> { // NOLINT
 public:
   Output(const std::string& name, Reactor* container)
       : Port<T>(name, PortType::Output, container) {}
-  Output(Output&&) noexcept = default;
+  Output(Output&&) = default; // NOLINT(performance-noexcept-move-constructor)
 };
 
 } // namespace reactor
