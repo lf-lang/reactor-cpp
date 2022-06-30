@@ -26,6 +26,7 @@ if (NOT DEFINED LF_REACTOR_CPP_SUFFIX)
 endif()
 
 find_package (Threads)
+find_package (Boost 1.79 COMPONENTS graph REQUIRED)
 
 set(DEFAULT_BUILD_TYPE "Release")
 if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
