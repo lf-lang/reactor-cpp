@@ -1,6 +1,7 @@
 set(SOURCE_FILES
     action.cc
     assert.cc
+    dependency_graph.cc
     environment.cc
     logical_time.cc
     port.cc
@@ -35,7 +36,7 @@ else()
 endif()
 
 target_link_libraries(${LIB_TARGET} LINK_PUBLIC ${CMAKE_THREAD_LIBS_INIT})
-target_link_libraries(${LIB_TARGET} LINK_PUBLIC ${Boost_LIBRARIES})
+target_link_libraries(${LIB_TARGET} LINK_PRIVATE ${Boost_LIBRARIES})
 if(REACTOR_CPP_TRACE)
   target_link_libraries(${LIB_TARGET} LTTng::UST)
 endif()
