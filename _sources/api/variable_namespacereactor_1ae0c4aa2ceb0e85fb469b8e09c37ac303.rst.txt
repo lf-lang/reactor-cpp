@@ -1,0 +1,14 @@
+.. _exhale_variable_namespacereactor_1ae0c4aa2ceb0e85fb469b8e09c37ac303:
+
+Variable TIME_TO_STR_BUFFER_SIZE
+================================
+
+- Defined in :ref:`file_lib_time.cc`
+
+
+Variable Documentation
+----------------------
+
+
+.. doxygenvariable:: TIME_TO_STR_BUFFER_SIZE
+   :project: reactor-cpp

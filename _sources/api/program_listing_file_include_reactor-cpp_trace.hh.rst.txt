@@ -85,6 +85,7 @@ Program Listing for File trace.hh
    #else
    
    #ifndef REACTOR_CPP_TRACE_HH
+   // NOLINTNEXTLINE
    #define REACTOR_CPP_TRACE_HH
    
    namespace reactor {

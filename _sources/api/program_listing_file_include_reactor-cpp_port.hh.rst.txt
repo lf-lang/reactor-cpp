@@ -84,8 +84,8 @@ Program Listing for File port.hh
          : BasePort(name, type, container) {}
    
      void bind_to(Port<T>* port) { base_bind_to(port); }
-     auto typed_inward_binding() const noexcept -> Port<T>*;
-     auto typed_outward_bindings() const noexcept -> const std::set<Port<T>*>&;
+     [[nodiscard]] auto typed_inward_binding() const noexcept -> Port<T>*;
+     [[nodiscard]] auto typed_outward_bindings() const noexcept -> const std::set<Port<T>*>&;
    
      void set(const ImmutableValuePtr<T>& value_ptr);
      void set(MutableValuePtr<T>&& value_ptr) { set(ImmutableValuePtr<T>(std::forward<MutableValuePtr<T>>(value_ptr))); }
@@ -127,14 +127,14 @@ Program Listing for File port.hh
    public:
      Input(const std::string& name, Reactor* container)
          : Port<T>(name, PortType::Input, container) {}
-     Input(Input&&) = default;
+     Input(Input&&) = default; // NOLINT(performance-noexcept-move-constructor)
    };
    
    template <class T> class Output : public Port<T> { // NOLINT
    public:
      Output(const std::string& name, Reactor* container)
          : Port<T>(name, PortType::Output, container) {}
-     Output(Output&&) = default;
+     Output(Output&&) = default; // NOLINT(performance-noexcept-move-constructor)
    };
    
    } // namespace reactor

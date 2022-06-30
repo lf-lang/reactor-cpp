@@ -18,7 +18,8 @@ Program Listing for File value_ptr.hh
     *   Christian Menard
     */
    
-   #pragma once
+   #ifndef REACTOR_CPP_VALUE_PTR_HH
+   #define REACTOR_CPP_VALUE_PTR_HH
    
    #include <memory>
    #include <type_traits>
@@ -52,7 +53,7 @@ Program Listing for File value_ptr.hh
        return *this;
      }
    
-     auto get() const noexcept -> T* { return internal_ptr.get(); }
+     [[nodiscard]] auto get() const noexcept -> T* { return internal_ptr.get(); }
    
      explicit operator bool() const { return get() == nullptr; }
    
@@ -66,6 +67,7 @@ Program Listing for File value_ptr.hh
    
      // Give the factory function make_mutable_value() access to the private
      // constructor
+     // NOLINTNEXTLINE(readability-redundant-declaration)
      template <class U, class... Args> friend auto make_mutable_value(Args&&... args) -> MutableValuePtr<U>;
    };
    
@@ -93,7 +95,7 @@ Program Listing for File value_ptr.hh
        this->internal_ptr = nullptr;
        return *this;
      }
-     auto operator=(const ImmutableValuePtr& ptr) -> ImmutableValuePtr& {
+     auto operator=(const ImmutableValuePtr& ptr) -> ImmutableValuePtr& { // NOLINT(cert-oop54-cpp)
        this->internal_ptr = ptr.internal_ptr;
        return *this;
      }
@@ -102,17 +104,18 @@ Program Listing for File value_ptr.hh
        return *this;
      }
    
-     auto get() const -> const_T* { return internal_ptr.get(); }
+     [[nodiscard]] auto get() const -> const_T* { return internal_ptr.get(); }
    
      explicit operator bool() const { return get() == nullptr; }
    
      auto operator*() const -> const_T& { return *get(); }
      auto operator->() const -> const_T* { return get(); }
    
-     auto get_mutable_copy() const -> MutableValuePtr<T> { return MutableValuePtr<T>(new T(*internal_ptr)); }
+     [[nodiscard]] auto get_mutable_copy() const -> MutableValuePtr<T> { return MutableValuePtr<T>(new T(*internal_ptr)); }
    
      // Give the factory function make_mutable_value() access to the private
      // constructor
+     // NOLINTNEXTLINE(readability-redundant-declaration)
      template <class U, class... Args> friend auto make_immutable_value(Args&&... args) -> ImmutableValuePtr<U>;
    };
    
@@ -184,3 +187,5 @@ Program Listing for File value_ptr.hh
    }
    
    } // namespace reactor
+   
+   #endif

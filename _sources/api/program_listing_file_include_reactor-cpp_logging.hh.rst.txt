@@ -48,13 +48,11 @@ Program Listing for File logging.hh
      }
    
      template <class T> auto operator<<(const T& msg) -> BaseLogger& {
-       std::cerr << msg;
+       std::cerr << msg; // NOLINT
        return *this;
      }
    
-     ~BaseLogger() { // NOLINT
-       std::cerr << std::endl;
-     }
+     ~BaseLogger() { std::cerr << std::endl; }
    };
    
    template <> class BaseLogger<false> { // NOLINT
