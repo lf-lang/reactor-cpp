@@ -29,7 +29,7 @@ ReactorElement::ReactorElement(const std::string& name, ReactorElement::Type typ
   // when this constructor is executed. dynamic_cast only works for
   // completely constructed objects. Technically, the casts here return
   // invalid pointers as the objects they point to do not yet
-  // exists. However, we are good as long as we only store the pointer and do
+  // exists. However, we are good as long as we only store  the pointer and do
   // not dereference it before construction is completeted.
   // It works, but maybe there is some nicer way of doing this...
   switch (type) {
@@ -171,6 +171,10 @@ auto Reactor::get_elapsed_logical_time() const noexcept -> Duration {
 
 auto Reactor::get_elapsed_physical_time() const noexcept -> Duration {
   return get_physical_time() - environment()->start_time();
+}
+
+inline auto Reactor::compare_reaction_priority(const Reaction* a, const Reaction* b) -> bool {
+  return a->priority() < b->priority();
 }
 
 } // namespace reactor
