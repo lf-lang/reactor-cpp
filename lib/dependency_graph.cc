@@ -11,14 +11,33 @@ using namespace boost;
 namespace reactor {
 
 using DependencyGraph = directed_graph<>;
-using ReactionToVertexMap = std::map<Reaction*, DependencyGraph::vertex_descriptor>;
+using ReactionToVertexMap = std::map<const Reaction*, DependencyGraph::vertex_descriptor>;
 
-void populate_graph_with_reactions(DependencyGraph& graph, ReactionToVertexMap& vertex_map, Reactor* reactor) {
+void populate_graph_with_reactions(DependencyGraph& graph, ReactionToVertexMap& vertex_map, const Reactor* reactor) {
   for (auto* reaction : reactor->reactions()) {
     vertex_map[reaction] = graph.add_vertex();
   }
   for (auto* sub_reactor : reactor->reactors()) {
     populate_graph_with_reactions(graph, vertex_map, sub_reactor);
+  }
+}
+
+void populate_graph_with_prioty_edges(DependencyGraph& graph, const ReactionToVertexMap& vertex_map,
+                                      const Reactor* reactor) {
+  const auto& reactions = reactor->reactions();
+
+  if (reactions.size() > 1) {
+    auto iterator = reactions.begin();
+    auto next = std::next(iterator);
+    while (next != reactions.end()) {
+      graph.add_edge(vertex_map.at(*iterator), vertex_map.at(*next));
+      iterator = next;
+      next = std::next(iterator);
+    }
+  }
+
+  for (auto* sub_reactor : reactor->reactors()) {
+    populate_graph_with_prioty_edges(graph, vertex_map, sub_reactor);
   }
 }
 
@@ -29,6 +48,7 @@ void generate_dependency_graph(std::set<Reactor*>& top_level_reactors) {
 
   for (auto* reactor : top_level_reactors) {
     populate_graph_with_reactions(graph, vertex_map, reactor);
+    populate_graph_with_prioty_edges(graph, vertex_map, reactor);
   }
 
   std::ofstream dot_file("test.dot");
