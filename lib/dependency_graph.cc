@@ -1,33 +1,38 @@
 #include <fstream>
 
 #include "reactor-cpp/dependency_graph.hh"
-#include <boost/graph/adjacency_list.hpp>
-#include <boost/graph/dijkstra_shortest_paths.hpp>
-#include <boost/graph/graph_traits.hpp>
+#include "reactor-cpp/reaction.hh"
+#include "reactor-cpp/reactor.hh"
+#include <boost/graph/directed_graph.hpp>
 #include <boost/graph/graphviz.hpp>
 
 using namespace boost;
 
-void reactor::generate_test_graph() {
-  // create a typedef for the Graph type
-  using Graph = adjacency_list<vecS, vecS, bidirectionalS>;
+namespace reactor {
 
-  // Make convenient labels for the vertices
-  enum { A, B, C, D, E, N };
-  const int num_vertices = N;
+using DependencyGraph = directed_graph<>;
+using ReactionToVertexMap = std::map<Reaction*, DependencyGraph::vertex_descriptor>;
 
-  // writing out the edges in the graph
-  using Edge = std::pair<int, int>;
-  Edge edge_array[] = {Edge(A, B), Edge(A, D), Edge(C, A), Edge(D, C), Edge(C, E), Edge(B, D), Edge(D, E)}; // NOLINT
+void populate_graph_with_reactions(DependencyGraph& graph, ReactionToVertexMap& vertex_map, Reactor* reactor) {
+  for (auto* reaction : reactor->reactions()) {
+    vertex_map[reaction] = graph.add_vertex();
+  }
+  for (auto* sub_reactor : reactor->reactors()) {
+    populate_graph_with_reactions(graph, vertex_map, sub_reactor);
+  }
+}
 
-  // declare a graph object
-  Graph g(num_vertices);
+void generate_dependency_graph(std::set<Reactor*>& top_level_reactors) {
 
-  // add the edges to the graph object
-  for (auto& i : edge_array) {
-    add_edge(i.first, i.second, g);
+  DependencyGraph graph{};
+  ReactionToVertexMap vertex_map{};
+
+  for (auto* reactor : top_level_reactors) {
+    populate_graph_with_reactions(graph, vertex_map, reactor);
   }
 
   std::ofstream dot_file("test.dot");
-  write_graphviz(dot_file, g);
+  write_graphviz(dot_file, graph);
 }
+
+} // namespace reactor

@@ -14,6 +14,7 @@
 
 #include "reactor-cpp/action.hh"
 #include "reactor-cpp/assert.hh"
+#include "reactor-cpp/dependency_graph.hh"
 #include "reactor-cpp/logging.hh"
 #include "reactor-cpp/port.hh"
 #include "reactor-cpp/reaction.hh"
@@ -46,6 +47,8 @@ void Environment::assemble() {
     build_dependency_graph(reactor);
   }
   calculate_indexes();
+
+  generate_dependency_graph(top_level_reactors_);
 }
 
 void Environment::build_dependency_graph(Reactor* reactor) { // NOLINT
