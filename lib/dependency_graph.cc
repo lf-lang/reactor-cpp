@@ -3,8 +3,10 @@
 #include "reactor-cpp/reaction.hh"
 #include "reactor-cpp/reactor.hh"
 
+#include <boost/graph/copy.hpp>
 #include <boost/graph/directed_graph.hpp>
 #include <boost/graph/graphviz.hpp>
+#include <boost/graph/named_function_params.hpp>
 #include <boost/graph/property_maps/constant_property_map.hpp>
 #include <boost/graph/transitive_reduction.hpp>
 #include <boost/property_map/function_property_map.hpp>
@@ -128,6 +130,59 @@ void ReactionDependencyGraph::export_graphviz(const std::string& file_name) {
                     return ss.str();
                   }));
   dp.property("style", make_constant_property<ReactionGraph::vertex_descriptor, std::string>("filled"));
+
+  std::ofstream dot_file(file_name);
+  write_graphviz_dp(dot_file, graph, dp);
+}
+
+GroupedDependencyGraph::GroupedDependencyGraph(ReactionDependencyGraph& reactionGraph) {
+  // the lambda below also has the side-effect of updating vertex map
+  copy_graph(reactionGraph.graph, graph,
+             vertex_copy([this, &reactionGraph](ReactionDependencyGraph::ReactionGraph::vertex_descriptor in,
+                                                GroupGraph::vertex_descriptor out) {
+               Group group{};
+               group.push_back(boost::get(reactionGraph.get_reaction_property_map(), in));
+               boost::put(get_group_property_map(), out, group);
+               vertex_map[group[0]] = out;
+             }));
+}
+
+  void GroupedDependencyGraph::export_graphviz(const std::string& file_name) {
+  auto group_proprty_map = get_group_property_map();
+  dynamic_properties dp;
+  dp.property("node_id", get(boost::vertex_index, graph));
+  dp.property("label", make_function_property_map<GroupGraph::vertex_descriptor, std::string>(
+                           [&group_proprty_map](GroupGraph::vertex_descriptor vertex) {
+                             std::stringstream ss;
+                             for (const auto* reaction : boost::get(group_proprty_map, vertex)) {
+                               auto sep = ss.tellp()==0 ? '{' : ',';
+                               ss << sep << reaction->name();
+                             }
+                             ss << '}';
+                             return ss.str();
+                           }));
+  dp.property("tooltip", make_function_property_map<GroupGraph::vertex_descriptor, std::string>(
+                             [&group_proprty_map](GroupGraph::vertex_descriptor vertex) {
+                               std::stringstream ss;
+                               for (const auto* reaction : boost::get(group_proprty_map, vertex)) {
+                                 ss << "reactions: \n";
+                                 ss << "  - " << reaction->fqn();
+                               }
+                               ss << '}';
+                               return ss.str();
+                             }));
+  dp.property("fillcolor",
+              make_function_property_map<GroupGraph::vertex_descriptor, std::string>(
+                  [&group_proprty_map](GroupGraph::vertex_descriptor vertex) {
+                    auto hash = std::hash<std::string>{}(boost::get(group_proprty_map, vertex)[0]->container()->fqn());
+                    auto red = (hash & 0xff0000) >> 16;  // NOLINT
+                    auto green = (hash & 0x00ff00) >> 9; // NOLINT
+                    auto blue = (hash & 0x0000ff);       // NOLINT
+                    std::stringstream ss;
+                    ss << "#" << std::setfill('0') << std::setw(2) << std::hex << red << green << blue;
+                    return ss.str();
+                  }));
+  dp.property("style", make_constant_property<GroupGraph::vertex_descriptor, std::string>("filled"));
 
   std::ofstream dot_file(file_name);
   write_graphviz_dp(dot_file, graph, dp);

@@ -1,14 +1,17 @@
 #ifndef REACTOR_CPP_DEPENDENCY_GRAPH_HH
 #define REACTOR_CPP_DEPENDENCY_GRAPH_HH
 
+#include "reactor-cpp/reaction.hh"
 #include "reactor-cpp/reactor.hh"
 
 #include <boost/graph/directed_graph.hpp>
+#include <vector>
 
 namespace reactor {
 
-class ReactionDependencyGraph {
+class GroupedDependencyGraph;
 
+class ReactionDependencyGraph {
 private:
   struct reaction_info_t {
     using kind = boost::vertex_property_tag;
@@ -18,7 +21,7 @@ private:
   using ReactionToVertexMap = std::map<const Reaction*, ReactionGraph::vertex_descriptor>;
   using ReactionPropertyMap = boost::property_map<ReactionGraph, reaction_info_t>::type;
 
-      ReactionGraph graph{};
+  ReactionGraph graph{};
   ReactionToVertexMap vertex_map{};
 
   // helper functions
@@ -36,6 +39,35 @@ public:
   void export_graphviz(const std::string& file_name);
 
   [[nodiscard]] auto transitive_reduction() const -> ReactionDependencyGraph;
+
+  friend GroupedDependencyGraph;
+};
+
+class GroupedDependencyGraph {
+
+private:
+  struct group_info_t {
+    using kind = boost::vertex_property_tag;
+  };
+  using Group = std::vector<const Reaction*>;
+  using GroupProperty = boost::property<group_info_t, Group>;
+  using GroupGraph = boost::directed_graph<GroupProperty>;
+  using ReactionToVertexMap = std::map<const Reaction*, GroupGraph::vertex_descriptor>;
+  using GroupPropertyMap = boost::property_map<GroupGraph, group_info_t>::type;
+
+  GroupGraph graph{};
+  ReactionToVertexMap vertex_map{};
+
+  [[nodiscard]] auto get_group_property_map() -> GroupPropertyMap { return boost::get(group_info_t{}, graph); }
+
+public:
+  // TODO: This should be a const reference, but I don't know how to get immutable access to the reaction graph
+  // properties...
+  GroupedDependencyGraph(ReactionDependencyGraph& reactionGraph);
+
+  void export_graphviz(const std::string& file_name);
+
+  [[nodiscard]] auto transitive_reduction() const -> GroupedDependencyGraph;
 };
 
 } // namespace reactor
