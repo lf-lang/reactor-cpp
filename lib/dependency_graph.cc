@@ -1,6 +1,7 @@
 #include <fstream>
 
 #include "reactor-cpp/dependency_graph.hh"
+#include "reactor-cpp/port.hh"
 #include "reactor-cpp/reaction.hh"
 #include "reactor-cpp/reactor.hh"
 #include <boost/graph/directed_graph.hpp>
@@ -22,8 +23,8 @@ void populate_graph_with_reactions(DependencyGraph& graph, ReactionToVertexMap& 
   }
 }
 
-void populate_graph_with_prioty_edges(DependencyGraph& graph, const ReactionToVertexMap& vertex_map,
-                                      const Reactor* reactor) {
+void populate_graph_with_priority_edges(DependencyGraph& graph, const ReactionToVertexMap& vertex_map,
+                                        const Reactor* reactor) {
   const auto& reactions = reactor->reactions();
 
   if (reactions.size() > 1) {
@@ -37,7 +38,26 @@ void populate_graph_with_prioty_edges(DependencyGraph& graph, const ReactionToVe
   }
 
   for (auto* sub_reactor : reactor->reactors()) {
-    populate_graph_with_prioty_edges(graph, vertex_map, sub_reactor);
+    populate_graph_with_priority_edges(graph, vertex_map, sub_reactor);
+  }
+}
+
+void populate_graph_with_dependency_edges(DependencyGraph& graph, const ReactionToVertexMap& vertex_map,
+                                          const Reactor* reactor) {
+  for (auto* reaction : reactor->reactions()) {
+    for (auto* dependency : reaction->dependencies()) {
+      auto* source = dependency;
+      while (source->has_inward_binding()) {
+        source = source->inward_binding();
+      }
+      for (auto* antidependency : source->antidependencies()) {
+        graph.add_edge(vertex_map.at(antidependency), vertex_map.at(reaction));
+      }
+    }
+  }
+
+  for (auto* sub_reactor : reactor->reactors()) {
+    populate_graph_with_dependency_edges(graph, vertex_map, sub_reactor);
   }
 }
 
@@ -48,7 +68,8 @@ void generate_dependency_graph(std::set<Reactor*>& top_level_reactors) {
 
   for (auto* reactor : top_level_reactors) {
     populate_graph_with_reactions(graph, vertex_map, reactor);
-    populate_graph_with_prioty_edges(graph, vertex_map, reactor);
+    populate_graph_with_priority_edges(graph, vertex_map, reactor);
+    populate_graph_with_dependency_edges(graph, vertex_map, reactor);
   }
 
   std::ofstream dot_file("test.dot");
