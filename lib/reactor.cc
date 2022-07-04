@@ -174,7 +174,7 @@ auto Reactor::get_elapsed_physical_time() const noexcept -> Duration {
 }
 
 inline auto Reactor::compare_reaction_priority(const Reaction* a, const Reaction* b) -> bool {
-  return a->priority() < b->priority();
+  return a->priority() > b->priority();
 }
 
 } // namespace reactor
