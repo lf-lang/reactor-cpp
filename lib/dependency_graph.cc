@@ -3,14 +3,21 @@
 #include "reactor-cpp/reaction.hh"
 #include "reactor-cpp/reactor.hh"
 
+#include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/directed_graph.hpp>
 #include <boost/graph/graphviz.hpp>
 #include <boost/graph/property_maps/constant_property_map.hpp>
+#include <boost/graph/transitive_reduction.hpp>
 #include <boost/pending/property.hpp>
 #include <boost/property_map/function_property_map.hpp>
 
+#include <boost/property_map/property_map.hpp>
+#include <cstddef>
+#include <ctime>
+#include <iomanip>
 #include <map>
 #include <set>
+#include <sstream>
 #include <string>
 
 using namespace boost;
@@ -88,6 +95,19 @@ void generate_dependency_graph(std::set<Reactor*>& top_level_reactors) {
     put(reaction_proprty_map, entry.second, entry.first);
   }
 
+  DependencyGraph reduced_graph{};
+  std::map<DependencyGraph::vertex_descriptor, DependencyGraph::vertex_descriptor> graph_to_reduced_graph{};
+  std::map<DependencyGraph::vertex_descriptor, std::size_t> id_map{};
+  size_t id{0};
+  for (DependencyGraph::vertex_descriptor vd : boost::make_iterator_range(vertices(graph))) {
+    id_map[vd] = id++;
+  }
+
+  transitive_reduction(graph, reduced_graph, make_assoc_property_map(graph_to_reduced_graph), make_assoc_property_map(id_map));
+  for (DependencyGraph::vertex_descriptor vd : boost::make_iterator_range(vertices(graph))) {
+    put(reaction_proprty_map, graph_to_reduced_graph[vd], get(reaction_proprty_map, vd));
+  }
+
   dynamic_properties dp;
   dp.property("node_id", get(boost::vertex_index, graph));
   dp.property("label", make_function_property_map<DependencyGraph::vertex_descriptor, std::string>(
@@ -102,17 +122,20 @@ void generate_dependency_graph(std::set<Reactor*>& top_level_reactors) {
               make_function_property_map<DependencyGraph::vertex_descriptor, std::string>(
                   [&reaction_proprty_map](DependencyGraph::vertex_descriptor vertex) {
                     auto hash = std::hash<std::string>{}(boost::get(reaction_proprty_map, vertex)->container()->fqn());
-                    auto red = (hash & 0xff0000) >> 16; // NOLINT
+                    auto red = (hash & 0xff0000) >> 16;  // NOLINT
                     auto green = (hash & 0x00ff00) >> 9; // NOLINT
-                    auto blue = (hash & 0x0000ff); // NOLINT
+                    auto blue = (hash & 0x0000ff);       // NOLINT
                     std::stringstream ss;
                     ss << "#" << std::setfill('0') << std::setw(2) << std::hex << red << green << blue;
                     return ss.str();
                   }));
   dp.property("style", make_constant_property<DependencyGraph::vertex_descriptor, std::string>("filled"));
 
-  std::ofstream dot_file("test.dot");
+  std::ofstream dot_file("graph.dot");
   write_graphviz_dp(dot_file, graph, dp);
+
+  std::ofstream reduced_dot_file("reduced_graph.dot");
+  write_graphviz_dp(reduced_dot_file, reduced_graph, dp);
 }
 
 } // namespace reactor
