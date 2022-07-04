@@ -48,7 +48,12 @@ void Environment::assemble() {
   }
   calculate_indexes();
 
-  generate_dependency_graph(top_level_reactors_);
+  // Testbed for the new graph structure
+  ReactionDependencyGraph graph{top_level_reactors_};
+  ReactionDependencyGraph reduced_graph = graph.transitive_reduction();
+
+  graph.export_graphviz("graph.dot");
+  reduced_graph.export_graphviz("reduced_graph.dot");
 }
 
 void Environment::build_dependency_graph(Reactor* reactor) { // NOLINT

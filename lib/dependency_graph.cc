@@ -3,16 +3,12 @@
 #include "reactor-cpp/reaction.hh"
 #include "reactor-cpp/reactor.hh"
 
-#include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/directed_graph.hpp>
 #include <boost/graph/graphviz.hpp>
 #include <boost/graph/property_maps/constant_property_map.hpp>
 #include <boost/graph/transitive_reduction.hpp>
-#include <boost/pending/property.hpp>
 #include <boost/property_map/function_property_map.hpp>
 
-#include <boost/property_map/property_map.hpp>
-#include <cstddef>
 #include <ctime>
 #include <iomanip>
 #include <map>
@@ -24,25 +20,16 @@ using namespace boost;
 
 namespace reactor {
 
-struct reaction_info_t {
-  using kind = vertex_property_tag;
-};
-
-using ReactionProperty = property<reaction_info_t, const Reaction*>;
-using DependencyGraph = directed_graph<ReactionProperty>;
-using ReactionToVertexMap = std::map<const Reaction*, DependencyGraph::vertex_descriptor>;
-
-void populate_graph_with_reactions(DependencyGraph& graph, ReactionToVertexMap& vertex_map, const Reactor* reactor) {
+void ReactionDependencyGraph::populate_graph_with_reactions(const Reactor* reactor) {
   for (auto* reaction : reactor->reactions()) {
     vertex_map[reaction] = graph.add_vertex();
   }
   for (auto* sub_reactor : reactor->reactors()) {
-    populate_graph_with_reactions(graph, vertex_map, sub_reactor);
+    populate_graph_with_reactions(sub_reactor);
   }
 }
 
-void populate_graph_with_priority_edges(DependencyGraph& graph, const ReactionToVertexMap& vertex_map,
-                                        const Reactor* reactor) {
+void ReactionDependencyGraph::populate_graph_with_priority_edges(const Reactor* reactor) {
   const auto& reactions = reactor->reactions();
 
   if (reactions.size() > 1) {
@@ -56,12 +43,11 @@ void populate_graph_with_priority_edges(DependencyGraph& graph, const ReactionTo
   }
 
   for (auto* sub_reactor : reactor->reactors()) {
-    populate_graph_with_priority_edges(graph, vertex_map, sub_reactor);
+    populate_graph_with_priority_edges(sub_reactor);
   }
 }
 
-void populate_graph_with_dependency_edges(DependencyGraph& graph, const ReactionToVertexMap& vertex_map,
-                                          const Reactor* reactor) {
+void ReactionDependencyGraph::populate_graph_with_dependency_edges(const Reactor* reactor) {
   for (auto* reaction : reactor->reactions()) {
     for (auto* dependency : reaction->dependencies()) {
       auto* source = dependency;
@@ -75,52 +61,64 @@ void populate_graph_with_dependency_edges(DependencyGraph& graph, const Reaction
   }
 
   for (auto* sub_reactor : reactor->reactors()) {
-    populate_graph_with_dependency_edges(graph, vertex_map, sub_reactor);
+    populate_graph_with_dependency_edges(sub_reactor);
   }
 }
 
-void generate_dependency_graph(std::set<Reactor*>& top_level_reactors) {
-
-  DependencyGraph graph{};
-  ReactionToVertexMap vertex_map{};
-
+ReactionDependencyGraph::ReactionDependencyGraph(const std::set<Reactor*>& top_level_reactors) {
   for (auto* reactor : top_level_reactors) {
-    populate_graph_with_reactions(graph, vertex_map, reactor);
-    populate_graph_with_priority_edges(graph, vertex_map, reactor);
-    populate_graph_with_dependency_edges(graph, vertex_map, reactor);
+    populate_graph_with_reactions(reactor);
+    populate_graph_with_priority_edges(reactor);
+    populate_graph_with_dependency_edges(reactor);
   }
 
-  property_map<DependencyGraph, reaction_info_t>::type reaction_proprty_map = get(reaction_info_t(), graph);
+  // annotate edge vertex with a property that points to the reaction it corresponds to
+  auto reaction_proprty_map = get_reaction_property_map();
   for (auto entry : vertex_map) {
     put(reaction_proprty_map, entry.second, entry.first);
   }
+}
 
-  DependencyGraph reduced_graph{};
-  std::map<DependencyGraph::vertex_descriptor, DependencyGraph::vertex_descriptor> graph_to_reduced_graph{};
-  std::map<DependencyGraph::vertex_descriptor, std::size_t> id_map{};
+auto ReactionDependencyGraph::transitive_reduction() const -> ReactionDependencyGraph {
+  ReactionDependencyGraph reduced{};
+
+  // transitive_reduction uses this to populate a mapping from original vertices to new vertices in the reduced graph
+  std::map<ReactionGraph::vertex_descriptor, ReactionGraph::vertex_descriptor> graph_to_reduced_graph{};
+  // transitive reduction needs this mapping of vertices to integers
+  std::map<ReactionGraph::vertex_descriptor, std::size_t> id_map{};
   size_t id{0};
-  for (DependencyGraph::vertex_descriptor vd : boost::make_iterator_range(vertices(graph))) {
+  for (ReactionGraph::vertex_descriptor vd : boost::make_iterator_range(vertices(graph))) {
     id_map[vd] = id++;
   }
 
-  transitive_reduction(graph, reduced_graph, make_assoc_property_map(graph_to_reduced_graph), make_assoc_property_map(id_map));
-  for (DependencyGraph::vertex_descriptor vd : boost::make_iterator_range(vertices(graph))) {
-    put(reaction_proprty_map, graph_to_reduced_graph[vd], get(reaction_proprty_map, vd));
+  // perform the actual reduction
+  boost::transitive_reduction(graph, reduced.graph, make_assoc_property_map(graph_to_reduced_graph),
+                              make_assoc_property_map(id_map));
+
+  // update the mapping of reactions to vertices
+  auto reaction_property_map = reduced.get_reaction_property_map();
+  for (ReactionGraph::vertex_descriptor vd : boost::make_iterator_range(vertices(graph))) {
+    put(reaction_property_map, graph_to_reduced_graph[vd], get(reaction_property_map, vd));
   }
 
+  return reduced;
+}
+
+void ReactionDependencyGraph::export_graphviz(const std::string& file_name) {
+  auto reaction_proprty_map = get_reaction_property_map();
   dynamic_properties dp;
   dp.property("node_id", get(boost::vertex_index, graph));
-  dp.property("label", make_function_property_map<DependencyGraph::vertex_descriptor, std::string>(
-                           [&reaction_proprty_map](DependencyGraph::vertex_descriptor vertex) {
+  dp.property("label", make_function_property_map<ReactionGraph::vertex_descriptor, std::string>(
+                           [&reaction_proprty_map](ReactionGraph::vertex_descriptor vertex) {
                              return boost::get(reaction_proprty_map, vertex)->name();
                            }));
-  dp.property("tooltip", make_function_property_map<DependencyGraph::vertex_descriptor, std::string>(
-                             [&reaction_proprty_map](DependencyGraph::vertex_descriptor vertex) {
+  dp.property("tooltip", make_function_property_map<ReactionGraph::vertex_descriptor, std::string>(
+                             [&reaction_proprty_map](ReactionGraph::vertex_descriptor vertex) {
                                return "container: " + boost::get(reaction_proprty_map, vertex)->container()->fqn();
                              }));
   dp.property("fillcolor",
-              make_function_property_map<DependencyGraph::vertex_descriptor, std::string>(
-                  [&reaction_proprty_map](DependencyGraph::vertex_descriptor vertex) {
+              make_function_property_map<ReactionGraph::vertex_descriptor, std::string>(
+                  [&reaction_proprty_map](ReactionGraph::vertex_descriptor vertex) {
                     auto hash = std::hash<std::string>{}(boost::get(reaction_proprty_map, vertex)->container()->fqn());
                     auto red = (hash & 0xff0000) >> 16;  // NOLINT
                     auto green = (hash & 0x00ff00) >> 9; // NOLINT
@@ -129,13 +127,10 @@ void generate_dependency_graph(std::set<Reactor*>& top_level_reactors) {
                     ss << "#" << std::setfill('0') << std::setw(2) << std::hex << red << green << blue;
                     return ss.str();
                   }));
-  dp.property("style", make_constant_property<DependencyGraph::vertex_descriptor, std::string>("filled"));
+  dp.property("style", make_constant_property<ReactionGraph::vertex_descriptor, std::string>("filled"));
 
-  std::ofstream dot_file("graph.dot");
+  std::ofstream dot_file(file_name);
   write_graphviz_dp(dot_file, graph, dp);
-
-  std::ofstream reduced_dot_file("reduced_graph.dot");
-  write_graphviz_dp(reduced_dot_file, reduced_graph, dp);
 }
 
 } // namespace reactor
