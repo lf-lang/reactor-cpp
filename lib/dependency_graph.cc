@@ -255,4 +255,30 @@ void GroupedDependencyGraph::group_reactions_by_container_helper(const Reactor* 
     group_reactions_by_container_helper(r);
   }
 }
+
+auto GroupedDependencyGraph::transitive_reduction() const -> GroupedDependencyGraph {
+  GroupedDependencyGraph reduced{};
+
+  // transitive_reduction uses this to populate a mapping from original vertices to new vertices in the reduced graph
+  std::map<GroupGraph::vertex_descriptor, GroupGraph::vertex_descriptor> graph_to_reduced_graph{};
+  // transitive reduction needs this mapping of vertices to integers
+  std::map<GroupGraph::vertex_descriptor, std::size_t> id_map{};
+  size_t id{0};
+  for (GroupGraph::vertex_descriptor vd : boost::make_iterator_range(vertices(graph))) {
+    id_map[vd] = id++;
+  }
+
+  // perform the actual reduction
+  boost::transitive_reduction(graph, reduced.graph, make_assoc_property_map(graph_to_reduced_graph),
+                              make_assoc_property_map(id_map));
+
+  // update the mapping of reactions to vertices
+  auto group_property_map = reduced.get_group_property_map();
+  for (GroupGraph::vertex_descriptor vd : boost::make_iterator_range(vertices(graph))) {
+    put(group_property_map, graph_to_reduced_graph[vd], get(group_property_map, vd));
+  }
+
+  return reduced;
+}
+
 } // namespace reactor

@@ -82,6 +82,8 @@ private:
 
   void group_reactions_by_container_helper(const Reactor* reactor);
 
+  GroupedDependencyGraph() = default;
+
 public:
   // TODO: This should be a const reference, but I don't know how to get immutable access to the reaction graph
   // properties...
