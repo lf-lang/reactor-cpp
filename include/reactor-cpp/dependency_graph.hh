@@ -4,6 +4,7 @@
 #include "reactor-cpp/reaction.hh"
 #include "reactor-cpp/reactor.hh"
 
+#include <boost/graph/breadth_first_search.hpp>
 #include <boost/graph/directed_graph.hpp>
 #include <vector>
 
@@ -60,12 +61,39 @@ private:
 
   [[nodiscard]] auto get_group_property_map() -> GroupPropertyMap { return boost::get(group_info_t{}, graph); }
 
+  struct ReachabilityVisitor : public boost::default_bfs_visitor {
+  private:
+    GroupGraph::vertex_descriptor to;
+
+  public:
+    ReachabilityVisitor(GroupGraph::vertex_descriptor to)
+        : to{to} {}
+
+    // this exception is used to stop the BFS early if a matching vertex is found
+    struct PathExists : public std::exception {};
+
+    // this throws PathExists on success
+    void discover_vertex(GroupGraph::vertex_descriptor u, [[maybe_unused]] const GroupGraph& g) const {
+      if (u == to) {
+        throw PathExists();
+      }
+    }
+  };
+
+  void group_reactions_by_container_helper(const Reactor* reactor);
+
 public:
   // TODO: This should be a const reference, but I don't know how to get immutable access to the reaction graph
   // properties...
   GroupedDependencyGraph(ReactionDependencyGraph& reactionGraph);
 
   void export_graphviz(const std::string& file_name);
+
+  void try_contract_edge(const Reaction* a, const Reaction* b);
+
+  void group_reactions_by_container(const std::set<Reactor*>& top_level_reactors);
+
+  auto has_path(const Reaction* a, const Reaction* b) const -> bool;
 
   [[nodiscard]] auto transitive_reduction() const -> GroupedDependencyGraph;
 };

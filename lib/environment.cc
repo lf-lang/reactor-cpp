@@ -51,10 +51,12 @@ void Environment::assemble() {
   // Testbed for the new graph structure
   ReactionDependencyGraph graph{top_level_reactors_};
   ReactionDependencyGraph reduced_graph = graph.transitive_reduction();
-  GroupedDependencyGraph grouped_graph{reduced_graph};
 
   graph.export_graphviz("graph.dot");
   reduced_graph.export_graphviz("reduced_graph.dot");
+
+  GroupedDependencyGraph grouped_graph{reduced_graph};
+  grouped_graph.group_reactions_by_container(top_level_reactors_);
   grouped_graph.export_graphviz("grouped_graph.dot");
 }
 

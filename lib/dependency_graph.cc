@@ -3,13 +3,17 @@
 #include "reactor-cpp/reaction.hh"
 #include "reactor-cpp/reactor.hh"
 
+#include <boost/graph/breadth_first_search.hpp>
 #include <boost/graph/copy.hpp>
 #include <boost/graph/directed_graph.hpp>
+#include <boost/graph/graph_mutability_traits.hpp>
 #include <boost/graph/graphviz.hpp>
 #include <boost/graph/named_function_params.hpp>
 #include <boost/graph/property_maps/constant_property_map.hpp>
+#include <boost/graph/subgraph.hpp>
 #include <boost/graph/transitive_reduction.hpp>
 #include <boost/property_map/function_property_map.hpp>
+#include <boost/range/iterator_range_core.hpp>
 
 #include <ctime>
 #include <iomanip>
@@ -147,7 +151,7 @@ GroupedDependencyGraph::GroupedDependencyGraph(ReactionDependencyGraph& reaction
              }));
 }
 
-  void GroupedDependencyGraph::export_graphviz(const std::string& file_name) {
+void GroupedDependencyGraph::export_graphviz(const std::string& file_name) {
   auto group_proprty_map = get_group_property_map();
   dynamic_properties dp;
   dp.property("node_id", get(boost::vertex_index, graph));
@@ -155,7 +159,7 @@ GroupedDependencyGraph::GroupedDependencyGraph(ReactionDependencyGraph& reaction
                            [&group_proprty_map](GroupGraph::vertex_descriptor vertex) {
                              std::stringstream ss;
                              for (const auto* reaction : boost::get(group_proprty_map, vertex)) {
-                               auto sep = ss.tellp()==0 ? '{' : ',';
+                               auto sep = ss.tellp() == 0 ? '{' : ',';
                                ss << sep << reaction->name();
                              }
                              ss << '}';
@@ -188,4 +192,83 @@ GroupedDependencyGraph::GroupedDependencyGraph(ReactionDependencyGraph& reaction
   write_graphviz_dp(dot_file, graph, dp);
 }
 
+void GroupedDependencyGraph::try_contract_edge(const Reaction* a, const Reaction* b) {
+  GroupGraph::vertex_descriptor va = vertex_map[a];
+  GroupGraph::vertex_descriptor vb = vertex_map[b];
+
+  // if both vertexes are the same we can abort...
+  if (va == vb) {
+    return;
+  }
+
+  // we remove the edge that we want to contract
+  remove_edge(va, vb, graph);
+  // and then check if there is another path from a to b
+  if (has_path(a, b)) {
+    // If there is another path from a to b, contracting would introduce a cycle into the graph. Thus we abort here and
+    // simply add the edge back that we removed earlier.
+    add_edge(va, vb, graph);
+  } else {
+    // it is safe to contract.
+
+    // route all edges in/out of vb to va
+    for (auto edge : make_iterator_range(out_edges(vb, graph))) {
+      add_edge(va, target(edge, graph), graph);
+    }
+    for (auto edge : make_iterator_range(in_edges(vb, graph))) {
+      add_edge(source(edge, graph), va, graph);
+    }
+
+    // update va's properties
+    auto& va_reactions = boost::get(get_group_property_map(), va);
+    auto& vb_reactions = boost::get(get_group_property_map(), vb);
+    va_reactions.insert(va_reactions.end(), vb_reactions.begin(), vb_reactions.end());
+
+    // update the vertex mapping
+    for (const auto* reaction : vb_reactions) {
+      vertex_map[reaction] = va;
+    }
+
+    // delete vb
+    clear_vertex(vb, graph);
+    remove_vertex(vb, graph);
+  }
+}
+
+auto GroupedDependencyGraph::has_path(const Reaction* a, const Reaction* b) const -> bool {
+  GroupGraph::vertex_descriptor va = vertex_map.at(a);
+  GroupGraph::vertex_descriptor vb = vertex_map.at(b);
+
+  try {
+    // NOLINTNEXTLINE(clang-analyzer-cplusplus.NewDelete) [prevents a warning triggered from the boost headers]
+    breadth_first_search(graph, va, visitor(ReachabilityVisitor(vb)));
+  } catch (const ReachabilityVisitor::PathExists& e) {
+    return true;
+  }
+  return false;
+}
+
+void GroupedDependencyGraph::group_reactions_by_container(const std::set<Reactor*>& top_level_reactors) {
+  for (const auto* reactor : top_level_reactors) {
+    group_reactions_by_container_helper(reactor);
+  }
+}
+
+void GroupedDependencyGraph::group_reactions_by_container_helper(const Reactor* reactor) {
+  const auto& reactions = reactor->reactions();
+
+  if (reactions.size() > 1) {
+    auto it = reactions.begin();
+    auto next = std::next(it);
+    while (next != reactions.end()) {
+      try_contract_edge(*it, *next);
+      it = next;
+      next = std::next(it);
+    }
+  }
+
+  for (const auto* r : reactor->reactors()) {
+    group_reactions_by_container_helper(r);
+  }
+}
 } // namespace reactor
