@@ -93,8 +93,6 @@ public:
 
   void group_reactions_by_container(const std::set<Reactor*>& top_level_reactors);
 
-  auto has_path(const Reaction* a, const Reaction* b) const -> bool;
-
   [[nodiscard]] auto transitive_reduction() const -> GroupedDependencyGraph;
 };
 

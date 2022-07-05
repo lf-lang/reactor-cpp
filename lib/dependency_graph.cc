@@ -201,51 +201,35 @@ void GroupedDependencyGraph::try_contract_edge(const Reaction* a, const Reaction
     return;
   }
 
-  // we remove the edge that we want to contract
+  // Abort if there is no direct edge between the vertexes
+  if (!edge(va, vb, graph).second) {
+    return;
+  }
+
+  // remove the direct edge between va and vb
   remove_edge(va, vb, graph);
-  // and then check if there is another path from a to b
-  if (has_path(a, b)) {
-    // If there is another path from a to b, contracting would introduce a cycle into the graph. Thus we abort here and
-    // simply add the edge back that we removed earlier.
-    add_edge(va, vb, graph);
-  } else {
-    // it is safe to contract.
 
-    // route all edges in/out of vb to va
-    for (auto edge : make_iterator_range(out_edges(vb, graph))) {
-      add_edge(va, target(edge, graph), graph);
-    }
-    for (auto edge : make_iterator_range(in_edges(vb, graph))) {
-      add_edge(source(edge, graph), va, graph);
-    }
-
-    // update va's properties
-    auto& va_reactions = boost::get(get_group_property_map(), va);
-    auto& vb_reactions = boost::get(get_group_property_map(), vb);
-    va_reactions.insert(va_reactions.end(), vb_reactions.begin(), vb_reactions.end());
-
-    // update the vertex mapping
-    for (const auto* reaction : vb_reactions) {
-      vertex_map[reaction] = va;
-    }
-
-    // delete vb
-    clear_vertex(vb, graph);
-    remove_vertex(vb, graph);
+  // route all edges in/out of vb to va
+  for (auto edge : make_iterator_range(out_edges(vb, graph))) {
+    add_edge(va, target(edge, graph), graph);
   }
-}
-
-auto GroupedDependencyGraph::has_path(const Reaction* a, const Reaction* b) const -> bool {
-  GroupGraph::vertex_descriptor va = vertex_map.at(a);
-  GroupGraph::vertex_descriptor vb = vertex_map.at(b);
-
-  try {
-    // NOLINTNEXTLINE(clang-analyzer-cplusplus.NewDelete) [prevents a warning triggered from the boost headers]
-    breadth_first_search(graph, va, visitor(ReachabilityVisitor(vb)));
-  } catch (const ReachabilityVisitor::PathExists& e) {
-    return true;
+  for (auto edge : make_iterator_range(in_edges(vb, graph))) {
+    add_edge(source(edge, graph), va, graph);
   }
-  return false;
+
+  // update va's properties
+  auto& va_reactions = boost::get(get_group_property_map(), va);
+  auto& vb_reactions = boost::get(get_group_property_map(), vb);
+  va_reactions.insert(va_reactions.end(), vb_reactions.begin(), vb_reactions.end());
+
+  // update the vertex mapping
+  for (const auto* reaction : vb_reactions) {
+    vertex_map[reaction] = va;
+  }
+
+  // delete vb
+  clear_vertex(vb, graph);
+  remove_vertex(vb, graph);
 }
 
 void GroupedDependencyGraph::group_reactions_by_container(const std::set<Reactor*>& top_level_reactors) {
