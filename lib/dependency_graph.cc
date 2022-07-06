@@ -168,9 +168,9 @@ void GroupedDependencyGraph::export_graphviz(const std::string& file_name) {
   dp.property("tooltip", make_function_property_map<GroupGraph::vertex_descriptor, std::string>(
                              [&group_proprty_map](GroupGraph::vertex_descriptor vertex) {
                                std::stringstream ss;
+                               ss << "reactions: \n";
                                for (const auto* reaction : boost::get(group_proprty_map, vertex)) {
-                                 ss << "reactions: \n";
-                                 ss << "  - " << reaction->fqn();
+                                 ss << "  - " << reaction->fqn() << '\n';
                                }
                                ss << '}';
                                return ss.str();
