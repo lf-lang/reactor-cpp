@@ -8,6 +8,7 @@
 #include <boost/graph/directed_graph.hpp>
 #include <boost/graph/filtered_graph.hpp>
 #include <boost/graph/graph_mutability_traits.hpp>
+#include <boost/graph/graph_traits.hpp>
 #include <boost/graph/graphviz.hpp>
 #include <boost/graph/named_function_params.hpp>
 #include <boost/graph/property_maps/constant_property_map.hpp>
@@ -16,6 +17,7 @@
 #include <boost/property_map/function_property_map.hpp>
 #include <boost/range/iterator_range_core.hpp>
 
+#include <cstddef>
 #include <ctime>
 #include <iomanip>
 #include <map>
@@ -158,9 +160,19 @@ void GroupedDependencyGraph::export_graphviz(const std::string& file_name) {
   dp.property("label", make_function_property_map<GroupGraph::vertex_descriptor, std::string>(
                            [&group_proprty_map](GroupGraph::vertex_descriptor vertex) {
                              std::stringstream ss;
-                             for (const auto* reaction : boost::get(group_proprty_map, vertex)) {
-                               auto sep = ss.tellp() == 0 ? '{' : ',';
-                               ss << sep << reaction->name();
+                             std::size_t count{0};
+                             const auto& reactions = boost::get(group_proprty_map, vertex);
+
+                             ss << '{';
+                             for (const auto* reaction : reactions) {
+                               count++;
+                               ss << reaction->name();
+                               if (count != reactions.size()) {
+                                 ss << ',';
+                                 if (count % 4 == 0) {
+                                   ss << '\n';
+                                 }
+                               }
                              }
                              ss << '}';
                              return ss.str();
@@ -195,10 +207,7 @@ void GroupedDependencyGraph::export_graphviz(const std::string& file_name) {
   write_graphviz_dp(dot_file, graph, dp);
 }
 
-void GroupedDependencyGraph::try_contract_edge(const Reaction* a, const Reaction* b) {
-  GroupGraph::vertex_descriptor va = vertex_map[a];
-  GroupGraph::vertex_descriptor vb = vertex_map[b];
-
+void GroupedDependencyGraph::try_contract_edge(GroupGraph::vertex_descriptor va, GroupGraph::vertex_descriptor vb) {
   // if both vertexes are the same we can abort...
   if (va == vb) {
     return;
@@ -276,7 +285,7 @@ void GroupedDependencyGraph::group_reactions_by_container_helper(const Reactor* 
     auto it = reactions.begin();
     auto next = std::next(it);
     while (next != reactions.end()) {
-      try_contract_edge(*it, *next);
+      try_contract_edge(vertex_map.at(*it), vertex_map.at(*next));
       it = next;
       next = std::next(it);
     }
@@ -311,6 +320,20 @@ auto GroupedDependencyGraph::transitive_reduction() -> GroupedDependencyGraph {
   }
 
   return reduced;
+}
+
+void GroupedDependencyGraph::group_chains() {
+  for (GroupGraph::vertex_descriptor vd : boost::make_iterator_range(vertices(graph))) {
+    if (in_degree(vd, graph) == 1) {
+      auto edge_iterator = in_edges(vd, graph).first;
+      GroupGraph::vertex_descriptor vs = source(*edge_iterator, graph);
+      if (out_degree(vs, graph) == 1) {
+        try_contract_edge(vs, vd);
+      }
+    }
+  }
+
+  clear_all_empty_vertices();
 }
 
 } // namespace reactor

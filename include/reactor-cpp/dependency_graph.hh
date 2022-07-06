@@ -108,9 +108,11 @@ public:
 
   void export_graphviz(const std::string& file_name);
 
-  void try_contract_edge(const Reaction* a, const Reaction* b);
+  void try_contract_edge(GroupGraph::vertex_descriptor va, GroupGraph::vertex_descriptor vb);
 
   void group_reactions_by_container(const std::set<Reactor*>& top_level_reactors);
+
+  void group_chains();
 
   // TODO: This should be const, but I don't know how to get immutable access to the reaction graph properties...
   [[nodiscard]] auto transitive_reduction() -> GroupedDependencyGraph;
