@@ -6,6 +6,8 @@
 
 #include <boost/graph/breadth_first_search.hpp>
 #include <boost/graph/directed_graph.hpp>
+#include <boost/graph/graph_selectors.hpp>
+#include <boost/pending/property.hpp>
 #include <vector>
 
 namespace reactor {
@@ -80,7 +82,21 @@ private:
     }
   };
 
+  class NonEmptyGoupFilter {
+  private:
+    GroupPropertyMap property_map;
+
+  public:
+    NonEmptyGoupFilter() = default;
+    NonEmptyGoupFilter(const GroupPropertyMap& map)
+        : property_map{map} {}
+
+    auto operator()(GroupGraph::vertex_descriptor vertex) const -> bool { return !boost::get(property_map, vertex).empty(); }
+  };
+
   void group_reactions_by_container_helper(const Reactor* reactor);
+
+  void clear_all_empty_vertices();
 
   GroupedDependencyGraph() = default;
 

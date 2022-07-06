@@ -6,6 +6,7 @@
 #include <boost/graph/breadth_first_search.hpp>
 #include <boost/graph/copy.hpp>
 #include <boost/graph/directed_graph.hpp>
+#include <boost/graph/filtered_graph.hpp>
 #include <boost/graph/graph_mutability_traits.hpp>
 #include <boost/graph/graphviz.hpp>
 #include <boost/graph/named_function_params.hpp>
@@ -175,17 +176,20 @@ void GroupedDependencyGraph::export_graphviz(const std::string& file_name) {
                                ss << '}';
                                return ss.str();
                              }));
-  dp.property("fillcolor",
-              make_function_property_map<GroupGraph::vertex_descriptor, std::string>(
-                  [&group_proprty_map](GroupGraph::vertex_descriptor vertex) {
-                    auto hash = std::hash<std::string>{}(boost::get(group_proprty_map, vertex)[0]->container()->fqn());
-                    auto red = (hash & 0xff0000) >> 16;  // NOLINT
-                    auto green = (hash & 0x00ff00) >> 9; // NOLINT
-                    auto blue = (hash & 0x0000ff);       // NOLINT
-                    std::stringstream ss;
-                    ss << "#" << std::setfill('0') << std::setw(2) << std::hex << red << green << blue;
-                    return ss.str();
-                  }));
+  dp.property("fillcolor", make_function_property_map<GroupGraph::vertex_descriptor, std::string>(
+                               [&group_proprty_map](GroupGraph::vertex_descriptor vertex) {
+                                 auto& reactions = boost::get(group_proprty_map, vertex);
+                                 if (!reactions.empty()) {
+                                   auto hash = std::hash<std::string>{}(reactions[0]->container()->fqn());
+                                   auto red = (hash & 0xff0000) >> 16;  // NOLINT
+                                   auto green = (hash & 0x00ff00) >> 9; // NOLINT
+                                   auto blue = (hash & 0x0000ff);       // NOLINT
+                                   std::stringstream ss;
+                                   ss << "#" << std::setfill('0') << std::setw(2) << std::hex << red << green << blue;
+                                   return ss.str();
+                                 }
+                                 return std::string{"#ffffff"};
+                               }));
   dp.property("style", make_constant_property<GroupGraph::vertex_descriptor, std::string>("filled"));
 
   std::ofstream dot_file(file_name);
@@ -227,14 +231,42 @@ void GroupedDependencyGraph::try_contract_edge(const Reaction* a, const Reaction
     vertex_map[reaction] = va;
   }
 
-  // delete vb
+  // and remove all reactions listed in vb making it empty
+  vb_reactions.clear();
+
+  // remove all the edges from/to vb, but don't remove vb itself yet. Removing it would invalidate all the vertex
+  // descriptors and iterators. Its better to later remove all empty vertices in a single go.
   clear_vertex(vb, graph);
-  remove_vertex(vb, graph);
 }
 
 void GroupedDependencyGraph::group_reactions_by_container(const std::set<Reactor*>& top_level_reactors) {
   for (const auto* reactor : top_level_reactors) {
     group_reactions_by_container_helper(reactor);
+  }
+
+  clear_all_empty_vertices();
+}
+
+void GroupedDependencyGraph::clear_all_empty_vertices() {
+  // First, get a filtered view of the graph only showing the non-empty vertices
+  NonEmptyGoupFilter filter{get_group_property_map()};
+  filtered_graph<GroupGraph, keep_all, NonEmptyGoupFilter> filtered_graph{graph, keep_all(), filter};
+
+  // Create a new graph and copy the contents from the filtered view.
+  GroupGraph new_graph{};
+  copy_graph(filtered_graph, new_graph);
+
+  // Replace our current internal graph and clear the old one
+  graph.swap(new_graph);
+  new_graph.clear();
+
+  // update the vertex map with the new vertex descriptors
+  vertex_map.clear();
+  for (GroupGraph::vertex_descriptor vd : boost::make_iterator_range(vertices(graph))) {
+    const auto& reactions = get(get_group_property_map(), vd);
+    for (const auto* reaction : reactions) {
+      vertex_map[reaction] = vd;
+    }
   }
 }
 
