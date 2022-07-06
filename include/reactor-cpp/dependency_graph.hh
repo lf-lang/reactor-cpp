@@ -41,7 +41,8 @@ public:
 
   void export_graphviz(const std::string& file_name);
 
-  [[nodiscard]] auto transitive_reduction() const -> ReactionDependencyGraph;
+  // TODO: This should be const, but I don't know how to get immutable access to the reaction graph properties...
+  [[nodiscard]] auto transitive_reduction() -> ReactionDependencyGraph;
 
   friend GroupedDependencyGraph;
 };
@@ -111,7 +112,8 @@ public:
 
   void group_reactions_by_container(const std::set<Reactor*>& top_level_reactors);
 
-  [[nodiscard]] auto transitive_reduction() const -> GroupedDependencyGraph;
+  // TODO: This should be const, but I don't know how to get immutable access to the reaction graph properties...
+  [[nodiscard]] auto transitive_reduction() -> GroupedDependencyGraph;
 };
 
 } // namespace reactor

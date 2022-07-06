@@ -86,7 +86,7 @@ ReactionDependencyGraph::ReactionDependencyGraph(const std::set<Reactor*>& top_l
   }
 }
 
-auto ReactionDependencyGraph::transitive_reduction() const -> ReactionDependencyGraph {
+auto ReactionDependencyGraph::transitive_reduction() -> ReactionDependencyGraph {
   ReactionDependencyGraph reduced{};
 
   // transitive_reduction uses this to populate a mapping from original vertices to new vertices in the reduced graph
@@ -103,9 +103,8 @@ auto ReactionDependencyGraph::transitive_reduction() const -> ReactionDependency
                               make_assoc_property_map(id_map));
 
   // update the mapping of reactions to vertices
-  auto reaction_property_map = reduced.get_reaction_property_map();
   for (ReactionGraph::vertex_descriptor vd : boost::make_iterator_range(vertices(graph))) {
-    put(reaction_property_map, graph_to_reduced_graph[vd], get(reaction_property_map, vd));
+    put(reduced.get_reaction_property_map(), graph_to_reduced_graph[vd], get(get_reaction_property_map(), vd));
   }
 
   return reduced;
@@ -288,7 +287,7 @@ void GroupedDependencyGraph::group_reactions_by_container_helper(const Reactor* 
   }
 }
 
-auto GroupedDependencyGraph::transitive_reduction() const -> GroupedDependencyGraph {
+auto GroupedDependencyGraph::transitive_reduction() -> GroupedDependencyGraph {
   GroupedDependencyGraph reduced{};
 
   // transitive_reduction uses this to populate a mapping from original vertices to new vertices in the reduced graph
@@ -305,9 +304,10 @@ auto GroupedDependencyGraph::transitive_reduction() const -> GroupedDependencyGr
                               make_assoc_property_map(id_map));
 
   // update the mapping of reactions to vertices
-  auto group_property_map = reduced.get_group_property_map();
   for (GroupGraph::vertex_descriptor vd : boost::make_iterator_range(vertices(graph))) {
-    put(group_property_map, graph_to_reduced_graph[vd], get(group_property_map, vd));
+    auto& reactions = boost::get(get_group_property_map(), vd);
+    auto& reduced_reactions = boost::get(reduced.get_group_property_map(), graph_to_reduced_graph[vd]);
+    reduced_reactions.insert(reduced_reactions.end(), reactions.begin(), reactions.end());
   }
 
   return reduced;
