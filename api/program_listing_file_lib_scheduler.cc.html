@@ -666,16 +666,12 @@
   <span class="n">set_port_helper</span><span class="p">(</span><span class="n">port</span><span class="p">);</span>
 <span class="p">}</span>
 
-<span class="kt">void</span> <span class="n">Scheduler</span><span class="o">::</span><span class="n">set_port_helper</span><span class="p">(</span><span class="n">BasePort</span><span class="o">*</span> <span class="n">port</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// NOLINT</span>
-  <span class="n">reactor_assert</span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">port</span><span class="o">-&gt;</span><span class="n">has_outward_bindings</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">port</span><span class="o">-&gt;</span><span class="n">triggers</span><span class="p">().</span><span class="n">empty</span><span class="p">()));</span>
-  <span class="k">if</span> <span class="p">(</span><span class="n">port</span><span class="o">-&gt;</span><span class="n">has_outward_bindings</span><span class="p">())</span> <span class="p">{</span>
-    <span class="k">for</span> <span class="p">(</span><span class="k">auto</span><span class="o">*</span> <span class="nl">binding</span> <span class="p">:</span> <span class="n">port</span><span class="o">-&gt;</span><span class="n">outward_bindings</span><span class="p">())</span> <span class="p">{</span>
-      <span class="n">set_port_helper</span><span class="p">(</span><span class="n">binding</span><span class="p">);</span>
-    <span class="p">}</span>
-  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-    <span class="k">for</span> <span class="p">(</span><span class="k">auto</span><span class="o">*</span> <span class="nl">reaction</span> <span class="p">:</span> <span class="n">port</span><span class="o">-&gt;</span><span class="n">triggers</span><span class="p">())</span> <span class="p">{</span>
-      <span class="n">triggered_reactions_</span><span class="p">[</span><span class="n">Worker</span><span class="o">::</span><span class="n">current_worker_id</span><span class="p">()].</span><span class="n">push_back</span><span class="p">(</span><span class="n">reaction</span><span class="p">);</span>
-    <span class="p">}</span>
+<span class="kt">void</span> <span class="n">Scheduler</span><span class="o">::</span><span class="n">set_port_helper</span><span class="p">(</span><span class="n">BasePort</span><span class="o">*</span> <span class="n">port</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">auto</span><span class="o">*</span> <span class="nl">reaction</span> <span class="p">:</span> <span class="n">port</span><span class="o">-&gt;</span><span class="n">triggers</span><span class="p">())</span> <span class="p">{</span>
+    <span class="n">triggered_reactions_</span><span class="p">[</span><span class="n">Worker</span><span class="o">::</span><span class="n">current_worker_id</span><span class="p">()].</span><span class="n">push_back</span><span class="p">(</span><span class="n">reaction</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">auto</span><span class="o">*</span> <span class="nl">binding</span> <span class="p">:</span> <span class="n">port</span><span class="o">-&gt;</span><span class="n">outward_bindings</span><span class="p">())</span> <span class="p">{</span>
+    <span class="n">set_port_helper</span><span class="p">(</span><span class="n">binding</span><span class="p">);</span>
   <span class="p">}</span>
 <span class="p">}</span>
 
