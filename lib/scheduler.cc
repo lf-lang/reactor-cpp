@@ -381,16 +381,12 @@ void Scheduler::set_port(BasePort* port) {
   set_port_helper(port);
 }
 
-void Scheduler::set_port_helper(BasePort* port) { // NOLINT
-  reactor_assert(!(port->has_outward_bindings() && !port->triggers().empty()));
-  if (port->has_outward_bindings()) {
-    for (auto* binding : port->outward_bindings()) {
-      set_port_helper(binding);
-    }
-  } else {
-    for (auto* reaction : port->triggers()) {
-      triggered_reactions_[Worker::current_worker_id()].push_back(reaction);
-    }
+void Scheduler::set_port_helper(BasePort* port) {
+  for (auto* reaction : port->triggers()) {
+    triggered_reactions_[Worker::current_worker_id()].push_back(reaction);
+  }
+  for (auto* binding : port->outward_bindings()) {
+    set_port_helper(binding);
   }
 }
 
