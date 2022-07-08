@@ -92,7 +92,9 @@ private:
     NonEmptyGoupFilter(const GroupPropertyMap& map)
         : property_map{map} {}
 
-    auto operator()(GroupGraph::vertex_descriptor vertex) const -> bool { return !boost::get(property_map, vertex).empty(); }
+    auto operator()(GroupGraph::vertex_descriptor vertex) const -> bool {
+      return !boost::get(property_map, vertex).empty();
+    }
   };
 
   void group_reactions_by_container_helper(const Reactor* reactor);
@@ -107,6 +109,8 @@ public:
   GroupedDependencyGraph(ReactionDependencyGraph& reactionGraph);
 
   void export_graphviz(const std::string& file_name);
+
+  auto has_path(GroupGraph::vertex_descriptor va, GroupGraph::vertex_descriptor vb) const -> bool;
 
   void try_contract_edge(GroupGraph::vertex_descriptor va, GroupGraph::vertex_descriptor vb);
 

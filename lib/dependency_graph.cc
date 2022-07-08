@@ -221,6 +221,14 @@ void GroupedDependencyGraph::try_contract_edge(GroupGraph::vertex_descriptor va,
   // remove the direct edge between va and vb
   remove_edge(va, vb, graph);
 
+  // check if there is still a path from va to vb; abort in this case as we would introduce a cycle when contracting the
+  // edge
+  if (has_path(va, vb)) {
+    // add the original edge back and abort
+    add_edge(va, vb, graph);
+    return;
+  }
+
   // route all edges in/out of vb to va
   for (auto edge : make_iterator_range(out_edges(vb, graph))) {
     add_edge(va, target(edge, graph), graph);
@@ -325,8 +333,7 @@ auto GroupedDependencyGraph::transitive_reduction() -> GroupedDependencyGraph {
 void GroupedDependencyGraph::group_chains() {
   for (GroupGraph::vertex_descriptor vd : boost::make_iterator_range(vertices(graph))) {
     if (in_degree(vd, graph) == 1) {
-      auto edge_iterator = in_edges(vd, graph).first;
-      GroupGraph::vertex_descriptor vs = source(*edge_iterator, graph);
+      GroupGraph::vertex_descriptor vs = source(*in_edges(vd, graph).first, graph);
       if (out_degree(vs, graph) == 1) {
         try_contract_edge(vs, vd);
       }
@@ -335,5 +342,17 @@ void GroupedDependencyGraph::group_chains() {
 
   clear_all_empty_vertices();
 }
+
+#ifndef __clang_analyzer__ // exclude this from static analysis as breadth_first_search appears to include a bug...
+auto GroupedDependencyGraph::has_path(GroupGraph::vertex_descriptor va, GroupGraph::vertex_descriptor vb) const
+    -> bool {
+  try {
+    breadth_first_search(graph, va, visitor(ReachabilityVisitor(vb)));
+  } catch (const ReachabilityVisitor::PathExists& e) {
+    return true;
+  }
+  return false;
+}
+#endif
 
 } // namespace reactor
