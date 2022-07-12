@@ -57,6 +57,7 @@ public:
 
   friend class Reaction;
   friend class Scheduler;
+  friend class GroupScheduler;
 };
 
 template <class T> class Port : public BasePort {
