@@ -112,12 +112,11 @@ private:
 
   void clear_all_empty_vertices();
 
-  GroupedDependencyGraph() = default;
-
 public:
   // TODO: This should be a const reference, but I don't know how to get immutable access to the reaction graph
   // properties...
   GroupedDependencyGraph(ReactionDependencyGraph& reactionGraph);
+  GroupedDependencyGraph() = default;
 
   void export_graphviz(const std::string& file_name);
 

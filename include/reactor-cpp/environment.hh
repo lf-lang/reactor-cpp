@@ -13,6 +13,7 @@
 #include <string>
 #include <vector>
 
+#include "reactor-cpp/dependency_graph.hh"
 #include "reactor.hh"
 #include "scheduler.hh"
 
@@ -41,6 +42,8 @@ private:
   Scheduler scheduler_;
   Phase phase_{Phase::Construction};
   TimePoint start_time_{};
+
+  GroupedDependencyGraph grouped_graph_{};
 
   void build_dependency_graph(Reactor* reactor);
   void calculate_indexes();
@@ -83,6 +86,8 @@ public:
   [[nodiscard]] auto fast_fwd_execution() const noexcept -> bool { return fast_fwd_execution_; }
   [[nodiscard]] auto run_forever() const noexcept -> bool { return run_forever_; }
   [[nodiscard]] auto max_reaction_index() const noexcept -> unsigned int { return max_reaction_index_; }
+
+  [[nodiscard]] auto grouped_graph() const noexcept -> const GroupedDependencyGraph& { return grouped_graph_; }
 };
 } // namespace reactor
 

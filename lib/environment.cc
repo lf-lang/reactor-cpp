@@ -64,6 +64,8 @@ void Environment::assemble() {
 
   reduced_grouped_graph.group_chains();
   reduced_grouped_graph.export_graphviz("grouped_chains_graph.dot");
+
+  this->grouped_graph_ = reduced_grouped_graph;
 }
 
 void Environment::build_dependency_graph(Reactor* reactor) { // NOLINT
