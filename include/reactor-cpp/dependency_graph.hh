@@ -7,6 +7,7 @@
 #include <boost/graph/breadth_first_search.hpp>
 #include <boost/graph/directed_graph.hpp>
 #include <boost/graph/graph_selectors.hpp>
+#include <boost/graph/properties.hpp>
 #include <boost/pending/property.hpp>
 #include <vector>
 
@@ -14,15 +15,22 @@ namespace reactor {
 
 class GroupedDependencyGraph;
 
+enum class DependencyType { Undefined, Priority, Trigger, Effect };
+
 class ReactionDependencyGraph {
 private:
   struct reaction_info_t {
     using kind = boost::vertex_property_tag;
   };
+  struct dependency_info_t {
+    using kind = boost::edge_property_tag;
+  };
   using ReactionProperty = boost::property<reaction_info_t, const Reaction*>;
-  using ReactionGraph = boost::directed_graph<ReactionProperty>;
+  using DependencyProperty = boost::property<dependency_info_t, DependencyType>;
+  using ReactionGraph = boost::directed_graph<ReactionProperty, DependencyProperty>;
   using ReactionToVertexMap = std::map<const Reaction*, ReactionGraph::vertex_descriptor>;
   using ReactionPropertyMap = boost::property_map<ReactionGraph, reaction_info_t>::type;
+  using DependencyPropertyMap = boost::property_map<ReactionGraph, dependency_info_t>::type;
 
   ReactionGraph graph{};
   ReactionToVertexMap vertex_map{};
@@ -33,6 +41,9 @@ private:
   void populate_graph_with_dependency_edges(const Reactor* reactor);
 
   [[nodiscard]] auto get_reaction_property_map() -> ReactionPropertyMap { return boost::get(reaction_info_t{}, graph); }
+  [[nodiscard]] auto get_dependency_property_map() -> DependencyPropertyMap {
+    return boost::get(dependency_info_t{}, graph);
+  }
 
   ReactionDependencyGraph() = default;
 

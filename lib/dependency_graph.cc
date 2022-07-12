@@ -45,7 +45,8 @@ void ReactionDependencyGraph::populate_graph_with_priority_edges(const Reactor* 
     auto iterator = reactions.begin();
     auto next = std::next(iterator);
     while (next != reactions.end()) {
-      graph.add_edge(vertex_map.at(*iterator), vertex_map.at(*next));
+      auto edge = graph.add_edge(vertex_map.at(*iterator), vertex_map.at(*next)).first;
+      put(get_dependency_property_map(), edge, DependencyType::Priority);
       iterator = next;
       next = std::next(iterator);
     }
@@ -64,7 +65,12 @@ void ReactionDependencyGraph::populate_graph_with_dependency_edges(const Reactor
         source = source->inward_binding();
       }
       for (auto* antidependency : source->antidependencies()) {
-        graph.add_edge(vertex_map.at(antidependency), vertex_map.at(reaction));
+        auto edge = graph.add_edge(vertex_map.at(antidependency), vertex_map.at(reaction)).first;
+        if (reaction->port_triggers().count(dependency) == 0) {
+          put(get_dependency_property_map(), edge, DependencyType::Effect);
+        } else {
+          put(get_dependency_property_map(), edge, DependencyType::Trigger);
+        }
       }
     }
   }
@@ -114,6 +120,7 @@ auto ReactionDependencyGraph::transitive_reduction() -> ReactionDependencyGraph 
 
 void ReactionDependencyGraph::export_graphviz(const std::string& file_name) {
   auto reaction_proprty_map = get_reaction_property_map();
+  auto dependency_proprty_map = get_dependency_property_map();
   dynamic_properties dp;
   dp.property("node_id", get(boost::vertex_index, graph));
   dp.property("label", make_function_property_map<ReactionGraph::vertex_descriptor, std::string>(
@@ -136,6 +143,21 @@ void ReactionDependencyGraph::export_graphviz(const std::string& file_name) {
                     return ss.str();
                   }));
   dp.property("style", make_constant_property<ReactionGraph::vertex_descriptor, std::string>("filled"));
+  dp.property("style", make_function_property_map<ReactionGraph::edge_descriptor, std::string>(
+                           [&dependency_proprty_map](ReactionGraph::edge_descriptor edge) {
+                             auto dependency_type = boost::get(dependency_proprty_map, edge);
+                             switch (dependency_type) {
+                             case DependencyType::Undefined:
+                               return "solid";
+                             case DependencyType::Priority:
+                               return "dotted";
+                             case DependencyType::Effect:
+                               return "dashed";
+                             case DependencyType::Trigger:
+                               return "bold";
+                             }
+                             return "invis";
+                           }));
 
   std::ofstream dot_file(file_name);
   write_graphviz_dp(dot_file, graph, dp);
@@ -150,7 +172,11 @@ GroupedDependencyGraph::GroupedDependencyGraph(ReactionDependencyGraph& reaction
                group.push_back(boost::get(reactionGraph.get_reaction_property_map(), in));
                boost::put(get_group_property_map(), out, group);
                vertex_map[group[0]] = out;
-             }));
+             })
+                 .edge_copy([]([[maybe_unused]] ReactionDependencyGraph::ReactionGraph::edge_descriptor in,
+                               [[maybe_unused]] GroupGraph::edge_descriptor out) {
+                   // do nothing; simply drop the edge descriptors
+                 }));
 }
 
 void GroupedDependencyGraph::export_graphviz(const std::string& file_name) {
