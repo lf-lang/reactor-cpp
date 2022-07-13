@@ -102,10 +102,6 @@ Functions
 
 - :ref:`exhale_function_namespacereactor_1a423923d74709265265a52445c1bfd35c`
 
-- :ref:`exhale_function_namespacereactor_1ae28f31e6cace572d829c81ef6facba64`
-
-- :ref:`exhale_function_namespacereactor_1a5383c6edf696c4a4178f4aee118e996d`
-
 - :ref:`exhale_function_namespacereactor_1ab9346e38e75455cc64fba42e503898a2`
 
 - :ref:`exhale_function_namespacereactor_1ae21f869bafee79852a3b478981282224`
@@ -123,6 +119,10 @@ Functions
 - :ref:`exhale_function_namespacereactor_1a9abf744286d6ecb0a23346dfe1def44a`
 
 - :ref:`exhale_function_namespacereactor_1a7ed1378bb8c01236b59b6e1e22223e0e`
+
+- :ref:`exhale_function_namespacereactor_1ae28f31e6cace572d829c81ef6facba64`
+
+- :ref:`exhale_function_namespacereactor_1a5383c6edf696c4a4178f4aee118e996d`
 
 - :ref:`exhale_function_namespacereactor_1a97a41d457d5536c9e5735a8bfd3861a7`
 
