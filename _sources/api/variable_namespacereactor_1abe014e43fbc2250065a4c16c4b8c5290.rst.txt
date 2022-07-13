@@ -1,0 +1,14 @@
+.. _exhale_variable_namespacereactor_1abe014e43fbc2250065a4c16c4b8c5290:
+
+Variable NANOSECONDS_IN_ONE_SECOND
+==================================
+
+- Defined in :ref:`file_lib_time.cc`
+
+
+Variable Documentation
+----------------------
+
+
+.. doxygenvariable:: NANOSECONDS_IN_ONE_SECOND
+   :project: reactor-cpp

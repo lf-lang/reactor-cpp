@@ -1,0 +1,14 @@
+.. _exhale_variable_namespacereactor_1a035373ef0b83f47fb5a451a0b8b3f18a:
+
+Variable NANOSECOND_DIGITS
+==========================
+
+- Defined in :ref:`file_lib_time.cc`
+
+
+Variable Documentation
+----------------------
+
+
+.. doxygenvariable:: NANOSECOND_DIGITS
+   :project: reactor-cpp

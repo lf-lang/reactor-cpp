@@ -71,5 +71,9 @@ Variables
 ---------
 
 
+- :ref:`exhale_variable_namespacereactor_1a035373ef0b83f47fb5a451a0b8b3f18a`
+
+- :ref:`exhale_variable_namespacereactor_1abe014e43fbc2250065a4c16c4b8c5290`
+
 - :ref:`exhale_variable_namespacereactor_1ae0c4aa2ceb0e85fb469b8e09c37ac303`
 
