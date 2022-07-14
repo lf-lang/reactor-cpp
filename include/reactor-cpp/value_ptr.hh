@@ -24,12 +24,6 @@ namespace detail {
 template <class T, bool is_scalar> class ImmutableValuePtr {};
 template <class T, bool is_scalar> class MutableValuePtr {};
 
-template <class T, bool is_scalar, class... Args>
-auto make_immutable_value(Args&&... args) -> ImmutableValuePtr<T, is_scalar>;
-
-template <class T, bool is_scalar, class... Args>
-auto make_mutable_value(Args&&... args) -> MutableValuePtr<T, is_scalar>;
-
 } // namespace detail
 
 template <class T> using MutableValuePtr = detail::MutableValuePtr<T, std::is_scalar<T>::value>;
@@ -51,7 +45,11 @@ template <class T> using ImmutableValuePtr = detail::ImmutableValuePtr<T, std::i
  * @return a new immutable value pointer
  */
 template <class T, class... Args> auto make_immutable_value(Args&&... args) -> ImmutableValuePtr<T> {
-  return detail::make_immutable_value<T, std::is_scalar<T>::value, Args...>(args...);
+  if constexpr (std::is_scalar<T>::value) {
+    return ImmutableValuePtr<T>(T(std::forward<Args>(args)...));
+  } else {
+    return ImmutableValuePtr<T>(new T(std::forward<Args>(args)...));
+  }
 }
 
 /**
@@ -70,7 +68,11 @@ template <class T, class... Args> auto make_immutable_value(Args&&... args) -> I
  * @return a new mutable value pointer
  */
 template <class T, class... Args> auto make_mutable_value(Args&&... args) -> MutableValuePtr<T> {
-  return detail::make_mutable_value<T, std::is_scalar<T>::value, Args...>(args...);
+  if constexpr (std::is_scalar<T>::value) {
+    return MutableValuePtr<T>(T(std::forward<Args>(args)...));
+  } else {
+    return MutableValuePtr<T>(new T(std::forward<Args>(args)...));
+  }
 }
 
 // Comparison operators
@@ -476,12 +478,9 @@ private:
   T value_{};
   bool valid_{false};
 
-  explicit MutableValuePtr(const T* value) {
-    if (value != nullptr) {
-      value_ = *value;
-      valid_ = true;
-    }
-  }
+  explicit MutableValuePtr(const T value)
+      : value_{value}
+      , valid_{true} {}
 
 public:
   constexpr MutableValuePtr() = default;
@@ -531,12 +530,9 @@ private:
   T value_{};
   bool valid_{false};
 
-  explicit ImmutableValuePtr(T* value) {
-    if (value != nullptr) {
-      value_ = *value;
-      valid_ = true;
-    }
-  }
+  explicit ImmutableValuePtr(T value)
+      : value_{value}
+      , valid_{true} {}
 
 public:
   constexpr ImmutableValuePtr() = default;
@@ -571,22 +567,6 @@ public:
   template <class U, class... Args>
   friend auto reactor::make_immutable_value(Args&&... args) -> reactor::ImmutableValuePtr<U>;
 };
-
-template <class T, class... Args> auto make_immutable_value(Args&&... args) -> ImmutableValuePtr<T, false> {
-  return ImmutableValuePtr<T, false>(new T(std::forward<Args>(args)...));
-}
-
-template <class T, class... Args> auto make_immutable_value(Args&&... args) -> ImmutableValuePtr<T, true> {
-  return ImmutableValuePtr<T, true>(T(std::forward<Args>(args)...));
-}
-
-template <class T, class... Args> auto make_mutable_value(Args&&... args) -> MutableValuePtr<T, false> {
-  return MutableValuePtr<T, false>(new T(std::forward<Args>(args)...));
-}
-
-template <class T, class... Args> auto make_mutable_value(Args&&... args) -> MutableValuePtr<T, true> {
-  return MutableValuePtr<T, true>(T(std::forward<Args>(args)...));
-}
 
 } // namespace detail
 
