@@ -359,6 +359,108 @@ public:
   template <class U, class... Args> friend auto make_immutable_value(Args&&... args) -> ImmutableValuePtr<U, false>;
 };
 
+
+
+template <class T> class MutableValuePtr<T, true> {
+private:
+  T value_{};
+  bool valid_{false};
+
+  explicit MutableValuePtr(const T* value) {
+    if (value != nullptr) {
+      value_ = *value;
+      valid_ = true;
+    }
+  }
+
+public:
+  constexpr MutableValuePtr() = default;
+  ~MutableValuePtr() = default;
+  MutableValuePtr(const MutableValuePtr&) = delete;
+  MutableValuePtr(MutableValuePtr&& ptr) noexcept = default;
+
+  explicit constexpr MutableValuePtr(std::nullptr_t) {}
+
+  auto operator=(MutableValuePtr&& ptr) noexcept -> MutableValuePtr& = default;
+  auto operator=(const MutableValuePtr& ptr) -> MutableValuePtr& = delete;
+
+  auto operator=(std::nullptr_t) noexcept -> MutableValuePtr& {
+    valid_ = false;
+    return *this;
+  }
+
+  [[nodiscard]] auto get() noexcept -> T* { return valid_ ? &value_ : nullptr; }
+  [[nodiscard]] auto get() const noexcept -> const T* { return valid_ ? &value_ : nullptr; }
+
+  explicit operator bool() const { return valid_; }
+
+  auto operator*() -> T& { return value_; }
+  auto operator*() const -> const T& { return value_; }
+
+  auto operator->() -> T* { return get(); }
+  auto operator->() const -> const T* { return get(); }
+
+  // Give ImmutableValuePtr access to the private constructor. This is required
+  // for creating a MutableValuePtr from an ImmutableValuePtr in
+  // get_mutable_copy()
+  friend class ImmutableValuePtr<T, true>;
+
+  // Give the factory function make_mutable_value() access to the private
+  // constructor
+  // NOLINTNEXTLINE(readability-redundant-declaration)
+  template <class U, class... Args> friend auto make_mutable_value(Args&&... args) -> MutableValuePtr<U, true>;
+};
+
+template <class T> class ImmutableValuePtr<T, true> {
+public:
+  /// A type alias that adds ``const`` to ``T``
+  using const_T = typename std::add_const<T>::type;
+
+private:
+  T value_{};
+  bool valid_{false};
+
+  explicit ImmutableValuePtr(T* value) {
+    if (value != nullptr) {
+      value_ = *value;
+      valid_ = true;
+    }
+  }
+
+public:
+  constexpr ImmutableValuePtr() = default;
+  ~ImmutableValuePtr() = default;
+  ImmutableValuePtr(const ImmutableValuePtr& ptr) = default;
+  ImmutableValuePtr(ImmutableValuePtr&& ptr) noexcept = default;
+
+  explicit constexpr ImmutableValuePtr(std::nullptr_t) {}
+  explicit ImmutableValuePtr(MutableValuePtr<T, false>&& ptr)
+    : value_(ptr.value_), valid_(ptr.valid_) {}
+
+  auto operator=(std::nullptr_t) -> ImmutableValuePtr& {
+    this->valid_ = false;
+    return *this;
+  }
+  auto operator=(const ImmutableValuePtr& ptr) -> ImmutableValuePtr& = default;
+  auto operator=(ImmutableValuePtr&& ptr) noexcept -> ImmutableValuePtr& = default;
+
+  [[nodiscard]] auto get() const -> const_T* { return valid_ ? &value_ : nullptr; }
+
+  explicit operator bool() const { return valid_; }
+
+  auto operator*() const -> const_T& { return value_; }
+  auto operator->() const -> const_T* { return get(); }
+
+  [[nodiscard]] auto get_mutable_copy() const -> MutableValuePtr<T, true> {
+    return MutableValuePtr<T, true>(get());
+  }
+
+  // Give the factory function make_mutable_value() access to the private
+  // constructor
+  // NOLINTNEXTLINE(readability-redundant-declaration)
+  template <class U, class... Args> friend auto make_immutable_value(Args&&... args) -> ImmutableValuePtr<U, true>;
+};
+
 } // namespace detail
 
 template <class T> using MutableValuePtr = detail::MutableValuePtr<T, std::is_scalar<T>::value>;
