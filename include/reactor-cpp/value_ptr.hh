@@ -19,8 +19,10 @@
 
 namespace reactor {
 
-// forward declaration
-template <class T> class ImmutableValuePtr;
+namespace detail {
+
+template <class T, bool is_scalar> class ImmutableValuePtr {};
+template <class T, bool is_scalar> class MutableValuePtr {};
 
 /**
  * @brief Smart pointer to a mutable value.
@@ -38,7 +40,7 @@ template <class T> class ImmutableValuePtr;
  * @tparam T type of the value managed by this class
  * @author Christian Menard
  */
-template <class T> class MutableValuePtr { // NOLINT
+template <class T> class MutableValuePtr<T, false> {
 private:
   /// The internal unique smart pointer that this class builds upon.
   std::unique_ptr<T> internal_ptr;
@@ -63,8 +65,9 @@ public:
    * Constructs a :class:`MutableValuePtr` that owns nothing.
    * @endrst
    */
-  constexpr MutableValuePtr()
-      : internal_ptr(nullptr) {}
+  constexpr MutableValuePtr() = default;
+  ~MutableValuePtr() = default;
+
   /**
    * Copy constructor (Deleted).
    * @rst
@@ -74,6 +77,7 @@ public:
    * @endrst
    */
   MutableValuePtr(const MutableValuePtr&) = delete;
+
   /**
    * Move constructor.
    * @rst
@@ -83,6 +87,7 @@ public:
    * @endrst
    */
   MutableValuePtr(MutableValuePtr&& ptr) noexcept = default;
+
   /**
    * Constructor from ``nullptr``.
    * @rst
@@ -103,6 +108,17 @@ public:
     this->internal_ptr = std::move(ptr.internal_ptr);
     return *this;
   }
+
+  /**
+   * Copy assignment operator (Deleted).
+   * @rst
+   * Since :class:`MutableValuePtr` enforces unique ownership, there cannot
+   * be two instances pointing to the same object and therefore copying cannot
+   * be allowed,
+   * @endrst
+   */
+  auto operator=(const MutableValuePtr& ptr) -> MutableValuePtr& = delete;
+
   /**
    * Assignment operator from ``nullptr``.
    *
@@ -144,12 +160,12 @@ public:
   // Give ImmutableValuePtr access to the private constructor. This is required
   // for creating a MutableValuePtr from an ImmutableValuePtr in
   // get_mutable_copy()
-  friend class ImmutableValuePtr<T>;
+  friend class ImmutableValuePtr<T, false>;
 
   // Give the factory function make_mutable_value() access to the private
   // constructor
   // NOLINTNEXTLINE(readability-redundant-declaration)
-  template <class U, class... Args> friend auto make_mutable_value(Args&&... args) -> MutableValuePtr<U>;
+  template <class U, class... Args> friend auto make_mutable_value(Args&&... args) -> MutableValuePtr<U, false>;
 };
 
 /**
@@ -169,7 +185,7 @@ public:
  * @tparam T type of the value managed by this class
  * @author Christian Menard
  */
-template <class T> class ImmutableValuePtr { // NOLINT
+template <class T> class ImmutableValuePtr<T, false> {
 public:
   /// A type alias that adds ``const`` to ``T``
   using const_T = typename std::add_const<T>::type;
@@ -199,6 +215,9 @@ public:
    */
   constexpr ImmutableValuePtr()
       : internal_ptr(nullptr) {}
+
+  ~ImmutableValuePtr() = default;
+
   /**
    * Copy constructor.
    * @rst
@@ -235,7 +254,7 @@ public:
    * associated with ``ptr`` to an immutable value.
    * @endrst
    */
-  explicit ImmutableValuePtr(MutableValuePtr<T>&& ptr)
+  explicit ImmutableValuePtr(MutableValuePtr<T, false>&& ptr)
       : internal_ptr(std::move(ptr.internal_ptr)) {}
 
   /**
@@ -330,13 +349,20 @@ public:
    * ``get() == nullptr``.
    * @return a mutable value pointer
    */
-  [[nodiscard]] auto get_mutable_copy() const -> MutableValuePtr<T> { return MutableValuePtr<T>(new T(*internal_ptr)); }
+  [[nodiscard]] auto get_mutable_copy() const -> MutableValuePtr<T, false> {
+    return MutableValuePtr<T, false>(new T(*internal_ptr));
+  }
 
   // Give the factory function make_mutable_value() access to the private
   // constructor
   // NOLINTNEXTLINE(readability-redundant-declaration)
-  template <class U, class... Args> friend auto make_immutable_value(Args&&... args) -> ImmutableValuePtr<U>;
+  template <class U, class... Args> friend auto make_immutable_value(Args&&... args) -> ImmutableValuePtr<U, false>;
 };
+
+} // namespace detail
+
+template <class T> using MutableValuePtr = detail::MutableValuePtr<T, std::is_scalar<T>::value>;
+template <class T> using ImmutableValuePtr = detail::ImmutableValuePtr<T, std::is_scalar<T>::value>;
 
 /**
  * @rst
@@ -344,7 +370,7 @@ public:
  *
  * Creates and initializes a new instance of ``T`` and returns a new
  * :class:`ImmutableValuePtr` owning this value. This is analogues to
- * :std-memory:`make_shared`.
+ * :std-memory:`make_shared`
  * @endrst
  * @tparam T type of the value to be created
  * @tparam Args types of ``T``'s constructor arguments. Usually, this does not
