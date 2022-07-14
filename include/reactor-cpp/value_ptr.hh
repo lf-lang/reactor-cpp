@@ -24,6 +24,12 @@ namespace detail {
 template <class T, bool is_scalar> class ImmutableValuePtr {};
 template <class T, bool is_scalar> class MutableValuePtr {};
 
+template <class T, bool is_scalar, class... Args>
+auto make_immutable_value(Args&&... args) -> ImmutableValuePtr<T, is_scalar>;
+
+template <class T, bool is_scalar, class... Args>
+auto make_mutable_value(Args&&... args) -> MutableValuePtr<T, is_scalar>;
+
 } // namespace detail
 
 template <class T> using MutableValuePtr = detail::MutableValuePtr<T, std::is_scalar<T>::value>;
@@ -45,7 +51,7 @@ template <class T> using ImmutableValuePtr = detail::ImmutableValuePtr<T, std::i
  * @return a new immutable value pointer
  */
 template <class T, class... Args> auto make_immutable_value(Args&&... args) -> ImmutableValuePtr<T> {
-  return ImmutableValuePtr<T>(new T(std::forward<Args>(args)...));
+  return detail::make_immutable_value<T, std::is_scalar<T>::value, Args...>(args...);
 }
 
 /**
@@ -64,7 +70,7 @@ template <class T, class... Args> auto make_immutable_value(Args&&... args) -> I
  * @return a new mutable value pointer
  */
 template <class T, class... Args> auto make_mutable_value(Args&&... args) -> MutableValuePtr<T> {
-  return MutableValuePtr<T>(new T(std::forward<Args>(args)...));
+  return detail::make_mutable_value<T, std::is_scalar<T>::value, Args...>(args...);
 }
 
 // Comparison operators
@@ -269,7 +275,8 @@ public:
   // Give the factory function make_mutable_value() access to the private
   // constructor
   // NOLINTNEXTLINE(readability-redundant-declaration)
-  template <class U, class... Args> friend auto reactor::make_mutable_value(Args&&... args) -> reactor::MutableValuePtr<U>;
+  template <class U, class... Args>
+  friend auto reactor::make_mutable_value(Args&&... args) -> reactor::MutableValuePtr<U>;
 };
 
 /**
@@ -460,7 +467,8 @@ public:
   // Give the factory function make_mutable_value() access to the private
   // constructor
   // NOLINTNEXTLINE(readability-redundant-declaration)
-  template <class U, class... Args> friend auto reactor::make_immutable_value(Args&&... args) -> reactor::ImmutableValuePtr<U>;
+  template <class U, class... Args>
+  friend auto reactor::make_immutable_value(Args&&... args) -> reactor::ImmutableValuePtr<U>;
 };
 
 template <class T> class MutableValuePtr<T, true> {
@@ -510,7 +518,8 @@ public:
   // Give the factory function make_mutable_value() access to the private
   // constructor
   // NOLINTNEXTLINE(readability-redundant-declaration)
-  template <class U, class... Args> friend auto reactor::make_mutable_value(Args&&... args) -> reactor::MutableValuePtr<U>;
+  template <class U, class... Args>
+  friend auto reactor::make_mutable_value(Args&&... args) -> reactor::MutableValuePtr<U>;
 };
 
 template <class T> class ImmutableValuePtr<T, true> {
@@ -559,8 +568,25 @@ public:
   // Give the factory function make_mutable_value() access to the private
   // constructor
   // NOLINTNEXTLINE(readability-redundant-declaration)
-  template <class U, class... Args> friend auto reactor::make_immutable_value(Args&&... args) -> reactor::ImmutableValuePtr<U>;
+  template <class U, class... Args>
+  friend auto reactor::make_immutable_value(Args&&... args) -> reactor::ImmutableValuePtr<U>;
 };
+
+template <class T, class... Args> auto make_immutable_value(Args&&... args) -> ImmutableValuePtr<T, false> {
+  return ImmutableValuePtr<T, false>(new T(std::forward<Args>(args)...));
+}
+
+template <class T, class... Args> auto make_immutable_value(Args&&... args) -> ImmutableValuePtr<T, true> {
+  return ImmutableValuePtr<T, true>(T(std::forward<Args>(args)...));
+}
+
+template <class T, class... Args> auto make_mutable_value(Args&&... args) -> MutableValuePtr<T, false> {
+  return MutableValuePtr<T, false>(new T(std::forward<Args>(args)...));
+}
+
+template <class T, class... Args> auto make_mutable_value(Args&&... args) -> MutableValuePtr<T, true> {
+  return MutableValuePtr<T, true>(T(std::forward<Args>(args)...));
+}
 
 } // namespace detail
 
