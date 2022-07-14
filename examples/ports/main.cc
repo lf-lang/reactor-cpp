@@ -89,30 +89,30 @@ public:
 };
 
 auto main() -> int {
-  Environment e{4};
+  Environment env{4};
 
-  Trigger t1{"t1", &e, 1s};
-  Counter c1{"c1", &e};
-  Printer p1{"p1", &e};
-  t1.trigger.bind_to(&c1.trigger);
-  c1.count.bind_to(&p1.value);
+  Trigger trigger1{"t1", &env, 1s};
+  Counter counter1{"c1", &env};
+  Printer printer1{"p1", &env};
+  trigger1.trigger.bind_to(&counter1.trigger);
+  counter1.count.bind_to(&printer1.value);
 
-  Trigger t2{"t2", &e, 2s};
-  Counter c2{"c2", &e};
-  Printer p2{"p2", &e};
-  t2.trigger.bind_to(&c2.trigger);
-  c2.count.bind_to(&p2.value);
+  Trigger trigger2{"t2", &env, 2s};
+  Counter counter2{"c2", &env};
+  Printer printer2{"p2", &env};
+  trigger2.trigger.bind_to(&counter2.trigger);
+  counter2.count.bind_to(&printer2.value);
 
-  Adder add{"add", &e};
-  Printer p_add{"p_add", &e};
-  c1.count.bind_to(&add.i1);
-  c2.count.bind_to(&add.i2);
+  Adder add{"add", &env};
+  Printer p_add{"p_add", &env};
+  counter1.count.bind_to(&add.i1);
+  counter2.count.bind_to(&add.i2);
   add.sum.bind_to(&p_add.value);
 
-  e.assemble();
+  env.assemble();
 
-  auto t = e.startup();
-  t.join();
+  auto thread = env.startup();
+  thread.join();
 
   return 0;
 }
