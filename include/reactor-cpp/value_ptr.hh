@@ -276,8 +276,8 @@ public:
 
   // Give the factory function make_mutable_value() access to the private
   // constructor
-  // NOLINTNEXTLINE(readability-redundant-declaration)
   template <class U, class... Args>
+  // NOLINTNEXTLINE(readability-redundant-declaration)
   friend auto reactor::make_mutable_value(Args&&... args) -> reactor::MutableValuePtr<U>;
 };
 
@@ -468,8 +468,8 @@ public:
 
   // Give the factory function make_mutable_value() access to the private
   // constructor
-  // NOLINTNEXTLINE(readability-redundant-declaration)
   template <class U, class... Args>
+  // NOLINTNEXTLINE(readability-redundant-declaration)
   friend auto reactor::make_immutable_value(Args&&... args) -> reactor::ImmutableValuePtr<U>;
 };
 
@@ -516,8 +516,8 @@ public:
 
   // Give the factory function make_mutable_value() access to the private
   // constructor
-  // NOLINTNEXTLINE(readability-redundant-declaration)
   template <class U, class... Args>
+  // NOLINTNEXTLINE(readability-redundant-declaration)
   friend auto reactor::make_mutable_value(Args&&... args) -> reactor::MutableValuePtr<U>;
 };
 
@@ -563,8 +563,8 @@ public:
 
   // Give the factory function make_mutable_value() access to the private
   // constructor
-  // NOLINTNEXTLINE(readability-redundant-declaration)
   template <class U, class... Args>
+  // NOLINTNEXTLINE(readability-redundant-declaration)
   friend auto reactor::make_immutable_value(Args&&... args) -> reactor::ImmutableValuePtr<U>;
 };
 
