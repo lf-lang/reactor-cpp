@@ -48,7 +48,7 @@ template <class T, class... Args> auto make_immutable_value(Args&&... args) -> I
   if constexpr (std::is_scalar<T>::value) {
     return ImmutableValuePtr<T>(T(std::forward<Args>(args)...));
   } else {
-    return ImmutableValuePtr<T>(new T(std::forward<Args>(args)...));
+    return ImmutableValuePtr<T>(std::make_shared<T>(std::forward<Args>(args)...));
   }
 }
 
@@ -71,7 +71,7 @@ template <class T, class... Args> auto make_mutable_value(Args&&... args) -> Mut
   if constexpr (std::is_scalar<T>::value) {
     return MutableValuePtr<T>(T(std::forward<Args>(args)...));
   } else {
-    return MutableValuePtr<T>(new T(std::forward<Args>(args)...));
+    return MutableValuePtr<T>(std::make_unique<T>(std::forward<Args>(args)...));
   }
 }
 
@@ -167,8 +167,8 @@ private:
    * :func:`make_immutable_copy()` method of :class:`ImmutableValuePtr`.
    * @endrst
    */
-  explicit MutableValuePtr(T* value)
-      : internal_ptr(value) {}
+  explicit MutableValuePtr(std::unique_ptr<T>&& value)
+      : internal_ptr(std::move(value)) {}
 
 public:
   /**
@@ -316,8 +316,8 @@ private:
    * :func:`make_immutable_value()` factory function.
    * @endrst
    */
-  explicit ImmutableValuePtr(T* value)
-      : internal_ptr(value) {}
+  explicit ImmutableValuePtr(std::shared_ptr<T>&& value)
+      : internal_ptr(std::move(value)) {}
 
 public:
   /**
@@ -463,7 +463,7 @@ public:
    * @return a mutable value pointer
    */
   [[nodiscard]] auto get_mutable_copy() const -> MutableValuePtr<T, false> {
-    return MutableValuePtr<T, false>(new T(*internal_ptr));
+    return MutableValuePtr<T, false>(std::make_unique<T>(*internal_ptr));
   }
 
   // Give the factory function make_mutable_value() access to the private
