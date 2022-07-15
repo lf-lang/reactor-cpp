@@ -155,16 +155,16 @@ public:
 };
 
 auto main() -> int {
-  Environment e{4};
+  Environment env{4};
 
-  LeftPedal left_pedal{&e};
-  RightPedal right_pedal{&e};
-  BrakeControl brake_control{&e};
-  EngineControl engine_control{&e};
-  Brake brakes{&e};
-  Engine engine{&e};
+  LeftPedal left_pedal{&env};
+  RightPedal right_pedal{&env};
+  BrakeControl brake_control{&env};
+  EngineControl engine_control{&env};
+  Brake brakes{&env};
+  Engine engine{&env};
 
-  e.assemble();
+  env.assemble();
   left_pedal.angle.bind_to(&brake_control.angle);
   left_pedal.on_off.bind_to(&engine_control.on_off);
   brake_control.force.bind_to(&brakes.force);
@@ -172,10 +172,10 @@ auto main() -> int {
   engine_control.check.bind_to(&right_pedal.check);
   engine_control.torque.bind_to(&engine.torque);
 
-  e.export_dependency_graph("graph.dot");
+  env.export_dependency_graph("graph.dot");
 
-  auto t = e.startup();
-  t.join();
+  auto thread = env.startup();
+  thread.join();
 
   return 0;
 }

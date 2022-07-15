@@ -37,13 +37,13 @@ public:
 };
 
 auto main() -> int {
-  Environment e{4, true};
+  Environment env{4, true};
 
-  Count count{&e};
-  e.assemble();
+  Count count{&env};
+  env.assemble();
 
-  auto t = e.startup();
-  t.join();
+  auto thread = env.startup();
+  thread.join();
 
   return 0;
 }

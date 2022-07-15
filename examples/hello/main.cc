@@ -44,14 +44,14 @@ public:
 };
 
 auto main() -> int {
-  Environment e{4};
+  Environment env{4};
 
-  Hello hello{&e};
-  Timeout timeout{&e, 5s};
-  e.assemble();
+  Hello hello{&env};
+  Timeout timeout{&env, 5s};
+  env.assemble();
 
-  auto t = e.startup();
-  t.join();
+  auto thread = env.startup();
+  thread.join();
 
   return 0;
 }

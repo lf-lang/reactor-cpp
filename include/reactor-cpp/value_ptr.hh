@@ -19,8 +19,122 @@
 
 namespace reactor {
 
-// forward declaration
-template <class T> class ImmutableValuePtr;
+namespace detail {
+
+template <class T, bool is_scalar> class ImmutableValuePtr {};
+template <class T, bool is_scalar> class MutableValuePtr {};
+
+} // namespace detail
+
+template <class T> using MutableValuePtr = detail::MutableValuePtr<T, std::is_scalar<T>::value>;
+template <class T> using ImmutableValuePtr = detail::ImmutableValuePtr<T, std::is_scalar<T>::value>;
+
+/**
+ * @rst
+ * Create an instance of :class:`ImmutableValuePtr`.
+ *
+ * Creates and initializes a new instance of ``T`` and returns a new
+ * :class:`ImmutableValuePtr` owning this value. This is analogues to
+ * :std-memory:`make_shared`
+ * @endrst
+ * @tparam T type of the value to be created
+ * @tparam Args types of ``T``'s constructor arguments. Usually, this does not
+ * need to be given explicitly and will be inferred automatically from the
+ * given ``args``.
+ * @param args Arguments to be forwarded to ``T``'s constructor
+ * @return a new immutable value pointer
+ */
+template <class T, class... Args> auto make_immutable_value(Args&&... args) -> ImmutableValuePtr<T> {
+  if constexpr (std::is_scalar<T>::value) {
+    return ImmutableValuePtr<T>(T(std::forward<Args>(args)...));
+  } else {
+    return ImmutableValuePtr<T>(std::make_shared<T>(std::forward<Args>(args)...));
+  }
+}
+
+/**
+ * @rst
+ * Create an instance of :class:`MutableValuePtr`.
+
+ * Creates and initializes a new instance of ``T`` and returns a new
+ * :class:`MutableValuePtr` owning this value. This is analogues to
+ * :std-memory:`make_unique`.
+ * @endrst
+ * @tparam T type of the value to be created
+ * @tparam Args types of ``T``'s constructor arguments. Usually, this does not
+ * need to be given explicitly and will be inferred automatically from the
+ * given ``args``.
+ * @param args Arguments to be forwarded to ``T``'s constructor
+ * @return a new mutable value pointer
+ */
+template <class T, class... Args> auto make_mutable_value(Args&&... args) -> MutableValuePtr<T> {
+  if constexpr (std::is_scalar<T>::value) {
+    return MutableValuePtr<T>(T(std::forward<Args>(args)...));
+  } else {
+    return MutableValuePtr<T>(std::make_unique<T>(std::forward<Args>(args)...));
+  }
+}
+
+// Comparison operators
+
+template <class T, class U>
+auto operator==(const MutableValuePtr<T>& ptr1, const MutableValuePtr<U>& ptr2) noexcept -> bool {
+  return ptr1.get() == ptr2.get();
+}
+template <class T, class U>
+auto operator==(const ImmutableValuePtr<T>& ptr1, const ImmutableValuePtr<U>& ptr2) noexcept -> bool {
+  return ptr1.get() == ptr2.get();
+}
+template <class T, class U>
+auto operator==(const ImmutableValuePtr<T>& ptr1, const MutableValuePtr<U>& ptr2) noexcept -> bool {
+  return ptr1.get() == ptr2.get();
+}
+template <class T, class U>
+auto operator==(const MutableValuePtr<T>& ptr1, const ImmutableValuePtr<U>& ptr2) noexcept -> bool {
+  return ptr1.get() == ptr2.get();
+}
+template <class T> auto operator==(const MutableValuePtr<T>& ptr1, std::nullptr_t) noexcept -> bool {
+  return ptr1.get() == nullptr;
+}
+template <class T> auto operator==(std::nullptr_t, const MutableValuePtr<T>& ptr2) noexcept -> bool {
+  return ptr2.get() == nullptr;
+}
+template <class T> auto operator==(const ImmutableValuePtr<T>& ptr1, std::nullptr_t) noexcept -> bool {
+  return ptr1.get() == nullptr;
+}
+template <class T> auto operator==(std::nullptr_t, const ImmutableValuePtr<T>& ptr1) noexcept -> bool {
+  return ptr1.get() == nullptr;
+}
+
+template <class T, class U>
+auto operator!=(const MutableValuePtr<T>& ptr1, const MutableValuePtr<U>& ptr2) noexcept -> bool {
+  return ptr1.get() != ptr2.get();
+}
+
+template <class T, class U>
+auto operator!=(const ImmutableValuePtr<T>& ptr1, const ImmutableValuePtr<U>& ptr2) -> bool {
+  return ptr1.get() != ptr2.get();
+}
+template <class T, class U> auto operator!=(const ImmutableValuePtr<T>& ptr1, const MutableValuePtr<U>& ptr2) -> bool {
+  return ptr1.get() != ptr2.get();
+}
+template <class T, class U> auto operator!=(const MutableValuePtr<T>& ptr1, const ImmutableValuePtr<U>& ptr2) -> bool {
+  return ptr1.get() != ptr2.get();
+}
+template <class T> auto operator!=(const MutableValuePtr<T>& ptr1, std::nullptr_t) -> bool {
+  return ptr1.get() != nullptr;
+}
+template <class T> auto operator!=(std::nullptr_t, const MutableValuePtr<T>& ptr1) -> bool {
+  return ptr1.get() != nullptr;
+}
+template <class T> auto operator!=(const ImmutableValuePtr<T>& ptr1, std::nullptr_t) -> bool {
+  return ptr1.get() != nullptr;
+}
+template <class T> auto operator!=(std::nullptr_t, const ImmutableValuePtr<T>& ptr1) -> bool {
+  return ptr1.get() != nullptr;
+}
+
+namespace detail {
 
 /**
  * @brief Smart pointer to a mutable value.
@@ -38,7 +152,7 @@ template <class T> class ImmutableValuePtr;
  * @tparam T type of the value managed by this class
  * @author Christian Menard
  */
-template <class T> class MutableValuePtr { // NOLINT
+template <class T> class MutableValuePtr<T, false> {
 private:
   /// The internal unique smart pointer that this class builds upon.
   std::unique_ptr<T> internal_ptr;
@@ -53,8 +167,8 @@ private:
    * :func:`make_immutable_copy()` method of :class:`ImmutableValuePtr`.
    * @endrst
    */
-  explicit MutableValuePtr(T* value)
-      : internal_ptr(value) {}
+  explicit MutableValuePtr(std::unique_ptr<T>&& value)
+      : internal_ptr(std::move(value)) {}
 
 public:
   /**
@@ -63,8 +177,9 @@ public:
    * Constructs a :class:`MutableValuePtr` that owns nothing.
    * @endrst
    */
-  constexpr MutableValuePtr()
-      : internal_ptr(nullptr) {}
+  constexpr MutableValuePtr() = default;
+  ~MutableValuePtr() = default;
+
   /**
    * Copy constructor (Deleted).
    * @rst
@@ -74,6 +189,7 @@ public:
    * @endrst
    */
   MutableValuePtr(const MutableValuePtr&) = delete;
+
   /**
    * Move constructor.
    * @rst
@@ -83,6 +199,7 @@ public:
    * @endrst
    */
   MutableValuePtr(MutableValuePtr&& ptr) noexcept = default;
+
   /**
    * Constructor from ``nullptr``.
    * @rst
@@ -103,6 +220,17 @@ public:
     this->internal_ptr = std::move(ptr.internal_ptr);
     return *this;
   }
+
+  /**
+   * Copy assignment operator (Deleted).
+   * @rst
+   * Since :class:`MutableValuePtr` enforces unique ownership, there cannot
+   * be two instances pointing to the same object and therefore copying cannot
+   * be allowed,
+   * @endrst
+   */
+  auto operator=(const MutableValuePtr& ptr) -> MutableValuePtr& = delete;
+
   /**
    * Assignment operator from ``nullptr``.
    *
@@ -144,12 +272,13 @@ public:
   // Give ImmutableValuePtr access to the private constructor. This is required
   // for creating a MutableValuePtr from an ImmutableValuePtr in
   // get_mutable_copy()
-  friend class ImmutableValuePtr<T>;
+  friend class ImmutableValuePtr<T, false>;
 
   // Give the factory function make_mutable_value() access to the private
   // constructor
+  template <class U, class... Args>
   // NOLINTNEXTLINE(readability-redundant-declaration)
-  template <class U, class... Args> friend auto make_mutable_value(Args&&... args) -> MutableValuePtr<U>;
+  friend auto reactor::make_mutable_value(Args&&... args) -> reactor::MutableValuePtr<U>;
 };
 
 /**
@@ -169,7 +298,7 @@ public:
  * @tparam T type of the value managed by this class
  * @author Christian Menard
  */
-template <class T> class ImmutableValuePtr { // NOLINT
+template <class T> class ImmutableValuePtr<T, false> {
 public:
   /// A type alias that adds ``const`` to ``T``
   using const_T = typename std::add_const<T>::type;
@@ -187,8 +316,8 @@ private:
    * :func:`make_immutable_value()` factory function.
    * @endrst
    */
-  explicit ImmutableValuePtr(T* value)
-      : internal_ptr(value) {}
+  explicit ImmutableValuePtr(std::shared_ptr<T>&& value)
+      : internal_ptr(std::move(value)) {}
 
 public:
   /**
@@ -199,6 +328,9 @@ public:
    */
   constexpr ImmutableValuePtr()
       : internal_ptr(nullptr) {}
+
+  ~ImmutableValuePtr() = default;
+
   /**
    * Copy constructor.
    * @rst
@@ -235,7 +367,7 @@ public:
    * associated with ``ptr`` to an immutable value.
    * @endrst
    */
-  explicit ImmutableValuePtr(MutableValuePtr<T>&& ptr)
+  explicit ImmutableValuePtr(MutableValuePtr<T, false>&& ptr)
       : internal_ptr(std::move(ptr.internal_ptr)) {}
 
   /**
@@ -330,110 +462,113 @@ public:
    * ``get() == nullptr``.
    * @return a mutable value pointer
    */
-  [[nodiscard]] auto get_mutable_copy() const -> MutableValuePtr<T> { return MutableValuePtr<T>(new T(*internal_ptr)); }
+  [[nodiscard]] auto get_mutable_copy() const -> MutableValuePtr<T, false> {
+    return MutableValuePtr<T, false>(std::make_unique<T>(*internal_ptr));
+  }
 
   // Give the factory function make_mutable_value() access to the private
   // constructor
+  template <class U, class... Args>
   // NOLINTNEXTLINE(readability-redundant-declaration)
-  template <class U, class... Args> friend auto make_immutable_value(Args&&... args) -> ImmutableValuePtr<U>;
+  friend auto reactor::make_immutable_value(Args&&... args) -> reactor::ImmutableValuePtr<U>;
 };
 
-/**
- * @rst
- * Create an instance of :class:`ImmutableValuePtr`.
- *
- * Creates and initializes a new instance of ``T`` and returns a new
- * :class:`ImmutableValuePtr` owning this value. This is analogues to
- * :std-memory:`make_shared`.
- * @endrst
- * @tparam T type of the value to be created
- * @tparam Args types of ``T``'s constructor arguments. Usually, this does not
- * need to be given explicitly and will be inferred automatically from the
- * given ``args``.
- * @param args Arguments to be forwarded to ``T``'s constructor
- * @return a new immutable value pointer
- */
-template <class T, class... Args> auto make_immutable_value(Args&&... args) -> ImmutableValuePtr<T> {
-  return ImmutableValuePtr<T>(new T(std::forward<Args>(args)...));
-}
+template <class T> class MutableValuePtr<T, true> {
+private:
+  T value_{};
+  bool valid_{false};
 
-/**
- * @rst
- * Create an instance of :class:`MutableValuePtr`.
+  explicit MutableValuePtr(const T value)
+      : value_{value}
+      , valid_{true} {}
 
- * Creates and initializes a new instance of ``T`` and returns a new
- * :class:`MutableValuePtr` owning this value. This is analogues to
- * :std-memory:`make_unique`.
- * @endrst
- * @tparam T type of the value to be created
- * @tparam Args types of ``T``'s constructor arguments. Usually, this does not
- * need to be given explicitly and will be inferred automatically from the
- * given ``args``.
- * @param args Arguments to be forwarded to ``T``'s constructor
- * @return a new mutable value pointer
- */
-template <class T, class... Args> auto make_mutable_value(Args&&... args) -> MutableValuePtr<T> {
-  return MutableValuePtr<T>(new T(std::forward<Args>(args)...));
-}
+public:
+  constexpr MutableValuePtr() = default;
+  ~MutableValuePtr() = default;
+  MutableValuePtr(const MutableValuePtr&) = delete;
+  MutableValuePtr(MutableValuePtr&& ptr) noexcept = default;
 
-// Comparison operators
+  explicit constexpr MutableValuePtr(std::nullptr_t) {}
 
-template <class T, class U>
-auto operator==(const MutableValuePtr<T>& ptr1, const MutableValuePtr<U>& ptr2) noexcept -> bool {
-  return ptr1.get() == ptr2.get();
-}
-template <class T, class U>
-auto operator==(const ImmutableValuePtr<T>& ptr1, const ImmutableValuePtr<U>& ptr2) noexcept -> bool {
-  return ptr1.get() == ptr2.get();
-}
-template <class T, class U>
-auto operator==(const ImmutableValuePtr<T>& ptr1, const MutableValuePtr<U>& ptr2) noexcept -> bool {
-  return ptr1.get() == ptr2.get();
-}
-template <class T, class U>
-auto operator==(const MutableValuePtr<T>& ptr1, const ImmutableValuePtr<U>& ptr2) noexcept -> bool {
-  return ptr1.get() == ptr2.get();
-}
-template <class T> auto operator==(const MutableValuePtr<T>& ptr1, std::nullptr_t) noexcept -> bool {
-  return ptr1.get() == nullptr;
-}
-template <class T> auto operator==(std::nullptr_t, const MutableValuePtr<T>& ptr2) noexcept -> bool {
-  return ptr2.get() == nullptr;
-}
-template <class T> auto operator==(const ImmutableValuePtr<T>& ptr1, std::nullptr_t) noexcept -> bool {
-  return ptr1.get() == nullptr;
-}
-template <class T> auto operator==(std::nullptr_t, const ImmutableValuePtr<T>& ptr1) noexcept -> bool {
-  return ptr1.get() == nullptr;
-}
+  auto operator=(MutableValuePtr&& ptr) noexcept -> MutableValuePtr& = default;
+  auto operator=(const MutableValuePtr& ptr) -> MutableValuePtr& = delete;
 
-template <class T, class U>
-auto operator!=(const MutableValuePtr<T>& ptr1, const MutableValuePtr<U>& ptr2) noexcept -> bool {
-  return ptr1.get() != ptr2.get();
-}
+  auto operator=(std::nullptr_t) noexcept -> MutableValuePtr& {
+    valid_ = false;
+    return *this;
+  }
 
-template <class T, class U>
-auto operator!=(const ImmutableValuePtr<T>& ptr1, const ImmutableValuePtr<U>& ptr2) -> bool {
-  return ptr1.get() != ptr2.get();
-}
-template <class T, class U> auto operator!=(const ImmutableValuePtr<T>& ptr1, const MutableValuePtr<U>& ptr2) -> bool {
-  return ptr1.get() != ptr2.get();
-}
-template <class T, class U> auto operator!=(const MutableValuePtr<T>& ptr1, const ImmutableValuePtr<U>& ptr2) -> bool {
-  return ptr1.get() != ptr2.get();
-}
-template <class T> auto operator!=(const MutableValuePtr<T>& ptr1, std::nullptr_t) -> bool {
-  return ptr1.get() != nullptr;
-}
-template <class T> auto operator!=(std::nullptr_t, const MutableValuePtr<T>& ptr1) -> bool {
-  return ptr1.get() != nullptr;
-}
-template <class T> auto operator!=(const ImmutableValuePtr<T>& ptr1, std::nullptr_t) -> bool {
-  return ptr1.get() != nullptr;
-}
-template <class T> auto operator!=(std::nullptr_t, const ImmutableValuePtr<T>& ptr1) -> bool {
-  return ptr1.get() != nullptr;
-}
+  [[nodiscard]] auto get() noexcept -> T* { return valid_ ? &value_ : nullptr; }
+  [[nodiscard]] auto get() const noexcept -> const T* { return valid_ ? &value_ : nullptr; }
+
+  explicit operator bool() const { return valid_; }
+
+  auto operator*() -> T& { return value_; }
+  auto operator*() const -> const T& { return value_; }
+
+  auto operator->() -> T* { return get(); }
+  auto operator->() const -> const T* { return get(); }
+
+  // Give ImmutableValuePtr access to the private constructor. This is required
+  // for creating a MutableValuePtr from an ImmutableValuePtr in
+  // get_mutable_copy()
+  friend class ImmutableValuePtr<T, true>;
+
+  // Give the factory function make_mutable_value() access to the private
+  // constructor
+  template <class U, class... Args>
+  // NOLINTNEXTLINE(readability-redundant-declaration)
+  friend auto reactor::make_mutable_value(Args&&... args) -> reactor::MutableValuePtr<U>;
+};
+
+template <class T> class ImmutableValuePtr<T, true> {
+public:
+  /// A type alias that adds ``const`` to ``T``
+  using const_T = typename std::add_const<T>::type;
+
+private:
+  T value_{};
+  bool valid_{false};
+
+  explicit ImmutableValuePtr(T value)
+      : value_{value}
+      , valid_{true} {}
+
+public:
+  constexpr ImmutableValuePtr() = default;
+  ~ImmutableValuePtr() = default;
+  ImmutableValuePtr(const ImmutableValuePtr& ptr) = default;
+  ImmutableValuePtr(ImmutableValuePtr&& ptr) noexcept = default;
+
+  explicit constexpr ImmutableValuePtr(std::nullptr_t) {}
+  explicit ImmutableValuePtr(MutableValuePtr<T, false>&& ptr)
+      : value_(ptr.value_)
+      , valid_(ptr.valid_) {}
+
+  auto operator=(std::nullptr_t) -> ImmutableValuePtr& {
+    this->valid_ = false;
+    return *this;
+  }
+  auto operator=(const ImmutableValuePtr& ptr) -> ImmutableValuePtr& = default;
+  auto operator=(ImmutableValuePtr&& ptr) noexcept -> ImmutableValuePtr& = default;
+
+  [[nodiscard]] auto get() const -> const_T* { return valid_ ? &value_ : nullptr; }
+
+  explicit operator bool() const { return valid_; }
+
+  auto operator*() const -> const_T& { return value_; }
+  auto operator->() const -> const_T* { return get(); }
+
+  [[nodiscard]] auto get_mutable_copy() const -> MutableValuePtr<T, true> { return MutableValuePtr<T, true>(get()); }
+
+  // Give the factory function make_mutable_value() access to the private
+  // constructor
+  template <class U, class... Args>
+  // NOLINTNEXTLINE(readability-redundant-declaration)
+  friend auto reactor::make_immutable_value(Args&&... args) -> reactor::ImmutableValuePtr<U>;
+};
+
+} // namespace detail
 
 } // namespace reactor
 
