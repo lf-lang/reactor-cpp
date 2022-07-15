@@ -1,0 +1,18 @@
+.. _exhale_class_classreactor_1_1detail_1_1ImmutableValuePtr_3_01T_00_01true_01_4:
+
+Template Class ImmutableValuePtr< T, true >
+===========================================
+
+- Defined in :ref:`file_include_reactor-cpp_value_ptr.hh`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: reactor::detail::ImmutableValuePtr< T, true >
+   :project: reactor-cpp
+   :members:
+   :protected-members:
+   :private-members:
+   :undoc-members:

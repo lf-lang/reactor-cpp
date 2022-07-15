@@ -53,14 +53,24 @@ Namespaces
 
 - :ref:`namespace_reactor`
 
+- :ref:`namespace_reactor__detail`
+
 
 Classes
 -------
 
 
-- :ref:`exhale_class_classreactor_1_1ImmutableValuePtr`
+- :ref:`exhale_class_classreactor_1_1detail_1_1ImmutableValuePtr`
 
-- :ref:`exhale_class_classreactor_1_1MutableValuePtr`
+- :ref:`exhale_class_classreactor_1_1detail_1_1ImmutableValuePtr_3_01T_00_01false_01_4`
+
+- :ref:`exhale_class_classreactor_1_1detail_1_1ImmutableValuePtr_3_01T_00_01true_01_4`
+
+- :ref:`exhale_class_classreactor_1_1detail_1_1MutableValuePtr`
+
+- :ref:`exhale_class_classreactor_1_1detail_1_1MutableValuePtr_3_01T_00_01false_01_4`
+
+- :ref:`exhale_class_classreactor_1_1detail_1_1MutableValuePtr_3_01T_00_01true_01_4`
 
 
 Functions
@@ -70,6 +80,8 @@ Functions
 - :ref:`exhale_function_namespacereactor_1acbe803639c9b25417767814a5887a2cb`
 
 - :ref:`exhale_function_namespacereactor_1a423923d74709265265a52445c1bfd35c`
+
+- :ref:`exhale_function_namespacereactor_1ac0edb361b709120291c4541f38b3398a`
 
 - :ref:`exhale_function_namespacereactor_1ac9f29488c533b424daa5d5650c94f172`
 
@@ -85,21 +97,28 @@ Functions
 
 - :ref:`exhale_function_namespacereactor_1a5383c6edf696c4a4178f4aee118e996d`
 
-- :ref:`exhale_function_namespacereactor_1ac0edb361b709120291c4541f38b3398a`
+- :ref:`exhale_function_namespacereactor_1a681bfde16a0a0e82e3c5d73bd0b773bb`
+
+- :ref:`exhale_function_namespacereactor_1af5416e608b92050f7588ac769c41b726`
 
 - :ref:`exhale_function_namespacereactor_1a4fcfbb5731c36115484d5cf4d89043f7`
-
-- :ref:`exhale_function_namespacereactor_1ae9812a13207521d1f890d05898a3d915`
 
 - :ref:`exhale_function_namespacereactor_1af62e616bf709f0f8845a65e1670cc15c`
 
 - :ref:`exhale_function_namespacereactor_1addeb5a9fd0b4ded0a0a5b586d88ce447`
 
-- :ref:`exhale_function_namespacereactor_1a5778cc8f6a62e1c0c382d535b47daa95`
-
 - :ref:`exhale_function_namespacereactor_1a67782e18adb2c48110108582a1afd68b`
 
-- :ref:`exhale_function_namespacereactor_1a681bfde16a0a0e82e3c5d73bd0b773bb`
+- :ref:`exhale_function_namespacereactor_1a5778cc8f6a62e1c0c382d535b47daa95`
 
-- :ref:`exhale_function_namespacereactor_1af5416e608b92050f7588ac769c41b726`
+- :ref:`exhale_function_namespacereactor_1ae9812a13207521d1f890d05898a3d915`
+
+
+Typedefs
+--------
+
+
+- :ref:`exhale_typedef_namespacereactor_1a5d43d70a734f81ffe4c1f8960ed161b8`
+
+- :ref:`exhale_typedef_namespacereactor_1a71beb4e9cb1b0a75b5981513005280ee`
 

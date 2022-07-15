@@ -1,0 +1,14 @@
+.. _exhale_typedef_namespacereactor_1a5d43d70a734f81ffe4c1f8960ed161b8:
+
+Typedef ImmutableValuePtr
+=========================
+
+- Defined in :ref:`file_include_reactor-cpp_value_ptr.hh`
+
+
+Typedef Documentation
+---------------------
+
+
+.. doxygentypedef:: ImmutableValuePtr
+   :project: reactor-cpp

@@ -1,7 +1,7 @@
-.. _exhale_class_classreactor_1_1MutableValuePtr:
+.. _exhale_class_classreactor_1_1detail_1_1ImmutableValuePtr:
 
-Template Class MutableValuePtr
-==============================
+Template Class ImmutableValuePtr
+================================
 
 - Defined in :ref:`file_include_reactor-cpp_value_ptr.hh`
 
@@ -10,7 +10,7 @@ Class Documentation
 -------------------
 
 
-.. doxygenclass:: reactor::MutableValuePtr
+.. doxygenclass:: reactor::detail::ImmutableValuePtr
    :project: reactor-cpp
    :members:
    :protected-members:
