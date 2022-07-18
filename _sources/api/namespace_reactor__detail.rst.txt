@@ -28,3 +28,40 @@ Classes
 - :ref:`exhale_class_classreactor_1_1detail_1_1MutableValuePtr_3_01T_00_01false_01_4`
 
 - :ref:`exhale_class_classreactor_1_1detail_1_1MutableValuePtr_3_01T_00_01true_01_4`
+
+
+Functions
+---------
+
+
+- :ref:`exhale_function_namespacereactor_1_1detail_1a550e6ee3d03b08171376cf881838ed08`
+
+- :ref:`exhale_function_namespacereactor_1_1detail_1a8b73b202734bab7f81ffa2344d3d8af0`
+
+- :ref:`exhale_function_namespacereactor_1_1detail_1a455fa691a02bb48c21c1a32a66ef45c2`
+
+- :ref:`exhale_function_namespacereactor_1_1detail_1aca9665dc765dc78c524b64385ad25461`
+
+- :ref:`exhale_function_namespacereactor_1_1detail_1a67bc411905f4846a7264f14ec6da2553`
+
+- :ref:`exhale_function_namespacereactor_1_1detail_1a5c8fed1db1a5f3a7b773d7dfbd781fea`
+
+- :ref:`exhale_function_namespacereactor_1_1detail_1af6300cb7d36971812559b4f23a3325a6`
+
+- :ref:`exhale_function_namespacereactor_1_1detail_1abbb2c6c775cfbd8aae55eb07e76ecafc`
+
+- :ref:`exhale_function_namespacereactor_1_1detail_1aab1b95318c0a71c8571ed48c26c108e5`
+
+- :ref:`exhale_function_namespacereactor_1_1detail_1ac02b25b82c732813f0d84a6d55bc2d4b`
+
+- :ref:`exhale_function_namespacereactor_1_1detail_1aee88d46af2268c3cae7b938aab34154d`
+
+- :ref:`exhale_function_namespacereactor_1_1detail_1a75f84bf235d6b1637076a77927fb33d4`
+
+- :ref:`exhale_function_namespacereactor_1_1detail_1a4009710d3f43951439229c44e4a6cb4d`
+
+- :ref:`exhale_function_namespacereactor_1_1detail_1a495aecaa129518eba45a7e17808997df`
+
+- :ref:`exhale_function_namespacereactor_1_1detail_1ad90988006d9994adaf6937dcf0ce8765`
+
+- :ref:`exhale_function_namespacereactor_1_1detail_1aa99c836d0f4965edb8edba9aabb600fa`

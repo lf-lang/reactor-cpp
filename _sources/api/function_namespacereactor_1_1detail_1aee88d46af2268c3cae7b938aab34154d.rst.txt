@@ -1,0 +1,14 @@
+.. _exhale_function_namespacereactor_1_1detail_1aee88d46af2268c3cae7b938aab34154d:
+
+Template Function operator==(const MutableValuePtr<T, scalar>&, std::nullptr_t)
+===============================================================================
+
+- Defined in :ref:`file_include_reactor-cpp_value_ptr.hh`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: operator==(const MutableValuePtr<T, scalar>&, std::nullptr_t)
+   :project: reactor-cpp
