@@ -74,10 +74,10 @@ public:
   auto create_worker() -> Worker<DefaultSchedulingPolicy> { return {*this, identity_counter++}; }
 };
 
+using DefaultWorker = Worker<DefaultSchedulingPolicy>;
+
 class ReadyQueue {
 private:
-  using Worker = Worker<DefaultSchedulingPolicy>;
-
   std::vector<Reaction*> queue_{};
   std::atomic<std::ptrdiff_t> size_{0};
   Semaphore sem_{0};
@@ -113,15 +113,13 @@ using EventMap = std::map<BaseAction*, std::function<void(void)>>;
 
 class Scheduler { // NOLINT
 private:
-  using Worker = Worker<DefaultSchedulingPolicy>;
-
   DefaultSchedulingPolicy policy_;
 
   const bool using_workers_;
   LogicalTime logical_time_{};
 
   Environment* environment_;
-  std::vector<Worker> workers_{};
+  std::vector<DefaultWorker> workers_{};
 
   std::mutex scheduling_mutex_;
   std::unique_lock<std::mutex> scheduling_lock_{scheduling_mutex_, std::defer_lock};

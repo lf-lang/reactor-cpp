@@ -71,9 +71,9 @@ auto ReadyQueue::pop() -> Reaction* {
 
   // If there is no ready reaction available, wait until there is one.
   while (old_size <= 0) {
-    log::Debug() << "(Worker " << Worker::current_worker_id() << ") Wait for work";
+    log::Debug() << "(Worker " << DefaultWorker::current_worker_id() << ") Wait for work";
     sem_.acquire();
-    log::Debug() << "(Worker " << Worker::current_worker_id() << ") Waking up";
+    log::Debug() << "(Worker " << DefaultWorker::current_worker_id() << ") Waking up";
     old_size = size_.fetch_sub(1, std::memory_order_acq_rel);
     // FIXME: Protect against underflow?
   }
@@ -344,7 +344,7 @@ void Scheduler::set_port(BasePort* port) {
   // We do not check here if port is already in the list. This means clean()
   // could be called multiple times for a single port. However, calling
   // clean() multiple time is not harmful and more efficient then checking if
-  set_ports_[Worker::current_worker_id()].push_back(port);
+  set_ports_[DefaultWorker::current_worker_id()].push_back(port);
 
   // recursively search for triggered reactions
   set_port_helper(port);
@@ -352,7 +352,7 @@ void Scheduler::set_port(BasePort* port) {
 
 void Scheduler::set_port_helper(BasePort* port) {
   for (auto* reaction : port->triggers()) {
-    triggered_reactions_[Worker::current_worker_id()].push_back(reaction);
+    triggered_reactions_[DefaultWorker::current_worker_id()].push_back(reaction);
   }
   for (auto* binding : port->outward_bindings()) {
     set_port_helper(binding);
