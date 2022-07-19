@@ -20,34 +20,6 @@
 
 namespace reactor {
 
-void DefaultSchedulingPolicy::worker_function(const Worker<DefaultSchedulingPolicy>& worker) {
-  if (worker.id() == 0) {
-    log::Debug() << "(Worker 0) do the initial scheduling";
-    scheduler_.schedule();
-  }
-
-  while (true) {
-    // wait for a ready reaction
-    auto* reaction = ready_queue_.pop();
-
-    // receiving a nullptr indicates that the worker should terminate
-    if (reaction == nullptr) {
-      break;
-    }
-
-    // execute the reaction
-    worker.execute_reaction(reaction);
-
-    // was this the very last reaction?
-    if (scheduler_.reactions_to_process_.fetch_sub(1, std::memory_order_acq_rel) == 1) {
-      // Yes, then schedule. The atomic decrement above ensures that only one
-      // thread enters this block.
-      scheduler_.schedule();
-    }
-    // continue otherwise
-  }
-}
-
 void Scheduler::schedule() noexcept {
   bool found_ready_reactions = schedule_ready_reactions();
 
@@ -63,53 +35,6 @@ void Scheduler::schedule() noexcept {
       terminate_all_workers();
       break;
     }
-  }
-}
-
-auto DefaultSchedulingPolicy::ReadyQueue::pop() -> Reaction* {
-  auto old_size = size_.fetch_sub(1, std::memory_order_acq_rel);
-
-  // If there is no ready reaction available, wait until there is one.
-  while (old_size <= 0) {
-    log::Debug() << "(Worker " << DefaultWorker::current_worker_id() << ") Wait for work";
-    sem_.acquire();
-    log::Debug() << "(Worker " << DefaultWorker::current_worker_id() << ") Waking up";
-    old_size = size_.fetch_sub(1, std::memory_order_acq_rel);
-    // FIXME: Protect against underflow?
-  }
-
-  auto pos = old_size - 1;
-  return queue_[pos];
-}
-
-void DefaultSchedulingPolicy::ReadyQueue::fill_up(std::vector<Reaction*>& ready_reactions) {
-  // clear the internal queue and swap contents
-  queue_.clear();
-  queue_.swap(ready_reactions);
-
-  // update the atomic size counter and release the semaphore to wake up
-  // waiting worker threads
-  auto new_size = static_cast<std::ptrdiff_t>(queue_.size());
-  auto old_size = size_.exchange(new_size, std::memory_order_acq_rel);
-
-  // calculate how many workers to wake up. -old_size indicates the number of
-  // workers who started waiting since the last update.
-  // We want to wake up at most all the waiting workers. If we would release
-  // more, other workers that are out of work would not block when acquiring
-  // the semaphore.
-  // Also, we do not want to wake up more workers than there is work. new_size
-  // indicates the number of ready reactions. Since there is always at least
-  // one worker running running, new_size - running_workers indicates the
-  // number of additional workers needed to process all reactions.
-  waiting_workers_ += -old_size;
-  auto running_workers = num_workers_ - waiting_workers_;
-  auto workers_to_wakeup = std::min(waiting_workers_, new_size - running_workers);
-
-  // wakeup other workers_
-  if (workers_to_wakeup > 0) {
-    waiting_workers_ -= workers_to_wakeup;
-    log::Debug() << "Wakeup " << workers_to_wakeup << " workers";
-    sem_.release(static_cast<int>(workers_to_wakeup));
   }
 }
 

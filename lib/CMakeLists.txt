@@ -1,6 +1,7 @@
 set(SOURCE_FILES
     action.cc
     assert.cc
+    default_scheduling_policy.cc
     environment.cc
     logical_time.cc
     port.cc

@@ -19,6 +19,9 @@ class Reactor;
 class Scheduler;
 class Tag;
 
+class DefaultSchedulingPolicy;
+template <class SchedulingPolicy> class Worker;
+
 template <class T> class Action;
 template <class T> class Port;
 
