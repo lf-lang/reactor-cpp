@@ -20,7 +20,7 @@
 
 namespace reactor {
 
-void DefaultSchedulingPolicy::worker_function(const Worker<DefaultSchedulingPolicy>& worker) const {
+void DefaultSchedulingPolicy::worker_function(const Worker<DefaultSchedulingPolicy>& worker) {
   if (worker.id() == 0) {
     log::Debug() << "(Worker 0) do the initial scheduling";
     scheduler_.schedule();
@@ -28,7 +28,7 @@ void DefaultSchedulingPolicy::worker_function(const Worker<DefaultSchedulingPoli
 
   while (true) {
     // wait for a ready reaction
-    auto* reaction = scheduler_.ready_queue_.pop();
+    auto* reaction = ready_queue_.pop();
 
     // receiving a nullptr indicates that the worker should terminate
     if (reaction == nullptr) {
@@ -66,7 +66,7 @@ void Scheduler::schedule() noexcept {
   }
 }
 
-auto ReadyQueue::pop() -> Reaction* {
+auto DefaultSchedulingPolicy::ReadyQueue::pop() -> Reaction* {
   auto old_size = size_.fetch_sub(1, std::memory_order_acq_rel);
 
   // If there is no ready reaction available, wait until there is one.
@@ -82,7 +82,7 @@ auto ReadyQueue::pop() -> Reaction* {
   return queue_[pos];
 }
 
-void ReadyQueue::fill_up(std::vector<Reaction*>& ready_reactions) {
+void DefaultSchedulingPolicy::ReadyQueue::fill_up(std::vector<Reaction*>& ready_reactions) {
   // clear the internal queue and swap contents
   queue_.clear();
   queue_.swap(ready_reactions);
@@ -304,10 +304,9 @@ void Scheduler::next() { // NOLINT
 }
 
 Scheduler::Scheduler(Environment* env)
-    : policy_(*this)
+    : policy_(*this, env->num_workers())
     , using_workers_(env->num_workers() > 1)
-    , environment_(env)
-    , ready_queue_(env->num_workers()) {}
+    , environment_(env) {}
 
 Scheduler::~Scheduler() = default;
 

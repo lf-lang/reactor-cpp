@@ -65,49 +65,54 @@ class DefaultSchedulingPolicy {
   Scheduler& scheduler_;
   std::size_t identity_counter{0};
 
-public:
-  DefaultSchedulingPolicy(Scheduler& scheduler)
-      : scheduler_(scheduler) {}
+  class ReadyQueue {
+  private:
+    std::vector<Reaction*> queue_{};
+    std::atomic<std::ptrdiff_t> size_{0};
+    Semaphore sem_{0};
+    std::ptrdiff_t waiting_workers_{0};
+    const unsigned int num_workers_;
 
-  void worker_function(const Worker<DefaultSchedulingPolicy>& worker) const;
+  public:
+    explicit ReadyQueue(unsigned num_workers)
+        : num_workers_(num_workers) {}
+
+    /**
+     * Retrieve a ready reaction from the queue.
+     *
+     * This method may be called concurrently. In case the queue is empty, the
+     * method blocks and waits until a ready reaction becomes available.
+     */
+    auto pop() -> Reaction*;
+
+    /**
+     * Fill the queue up with ready reactions.
+     *
+     * This method assumes that the internal queue is empty. It moves all
+     * reactions from the provided `ready_reactions` vector to the internal
+     * queue, leaving `ready_reactions` empty.
+     *
+     * Note that this method is not thread-safe. The caller needs to ensure that
+     * no other thread will try to read from the queue during this operation.
+     */
+    void fill_up(std::vector<Reaction*>& ready_reactions);
+  };
+
+  ReadyQueue ready_queue_;
+
+public:
+  // FIXME better to pass the environment and use num_workers from there, but for this we need to first fully separate
+  // the scheduler implementation from the policy.
+  DefaultSchedulingPolicy(Scheduler& scheduler, std::size_t num_workers)
+      : scheduler_(scheduler)
+      , ready_queue_(num_workers) {}
+
+  void worker_function(const Worker<DefaultSchedulingPolicy>& worker);
 
   auto create_worker() -> Worker<DefaultSchedulingPolicy> { return {*this, identity_counter++}; }
 };
 
 using DefaultWorker = Worker<DefaultSchedulingPolicy>;
-
-class ReadyQueue {
-private:
-  std::vector<Reaction*> queue_{};
-  std::atomic<std::ptrdiff_t> size_{0};
-  Semaphore sem_{0};
-  std::ptrdiff_t waiting_workers_{0};
-  const unsigned int num_workers_;
-
-public:
-  explicit ReadyQueue(unsigned num_workers)
-      : num_workers_(num_workers) {}
-
-  /**
-   * Retrieve a ready reaction from the queue.
-   *
-   * This method may be called concurrently. In case the queue is empty, the
-   * method blocks and waits until a ready reaction becomes available.
-   */
-  auto pop() -> Reaction*;
-
-  /**
-   * Fill the queue up with ready reactions.
-   *
-   * This method assumes that the internal queue is empty. It moves all
-   * reactions from the provided `ready_reactions` vector to the internal
-   * queue, leaving `ready_reactions` empty.
-   *
-   * Note that this method is not thread-safe. The caller needs to ensure that
-   * no other thread will try to read from the queue during this operation.
-   */
-  void fill_up(std::vector<Reaction*>& ready_reactions);
-};
 
 using EventMap = std::map<BaseAction*, std::function<void(void)>>;
 
@@ -134,7 +139,6 @@ private:
   std::vector<std::vector<Reaction*>> reaction_queue_;
   unsigned int reaction_queue_pos_{std::numeric_limits<unsigned>::max()};
 
-  ReadyQueue ready_queue_;
   std::atomic<std::ptrdiff_t> reactions_to_process_{0}; // NOLINT
 
   std::atomic<bool> stop_{false};
