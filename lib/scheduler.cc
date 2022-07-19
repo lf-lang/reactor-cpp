@@ -20,29 +20,8 @@
 
 namespace reactor {
 
-// NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
-thread_local const Worker* Worker::current_worker = nullptr;
-
-Worker::Worker(Worker&& work) // NOLINT(performance-noexcept-move-constructor)
-    : scheduler_{work.scheduler_}
-    , identity_{work.identity_} {
-  // Need to provide the move constructor in order to organize workers in a
-  // std::vector. However, moving is not save if the thread is already running,
-  // thus we throw an exception here if the worker is moved but the
-  // internal thread is already running.
-
-  if (work.thread_.joinable()) {
-    throw std::runtime_error{"Running workers cannot be moved!"};
-  }
-}
-
-void Worker::work() const {
-  // initialize the current worker thread local variable
-  current_worker = this;
-
-  log::Debug() << "(Worker " << this->identity_ << ") Starting";
-
-  if (identity_ == 0) {
+void DefaultSchedulingPolicy::worker_function(const Worker<DefaultSchedulingPolicy>& worker) const {
+  if (worker.id() == 0) {
     log::Debug() << "(Worker 0) do the initial scheduling";
     scheduler_.schedule();
   }
@@ -57,7 +36,7 @@ void Worker::work() const {
     }
 
     // execute the reaction
-    execute_reaction(reaction);
+    worker.execute_reaction(reaction);
 
     // was this the very last reaction?
     if (scheduler_.reactions_to_process_.fetch_sub(1, std::memory_order_acq_rel) == 1) {
@@ -67,17 +46,6 @@ void Worker::work() const {
     }
     // continue otherwise
   }
-
-  log::Debug() << "(Worker " << identity_ << ") terminates";
-}
-
-void Worker::execute_reaction(Reaction* reaction) const {
-  log::Debug() << "(Worker " << identity_ << ") "
-               << "execute reaction " << reaction->fqn();
-
-  tracepoint(reactor_cpp, reaction_execution_starts, id, reaction->fqn(), scheduler.logical_time());
-  reaction->trigger();
-  tracepoint(reactor_cpp, reaction_execution_finishes, id, reaction->fqn(), scheduler.logical_time());
 }
 
 void Scheduler::schedule() noexcept {
@@ -212,13 +180,13 @@ void Scheduler::start() {
   // be moved.
   workers_.reserve(num_workers);
   for (unsigned i = 0; i < num_workers; i++) {
-    workers_.emplace_back(*this, i);
-    workers_.back().start_thread();
+    workers_.emplace_back(policy_.create_worker());
+    workers_.back().start();
   }
 
   // join all worker threads
   for (auto& worker : workers_) {
-    worker.join_thread();
+    worker.join();
   }
 }
 
@@ -336,7 +304,8 @@ void Scheduler::next() { // NOLINT
 }
 
 Scheduler::Scheduler(Environment* env)
-    : using_workers_(env->num_workers() > 1)
+    : policy_(*this)
+    , using_workers_(env->num_workers() > 1)
     , environment_(env)
     , ready_queue_(env->num_workers()) {}
 

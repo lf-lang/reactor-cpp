@@ -10,6 +10,7 @@
 #define REACTOR_CPP_SCHEDULER_HH
 
 #include <condition_variable>
+#include <cstddef>
 #include <functional>
 #include <future>
 #include <map>
@@ -26,12 +27,11 @@ namespace reactor {
 
 // forward declarations
 class Scheduler;
-class Worker;
 
-class Worker { // NOLINT
-public:
-  Scheduler& scheduler_;
-  const unsigned int identity_{0};
+template <class SchedulingPolicy> class Worker {
+private:
+  SchedulingPolicy& policy_;
+  const std::size_t identity_{0};
   std::thread thread_{};
 
   // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
@@ -40,20 +40,44 @@ public:
   void work() const;
   void execute_reaction(Reaction* reaction) const;
 
-  Worker(Scheduler& scheduler, unsigned int identity)
-      : scheduler_{scheduler}
+public:
+  Worker(SchedulingPolicy& policy, std::size_t identity)
+      : policy_{policy}
       , identity_{identity} {}
   Worker(Worker&& worker); // NOLINT(performance-noexcept-move-constructor)
   Worker(const Worker& worker) = delete;
+  ~Worker() = default;
 
-  void start_thread() { thread_ = std::thread(&Worker::work, this); }
-  void join_thread() { thread_.join(); }
+  auto operator=(const Worker& worker) -> Worker& = delete;
+  auto operator=(Worker&& worker) -> Worker& = delete;
+
+  void start() { thread_ = std::thread(&Worker::work, this); }
+  void join() { thread_.join(); }
+
+  [[nodiscard]] auto id() const -> std::size_t { return identity_; }
 
   static auto current_worker_id() -> unsigned { return current_worker->identity_; }
+
+  friend SchedulingPolicy;
+};
+
+class DefaultSchedulingPolicy {
+  Scheduler& scheduler_;
+  std::size_t identity_counter{0};
+
+public:
+  DefaultSchedulingPolicy(Scheduler& scheduler)
+      : scheduler_(scheduler) {}
+
+  void worker_function(const Worker<DefaultSchedulingPolicy>& worker) const;
+
+  auto create_worker() -> Worker<DefaultSchedulingPolicy> { return {*this, identity_counter++}; }
 };
 
 class ReadyQueue {
 private:
+  using Worker = Worker<DefaultSchedulingPolicy>;
+
   std::vector<Reaction*> queue_{};
   std::atomic<std::ptrdiff_t> size_{0};
   Semaphore sem_{0};
@@ -89,6 +113,10 @@ using EventMap = std::map<BaseAction*, std::function<void(void)>>;
 
 class Scheduler { // NOLINT
 private:
+  using Worker = Worker<DefaultSchedulingPolicy>;
+
+  DefaultSchedulingPolicy policy_;
+
   const bool using_workers_;
   LogicalTime logical_time_{};
 
@@ -137,9 +165,12 @@ public:
   void start();
   void stop();
 
-  friend Worker;
+  // FIXME: this needs to be removed in the final version, as we cannot make all policies friends...
+  friend DefaultSchedulingPolicy;
 };
 
 } // namespace reactor
+
+#include "impl/scheduler_impl.hh"
 
 #endif // REACTOR_CPP_SCHEDULER_HH
