@@ -7,7 +7,6 @@ set(SOURCE_FILES
     port.cc
     reaction.cc
     reactor.cc
-    scheduler.cc
     time.cc
     )
 

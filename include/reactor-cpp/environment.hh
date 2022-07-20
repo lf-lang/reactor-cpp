@@ -13,8 +13,10 @@
 #include <string>
 #include <vector>
 
-#include "reactor.hh"
-#include "scheduler.hh"
+#include "reactor-cpp/default_scheduling_policy.hh"
+#include "reactor-cpp/fwd.hh"
+#include "reactor-cpp/reactor.hh"
+#include "reactor-cpp/scheduler.hh"
 
 namespace reactor {
 
@@ -38,7 +40,7 @@ private:
   std::set<Reaction*> reactions_{};
   std::vector<Dependency> dependencies_{};
 
-  Scheduler scheduler_;
+  Scheduler<DefaultSchedulingPolicy> scheduler_;
   Phase phase_{Phase::Construction};
   TimePoint start_time_{};
 
@@ -70,9 +72,9 @@ public:
 
   [[nodiscard]] auto top_level_reactors() const noexcept -> const auto& { return top_level_reactors_; }
   [[nodiscard]] auto phase() const noexcept -> Phase { return phase_; }
-  [[nodiscard]] auto scheduler() const noexcept -> const Scheduler* { return &scheduler_; }
+  [[nodiscard]] auto scheduler() const noexcept -> const Scheduler<DefaultSchedulingPolicy>* { return &scheduler_; }
 
-  auto scheduler() noexcept -> Scheduler* { return &scheduler_; }
+  auto scheduler() noexcept -> Scheduler<DefaultSchedulingPolicy>* { return &scheduler_; }
 
   [[nodiscard]] auto logical_time() const noexcept -> const LogicalTime& { return scheduler_.logical_time(); }
   [[nodiscard]] auto start_time() const noexcept -> const TimePoint& { return start_time_; }

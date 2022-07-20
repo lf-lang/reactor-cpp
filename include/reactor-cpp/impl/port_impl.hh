@@ -9,8 +9,8 @@
 #ifndef REACTOR_CPP_IMPL_PORT_IMPL_HH
 #define REACTOR_CPP_IMPL_PORT_IMPL_HH
 
-#include "../assert.hh"
-#include "../environment.hh"
+#include "reactor-cpp/assert.hh"
+#include "reactor-cpp/environment.hh"
 
 namespace reactor {
 

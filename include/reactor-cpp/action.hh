@@ -44,7 +44,7 @@ public:
   [[nodiscard]] auto inline min_delay() const noexcept -> Duration { return min_delay_; }
 
   friend class Reaction;
-  friend class Scheduler;
+  template<class SchedulingPolicy> friend class Scheduler;
 };
 
 template <class T> class Action : public BaseAction {
@@ -153,7 +153,5 @@ public:
 };
 
 } // namespace reactor
-
-#include "impl/action_impl.hh"
 
 #endif // REACTOR_CPP_ACTION_HH

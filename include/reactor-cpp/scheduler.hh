@@ -24,9 +24,6 @@
 
 namespace reactor {
 
-// forward declarations
-class Scheduler;
-
 template <class SchedulingPolicy> class Worker {
 private:
   SchedulingPolicy& policy_;
@@ -34,7 +31,7 @@ private:
   std::thread thread_{};
 
   // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
-  static thread_local const Worker* current_worker;
+  static thread_local std::size_t current_worker_id_;
 
   void work() const;
   void execute_reaction(Reaction* reaction) const;
@@ -55,25 +52,24 @@ public:
 
   [[nodiscard]] auto id() const -> std::size_t { return identity_; }
 
-  static auto current_worker_id() -> unsigned { return current_worker->identity_; }
+  static auto current_worker_id() -> unsigned;
 
   friend SchedulingPolicy;
 };
 
-
-using DefaultWorker = Worker<DefaultSchedulingPolicy>;
-
 using EventMap = std::map<BaseAction*, std::function<void(void)>>;
 
-class Scheduler { // NOLINT
+template <class SchedulingPolicy> class Scheduler {
 private:
-  DefaultSchedulingPolicy policy_;
+  using worker_t = Worker<SchedulingPolicy>;
+
+  SchedulingPolicy policy_;
 
   const bool using_workers_;
   LogicalTime logical_time_{};
 
   Environment* environment_;
-  std::vector<DefaultWorker> workers_{};
+  std::vector<worker_t> workers_{};
 
   std::mutex scheduling_mutex_;
   std::unique_lock<std::mutex> scheduling_lock_{scheduling_mutex_, std::defer_lock};
@@ -83,25 +79,21 @@ private:
   std::map<Tag, EventMap> event_queue_;
 
   std::vector<std::vector<BasePort*>> set_ports_;
-  std::vector<std::vector<Reaction*>> triggered_reactions_;
-
-  std::vector<std::vector<Reaction*>> reaction_queue_;
-  unsigned int reaction_queue_pos_{std::numeric_limits<unsigned>::max()};
-
-  std::atomic<std::ptrdiff_t> reactions_to_process_{0}; // NOLINT
 
   std::atomic<bool> stop_{false};
-  bool continue_execution_{true};
 
-  void schedule() noexcept;
-  auto schedule_ready_reactions() -> bool;
-  void next();
-  void terminate_all_workers();
+  std::vector<std::vector<Reaction*>> triggered_reactions_;
+
+  auto next() -> bool;
   void set_port_helper(BasePort* port);
 
 public:
   explicit Scheduler(Environment* env);
-  ~Scheduler();
+  Scheduler(Scheduler&&) = delete;
+  Scheduler(const Scheduler&) = delete;
+  ~Scheduler() = default;
+  auto operator=(Scheduler&&) -> Scheduler = delete;
+  auto operator=(const Scheduler&) -> Scheduler = delete;
 
   void schedule_sync(const Tag& tag, BaseAction* action, std::function<void(void)> pre_handler);
   void schedule_async(const Tag& tag, BaseAction* action, std::function<void(void)> pre_handler);
@@ -116,12 +108,9 @@ public:
   void start();
   void stop();
 
-  // FIXME: this needs to be removed in the final version, as we cannot make all policies friends...
-  friend DefaultSchedulingPolicy;
+  friend SchedulingPolicy;
 };
 
 } // namespace reactor
-
-#include "impl/scheduler_impl.hh"
 
 #endif // REACTOR_CPP_SCHEDULER_HH
