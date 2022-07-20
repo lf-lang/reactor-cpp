@@ -19,7 +19,7 @@ void BasePort::base_bind_to(BasePort* port) {
   reactor_assert(this->environment() == port->environment()); // NOLINT
   validate(!port->has_inward_binding(), "Ports may only be connected once");
   validate(!this->has_dependencies(), "Ports with dependencies may not be connected to other ports");
-  validate(!port->has_antidependencies(), "Ports with antidependencies may not be connected to other ports");
+  validate(!port->has_anti_dependencies(), "Ports with anti_dependencies may not be connected to other ports");
   assert_phase(this, Environment::Phase::Assembly);
   if (this->is_input() && port->is_input()) {
     validate(this->container() == port->container()->container(),
@@ -79,7 +79,7 @@ void BasePort::register_antidependency(Reaction* reaction) {
   reactor_assert(antidependencies_.insert(reaction).second);
 }
 
-auto Port<void>::typed_outward_bindings() const noexcept -> const auto& {
+[[maybe_unused]] auto Port<void>::typed_outward_bindings() const noexcept -> const std::set<Port<void>*>& {
   // this is undefined behavior and should be changed
   return reinterpret_cast<const std::set<Port<void>*>&>(outward_bindings()); // NOLINT C++20 std::bit_cast
 }

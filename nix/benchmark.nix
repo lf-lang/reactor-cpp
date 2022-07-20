@@ -122,7 +122,8 @@ let
   attribute_set_callgrind = (builtins.map (x: profiler x "callgrind") (extract_derivations attribute_set_derivations));
   attribute_set_memory = (builtins.map library.memtest (extract_derivations attribute_set_derivations));
 in
-lib.listToAttrs (attribute_set_derivations
+  lib.listToAttrs (
+     attribute_set_derivations
   ++ attribute_set_cachegrind
   ++ attribute_set_callgrind
   ++ attribute_set_memory
@@ -132,4 +133,3 @@ lib.listToAttrs (attribute_set_derivations
   { name = "list-compilers"; value = library.list-compilers; }
   { name = "make-benchmark"; value = make-benchmark; }
 ])
-

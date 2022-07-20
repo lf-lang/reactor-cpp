@@ -8,10 +8,11 @@ set(SOURCE_FILES
     reactor.cc
     scheduler.cc
     time.cc
-    )
+    multiport_callback.cc
+)
 
 if(REACTOR_CPP_TRACE)
-  set(SOURCE_FILES ${SOURCE_FILES} trace.cc)
+  set(SOURCE_FILES ${SOURCE_FILES} trace.cc )
 endif()
 
 if (DEFINED LF_REACTOR_CPP_SUFFIX)

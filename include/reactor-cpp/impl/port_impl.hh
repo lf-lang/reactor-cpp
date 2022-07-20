@@ -11,17 +11,20 @@
 
 #include "../assert.hh"
 #include "../environment.hh"
+#include "reactor-cpp/port.hh"
 
 namespace reactor {
 
-template <class T> auto Port<T>::typed_outward_bindings() const noexcept -> const std::set<Port<T>*>& {
+template <class T> [[maybe_unused]]
+auto Port<T>::typed_outward_bindings() const noexcept -> const std::set<Port<T>*>& {
   // HACK this cast is ugly but should be safe as long as we only allow to
   // bind with Port<T>*. The alternative would be to copy the entire set and
   // cast each element individually, which is also ugly...
   return reinterpret_cast<const std::set<Port<T>*>&>(outward_bindings()); // NOLINT C++20 std::bit_cast
 }
 
-template <class T> auto Port<T>::typed_inward_binding() const noexcept -> Port<T>* {
+template <class T>
+auto Port<T>::typed_inward_binding() const noexcept -> Port<T>* {
   // we can use a static cast here since we know that this port is always
   // connected with another Port<T>.
   return static_cast<Port<T>*>(inward_binding());

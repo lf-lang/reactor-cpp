@@ -68,7 +68,7 @@ void Environment::build_dependency_graph(Reactor* reactor) { // NOLINT
       while (source->has_inward_binding()) {
         source = source->inward_binding();
       }
-      for (auto* antidependency : source->antidependencies()) {
+      for (auto* antidependency : source->anti_dependencies()) {
         dependencies_.emplace_back(reaction, antidependency);
       }
     }
@@ -309,7 +309,7 @@ void Environment::dump_port_to_yaml(std::ofstream& yaml, const BasePort& port) {
     }
   }
   yaml << "        effect_of: " << std::endl;
-  for (auto* const antidepencency : port.antidependencies()) {
+  for (auto* const antidepencency : port.anti_dependencies()) {
     yaml << "          - " << antidepencency->fqn() << std::endl;
   }
 }
