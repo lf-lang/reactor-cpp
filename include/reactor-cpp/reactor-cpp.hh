@@ -17,12 +17,7 @@
 #include "port.hh"
 #include "reaction.hh"
 #include "reactor.hh"
+#include "scheduler.hh"
 #include "time.hh"
-
-// include implementation header files
-
-#include "impl/action_impl.hh"
-#include "impl/port_impl.hh"
-#include "impl/scheduler_impl.hh"
 
 #endif // REACTOR_CPP_REACTOR_CPP_HH

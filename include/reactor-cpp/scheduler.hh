@@ -19,8 +19,9 @@
 #include <thread>
 #include <vector>
 
-#include "fwd.hh"
-#include "logical_time.hh"
+#include "reactor-cpp/base_scheduler.hh"
+#include "reactor-cpp/fwd.hh"
+#include "reactor-cpp/logical_time.hh"
 
 namespace reactor {
 
@@ -57,32 +58,17 @@ public:
   friend SchedulingPolicy;
 };
 
-using EventMap = std::map<BaseAction*, std::function<void(void)>>;
-
-template <class SchedulingPolicy> class Scheduler {
+template <class SchedulingPolicy> class Scheduler : public BaseScheduler {
 private:
   using worker_t = Worker<SchedulingPolicy>;
 
   SchedulingPolicy policy_;
 
-  const bool using_workers_;
-  LogicalTime logical_time_{};
-
-  Environment* environment_;
   std::vector<worker_t> workers_{};
-
-  std::mutex scheduling_mutex_;
-  std::unique_lock<std::mutex> scheduling_lock_{scheduling_mutex_, std::defer_lock};
-  std::condition_variable cv_schedule_;
-
-  std::mutex lock_event_queue_;
-  std::map<Tag, EventMap> event_queue_;
 
   std::vector<std::vector<BasePort*>> set_ports_;
 
   std::atomic<bool> stop_{false};
-
-  std::vector<std::vector<Reaction*>> triggered_reactions_;
 
   auto next() -> bool;
   void set_port_helper(BasePort* port);
@@ -91,26 +77,20 @@ public:
   explicit Scheduler(Environment* env);
   Scheduler(Scheduler&&) = delete;
   Scheduler(const Scheduler&) = delete;
-  ~Scheduler() = default;
-  auto operator=(Scheduler&&) -> Scheduler = delete;
-  auto operator=(const Scheduler&) -> Scheduler = delete;
-
-  void schedule_sync(const Tag& tag, BaseAction* action, std::function<void(void)> pre_handler);
-  void schedule_async(const Tag& tag, BaseAction* action, std::function<void(void)> pre_handler);
-
-  void inline lock() noexcept { scheduling_lock_.lock(); }
-  void inline unlock() noexcept { scheduling_lock_.unlock(); }
-
-  void set_port(BasePort* port);
-
-  [[nodiscard]] inline auto logical_time() const noexcept -> const auto& { return logical_time_; }
+  ~Scheduler() override = default;
+  auto operator=(Scheduler&&) -> Scheduler& = delete;
+  auto operator=(const Scheduler&) -> Scheduler& = delete;
 
   void start();
   void stop();
+
+  void set_port(BasePort* port) override;
 
   friend SchedulingPolicy;
 };
 
 } // namespace reactor
+
+#include "reactor-cpp/impl/scheduler_impl.hh"
 
 #endif // REACTOR_CPP_SCHEDULER_HH

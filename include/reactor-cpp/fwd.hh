@@ -18,6 +18,7 @@ class Reaction;
 class Reactor;
 class Tag;
 
+class BaseScheduler;
 class DefaultSchedulingPolicy;
 template <class SchedulingPolicy> class Worker;
 template <class SchedulingPolicy> class Scheduler;

@@ -9,7 +9,10 @@
 #ifndef REACTOR_CPP_IMPL_PORT_IMPL_HH
 #define REACTOR_CPP_IMPL_PORT_IMPL_HH
 
+#include "reactor-cpp/port.hh"
+
 #include "reactor-cpp/assert.hh"
+#include "reactor-cpp/base_scheduler.hh"
 #include "reactor-cpp/environment.hh"
 
 namespace reactor {
@@ -31,9 +34,9 @@ template <class T> void Port<T>::set(const ImmutableValuePtr<T>& value_ptr) {
   reactor::validate(!has_inward_binding(), "set() may only be called on ports that do not have an inward "
                                            "binding!");
   reactor::validate(value_ptr != nullptr, "Ports may not be set to nullptr!");
-  auto scheduler = environment()->scheduler();
+  auto& scheduler = environment()->scheduler();
   this->value_ptr_ = std::move(value_ptr);
-  scheduler->set_port(this);
+  scheduler.set_port(this);
 }
 
 template <class T> auto Port<T>::get() const noexcept -> const ImmutableValuePtr<T>& {

@@ -24,6 +24,7 @@ constexpr bool runtime_assertion = true;
 #include "environment.hh"
 
 #include <cassert>
+#include <map>
 #include <sstream>
 #include <stdexcept>
 #include <string>

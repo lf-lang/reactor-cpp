@@ -9,6 +9,7 @@
 #include "reactor-cpp/port.hh"
 
 #include "reactor-cpp/assert.hh"
+#include "reactor-cpp/base_scheduler.hh"
 #include "reactor-cpp/environment.hh"
 #include "reactor-cpp/reaction.hh"
 
@@ -28,7 +29,7 @@ void BasePort::base_bind_to(BasePort* port) {
   } else if (this->is_output() && port->is_input()) {
     validate(this->container()->container() == port->container()->container(),
              "An output port can only be bound to an input port if both ports "
-             "belong to reactors in the same hierarichal level");
+             "belong to reactors in the same hierarchical level");
   } else if (this->is_output() && port->is_output()) {
     validate(this->container()->container() == port->container(),
              "An output port A may only be bound to another output port B if A is "
@@ -93,9 +94,9 @@ auto Port<void>::typed_inward_binding() const noexcept -> Port<void>* {
 void Port<void>::set() {
   validate(!has_inward_binding(), "set() may only be called on a ports that do not have an inward "
                                   "binding!");
-  auto* scheduler = environment()->scheduler();
+  auto& scheduler = environment()->scheduler();
   this->present_ = true;
-  scheduler->set_port(this);
+  scheduler.set_port(this);
 }
 
 auto Port<void>::is_present() const noexcept -> bool {

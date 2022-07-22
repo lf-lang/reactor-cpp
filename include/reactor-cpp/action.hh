@@ -154,4 +154,6 @@ public:
 
 } // namespace reactor
 
+#include "reactor-cpp/impl/action_impl.hh"
+
 #endif // REACTOR_CPP_ACTION_HH

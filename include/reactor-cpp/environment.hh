@@ -9,14 +9,16 @@
 #ifndef REACTOR_CPP_ENVIRONMENT_HH
 #define REACTOR_CPP_ENVIRONMENT_HH
 
+#include <memory>
 #include <set>
 #include <string>
+#include <thread>
+#include <utility>
 #include <vector>
 
 #include "reactor-cpp/default_scheduling_policy.hh"
 #include "reactor-cpp/fwd.hh"
 #include "reactor-cpp/reactor.hh"
-#include "reactor-cpp/scheduler.hh"
 
 namespace reactor {
 
@@ -40,7 +42,7 @@ private:
   std::set<Reaction*> reactions_{};
   std::vector<Dependency> dependencies_{};
 
-  Scheduler<DefaultSchedulingPolicy> scheduler_;
+  std::unique_ptr<Scheduler<DefaultSchedulingPolicy>> scheduler_;
   Phase phase_{Phase::Construction};
   TimePoint start_time_{};
 
@@ -49,11 +51,7 @@ private:
 
 public:
   explicit Environment(unsigned int num_workers, bool run_forever = default_run_forever,
-                       bool fast_fwd_execution = default_fast_fwd_execution)
-      : num_workers_(num_workers)
-      , run_forever_(run_forever)
-      , fast_fwd_execution_(fast_fwd_execution)
-      , scheduler_(this) {}
+                       bool fast_fwd_execution = default_fast_fwd_execution);
 
   void register_reactor(Reactor* reactor);
   void assemble();
@@ -72,14 +70,13 @@ public:
 
   [[nodiscard]] auto top_level_reactors() const noexcept -> const auto& { return top_level_reactors_; }
   [[nodiscard]] auto phase() const noexcept -> Phase { return phase_; }
-  [[nodiscard]] auto scheduler() const noexcept -> const Scheduler<DefaultSchedulingPolicy>* { return &scheduler_; }
+  [[nodiscard]] auto scheduler() const noexcept -> const BaseScheduler&;
+  [[nodiscard]] auto scheduler() noexcept -> BaseScheduler&;
 
-  auto scheduler() noexcept -> Scheduler<DefaultSchedulingPolicy>* { return &scheduler_; }
-
-  [[nodiscard]] auto logical_time() const noexcept -> const LogicalTime& { return scheduler_.logical_time(); }
+  [[nodiscard]] auto logical_time() const noexcept -> const LogicalTime&;
   [[nodiscard]] auto start_time() const noexcept -> const TimePoint& { return start_time_; }
 
-  static auto physical_time() noexcept -> TimePoint { return get_physical_time(); }
+  [[nodiscard]] static auto physical_time() noexcept -> TimePoint { return get_physical_time(); }
 
   [[nodiscard]] auto num_workers() const noexcept -> unsigned int { return num_workers_; }
   [[nodiscard]] auto fast_fwd_execution() const noexcept -> bool { return fast_fwd_execution_; }

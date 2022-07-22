@@ -127,4 +127,6 @@ public:
 
 } // namespace reactor
 
+#include "reactor-cpp/impl/port_impl.hh"
+
 #endif // REACTOR_CPP_PORT_HH

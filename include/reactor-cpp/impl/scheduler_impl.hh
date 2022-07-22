@@ -11,12 +11,12 @@
 
 #include "reactor-cpp/action.hh"
 #include "reactor-cpp/assert.hh"
-#include "reactor-cpp/environment.hh"
 #include "reactor-cpp/fwd.hh"
 #include "reactor-cpp/logging.hh"
 #include "reactor-cpp/port.hh"
 #include "reactor-cpp/reaction.hh"
 #include "reactor-cpp/trace.hh"
+
 #include <cstddef>
 
 namespace reactor {
@@ -65,9 +65,8 @@ template <class SchedulingPolicy> void Worker<SchedulingPolicy>::execute_reactio
 
 template <class SchedulingPolicy>
 Scheduler<SchedulingPolicy>::Scheduler(Environment* env)
-    : policy_(*this, *env)
-    , using_workers_(env->num_workers() > 1)
-    , environment_(env) {}
+    : BaseScheduler(env)
+    , policy_(*this, *env) {}
 
 template <class SchedulingPolicy> void Scheduler<SchedulingPolicy>::start() {
   log::Debug() << "Starting the scheduler...";
@@ -210,37 +209,6 @@ template <class SchedulingPolicy> auto Scheduler<SchedulingPolicy>::next() -> bo
   }
 
   return continue_execution;
-}
-
-template <class SchedulingPolicy>
-void Scheduler<SchedulingPolicy>::schedule_sync(const Tag& tag, BaseAction* action,
-                                                std::function<void(void)> pre_handler) {
-  reactor_assert(logical_time_ < tag);
-  // TODO verify that the action is indeed allowed to be scheduled by the
-  // current reaction
-  log::Debug() << "Schedule action " << action->fqn() << (action->is_logical() ? " synchronously " : " asynchronously ")
-               << " with tag [" << tag.time_point() << ", " << tag.micro_step() << "]";
-  {
-    auto unique_lock =
-        using_workers_ ? std::unique_lock<std::mutex>(lock_event_queue_) : std::unique_lock<std::mutex>();
-
-    tracepoint(reactor_cpp, schedule_action, action->container()->fqn(), action->name(), tag); // NOLINT
-
-    // create a new event map or retrieve the existing one
-    auto emplace_result = event_queue_.try_emplace(tag, EventMap());
-    auto& event_map = emplace_result.first->second;
-
-    // insert the new event
-    event_map[action] = std::move(pre_handler);
-  }
-}
-
-template <class SchedulingPolicy>
-void Scheduler<SchedulingPolicy>::schedule_async(const Tag& tag, BaseAction* action,
-                                                 std::function<void(void)> pre_handler) {
-  std::lock_guard<std::mutex> lock_guard(scheduling_mutex_);
-  schedule_sync(tag, action, std::move(pre_handler));
-  cv_schedule_.notify_one();
 }
 
 template <class SchedulingPolicy> void Scheduler<SchedulingPolicy>::set_port(BasePort* port) {
