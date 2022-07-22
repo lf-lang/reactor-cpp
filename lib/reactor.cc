@@ -10,6 +10,7 @@
 
 #include "reactor-cpp/action.hh"
 #include "reactor-cpp/assert.hh"
+#include "reactor-cpp/base_scheduler.hh"
 #include "reactor-cpp/environment.hh"
 #include "reactor-cpp/logging.hh"
 #include "reactor-cpp/port.hh"
@@ -30,7 +31,7 @@ ReactorElement::ReactorElement(const std::string& name, ReactorElement::Type typ
   // completely constructed objects. Technically, the casts here return
   // invalid pointers as the objects they point to do not yet
   // exists. However, we are good as long as we only store the pointer and do
-  // not dereference it before construction is completeted.
+  // not de reference it before construction is completed.
   // It works, but maybe there is some nicer way of doing this...
   switch (type) {
   case Type::Action:
@@ -154,15 +155,15 @@ void Reactor::shutdown() {
 auto Reactor::get_physical_time() noexcept -> TimePoint { return reactor::get_physical_time(); }
 
 auto Reactor::get_logical_time() const noexcept -> TimePoint {
-  return environment()->scheduler()->logical_time().time_point();
+  return environment()->scheduler().logical_time().time_point();
 }
 
 auto Reactor::get_microstep() const noexcept -> mstep_t {
-  return environment()->scheduler()->logical_time().micro_step();
+  return environment()->scheduler().logical_time().micro_step();
 }
 
 auto Reactor::get_tag() const noexcept -> Tag {
-  return Tag::from_logical_time(environment()->scheduler()->logical_time());
+  return Tag::from_logical_time(environment()->scheduler().logical_time());
 }
 
 auto Reactor::get_elapsed_logical_time() const noexcept -> Duration {

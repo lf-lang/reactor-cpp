@@ -14,11 +14,26 @@
 
 #include "reactor-cpp/action.hh"
 #include "reactor-cpp/assert.hh"
+#include "reactor-cpp/default_scheduling_policy.hh"
 #include "reactor-cpp/logging.hh"
 #include "reactor-cpp/port.hh"
 #include "reactor-cpp/reaction.hh"
+#include "reactor-cpp/scheduler.hh"
 
 namespace reactor {
+
+Environment::Environment(unsigned int num_workers, bool run_forever, bool fast_fwd_execution)
+    : num_workers_(num_workers)
+    , run_forever_(run_forever)
+    , fast_fwd_execution_(fast_fwd_execution)
+    , scheduler_(std::make_unique<Scheduler<DefaultSchedulingPolicy>>(this)) {}
+
+[[nodiscard]] auto Environment::scheduler() const noexcept -> const BaseScheduler& { return *scheduler_; }
+[[nodiscard]] auto Environment::scheduler() noexcept -> BaseScheduler& { return *scheduler_; }
+
+[[nodiscard]] auto Environment::logical_time() const noexcept -> const LogicalTime& {
+  return scheduler_->logical_time();
+}
 
 void Environment::register_reactor(Reactor* reactor) {
   reactor_assert(reactor != nullptr);
@@ -97,13 +112,13 @@ void Environment::sync_shutdown() {
   }
 
   phase_ = Phase::Deconstruction;
-  scheduler_.stop();
+  scheduler_->stop();
 }
 
 void Environment::async_shutdown() {
-  scheduler_.lock();
+  scheduler_->lock();
   sync_shutdown();
-  scheduler_.unlock();
+  scheduler_->unlock();
 }
 
 auto dot_name([[maybe_unused]] ReactorElement* reactor_element) -> std::string {
@@ -227,7 +242,7 @@ auto Environment::startup() -> std::thread {
 
   // start processing events
   phase_ = Phase::Execution;
-  return std::thread([this]() { this->scheduler_.start(); });
+  return std::thread([this]() { this->scheduler_->start(); });
 }
 
 void Environment::dump_trigger_to_yaml(std::ofstream& yaml, const BaseAction& trigger) {
