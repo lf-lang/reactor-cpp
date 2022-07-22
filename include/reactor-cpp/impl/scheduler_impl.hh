@@ -25,7 +25,7 @@ template <class SchedulingPolicy>
 // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
 thread_local std::size_t Worker<SchedulingPolicy>::current_worker_id_{0};
 
-template <class SchedulingPolicy> auto Worker<SchedulingPolicy>::current_worker_id() -> unsigned {
+template <class SchedulingPolicy> auto Worker<SchedulingPolicy>::current_worker_id() -> std::size_t {
   return current_worker_id_;
 }
 

@@ -53,7 +53,7 @@ public:
 
   [[nodiscard]] auto id() const -> std::size_t { return identity_; }
 
-  static auto current_worker_id() -> unsigned;
+  static auto current_worker_id() -> std::size_t;
 
   friend SchedulingPolicy;
 };
