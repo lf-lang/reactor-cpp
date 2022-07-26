@@ -20,6 +20,7 @@ namespace reactor {
 
 class GroupedSchedulingPolicy {
 private:
+  std::size_t identity_counter{0};
   Scheduler<GroupedSchedulingPolicy>& scheduler_;
   Environment& environment_;
 

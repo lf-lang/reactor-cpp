@@ -4,6 +4,7 @@ set(SOURCE_FILES
     base_scheduler.cc
     default_scheduling_policy.cc
     dependency_graph.cc
+    grouped_scheduling_policy.cc
     environment.cc
     logical_time.cc
     port.cc
