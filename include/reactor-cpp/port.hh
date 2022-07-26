@@ -56,8 +56,7 @@ public:
   [[nodiscard]] inline auto antidependencies() const noexcept -> const auto& { return antidependencies_; }
 
   friend class Reaction;
-  friend class Scheduler;
-  friend class GroupScheduler;
+  template <class SchedulingPolicy> friend class Scheduler;
 };
 
 template <class T> class Port : public BasePort {
@@ -128,6 +127,6 @@ public:
 
 } // namespace reactor
 
-#include "impl/port_impl.hh"
+#include "reactor-cpp/impl/port_impl.hh"
 
 #endif // REACTOR_CPP_PORT_HH

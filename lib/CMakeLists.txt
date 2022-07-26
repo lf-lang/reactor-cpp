@@ -1,13 +1,14 @@
 set(SOURCE_FILES
     action.cc
     assert.cc
+    base_scheduler.cc
+    default_scheduling_policy.cc
     dependency_graph.cc
     environment.cc
     logical_time.cc
     port.cc
     reaction.cc
     reactor.cc
-    scheduler.cc
     time.cc
     )
 

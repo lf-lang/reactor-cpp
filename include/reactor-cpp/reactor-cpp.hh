@@ -17,6 +17,7 @@
 #include "port.hh"
 #include "reaction.hh"
 #include "reactor.hh"
+#include "scheduler.hh"
 #include "time.hh"
 
 #endif // REACTOR_CPP_REACTOR_CPP_HH

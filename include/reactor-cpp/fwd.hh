@@ -16,9 +16,13 @@ class BasePort;
 class Environment;
 class Reaction;
 class Reactor;
-class Scheduler;
-class GroupScheduler;
 class Tag;
+
+class BaseScheduler;
+class DefaultSchedulingPolicy;
+class GroupedSchedulingPolicy;
+template <class SchedulingPolicy> class Worker;
+template <class SchedulingPolicy> class Scheduler;
 
 template <class T> class Action;
 template <class T> class Port;
