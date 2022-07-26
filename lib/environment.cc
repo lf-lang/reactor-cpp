@@ -14,8 +14,8 @@
 
 #include "reactor-cpp/action.hh"
 #include "reactor-cpp/assert.hh"
-#include "reactor-cpp/default_scheduling_policy.hh"
 #include "reactor-cpp/dependency_graph.hh"
+#include "reactor-cpp/grouped_scheduling_policy.hh"
 #include "reactor-cpp/logging.hh"
 #include "reactor-cpp/port.hh"
 #include "reactor-cpp/reaction.hh"
@@ -27,7 +27,7 @@ Environment::Environment(unsigned int num_workers, bool run_forever, bool fast_f
     : num_workers_(num_workers)
     , run_forever_(run_forever)
     , fast_fwd_execution_(fast_fwd_execution)
-    , scheduler_(std::make_unique<Scheduler<DefaultSchedulingPolicy>>(this)) {}
+    , scheduler_(std::make_unique<Scheduler<GroupedSchedulingPolicy>>(this)) {}
 
 [[nodiscard]] auto Environment::scheduler() const noexcept -> const BaseScheduler& { return *scheduler_; }
 [[nodiscard]] auto Environment::scheduler() noexcept -> BaseScheduler& { return *scheduler_; }

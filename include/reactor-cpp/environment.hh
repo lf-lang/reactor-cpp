@@ -16,9 +16,9 @@
 #include <utility>
 #include <vector>
 
-#include "reactor-cpp/default_scheduling_policy.hh"
 #include "reactor-cpp/dependency_graph.hh"
 #include "reactor-cpp/fwd.hh"
+#include "reactor-cpp/grouped_scheduling_policy.hh"
 #include "reactor-cpp/reactor.hh"
 
 namespace reactor {
@@ -43,7 +43,7 @@ private:
   std::set<Reaction*> reactions_{};
   std::vector<Dependency> dependencies_{};
 
-  std::unique_ptr<Scheduler<DefaultSchedulingPolicy>> scheduler_;
+  std::unique_ptr<Scheduler<GroupedSchedulingPolicy>> scheduler_;
   Phase phase_{Phase::Construction};
   TimePoint start_time_{};
 
