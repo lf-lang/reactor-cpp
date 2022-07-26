@@ -14,9 +14,9 @@
 #include <utility>
 #include <vector>
 
-#include "dependency_graph.hh"
-#include "group_scheduler.hh"
-#include "reactor.hh"
+#include "reactor-cpp/dependency_graph.hh"
+#include "reactor-cpp/reactor.hh"
+#include "reactor-cpp/scheduler.hh"
 
 namespace reactor {
 
@@ -40,7 +40,7 @@ private:
   std::set<Reaction*> reactions_{};
   std::vector<Dependency> dependencies_{};
 
-  GroupScheduler scheduler_;
+  Scheduler scheduler_;
   Phase phase_{Phase::Construction};
   TimePoint start_time_{};
 
@@ -74,9 +74,9 @@ public:
 
   [[nodiscard]] auto top_level_reactors() const noexcept -> const auto& { return top_level_reactors_; }
   [[nodiscard]] auto phase() const noexcept -> Phase { return phase_; }
-  [[nodiscard]] auto scheduler() const noexcept -> const GroupScheduler* { return &scheduler_; }
+  [[nodiscard]] auto scheduler() const noexcept -> const Scheduler* { return &scheduler_; }
 
-  auto scheduler() noexcept -> GroupScheduler* { return &scheduler_; }
+  auto scheduler() noexcept -> Scheduler* { return &scheduler_; }
 
   [[nodiscard]] auto logical_time() const noexcept -> const LogicalTime& { return scheduler_.logical_time(); }
   [[nodiscard]] auto start_time() const noexcept -> const TimePoint& { return start_time_; }

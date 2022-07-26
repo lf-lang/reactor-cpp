@@ -3,7 +3,6 @@ set(SOURCE_FILES
     assert.cc
     dependency_graph.cc
     environment.cc
-    group_scheduler.cc
     logical_time.cc
     port.cc
     reaction.cc
