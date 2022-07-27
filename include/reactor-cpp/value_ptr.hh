@@ -44,7 +44,8 @@ template <class T> using ImmutableValuePtr = detail::ImmutableValuePtr<T, std::i
  * @param args Arguments to be forwarded to ``T``'s constructor
  * @return a new immutable value pointer
  */
-template <class T, class... Args> auto make_immutable_value(Args&&... args) -> ImmutableValuePtr<T> {
+template <class T, class... Args>
+auto make_immutable_value(Args&&... args) -> ImmutableValuePtr<T> {
   if constexpr (std::is_scalar<T>::value) {
     return ImmutableValuePtr<T>(T(std::forward<Args>(args)...));
   } else {

@@ -85,6 +85,8 @@ let
 
         installPhase = ''
           mkdir -p $out/bin
+          mkdir -p $out/debug
+          cp -r ./src-gen/* $out/debug/
           cp -r ./bin/${file_name} $out/bin/${file_name}-${compiler.pname}
           cp -r ./bin/${file_name} $out/bin/${package_name}
         '';

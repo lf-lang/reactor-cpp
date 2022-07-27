@@ -46,7 +46,13 @@
           lingua-franca-benchmarks = lingua-franca-benchmarks;
           lf-benchmark-runner = lf-benchmark-runner.packages."${system}".lf-benchmark-runner;
         };
-        customPackages = pkgs.lib.mergeAttrs allBenchmarks allTests;
+        customPackages = allBenchmarks // allTests // {
+          reactor-cpp = pkgs.callPackage ./nix/reactor-cpp.nix {
+            mkDerivation = pkgs.stdenv.mkDerivation;
+            debug = false;
+            reactor-cpp-src = ./.;
+          };
+        };
       in
       rec {
         checks = packages;

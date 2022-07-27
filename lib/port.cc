@@ -76,7 +76,7 @@ void BasePort::register_antidependency(Reaction* reaction) {
              "Antidependent input ports must belong to a contained reactor");
   }
 
-  reactor_assert(antidependencies_.insert(reaction).second);
+  reactor_assert(anti_dependencies_.insert(reaction).second);
 }
 
 [[maybe_unused]] auto Port<void>::typed_outward_bindings() const noexcept -> const std::set<Port<void>*>& {
