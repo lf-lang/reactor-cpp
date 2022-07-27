@@ -14,7 +14,6 @@
 
 #include "reactor-cpp/action.hh"
 #include "reactor-cpp/assert.hh"
-#include "reactor-cpp/dependency_graph.hh"
 #include "reactor-cpp/grouped_scheduling_policy.hh"
 #include "reactor-cpp/logging.hh"
 #include "reactor-cpp/port.hh"
@@ -62,25 +61,6 @@ void Environment::assemble() {
     build_dependency_graph(reactor);
   }
   calculate_indexes();
-
-  // Testbed for the new graph structure
-  ReactionDependencyGraph graph{top_level_reactors_};
-  ReactionDependencyGraph reduced_graph = graph.transitive_reduction();
-
-  graph.export_graphviz("graph.dot");
-  reduced_graph.export_graphviz("reduced_graph.dot");
-
-  GroupedDependencyGraph grouped_graph{reduced_graph};
-  grouped_graph.group_reactions_by_container(top_level_reactors_);
-  grouped_graph.export_graphviz("grouped_graph.dot");
-
-  GroupedDependencyGraph reduced_grouped_graph = grouped_graph.transitive_reduction();
-  reduced_grouped_graph.export_graphviz("reduced_grouped_graph.dot");
-
-  reduced_grouped_graph.group_chains();
-  reduced_grouped_graph.export_graphviz("grouped_chains_graph.dot");
-
-  this->grouped_graph_ = reduced_grouped_graph;
 }
 
 void Environment::build_dependency_graph(Reactor* reactor) { // NOLINT

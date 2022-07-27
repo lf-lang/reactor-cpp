@@ -18,7 +18,15 @@ GroupedSchedulingPolicy::GroupedSchedulingPolicy(Scheduler<GroupedSchedulingPoli
     : scheduler_(scheduler)
     , environment_(env) {}
 
-void GroupedSchedulingPolicy::init() {}
+void GroupedSchedulingPolicy::init() {
+  ReactionDependencyGraph graph{environment_.top_level_reactors()};
+  ReactionDependencyGraph reduced_graph = graph.transitive_reduction();
+  GroupedDependencyGraph grouped_graph{reduced_graph};
+  grouped_graph.group_reactions_by_container(environment_.top_level_reactors());
+
+  GroupedDependencyGraph reduced_grouped_graph = grouped_graph.transitive_reduction();
+  reduced_grouped_graph.group_chains();
+}
 
 auto GroupedSchedulingPolicy::create_worker() -> Worker<GroupedSchedulingPolicy> { return {*this, identity_counter++}; }
 
