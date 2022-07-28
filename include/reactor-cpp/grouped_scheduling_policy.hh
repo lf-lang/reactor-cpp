@@ -20,7 +20,7 @@ namespace reactor {
 
 struct ReactionGroup {
   std::size_t id{0};
-  std::vector<Reaction*> reactions{};
+  std::vector<std::pair<bool, Reaction*>> reactions{};
   std::vector<ReactionGroup*> successors{};
   std::atomic<bool> triggered{false};
   std::atomic<std::size_t> waiting_for{0};
@@ -35,6 +35,8 @@ private:
 
   std::vector<std::shared_ptr<ReactionGroup>> initial_groups_;
 
+  static void trigger_reaction(Reaction* reaction);
+
 public:
   GroupedSchedulingPolicy(Scheduler<GroupedSchedulingPolicy>& scheduler, Environment& env);
 
@@ -42,8 +44,8 @@ public:
   auto create_worker() -> Worker<GroupedSchedulingPolicy>;
   void worker_function(const Worker<GroupedSchedulingPolicy>& worker);
 
-  void trigger_reaction_from_next(Reaction* reaction);
-  void trigger_reaction_from_set_port(Reaction* reaction);
+  static inline void trigger_reaction_from_next(Reaction* reaction) { trigger_reaction(reaction); };
+  static inline void trigger_reaction_from_set_port(Reaction* reaction) { trigger_reaction(reaction); };
 };
 
 } // namespace reactor

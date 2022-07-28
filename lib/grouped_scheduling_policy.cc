@@ -48,11 +48,13 @@ void GroupedSchedulingPolicy::init() {
     group->id = id_counter++;
 
     // copy the list of reactions from the vertex
-    group->reactions = boost::get(reduced_grouped_graph.get_group_property_map(), vertex);
+    for (auto* reaction : boost::get(reduced_grouped_graph.get_group_property_map(), vertex)) {
+      group->reactions.emplace_back(std::make_pair(false, reaction));
+    }
 
     // Inform each reaction of its group and also set the index within the group
     std::size_t index_counter{0};
-    for (auto* reaction : group->reactions) {
+    for (auto [_, reaction] : group->reactions) {
       reaction->set_scheduler_info(group);
       reaction->set_index(index_counter++);
     }
@@ -73,7 +75,7 @@ void GroupedSchedulingPolicy::init() {
   for (const auto& [_, group] : vertex_to_group) {
     log::Debug() << "* Group " << group->id << ':';
     log::Debug() << "   + reactions:";
-    for (const auto* reaction : group->reactions) {
+    for (auto [_, reaction] : group->reactions) {
       log::Debug() << "      - " << reaction->fqn();
     }
     log::Debug() << "   + successors:";
@@ -93,11 +95,12 @@ void GroupedSchedulingPolicy::worker_function(const Worker<GroupedSchedulingPoli
   }
 }
 
-void GroupedSchedulingPolicy::trigger_reaction_from_next([[maybe_unused]] Reaction* reaction) { // NOLINT
-  log::Warn() << "trigger_reaction_from_next is not yet implemented";
-}
-void GroupedSchedulingPolicy::trigger_reaction_from_set_port([[maybe_unused]] Reaction* reaction) { // NOLINT
-  log::Warn() << "trigger_reaction_from_port is not yet implemented";
+void GroupedSchedulingPolicy::trigger_reaction(Reaction* reaction) {
+  auto group = reaction->get_scheduler_info<ReactionGroup>();
+  log::Debug() << "(GroupedSchedulingPolicy) trigger reaction " << reaction->fqn() << " in Group " << group->id;
+  auto& triggered_reaction_pair = group->reactions[reaction->index()];
+  triggered_reaction_pair.first = true;
+  group->triggered.store(true, std::memory_order_release);
 }
 
 } // namespace reactor
