@@ -59,8 +59,7 @@ public:
 };
 
 class GroupedDependencyGraph {
-
-private:
+public:
   struct group_info_t {
     using kind = boost::vertex_property_tag;
   };
@@ -70,10 +69,9 @@ private:
   using ReactionToVertexMap = std::map<const Reaction*, GroupGraph::vertex_descriptor>;
   using GroupPropertyMap = boost::property_map<GroupGraph, group_info_t>::type;
 
+private:
   GroupGraph graph{};
   ReactionToVertexMap vertex_map{};
-
-  [[nodiscard]] auto get_group_property_map() -> GroupPropertyMap { return boost::get(group_info_t{}, graph); }
 
   struct ReachabilityVisitor : public boost::default_bfs_visitor {
   private:
@@ -130,6 +128,10 @@ public:
 
   // TODO: This should be const, but I don't know how to get immutable access to the reaction graph properties...
   [[nodiscard]] auto transitive_reduction() -> GroupedDependencyGraph;
+
+  [[nodiscard]] auto get_graph() const -> const GroupGraph& { return graph; }
+
+  [[nodiscard]] auto get_group_property_map() -> GroupPropertyMap { return boost::get(group_info_t{}, graph); }
 };
 
 } // namespace reactor
