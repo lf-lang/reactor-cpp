@@ -22,7 +22,6 @@ struct ReactionGroup {
   std::size_t id{0};
   std::vector<std::pair<bool, Reaction*>> reactions{};
   std::vector<ReactionGroup*> successors{};
-  std::atomic<bool> triggered{false};
   std::atomic<std::size_t> waiting_for{0};
   std::size_t num_predecessors{0};
 };
@@ -33,8 +32,9 @@ private:
   Scheduler<GroupedSchedulingPolicy>& scheduler_;
   Environment& environment_;
 
-  std::vector<std::shared_ptr<ReactionGroup>> initial_groups_;
+  std::vector<ReactionGroup*> initial_groups_;
 
+  static void process_group(const Worker<GroupedSchedulingPolicy>& worker, ReactionGroup* group);
   static void trigger_reaction(Reaction* reaction);
 
 public:

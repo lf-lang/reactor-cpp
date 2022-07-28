@@ -37,7 +37,7 @@ void GroupedSchedulingPolicy::init() {
     vertex_to_group[vertex] = group;
 
     if (boost::in_degree(vertex, g) == 0) {
-      initial_groups_.push_back(group);
+      initial_groups_.push_back(group.get());
     }
   }
 
@@ -91,7 +91,15 @@ auto GroupedSchedulingPolicy::create_worker() -> Worker<GroupedSchedulingPolicy>
 void GroupedSchedulingPolicy::worker_function(const Worker<GroupedSchedulingPolicy>& worker) {
   if (worker.id() == 0) {
     log::Debug() << "(Worker 0) do the initial scheduling";
-    scheduler_.next();
+    while (scheduler_.next()) {
+      for (auto* group : initial_groups_) {
+        process_group(worker, group);
+      }
+    }
+    // process all shutdown reactions
+    for (auto* group : initial_groups_) {
+      process_group(worker, group);
+    }
   }
 }
 
@@ -100,7 +108,26 @@ void GroupedSchedulingPolicy::trigger_reaction(Reaction* reaction) {
   log::Debug() << "(GroupedSchedulingPolicy) trigger reaction " << reaction->fqn() << " in Group " << group->id;
   auto& triggered_reaction_pair = group->reactions[reaction->index()];
   triggered_reaction_pair.first = true;
-  group->triggered.store(true, std::memory_order_release);
+}
+
+void GroupedSchedulingPolicy::process_group(const Worker<GroupedSchedulingPolicy>& worker, ReactionGroup* group) {
+  log::Debug() << "(Worker " << worker.id() << ") process Group " << group->id;
+
+  for (auto& triggered_reaction_pair : group->reactions) {
+    if (triggered_reaction_pair.first) {
+      triggered_reaction_pair.first = false;
+      worker.execute_reaction(triggered_reaction_pair.second);
+    }
+  }
+
+  for (auto* successor : group->successors) {
+    auto old = successor->waiting_for.fetch_sub(1, std::memory_order_acq_rel);
+    if (old == 1) {
+      process_group(worker, successor);
+    }
+  }
+
+  group->waiting_for.store(group->num_predecessors, std::memory_order_release);
 }
 
 } // namespace reactor
