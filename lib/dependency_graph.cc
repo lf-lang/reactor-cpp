@@ -269,7 +269,7 @@ void GroupedDependencyGraph::try_contract_edge(GroupGraph::vertex_descriptor va,
   va_reactions.insert(va_reactions.end(), vb_reactions.begin(), vb_reactions.end());
 
   // update the vertex mapping
-  for (const auto* reaction : vb_reactions) {
+  for (auto* reaction : vb_reactions) {
     vertex_map[reaction] = va;
   }
 
@@ -306,7 +306,7 @@ void GroupedDependencyGraph::clear_all_empty_vertices() {
   vertex_map.clear();
   for (GroupGraph::vertex_descriptor vd : boost::make_iterator_range(vertices(graph))) {
     const auto& reactions = get(get_group_property_map(), vd);
-    for (const auto* reaction : reactions) {
+    for (auto* reaction : reactions) {
       vertex_map[reaction] = vd;
     }
   }

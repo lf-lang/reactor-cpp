@@ -20,7 +20,7 @@ namespace reactor {
 
 struct ReactionGroup {
   std::size_t id{0};
-  std::vector<const Reaction*> reactions{};
+  std::vector<Reaction*> reactions{};
   std::vector<ReactionGroup*> successors{};
   std::atomic<bool> triggered{false};
   std::atomic<std::size_t> waiting_for{0};
@@ -33,8 +33,7 @@ private:
   Scheduler<GroupedSchedulingPolicy>& scheduler_;
   Environment& environment_;
 
-  std::vector<std::unique_ptr<ReactionGroup>> reaction_groups_;
-  std::vector<ReactionGroup*> initial_groups_;
+  std::vector<std::shared_ptr<ReactionGroup>> initial_groups_;
 
 public:
   GroupedSchedulingPolicy(Scheduler<GroupedSchedulingPolicy>& scheduler, Environment& env);

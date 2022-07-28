@@ -10,6 +10,7 @@
 #define REACTOR_CPP_REACTION_HH
 
 #include <functional>
+#include <memory>
 #include <set>
 
 #include "reactor.hh"
@@ -31,6 +32,8 @@ private:
 
   Duration deadline_{Duration::zero()};
   std::function<void(void)> deadline_handler_{nullptr};
+
+  std::shared_ptr<void> scheduler_info_;
 
   void set_deadline_impl(Duration deadline, const std::function<void(void)>& handler);
 
@@ -71,6 +74,12 @@ public:
   [[nodiscard]] auto has_deadline() const noexcept -> bool { return deadline_ != Duration::zero(); }
 
   [[nodiscard]] auto index() const noexcept -> unsigned int { return index_; }
+
+  template <class T> void set_scheduler_info(const std::shared_ptr<T>& ptr) noexcept { scheduler_info_ = ptr; }
+  template <class T> void set_scheduler_info(std::shared_ptr<T>&& ptr) noexcept { scheduler_info_ = ptr; }
+  template <class T> [[nodiscard]] auto get_scheduler_info() const noexcept -> std::shared_ptr<T> {
+    return std::static_pointer_cast<T>(scheduler_info_);
+  }
 };
 
 } // namespace reactor

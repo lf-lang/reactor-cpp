@@ -25,10 +25,10 @@ private:
   struct dependency_info_t {
     using kind = boost::edge_property_tag;
   };
-  using ReactionProperty = boost::property<reaction_info_t, const Reaction*>;
+  using ReactionProperty = boost::property<reaction_info_t, Reaction*>;
   using DependencyProperty = boost::property<dependency_info_t, DependencyType>;
   using ReactionGraph = boost::directed_graph<ReactionProperty, DependencyProperty>;
-  using ReactionToVertexMap = std::map<const Reaction*, ReactionGraph::vertex_descriptor>;
+  using ReactionToVertexMap = std::map<Reaction*, ReactionGraph::vertex_descriptor>;
   using ReactionPropertyMap = boost::property_map<ReactionGraph, reaction_info_t>::type;
   using DependencyPropertyMap = boost::property_map<ReactionGraph, dependency_info_t>::type;
 
@@ -63,10 +63,10 @@ public:
   struct group_info_t {
     using kind = boost::vertex_property_tag;
   };
-  using Group = std::vector<const Reaction*>;
+  using Group = std::vector<Reaction*>;
   using GroupProperty = boost::property<group_info_t, Group>;
   using GroupGraph = boost::directed_graph<GroupProperty>;
-  using ReactionToVertexMap = std::map<const Reaction*, GroupGraph::vertex_descriptor>;
+  using ReactionToVertexMap = std::map<Reaction*, GroupGraph::vertex_descriptor>;
   using GroupPropertyMap = boost::property_map<GroupGraph, group_info_t>::type;
 
 private:

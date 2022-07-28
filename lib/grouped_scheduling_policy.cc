@@ -29,26 +29,33 @@ void GroupedSchedulingPolicy::init() {
 
   auto g = reduced_grouped_graph.get_graph();
 
-  std::map<GroupedDependencyGraph::GroupGraph::vertex_descriptor, ReactionGroup*> vertex_to_group;
+  std::map<GroupedDependencyGraph::GroupGraph::vertex_descriptor, std::shared_ptr<ReactionGroup>> vertex_to_group;
 
   // create a reaction group for each vertex and keep track of all groups without dependencies in initial_groups_
   for (auto* vertex : boost::make_iterator_range(vertices(g))) {
-    auto& group = reaction_groups_.emplace_back(std::make_unique<ReactionGroup>());
-    vertex_to_group[vertex] = group.get();
+    auto group = std::make_shared<ReactionGroup>();
+    vertex_to_group[vertex] = group;
 
     if (boost::in_degree(vertex, g) == 0) {
-      initial_groups_.push_back(group.get());
+      initial_groups_.push_back(group);
     }
   }
 
   // initialize all reaction groups
   std::size_t id_counter{0};
   for (auto* vertex : boost::make_iterator_range(vertices(g))) {
-    auto* group = vertex_to_group[vertex];
+    auto& group = vertex_to_group[vertex];
     group->id = id_counter++;
 
     // copy the list of reactions from the vertex
     group->reactions = boost::get(reduced_grouped_graph.get_group_property_map(), vertex);
+
+    // Inform each reaction of its group and also set the index within the group
+    std::size_t index_counter{0};
+    for (auto* reaction : group->reactions) {
+      reaction->set_scheduler_info(group);
+      reaction->set_index(index_counter++);
+    }
 
     // initialize the number of dependencies (in edges)
     std::size_t num_predecessors = boost::in_degree(vertex, g);
@@ -57,13 +64,13 @@ void GroupedSchedulingPolicy::init() {
 
     // set all successors
     for (auto edge : boost::make_iterator_range(boost::out_edges(vertex, g))) {
-      auto* successor = vertex_to_group[boost::target(edge, g)];
-      group->successors.emplace_back(successor);
+      auto& successor = vertex_to_group[boost::target(edge, g)];
+      group->successors.emplace_back(successor.get());
     }
   }
 
   log::Debug() << "Identified reaction groups: ";
-  for (const auto& group : reaction_groups_) {
+  for (const auto& [_, group] : vertex_to_group) {
     log::Debug() << "* Group " << group->id << ':';
     log::Debug() << "   + reactions:";
     for (const auto* reaction : group->reactions) {
@@ -80,10 +87,17 @@ void GroupedSchedulingPolicy::init() {
 auto GroupedSchedulingPolicy::create_worker() -> Worker<GroupedSchedulingPolicy> { return {*this, identity_counter++}; }
 
 void GroupedSchedulingPolicy::worker_function(const Worker<GroupedSchedulingPolicy>& worker) {
-  reactor::log::Info() << "Hello from worker " << worker.id() << " [" << scheduler_.workers_.size() << "]\n";
+  if (worker.id() == 0) {
+    log::Debug() << "(Worker 0) do the initial scheduling";
+    scheduler_.next();
+  }
 }
 
-void GroupedSchedulingPolicy::trigger_reaction_from_next([[maybe_unused]] Reaction* reaction) {}
-void GroupedSchedulingPolicy::trigger_reaction_from_set_port([[maybe_unused]] Reaction* reaction) {}
+void GroupedSchedulingPolicy::trigger_reaction_from_next([[maybe_unused]] Reaction* reaction) { // NOLINT
+  log::Warn() << "trigger_reaction_from_next is not yet implemented";
+}
+void GroupedSchedulingPolicy::trigger_reaction_from_set_port([[maybe_unused]] Reaction* reaction) { // NOLINT
+  log::Warn() << "trigger_reaction_from_port is not yet implemented";
+}
 
 } // namespace reactor
