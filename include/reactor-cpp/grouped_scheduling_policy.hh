@@ -34,8 +34,28 @@ private:
 
   std::vector<ReactionGroup*> initial_groups_;
 
+  std::size_t num_groups_{0};
+  std::atomic<std::size_t> groups_to_process_{0};
+  std::atomic<bool> continue_execution_{true};
+
   static void process_group(const Worker<GroupedSchedulingPolicy>& worker, ReactionGroup* group);
   static void trigger_reaction(Reaction* reaction);
+
+  class GroupQueue {
+    // this vector only acts as a dynamically sized array
+    std::vector<ReactionGroup*> queue_{};
+    std::atomic<std::size_t> read_pos_{0};
+    std::atomic<std::size_t> write_pos_{0};
+    Semaphore semaphore_{0};
+
+  public:
+    void init(std::size_t max_size) { queue_.resize(max_size); }
+    void reset();
+    auto pop() -> ReactionGroup*;
+    auto push(const std::vector<ReactionGroup*>& groups);
+  };
+
+  GroupQueue group_queue_;
 
 public:
   GroupedSchedulingPolicy(Scheduler<GroupedSchedulingPolicy>& scheduler, Environment& env);
