@@ -13,6 +13,7 @@
 
 #include "reactor.hh"
 #include "value_ptr.hh"
+#include "multiport_callback.hh"
 
 namespace reactor {
 
@@ -21,6 +22,7 @@ enum class PortType { Input, Output };
 class BasePort : public ReactorElement {
 private:
   BasePort* inward_binding_{nullptr};
+  PortBankCallBack* port_bank_{nullptr};
   std::set<BasePort*> outward_bindings_{};
   const PortType type_;
 
@@ -34,6 +36,10 @@ protected:
                        container)
       , type_(type) {}
 
+  BasePort(const std::string& name, PortType type, Reactor* container, PortBankCallBack* port_bank)
+      : ReactorElement(name, (type == PortType::Input) ? ReactorElement::Type::Input : ReactorElement::Type::Output,
+                       container)
+      , type_(type), port_bank_(port_bank) {}
   void base_bind_to(BasePort* port);
   void register_dependency(Reaction* reaction, bool is_trigger);
   void register_antidependency(Reaction* reaction);
@@ -54,6 +60,12 @@ public:
   [[nodiscard]] inline auto triggers() const noexcept -> const auto& { return triggers_; }
   [[nodiscard]] inline auto dependencies() const noexcept -> const auto& { return dependencies_; }
   [[nodiscard]] inline auto anti_dependencies() const noexcept -> const auto& { return anti_dependencies_; }
+  
+  inline void activate() noexcept {
+    if (port_bank_ != nullptr) {
+      port_bank_->activate(this);
+    }
+  }
 
   friend class Reaction;
   friend class Scheduler;
@@ -70,6 +82,9 @@ public:
 
   Port(const std::string& name, PortType type, Reactor* container)
       : BasePort(name, type, container) {}
+  Port(const std::string& name, PortType type, Reactor* container, PortBankCallBack* port_bank)
+      : BasePort(name, type, container, port_bank) {}
+
 
   void bind_to(Port<T>* port) { base_bind_to(port); }
   [[nodiscard]] auto typed_inward_binding() const noexcept -> Port<T>*;
@@ -115,6 +130,9 @@ template <class T> class Input : public Port<T> { // NOLINT
 public:
   Input(const std::string& name, Reactor* container)
       : Port<T>(name, PortType::Input, container) {}
+  Input(const std::string& name, Reactor* container, PortBankCallBack* port_bank)
+      : Port<T>(name, PortType::Input, container, port_bank) {}
+
   Input(Input&&) = default; // NOLINT(performance-noexcept-move-constructor)
 };
 

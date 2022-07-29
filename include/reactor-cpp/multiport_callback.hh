@@ -16,6 +16,7 @@ class PortBankCallBack {
 private:
   std::vector<T> data_{};
   std::vector<std::size_t> active_ports_{};
+  PortBankCallBack<T, A>* right_site_ {nullptr}; 
 
 public:
   using allocator_type = A;
@@ -39,7 +40,8 @@ public:
   ~PortBankCallBack() = default;
 
   auto operator=(const PortBankCallBack<T>& other) -> PortBankCallBack& {
-    std::copy(std::begin(other), std::end(other), std::begin(data_));
+    std::copy(std::begin(other.data_), std::end(other.data_), std::begin(data_));
+    std::copy(std::begin(other.active_ports_), std::end(other.active_ports_), std::begin(active_ports_));
     return *this;
   }
   auto operator==(const PortBankCallBack& other) const -> bool {
@@ -47,17 +49,10 @@ public:
   }
   auto operator!=(const PortBankCallBack& other) const -> bool { return !(*this == other); };
   auto operator[](std::size_t index) -> T& { 
-      if (std::find(std::begin(active_ports_),std::end(active_ports_), index) == std::end(active_ports_) ) {
-        active_ports_.push_back(index);
-        std::sort(std::begin(active_ports_), std::end(active_ports_));
-      }
+      active_ports_.push_back(index);
       return data_[index]; 
   }
   auto operator[](std::size_t index) const -> const T& { 
-
-      if (std::find(std::begin(active_ports_),std::end(active_ports_), index) == std::end(active_ports_) ) {
-        ((PortBankCallBack*)this)->active_ports_.push_back(index); //REEEEE WTF TODO: FIX
-      }
       return data_[index]; 
   }
 
@@ -72,24 +67,45 @@ public:
   auto size() const noexcept -> size_type { return data_.size(); };
   auto max_size() const noexcept -> size_type { return data_.size(); };
   [[nodiscard]] auto empty() const -> bool { return data_.empty(); };
-   
+  
+  inline void set_right_site(PortBankCallBack<T, A>* right_site) noexcept {
+    right_site_ = right_site;
+  }
+
   inline void reserve(std::size_t size) noexcept {
     data_.reserve(size);
     active_ports_.reserve(size);
   }
 
   inline void push_back(const T& elem) noexcept {
+    if (elem->is_present()){
+        active_ports_.push_back(active_ports_.size());
+    }
     data_.push_back(elem);
   }
-  
+
   template <class... Args>
   inline void emplace_back(Args&&... args) noexcept  {
     data_.emplace_back(args...);
   }
 
+  template <class... Args>
+  inline void set(std::size_t index, Args&&... args) noexcept {
+    active_ports_.push_back(index);
+    std::cout << "setting: " << index << " filled: " << active_ports_.size() << std::endl;
+    data_[index].set(args...);
+  }
 
-  inline auto reset() noexcept {
-    active_ports_.clear();
+  inline void activate(T* port) noexcept {
+    auto position = (port - data_.data()) / sizeof(T);
+    active_ports_.push_back(position);
+  }
+
+  inline void filter() noexcept {
+    active_ports_.erase(
+        std::remove_if(active_ports_.begin(), active_ports_.end(),
+            [&](std::size_t index) { return !data_[index].is_present(); }),
+            active_ports_.end());
   }
 
   void update_active_ports() {
@@ -102,8 +118,24 @@ public:
     }
   }
 
-  inline auto active_ports_indices() const noexcept -> const std::vector<std::size_t>& { 
-    return active_ports_; 
+  inline auto active_ports_indices() const noexcept -> std::vector<std::size_t> { 
+    std::vector<std::size_t>ports_copy;
+    ports_copy.reserve(active_ports_.size() / 2);
+
+    auto not_contains = [&](std::size_t index) {
+        return std::find(std::begin(ports_copy),std::end(ports_copy), index) == std::end(ports_copy);
+    };
+
+    std::cout << "size befor: " << active_ports_.size() << std::endl;
+    for (auto i : active_ports_) {
+        if (data_[i].is_present() && not_contains(i)) {
+            ports_copy.push_back(i);
+        }
+    }
+    std::cout << "size after: " << ports_copy.size() << std::endl;
+    //((PortBankCallBack*)this)->active_ports_ = ports_copy;
+    //std::cout << "cleared: " << active_ports_.size() << std::endl;
+    return ports_copy; 
   }
 
   auto active_ports() const noexcept -> std::vector<T> {
@@ -117,9 +149,5 @@ public:
     return collection;
   }
 
-  void port_call_back(T* port) {
-    auto index = static_cast<std::size_t>(port - (&*std::begin(data_)));
-    active_ports_.push_back(index);
-  }
 };
 }
