@@ -34,7 +34,7 @@ public:
 
 private:
   using Dependency = std::pair<Reaction*, Reaction*>;
-  const unsigned int num_workers_{default_number_worker};
+  const std::size_t num_workers_{default_number_worker};
   unsigned int max_reaction_index_{default_max_reaction_index};
   const bool run_forever_{default_run_forever};
   const bool fast_fwd_execution_{default_fast_fwd_execution};
@@ -51,7 +51,7 @@ private:
   void calculate_indexes();
 
 public:
-  explicit Environment(unsigned int num_workers, bool run_forever = default_run_forever,
+  explicit Environment(std::size_t num_workers, bool run_forever = default_run_forever,
                        bool fast_fwd_execution = default_fast_fwd_execution);
 
   void register_reactor(Reactor* reactor);
@@ -79,7 +79,7 @@ public:
 
   [[nodiscard]] static auto physical_time() noexcept -> TimePoint { return get_physical_time(); }
 
-  [[nodiscard]] auto num_workers() const noexcept -> unsigned int { return num_workers_; }
+  [[nodiscard]] auto num_workers() const noexcept -> std::size_t { return num_workers_; }
   [[nodiscard]] auto fast_fwd_execution() const noexcept -> bool { return fast_fwd_execution_; }
   [[nodiscard]] auto run_forever() const noexcept -> bool { return run_forever_; }
   [[nodiscard]] auto max_reaction_index() const noexcept -> unsigned int { return max_reaction_index_; }

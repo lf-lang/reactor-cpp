@@ -9,6 +9,7 @@
 #include "reactor-cpp/environment.hh"
 
 #include <algorithm>
+#include <cstddef>
 #include <fstream>
 #include <map>
 
@@ -22,7 +23,7 @@
 
 namespace reactor {
 
-Environment::Environment(unsigned int num_workers, bool run_forever, bool fast_fwd_execution)
+Environment::Environment(std::size_t num_workers, bool run_forever, bool fast_fwd_execution)
     : num_workers_(num_workers)
     , run_forever_(run_forever)
     , fast_fwd_execution_(fast_fwd_execution)
