@@ -40,7 +40,7 @@ auto GroupedSchedulingPolicy::GroupQueue::push(const std::vector<ReactionGroup*>
     queue_[pos++] = group;
   }
   std::atomic_thread_fence(std::memory_order_acquire);
-  semaphore_.release(groups.size());
+  semaphore_.release(static_cast<std::ptrdiff_t>(groups.size()));
 }
 
 void GroupedSchedulingPolicy::GroupQueue::reset() {
@@ -117,7 +117,7 @@ void GroupedSchedulingPolicy::init() { // NOLINT
     std::set<ReactionGroup*> in_super_group;
     if (successors.size() > 1) {
       for (auto* successor_a : successors) {
-        if (in_super_group.count(successor_a) == 0 && successor_a->num_predecessors <= 1) {
+        if (in_super_group.contains(successor_a) && successor_a->num_predecessors <= 1) {
           std::vector<ReactionGroup*> same_successors;
           std::copy_if(successors.begin(), successors.end(), std::back_insert_iterator(same_successors),
                        [successor_a](ReactionGroup* successor_b) {

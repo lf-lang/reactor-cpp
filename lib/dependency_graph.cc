@@ -66,7 +66,7 @@ void ReactionDependencyGraph::populate_graph_with_dependency_edges(const Reactor
       }
       for (auto* antidependency : source->antidependencies()) {
         auto edge = graph.add_edge(vertex_map.at(antidependency), vertex_map.at(reaction)).first;
-        if (reaction->port_triggers().count(dependency) == 0) {
+        if (reaction->port_triggers().contains(dependency)) {
           put(get_dependency_property_map(), edge, DependencyType::Effect);
         } else {
           put(get_dependency_property_map(), edge, DependencyType::Trigger);

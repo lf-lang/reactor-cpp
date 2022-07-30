@@ -9,12 +9,13 @@
 #ifndef REACTOR_CPP_GROUPED_SCHEDULING_POLICY_HH
 #define REACTOR_CPP_GROUPED_SCHEDULING_POLICY_HH
 
+#include <atomic>
 #include <cstddef>
+#include <semaphore>
 #include <vector>
 
 #include "reactor-cpp/fwd.hh"
 #include "reactor-cpp/reaction.hh"
-#include "reactor-cpp/semaphore.hh"
 
 namespace reactor {
 
@@ -52,7 +53,7 @@ private:
     std::vector<ReactionGroup*> queue_{};
     std::atomic<std::size_t> read_pos_{0};
     std::atomic<std::size_t> write_pos_{0};
-    Semaphore semaphore_{0};
+    std::counting_semaphore<65536> semaphore_{0}; // NOLINT
 
   public:
     void init(std::size_t max_size) { queue_.resize(max_size); }
