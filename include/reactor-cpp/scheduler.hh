@@ -14,13 +14,13 @@
 #include <future>
 #include <map>
 #include <mutex>
+#include <semaphore>
 #include <set>
 #include <thread>
 #include <vector>
 
 #include "fwd.hh"
 #include "logical_time.hh"
-#include "semaphore.hh"
 
 namespace reactor {
 

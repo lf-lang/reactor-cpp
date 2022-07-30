@@ -1,3 +1,7 @@
+// NOLINT(llvm-header-guard)
+// This file may not contain a top level header guard as lttng expects this
+// header to be included multiple times
+
 /*
  * Copyright (C) 2020 TU Dresden
  * All rights reserved.
@@ -19,8 +23,6 @@
 #undef TRACEPOINT_INCLUDE
 #define TRACEPOINT_INCLUDE "reactor-cpp/trace.hh"
 
-// LTTng requires this header to be included multiple times. Therfore, we cannot
-// use `#praga once`, unfortunantely.
 #ifndef REACTOR_CPP_TRACE_HH
 namespace reactor {
 constexpr bool tracing_enabled = true;
