@@ -23,6 +23,7 @@ struct ReactionGroup {
   std::vector<std::pair<bool, Reaction*>> reactions{};
   std::vector<ReactionGroup*> successors{};
   std::atomic<std::size_t> waiting_for{0};
+  std::atomic<bool> triggered{false};
   std::size_t num_predecessors{0};
 };
 
@@ -56,6 +57,10 @@ private:
   };
 
   GroupQueue group_queue_;
+
+  void schedule();
+  auto finalize_group_and_notify_successors(ReactionGroup* group, std::vector<ReactionGroup*>& out_ready_groups) -> bool;
+  void notify_groups(const std::vector<ReactionGroup*>& groups, std::vector<ReactionGroup*>& out_ready_groups);
 
 public:
   GroupedSchedulingPolicy(Scheduler<GroupedSchedulingPolicy>& scheduler, Environment& env);

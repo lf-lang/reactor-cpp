@@ -125,75 +125,103 @@ void GroupedSchedulingPolicy::init() {
 
 auto GroupedSchedulingPolicy::create_worker() -> Worker<GroupedSchedulingPolicy> { return {*this, identity_counter++}; }
 
-void GroupedSchedulingPolicy::worker_function(const Worker<GroupedSchedulingPolicy>& worker) { // NOLINT
-  if (worker.id() == 0) {
-    log::Debug() << "(Worker 0) do the initial scheduling";
-    scheduler_.next();
-    groups_to_process_.store(num_groups_, std::memory_order_release);
-    group_queue_.push(initial_groups_);
+void GroupedSchedulingPolicy::schedule() {
+  group_queue_.reset();
+  if (continue_execution_.load(std::memory_order_acquire)) {
+    log::Debug() << "(Worker " << Worker<GroupedSchedulingPolicy>::current_worker_id() << ") call next";
+    bool continue_execution = scheduler_.next();
+    std::atomic_thread_fence(std::memory_order_release);
+    if (!continue_execution) {
+      continue_execution_.store(false, std::memory_order_relaxed);
+    }
+    groups_to_process_.store(num_groups_, std::memory_order_relaxed);
+  } else {
+    log::Debug() << "(Worker " << Worker<GroupedSchedulingPolicy>::current_worker_id()
+                 << ") signal all workers to terminate";
+    std::vector<ReactionGroup*> null_groups_(environment_.num_workers() + 1, nullptr);
+    group_queue_.push(null_groups_);
+    groups_to_process_.store(environment_.num_workers(), std::memory_order_release);
   }
+}
 
-  // This is used as a list for storing new ready groups while processing a group.
+auto GroupedSchedulingPolicy::finalize_group_and_notify_successors(ReactionGroup* group,
+                                                                   std::vector<ReactionGroup*>& out_ready_groups)
+    -> bool {
+  group->waiting_for.store(group->num_predecessors, std::memory_order_release);
+  notify_groups(group->successors, out_ready_groups);
+
+  // return true if the group was the last to be processed.
+  return 1 == groups_to_process_.fetch_sub(1, std::memory_order_acq_rel);
+}
+
+void GroupedSchedulingPolicy::notify_groups(const std::vector<ReactionGroup*>& groups,
+                                            std::vector<ReactionGroup*>& out_ready_groups) {
+  for (auto* group : groups) {
+    // decrement the waiting for counter
+    auto old = group->waiting_for.fetch_sub(1, std::memory_order_relaxed);
+    // If the old value was 1 (or 0), then all dependencies are fulfilled and the group is ready for execution
+    if (old <= 1) {
+      // If the group was triggered, then add it to the ready queue. Otherwise, we skip the group and check its
+      // successors.
+      if (group->triggered.exchange(false, std::memory_order_relaxed)) {
+        out_ready_groups.emplace_back(group);
+      } else {
+        finalize_group_and_notify_successors(group, out_ready_groups);
+      }
+    }
+  }
+  std::atomic_thread_fence(std::memory_order_acquire);
+}
+
+void GroupedSchedulingPolicy::worker_function(const Worker<GroupedSchedulingPolicy>& worker) {
+  // This is used as a list for storing new ready groups found while processing a group.
   std::vector<ReactionGroup*> ready_groups;
   ready_groups.reserve(num_groups_);
 
-  // We use this variable to pass a group to ourselves (avoiding the queue)
+  // We use this variable to pass a group to process to ourselves (avoiding the queue)
   ReactionGroup* next_group{nullptr};
 
+  // Worker 0 does the initial scheduling
+  if (worker.id() == 0) {
+    log::Debug() << "(Worker 0) do the initial scheduling";
+    schedule();
+    notify_groups(initial_groups_, ready_groups);
+    group_queue_.push(ready_groups);
+    ready_groups.clear();
+  }
+
   while (true) {
+    // Get a group to process. If we set next_group in the last iteration, we
+    // process this group. Otherwise we pop a group from the queue.
     auto* group = next_group != nullptr ? next_group : group_queue_.pop();
+    next_group = nullptr;
+
     // receiving a nullptr indicates that the worker should terminate
     if (group == nullptr) {
       break;
     }
 
-    // first, process the group
+    // process the group
     process_group(worker, group);
+    bool need_to_schedule = finalize_group_and_notify_successors(group, ready_groups);
 
-    // Check if this was the last group.
-    // If so, we call next() again, otherwise we update all successors and check for new ready groups
-    bool call_next{1 == groups_to_process_.fetch_sub(1, std::memory_order_acq_rel)};
-    if (call_next) {
-      group_queue_.reset();
-      if (continue_execution_.load(std::memory_order_acquire)) {
-        log::Debug() << "(Worker " << worker.id() << ") call next";
-        if (!scheduler_.next()) {
-          continue_execution_.store(false, std::memory_order_release);
-        }
-        std::copy(initial_groups_.begin(), initial_groups_.end(), std::back_inserter(ready_groups));
-        groups_to_process_.store(num_groups_, std::memory_order_release);
-      } else {
-        std::vector<ReactionGroup*> null_groups_(environment_.num_workers() + 1, nullptr);
-        group_queue_.push(null_groups_);
-        groups_to_process_.store(environment_.num_workers(), std::memory_order_release);
-      }
-    } else {
-      // Check if any of the successors has become ready
-      for (auto* successor : group->successors) {
-        auto old = successor->waiting_for.fetch_sub(1, std::memory_order_relaxed);
-        if (old == 1) {
-          ready_groups.emplace_back(successor);
-        }
-      }
+    if (need_to_schedule) {
+      schedule();
+      notify_groups(initial_groups_, ready_groups);
     }
 
-    // reset the waiting_for counter of the current group
-    std::atomic_thread_fence(std::memory_order_acq_rel);
-    group->waiting_for.store(group->num_predecessors, std::memory_order_relaxed);
-
-    if (ready_groups.empty()) {
-      next_group = nullptr;
-    } else {
-      log::Debug() << "(Worker " << worker.id() << ") found " << ready_groups.size()
-                   << " new groups that are ready for execution";
-      // keep the first ready group for ourselves to process next
+    log::Debug() << "(Worker " << worker.id() << ") found " << ready_groups.size()
+                 << " new groups that are ready for execution";
+    if (!ready_groups.empty()) {
+      // take one group for ourselves
       next_group = ready_groups.back();
       ready_groups.pop_back();
 
-      // all other groups we give to the ready queue
+      // if there are more, we put them on the queue
       if (!ready_groups.empty()) {
         group_queue_.push(ready_groups);
       }
+
       ready_groups.clear();
     }
   }
@@ -204,6 +232,7 @@ void GroupedSchedulingPolicy::trigger_reaction(Reaction* reaction) {
   log::Debug() << "(GroupedSchedulingPolicy) trigger reaction " << reaction->fqn() << " in Group " << group->id;
   auto& triggered_reaction_pair = group->reactions[reaction->index()];
   triggered_reaction_pair.first = true;
+  group->triggered.store(true, std::memory_order_release);
 }
 
 void GroupedSchedulingPolicy::process_group(const Worker<GroupedSchedulingPolicy>& worker, ReactionGroup* group) {
