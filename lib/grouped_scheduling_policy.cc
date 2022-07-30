@@ -127,21 +127,13 @@ auto GroupedSchedulingPolicy::create_worker() -> Worker<GroupedSchedulingPolicy>
 
 void GroupedSchedulingPolicy::schedule() {
   group_queue_.reset();
-  if (continue_execution_.load(std::memory_order_acquire)) {
-    log::Debug() << "(Worker " << Worker<GroupedSchedulingPolicy>::current_worker_id() << ") call next";
-    bool continue_execution = scheduler_.next();
-    std::atomic_thread_fence(std::memory_order_release);
-    if (!continue_execution) {
-      continue_execution_.store(false, std::memory_order_relaxed);
-    }
-    groups_to_process_.store(num_groups_, std::memory_order_relaxed);
-  } else {
-    log::Debug() << "(Worker " << Worker<GroupedSchedulingPolicy>::current_worker_id()
-                 << ") signal all workers to terminate";
-    std::vector<ReactionGroup*> null_groups_(environment_.num_workers() + 1, nullptr);
-    group_queue_.push(null_groups_);
-    groups_to_process_.store(environment_.num_workers(), std::memory_order_release);
+  log::Debug() << "(Worker " << Worker<GroupedSchedulingPolicy>::current_worker_id() << ") call next";
+  bool continue_execution = scheduler_.next();
+  std::atomic_thread_fence(std::memory_order_release);
+  if (!continue_execution) {
+    continue_execution_.store(false, std::memory_order_relaxed);
   }
+  groups_to_process_.store(num_groups_, std::memory_order_relaxed);
 }
 
 auto GroupedSchedulingPolicy::finalize_group_and_notify_successors(ReactionGroup* group,
@@ -171,6 +163,14 @@ void GroupedSchedulingPolicy::notify_groups(const std::vector<ReactionGroup*>& g
     }
   }
   std::atomic_thread_fence(std::memory_order_acquire);
+}
+
+void GroupedSchedulingPolicy::terminate_workers() {
+  log::Debug() << "(Worker " << Worker<GroupedSchedulingPolicy>::current_worker_id()
+               << ") signal all workers to terminate";
+  std::vector<ReactionGroup*> null_groups_(environment_.num_workers() + 1, nullptr);
+  group_queue_.push(null_groups_);
+  groups_to_process_.store(environment_.num_workers(), std::memory_order_release);
 }
 
 void GroupedSchedulingPolicy::worker_function(const Worker<GroupedSchedulingPolicy>& worker) {
@@ -206,8 +206,17 @@ void GroupedSchedulingPolicy::worker_function(const Worker<GroupedSchedulingPoli
     bool need_to_schedule = finalize_group_and_notify_successors(group, ready_groups);
 
     if (need_to_schedule) {
-      schedule();
-      notify_groups(initial_groups_, ready_groups);
+      // We use a do-while loop here as we could have scheduled events that do not trigger any reactions.
+      // In this case, ready_groups will be empty and we can simply call schedule again.
+      do {
+        if (continue_execution_.load(std::memory_order_acquire)) {
+          schedule();
+          notify_groups(initial_groups_, ready_groups);
+        } else {
+          terminate_workers();
+          break;
+        }
+      } while (ready_groups.empty());
     }
 
     log::Debug() << "(Worker " << worker.id() << ") found " << ready_groups.size()
