@@ -197,6 +197,20 @@ void GroupedSchedulingPolicy::schedule() {
   groups_to_process_.store(num_groups_, std::memory_order_relaxed);
 }
 
+void GroupedSchedulingPolicy::schedule_until_ready_or_terminate(std::vector<ReactionGroup*>& ready_groups) {
+  // We use a do-while loop here as we could have scheduled events that do not trigger any reactions.
+  // In this case, ready_groups will be empty and we can simply call schedule again.
+  do {
+    if (continue_execution_.load(std::memory_order_acquire)) {
+      schedule();
+      notify_groups(initial_groups_, ready_groups);
+    } else {
+      terminate_workers();
+      break;
+    }
+  } while (ready_groups.empty());
+}
+
 auto GroupedSchedulingPolicy::finalize_group_and_notify_successors(ReactionGroup* group,
                                                                    std::vector<ReactionGroup*>& out_ready_groups)
     -> bool {
@@ -282,8 +296,7 @@ void GroupedSchedulingPolicy::worker_function(const Worker<GroupedSchedulingPoli
   // Worker 0 does the initial scheduling
   if (worker.id() == 0) {
     log::Debug() << "(Worker 0) do the initial scheduling";
-    schedule();
-    notify_groups(initial_groups_, ready_groups);
+    schedule_until_ready_or_terminate(ready_groups);
     group_queue_.push(ready_groups);
     ready_groups.clear();
   }
@@ -304,17 +317,7 @@ void GroupedSchedulingPolicy::worker_function(const Worker<GroupedSchedulingPoli
     bool need_to_schedule = finalize_group_and_notify_successors(group, ready_groups);
 
     if (need_to_schedule) {
-      // We use a do-while loop here as we could have scheduled events that do not trigger any reactions.
-      // In this case, ready_groups will be empty and we can simply call schedule again.
-      do {
-        if (continue_execution_.load(std::memory_order_acquire)) {
-          schedule();
-          notify_groups(initial_groups_, ready_groups);
-        } else {
-          terminate_workers();
-          break;
-        }
-      } while (ready_groups.empty());
+      schedule_until_ready_or_terminate(ready_groups);
     }
 
     log::Debug() << "(Worker " << worker.id() << ") found " << ready_groups.size()
