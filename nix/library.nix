@@ -23,7 +23,7 @@ let
   # list of compiler for which packages are generated
   compilers = with pkgs; [ gcc10 gcc9 gcc8 clang_11 clang_12 clang_13 ];
 
-  default_compiler = pkgs.gcc;
+  default_compiler = pkgs.gcc10;
 
   mkDerivation = stdenv.mkDerivation;
 
