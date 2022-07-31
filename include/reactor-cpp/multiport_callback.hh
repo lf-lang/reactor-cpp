@@ -55,13 +55,9 @@ public:
   using iterator = typename std::vector<T>::iterator;
   using const_iterator = typename std::vector<T>::const_iterator;
 
-  PortBankCallBack() {
-    std::cout << "creating portbank" << std::endl;
-  };
+  PortBankCallBack() {};
 
   ~PortBankCallBack() {
-    std::cout << "deleting portbank" << std::endl;
-    
     if constexpr (std::is_pointer<T>::value) {
       if constexpr (!has_deactivate<std::remove_pointer_t<T>>::value) {
         for (auto i = 0; i < data_.size(); i++) {
@@ -77,11 +73,6 @@ public:
     }
   };
 
-  //auto operator=(const PortBankCallBack<T>& other) -> PortBankCallBack& {
-  //  std::copy(std::begin(other.data_), std::end(other.data_), std::begin(data_));
-  //  std::copy(std::begin(other.active_ports_), std::end(other.active_ports_), std::begin(active_ports_));
-  //  return *this;
-  //}
   auto operator==(const PortBankCallBack& other) const -> bool {
     return std::equal(std::begin(data_), std::end(data_), std::begin(other.data_), std::end(other.data_));
   }
@@ -144,7 +135,6 @@ public:
         return std::find(std::begin(ports_copy),std::end(ports_copy), index) == std::end(ports_copy);
     };
 
-    //std::cout << "size befor: " << active_ports_.size() << std::endl;
     for (auto i : active_ports_) {
         if (data_[i].is_present() && not_contains(i)) {
             ports_copy.push_back(i);
