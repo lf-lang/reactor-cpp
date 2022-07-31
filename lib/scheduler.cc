@@ -382,6 +382,10 @@ void Scheduler::set_port(BasePort* port) {
 }
 
 void Scheduler::set_port_helper(BasePort* port) {
+  if (port != nullptr) {
+    port->activate();
+  }
+
   for (auto* reaction : port->triggers()) {
     triggered_reactions_[Worker::current_worker_id()].push_back(reaction);
   }
