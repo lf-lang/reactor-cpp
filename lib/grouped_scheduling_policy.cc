@@ -263,6 +263,7 @@ void GroupedSchedulingPolicy::notify_groups(const std::vector<ReactionGroup*>& g
 }
 
 void GroupedSchedulingPolicy::terminate_workers() {
+  group_queue_.reset();
   log::Debug() << "(Worker " << Worker<GroupedSchedulingPolicy>::current_worker_id()
                << ") signal all workers to terminate";
   std::vector<ReactionGroup*> null_groups_(environment_.num_workers() + 1, nullptr);
