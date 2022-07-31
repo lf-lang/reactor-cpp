@@ -25,6 +25,11 @@ struct ReactionGroup {
   std::atomic<std::size_t> waiting_for{0};
   std::atomic<bool> triggered{false};
   std::size_t num_predecessors{0};
+
+  std::shared_ptr<ReactionGroup> super_group{nullptr};
+  std::vector<ReactionGroup*> sub_groups{};
+  std::vector<ReactionGroup*> triggered_sub_groups{};
+  std::atomic<std::size_t> triggered_sub_groups_write_pos{0};
 };
 
 class GroupedSchedulingPolicy {
@@ -59,8 +64,10 @@ private:
   GroupQueue group_queue_;
 
   void schedule();
-  auto finalize_group_and_notify_successors(ReactionGroup* group, std::vector<ReactionGroup*>& out_ready_groups) -> bool;
+  auto finalize_group_and_notify_successors(ReactionGroup* group, std::vector<ReactionGroup*>& out_ready_groups)
+      -> bool;
   void notify_groups(const std::vector<ReactionGroup*>& groups, std::vector<ReactionGroup*>& out_ready_groups);
+  void notify_super_group(ReactionGroup* group, std::vector<ReactionGroup*>& out_ready_groups);
   void terminate_workers();
 
 public:
