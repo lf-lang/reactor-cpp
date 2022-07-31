@@ -16,10 +16,24 @@
 
 namespace multiport {
 
+template <typename T>
+class has_deactivate
+{
+    typedef char one;
+    struct two { char x[2]; };
+
+    template <typename C> static one test( decltype(&C::has_deactivate) ) ;
+    template <typename C> static two test(...);    
+
+public:
+    enum { value = sizeof(test<T>(0)) == sizeof(char) };
+};
+   
+
 struct LockedPortList {
     std::mutex* mutex_ = nullptr;
     std::vector<std::size_t>* active_ports_ = nullptr;
-}
+};
 
 template <class T, class A = std::allocator<T>>
 class PortBankCallBack { 
@@ -45,16 +59,20 @@ public:
     std::cout << "creating portbank" << std::endl;
   };
 
-  //PortBankCallBack(const PortBankCallBack&) = delete;
   ~PortBankCallBack() {
     std::cout << "deleting portbank" << std::endl;
+    
     if constexpr (std::is_pointer<T>::value) {
-      for (auto i = 0; i < data_.size(); i++) {
-        data_[i]->deactivate();
+      if constexpr (!has_deactivate<std::remove_pointer_t<T>>::value) {
+        for (auto i = 0; i < data_.size(); i++) {
+          data_[i]->deactivate();
+        }
       }
     } else {
-      for (auto i = 0; i < data_.size(); i++) {
-        data_[i].deactivate();
+      if constexpr (has_deactivate<T>::value) {
+        for (auto i = 0; i < data_.size(); i++) {
+            data_[i].deactivate();
+        }
       }
     }
   };
@@ -83,8 +101,11 @@ public:
   auto max_size() const noexcept -> size_type { return data_.size(); };
   [[nodiscard]] auto empty() const -> bool { return data_.empty(); };
   
-  inline auto get_active_ports() -> std::vector<std::size_t>* {
-    return &(this->active_ports_);
+  inline auto get_active_ports() -> LockedPortList {
+    return LockedPortList {
+        &mutex_,
+        &active_ports_
+    }; 
   } 
 
   inline void reserve(std::size_t size) noexcept {
@@ -102,6 +123,7 @@ public:
   }
 
   void print() const {
+    std::lock_guard<std::mutex> lock(mutex_);
     for (auto i: active_ports_) {
         std::cout << i << ", ";
     }
@@ -113,17 +135,8 @@ public:
     data_[index].set(args...);
   }
 
-  void update_active_ports() {
-    active_ports_.clear();
-
-    for (auto i = 0ul; i < active_ports_.size(); i++) {
-      if ((*this)[i].set_) {
-        active_ports_.push_back(i);
-      }
-    }
-  }
-
   inline auto active_ports_indices() const noexcept -> std::vector<std::size_t> { 
+    std::lock_guard<std::mutex> lock(((PortBankCallBack*)this)->mutex_);
     std::vector<std::size_t>ports_copy;
     ports_copy.reserve(active_ports_.size() / 2);
 
@@ -131,26 +144,16 @@ public:
         return std::find(std::begin(ports_copy),std::end(ports_copy), index) == std::end(ports_copy);
     };
 
-    std::cout << "size befor: " << active_ports_.size() << std::endl;
+    //std::cout << "size befor: " << active_ports_.size() << std::endl;
     for (auto i : active_ports_) {
         if (data_[i].is_present() && not_contains(i)) {
             ports_copy.push_back(i);
         }
     }
+
+    ((PortBankCallBack*)this)->active_ports_ = ports_copy;
     return ports_copy; 
   }
-
-  auto active_ports() const noexcept -> std::vector<T> {
-    std::vector<T> collection{};
-    collection.reserve(active_ports_.size());
-
-    for (std::size_t index : active_ports_) {
-      collection.push_back(data_[index]);
-    }
-
-    return collection;
-  }
-
 };
 }
 

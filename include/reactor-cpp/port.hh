@@ -25,7 +25,7 @@ private:
   std::set<BasePort*> outward_bindings_{};
   const PortType type_;
   
-  std::vector<std::size_t>* active_ports_ = nullptr;
+  multiport::LockedPortList active_ports_{};
   std::size_t index_ = 0;
 
   std::set<Reaction*> dependencies_{};
@@ -38,7 +38,7 @@ protected:
                        container)
       , type_(type) {}
 
-  BasePort(const std::string& name, PortType type, Reactor* container, std::vector<std::size_t>* active_ports, std::size_t index)
+  BasePort(const std::string& name, PortType type, Reactor* container, multiport::LockedPortList active_ports, std::size_t index)
       : ReactorElement(name, (type == PortType::Input) ? ReactorElement::Type::Input : ReactorElement::Type::Output,
                        container)
       , type_(type), active_ports_(active_ports), index_(index) {}
@@ -63,15 +63,24 @@ public:
   [[nodiscard]] inline auto dependencies() const noexcept -> const auto& { return dependencies_; }
   [[nodiscard]] inline auto anti_dependencies() const noexcept -> const auto& { return anti_dependencies_; }
   
-  void activate() noexcept {
-    if (active_ports_ != nullptr) {
-      std::cout << "calling my portbank index:" << index_ << " size: " << active_ports_->size() << std::endl;
-      active_ports_->push_back(index_);
+  inline void activate() noexcept {
+    if (active_ports_.active_ports_ != nullptr) {
+      std::lock_guard<std::mutex> lock(*active_ports_.mutex_);
+      active_ports_.active_ports_->push_back(index_);
+    }
+  }
+
+  inline void clear() noexcept {
+    if (active_ports_.active_ports_ != nullptr) {
+      std::lock_guard<std::mutex> lock(*active_ports_.mutex_);
+      active_ports_.active_ports_->clear();
     }
   }
 
   inline void deactivate() noexcept {
-    active_ports_ = nullptr;
+    std::lock_guard<std::mutex> lock(*active_ports_.mutex_);
+    active_ports_.active_ports_ = nullptr;
+    active_ports_.mutex_ = nullptr;
   }
 
   friend class Reaction;
@@ -82,14 +91,17 @@ template <class T> class Port : public BasePort {
 private:
   ImmutableValuePtr<T> value_ptr_{nullptr};
 
-  void cleanup() final { value_ptr_ = nullptr; }
+  void cleanup() noexcept final {
+      value_ptr_ = nullptr; 
+      clear();
+  }
 
 public:
   using value_type = T;
 
   Port(const std::string& name, PortType type, Reactor* container)
       : BasePort(name, type, container) {}
-  Port(const std::string& name, PortType type, Reactor* container, std::vector<std::size_t>* active_ports, std::size_t index)
+  Port(const std::string& name, PortType type, Reactor* container, multiport::LockedPortList active_ports, std::size_t index)
       : BasePort(name, type, container, active_ports, index) {}
 
 
@@ -114,7 +126,10 @@ template <> class Port<void> : public BasePort {
 private:
   bool present_{false};
 
-  void cleanup() final { present_ = false; }
+  void cleanup() noexcept final { 
+      present_ = false;
+      clear();
+  }
 
 public:
   using value_type = void;
@@ -122,7 +137,7 @@ public:
   Port(const std::string& name, PortType type, Reactor* container)
       : BasePort(name, type, container) {}
 
-  Port(const std::string& name, PortType type, Reactor* container, std::vector<std::size_t>* active_ports, std::size_t index)
+  Port(const std::string& name, PortType type, Reactor* container, multiport::LockedPortList active_ports, std::size_t index)
       : BasePort(name, type, container, active_ports, index) {}
 
   void bind_to(Port<void>* port) { base_bind_to(port); }
@@ -140,7 +155,7 @@ template <class T> class Input : public Port<T> { // NOLINT
 public:
   Input(const std::string& name, Reactor* container)
       : Port<T>(name, PortType::Input, container) {}
-  Input(const std::string& name, Reactor* container, std::vector<std::size_t>* active_ports, std::size_t index)
+  Input(const std::string& name, Reactor* container, multiport::LockedPortList active_ports, std::size_t index)
       : Port<T>(name, PortType::Input, container, active_ports, index) {}
 
   Input(Input&&) = default; // NOLINT(performance-noexcept-move-constructor)
@@ -150,7 +165,7 @@ template <class T> class Output : public Port<T> { // NOLINT
 public:
   Output(const std::string& name, Reactor* container)
       : Port<T>(name, PortType::Output, container) {}
-  Output(const std::string& name, Reactor* container, std::vector<std::size_t>* active_ports, std::size_t index)
+  Output(const std::string& name, Reactor* container, multiport::LockedPortList active_ports, std::size_t index)
       : Port<T>(name, PortType::Output, container, active_ports, index) {}
 
   Output(Output&&) = default; // NOLINT(performance-noexcept-move-constructor)

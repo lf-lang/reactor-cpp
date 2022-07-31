@@ -17,7 +17,7 @@ let
   cpp-runtime = pkgs.callPackage ./reactor-cpp.nix {
     reactor-cpp-src = reactor-cpp-src;
     mkDerivation = stdenv.mkDerivation;
-    debug = true;
+    debug = false;
   };
 
   # list of compiler for which packages are generated
