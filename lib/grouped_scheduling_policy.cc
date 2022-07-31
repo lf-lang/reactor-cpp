@@ -241,12 +241,14 @@ void GroupedSchedulingPolicy::notify_super_group(ReactionGroup* group, std::vect
 
   // update successor if there is any
   if (!group->successors.empty()) {
-    reactor_assert(group->successors.size() == 1);
-    reactor_assert(group->successors[0]->num_predecessors == 1);
-    reactor_assert(group->successors[0]->sub_groups.empty());
+    for (auto* successor : group->successors) {
+      reactor_assert(successor->num_predecessors == 1);
+      reactor_assert(successor->sub_groups.empty());
 
-    group->successors[0]->waiting_for.fetch_sub(num_untriggered, std::memory_order_acq_rel);
-    // if none of the groups was triggered, then we can directly notify the successor
+      successor->waiting_for.fetch_sub(num_untriggered, std::memory_order_acq_rel);
+    }
+
+    // if none of the groups was triggered, then we can directly notify the successors
     if (num_triggered == 0) {
       notify_groups(group->successors, out_ready_groups);
     }
