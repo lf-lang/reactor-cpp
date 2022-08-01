@@ -63,14 +63,14 @@ public:
   [[nodiscard]] inline auto dependencies() const noexcept -> const auto& { return dependencies_; }
   [[nodiscard]] inline auto anti_dependencies() const noexcept -> const auto& { return anti_dependencies_; }
   
-  inline void activate() noexcept {
+  inline void activate() const noexcept {
     if (active_ports_.active_ports_ != nullptr) {
       std::lock_guard<std::mutex> lock(*active_ports_.mutex_);
       active_ports_.active_ports_->push_back(index_);
     }
   }
 
-  inline void clear() noexcept {
+  inline void clear() const noexcept {
     if (active_ports_.active_ports_ != nullptr) {
       std::lock_guard<std::mutex> lock(*active_ports_.mutex_);
       active_ports_.active_ports_->clear();

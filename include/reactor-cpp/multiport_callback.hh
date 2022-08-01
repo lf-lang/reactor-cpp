@@ -9,12 +9,10 @@
 #ifndef REACTOR_CPP_MULTIPORT_CALLBACK_HH
 #define REACTOR_CPP_MULTIPORT_CALLBACK_HH
 
-#include "portbank.hh"
-
-#include <vector>
 #include <algorithm>
-#include <type_traits>
 #include <mutex>
+#include <type_traits>
+#include <vector>
 
 namespace multiport {
 
@@ -23,11 +21,11 @@ namespace multiport {
 template <typename T>
 class has_deactivate
 {
-    typedef char one;
-    struct two { char x[2]; };
+    using one = char; 
+    struct two { char x[2]; }; //NOLINT modernize-use-using
 
-    template <typename C> static one test( decltype(&C::has_deactivate) ) ;
-    template <typename C> static two test(...);    
+    template <typename C> static auto test( decltype(&C::has_deactivate) ) -> one;
+    template <typename C> static auto test(...) -> two;    
 
 public:
     enum { value = sizeof(test<T>(0)) == sizeof(char) };
@@ -41,7 +39,7 @@ struct LockedPortList {
 };
 
 template <class T, class A = std::allocator<T>>
-class PortBankCallBack { 
+class PortBankCallBack { //NOLINT cppcoreguidelines-special-member-functions
 private:
   std::vector<T> data_{};
   std::vector<std::size_t> active_ports_{};
@@ -95,7 +93,7 @@ public:
   inline auto max_size() const noexcept -> size_type { return data_.size(); };
   [[nodiscard]] inline auto empty() const noexcept -> bool { return data_.empty(); };
 
-  inline auto get_active_ports() noexcept -> LockedPortList {
+  [[nodiscard]] inline auto get_active_ports() noexcept -> LockedPortList {
     return LockedPortList {
         &mutex_,
         &active_ports_
@@ -144,7 +142,8 @@ public:
     return ports_copy; 
   }
 };
-}
+} // namespace multiport
 
-#endif //REACTOR_CPP_MULTIPORT_CALLBACK_HH
+#endif // REACTOR_CPP_MULTIPORT_CALLBACK_HH
+
 
