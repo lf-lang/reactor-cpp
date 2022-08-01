@@ -382,7 +382,7 @@ void Scheduler::set_port(BasePort* port) {
 }
 
 void Scheduler::set_port_helper(BasePort* port) {
-  if (port->is_input()){
+  if (port->is_input()) {
     port->activate();
   }
 

@@ -11,9 +11,9 @@
 
 #include <set>
 
+#include "multiport_callback.hh"
 #include "reactor.hh"
 #include "value_ptr.hh"
-#include "multiport_callback.hh"
 
 namespace reactor {
 
