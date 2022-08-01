@@ -23,11 +23,11 @@
     "lingua-franca-benchmarks": {
       "flake": false,
       "locked": {
-        "lastModified": 1658145694,
-        "narHash": "sha256-+WqTco6BfJv2f0KTmRlxiP8+EEc157lXLNXFF5UsmaM=",
+        "lastModified": 1659081787,
+        "narHash": "sha256-KDo5nVz6RMSwHsfo4ipCaGd7uLXhAENQJ58SYe55xuE=",
         "owner": "lf-lang",
         "repo": "benchmarks-lingua-franca",
-        "rev": "8477420c5129b9bab498fe99f64e62c19c227cce",
+        "rev": "149798547d4254296400c15b9f8065f7fbd945af",
         "type": "github"
       },
       "original": {
@@ -51,11 +51,11 @@
     "lingua-franca-tests": {
       "flake": false,
       "locked": {
-        "lastModified": 1658294839,
-        "narHash": "sha256-qt7cey1D/nUPghv8NfSV7D9FCgKqRKnmIjunvWIaQnc=",
+        "lastModified": 1659267616,
+        "narHash": "sha256-umvGaaE2VZzxFbDkoqa7xRfV6xK4U9X2kZ2FfJJaLuI=",
         "owner": "lf-lang",
         "repo": "lingua-franca",
-        "rev": "5581f9820425fc7189b071c0e10493a420d8fc5c",
+        "rev": "b970bbf11506a2fd46750dee88abd936d79e88d6",
         "type": "github"
       },
       "original": {
@@ -103,11 +103,11 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1658161305,
-        "narHash": "sha256-X/nhnMCa1Wx4YapsspyAs6QYz6T/85FofrI6NpdPDHg=",
+        "lastModified": 1659219666,
+        "narHash": "sha256-pzYr5fokQPHv7CmUXioOhhzDy/XyWOIXP4LZvv/T7Mk=",
         "owner": "NixOs",
         "repo": "nixpkgs",
-        "rev": "e4d49de45a3b5dbcb881656b4e3986e666141ea9",
+        "rev": "7b9be38c7250b22d829ab6effdee90d5e40c6e5c",
         "type": "github"
       },
       "original": {
