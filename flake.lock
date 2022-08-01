@@ -7,11 +7,11 @@
         "utils": "utils"
       },
       "locked": {
-        "lastModified": 1650028179,
-        "narHash": "sha256-p8jQBiVwk0GQQjsK4gS1wk76bwPqr6J5Jn1UDlAWxjc=",
+        "lastModified": 1659359095,
+        "narHash": "sha256-uFlExLJT7vBV+8o/QcpWPqJEjXpkPW10qXNT6wcNqjc=",
         "owner": "revol-xut",
         "repo": "lf-benchmark-runner",
-        "rev": "7317490b9e4407c90b9bf51cd56d00b726a20aaf",
+        "rev": "9e6d6fbeb4c4ae5dc7d87e10d03a913367dac2c9",
         "type": "github"
       },
       "original": {

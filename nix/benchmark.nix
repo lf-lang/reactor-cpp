@@ -104,6 +104,23 @@ let
     '';
   };
 
+  individual-benchmark = (package: {
+    name = "benchmark-${package.name}";
+    value = mkDerivation {
+      name = "benchmark-${package.name}";
+      src = ./.;
+
+      buildPhase = ''
+        ${lf-benchmark-runner}/bin/lf-benchmark-runner --target lf-cpp --binary ${package}/bin/${package.name} --file ./result.csv
+      '';
+
+      installPhase = ''
+        mkdir -p $out/data
+        cp result.csv $out/data
+      '';
+    };
+  });
+
   # derivation for call and cachegrind. measuring a given package
   profiler = (package: valgrind_check:
     {
@@ -130,12 +147,14 @@ let
 
   attribute_set_cachegrind = (builtins.map (x: profiler x "cachegrind") (extract_derivations attribute_set_derivations));
   attribute_set_callgrind = (builtins.map (x: profiler x "callgrind") (extract_derivations attribute_set_derivations));
+  attribute_set_benchmarks = (builtins.map individual-benchmark (extract_derivations attribute_set_derivations));
   attribute_set_memory = (builtins.map library.memtest (extract_derivations attribute_set_derivations));
 in
   lib.listToAttrs (
      attribute_set_derivations
   ++ attribute_set_cachegrind
   ++ attribute_set_callgrind
+  ++ attribute_set_benchmarks
   ++ attribute_set_memory
   ++ [
   { name = "all-benchmarks"; value = all-benchmarks; }
