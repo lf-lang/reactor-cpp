@@ -4,7 +4,9 @@
   inputs = {
     utils.url = "github:numtide/flake-utils";
     nixpkgs.url = "github:NixOs/nixpkgs/nixos-unstable";
-    lf-benchmark-runner.url = "github:revol-xut/lf-benchmark-runner";
+    lf-benchmark-runner = {
+      url = "github:revol-xut/lf-benchmark-runner";
+    };
 
     # input for the reactor-cpp
     reactor-cpp = {

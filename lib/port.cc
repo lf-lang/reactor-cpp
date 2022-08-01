@@ -41,7 +41,7 @@ void BasePort::base_bind_to(BasePort* port) {
   reactor_assert(this->outward_bindings_.insert(port).second);
 }
 
-void BasePort::register_dependency(Reaction* reaction, bool is_trigger) {
+void BasePort::register_dependency(Reaction* reaction, bool is_trigger) noexcept {
   reactor_assert(reaction != nullptr);
   reactor_assert(this->environment() == reaction->environment()); // NOLINT
   validate(!this->has_outward_bindings(), "Dependencies may no be declared on ports with an outward binding!");
@@ -61,7 +61,7 @@ void BasePort::register_dependency(Reaction* reaction, bool is_trigger) {
   }
 }
 
-void BasePort::register_antidependency(Reaction* reaction) {
+void BasePort::register_antidependency(Reaction* reaction) noexcept {
   reactor_assert(reaction != nullptr);
   reactor_assert(this->environment() == reaction->environment()); // NOLINT
   validate(!this->has_inward_binding(), "Antidependencies may no be declared on ports with an inward binding!");

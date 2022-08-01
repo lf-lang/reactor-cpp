@@ -74,6 +74,16 @@ let
       ${pkgs.coreutils}/bin/cp ${run_all}/bin/* $out/bin/
     '' + install_command;
   };
+  
+  # package that builds all backages
+  build-all-benchmarks = mkDerivation {
+    src = ./.;
+    name = "build-all-benchmarks";
+    buildInputs = list_of_derivations;
+    installPhase = ''
+      ${pkgs.coreutils}/bin/mkdir -p $out/bin
+    '' + install_command;
+  };
 
   # runs our custom benchmark data extractor on the specified benchmark
   benchmark_command = (benchmark: "${lf-benchmark-runner}/bin/lf-benchmark-runner --target lf-cpp --binary ${benchmark}/bin/${benchmark.name} --file ./result.csv");

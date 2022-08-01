@@ -43,8 +43,8 @@ protected:
                        container)
       , type_(type), active_ports_(active_ports), index_(index) {}
   void base_bind_to(BasePort* port);
-  void register_dependency(Reaction* reaction, bool is_trigger);
-  void register_antidependency(Reaction* reaction);
+  void register_dependency(Reaction* reaction, bool is_trigger) noexcept;
+  void register_antidependency(Reaction* reaction) noexcept;
   virtual void cleanup() = 0;
 
 public:
