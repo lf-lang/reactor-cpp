@@ -119,7 +119,7 @@ public:
     data_[index].set(args...);
   }
 
-  inline auto active_ports_indices() const noexcept -> std::vector<std::size_t> { 
+  [[nodiscard]] inline auto active_ports_indices() const noexcept -> std::vector<std::size_t> { 
     std::vector<std::size_t>ports_copy;
     ports_copy.reserve(active_ports_.size() / 2);
 
