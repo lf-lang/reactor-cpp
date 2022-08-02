@@ -10,8 +10,11 @@
 #define REACTOR_CPP_MULTIPORT_CALLBACK_HH
 
 #include <algorithm>
+#include <atomic>
+#include <iostream>
 #include <mutex>
 #include <type_traits>
+#include <shared_mutex>
 #include <vector>
 
 namespace multiport {
@@ -34,7 +37,9 @@ public:
 // struct which gets handed to the ports to they can talk back
 // to the portbank
 struct LockedPortList {
-    std::mutex* mutex_ = nullptr;
+    std::shared_mutex* mutex_ = nullptr;
+    std::atomic<std::size_t>* size_ = nullptr;
+    std::atomic<std::size_t>* capacity_ = nullptr;
     std::vector<std::size_t>* active_ports_ = nullptr;
 };
 
@@ -43,7 +48,10 @@ class PortBankCallBack { //NOLINT cppcoreguidelines-special-member-functions
 private:
   std::vector<T> data_{};
   std::vector<std::size_t> active_ports_{};
-  std::mutex mutex_;
+  std::shared_mutex mutex_;
+  std::atomic<std::size_t> size_ = 0;
+  std::atomic<std::size_t> capacity_ = 0;
+
 public:
   using allocator_type = A;
   using value_type = typename A::value_type;
@@ -96,13 +104,16 @@ public:
   [[nodiscard]] inline auto get_active_ports() noexcept -> LockedPortList {
     return LockedPortList {
         &mutex_,
+        &size_,
+        &capacity_,
         &active_ports_
     };
   }
 
   inline void reserve(std::size_t size) noexcept {
     data_.reserve(size);
-    active_ports_.reserve(size);
+    active_ports_.reserve(size * 2);
+    capacity_ = size * 2;
   }
 
   inline void push_back(const T& elem) noexcept {
@@ -121,23 +132,30 @@ public:
 
   [[nodiscard]] inline auto active_ports_indices() const noexcept -> std::vector<std::size_t> { 
     std::vector<std::size_t>ports_copy;
-    ports_copy.reserve(active_ports_.size() / 2);
+    ports_copy.reserve(size_);
 
     auto not_contains = [&](std::size_t index) {
         return std::find(std::begin(ports_copy),std::end(ports_copy), index) == std::end(ports_copy);
     };
 
     {
-        std::lock_guard<std::mutex> lock(((PortBankCallBack*)this)->mutex_);
-        for (auto i : active_ports_) {
-            if (data_[i].is_present() && not_contains(i)) {
-                ports_copy.push_back(i);
+        //std::lock_guard<std::mutex> lock(((PortBankCallBack*)this)->mutex_);
+        std::unique_lock<std::shared_mutex> lock(((PortBankCallBack*)this)->mutex_);
+
+        std::size_t size = size_.load();
+
+        for (auto i = 0; i < size; i++) {
+            auto j = active_ports_[i];
+            if (data_[j].is_present() && not_contains(j)) {
+                ports_copy.push_back(j);
             }
         }
 
         // this is just ugly and higly dangerous 
         // but other wise I would need to strip out all the const qualifierts
-        ((PortBankCallBack*)this)->active_ports_ = ports_copy;    }
+        ((PortBankCallBack*)this)->size_ = ports_copy.size();
+        ((PortBankCallBack*)this)->active_ports_ = ports_copy;    
+    }
 
     return ports_copy; 
   }

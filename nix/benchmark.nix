@@ -7,6 +7,8 @@
 , lingua-franca-src
 , lingua-franca-benchmarks
 , valgrind
+, rev-reactor
+, rev-lingua-franca
 }:
 let
 
@@ -15,6 +17,8 @@ let
     lingua-franca-src = lingua-franca-src;
     reactor-cpp-src = reactor-cpp-src;
   };
+
+  hashed-inputs =builtins.hashString "sha1" (rev-reactor + rev-lingua-franca);
 
   mkDerivation = library.mkDerivation;
 
@@ -86,7 +90,7 @@ let
   };
 
   # runs our custom benchmark data extractor on the specified benchmark
-  benchmark_command = (benchmark: "${lf-benchmark-runner}/bin/lf-benchmark-runner --target lf-cpp --binary ${benchmark}/bin/${benchmark.name} --file ./result.csv");
+  benchmark_command = (benchmark: "${lf-benchmark-runner}/bin/lf-benchmark-runner --target lf-cpp-${hashed-inputs} --binary ${benchmark}/bin/${benchmark.name} --file ./result.csv");
 
   # compiles a giant script to run every benchmark and collect their results into on csv file
   benchmark_commands = lib.strings.concatStringsSep "\n" (builtins.map benchmark_command list_of_derivations);
@@ -111,7 +115,7 @@ let
       src = ./.;
 
       buildPhase = ''
-        ${lf-benchmark-runner}/bin/lf-benchmark-runner --target lf-cpp --binary ${package}/bin/${package.name} --file ./result.csv
+        ${lf-benchmark-runner}/bin/lf-benchmark-runner --target lf-cpp --binary ${package}/bin/${package.name} --file ./result.csv --image result.svg
       '';
 
       installPhase = ''

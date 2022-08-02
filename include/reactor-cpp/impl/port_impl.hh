@@ -36,6 +36,7 @@ template <class T> void Port<T>::set(const ImmutableValuePtr<T>& value_ptr) {
   reactor::validate(value_ptr != nullptr, "Ports may not be set to nullptr!");
   auto scheduler = environment()->scheduler();
   this->value_ptr_ = std::move(value_ptr);
+  this->present_ = true;
   scheduler->set_port(this);
 }
 
@@ -44,13 +45,6 @@ template <class T> auto Port<T>::get() const noexcept -> const ImmutableValuePtr
     return typed_inward_binding()->get();
   }
   return value_ptr_;
-}
-
-template <class T> auto Port<T>::is_present() const noexcept -> bool {
-  if (has_inward_binding()) {
-    return typed_inward_binding()->is_present();
-  }
-  return value_ptr_ != nullptr;
 }
 
 } // namespace reactor

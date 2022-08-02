@@ -33,6 +33,8 @@ private:
   std::set<Reaction*> anti_dependencies_{};
 
 protected:
+  bool present_{false};
+
   BasePort(const std::string& name, PortType type, Reactor* container)
       : ReactorElement(name, (type == PortType::Input) ? ReactorElement::Type::Input : ReactorElement::Type::Output,
                        container)
@@ -50,6 +52,12 @@ protected:
 public:
   [[nodiscard]] inline auto is_input() const noexcept -> bool { return type_ == PortType::Input; }
   [[nodiscard]] inline auto is_output() const noexcept -> bool { return type_ == PortType::Output; }
+  [[nodiscard]] inline auto is_present() const noexcept -> bool {
+    if (has_inward_binding()) {
+      return inward_binding()->is_present();
+    }
+    return present_;
+  };
 
   [[nodiscard]] inline auto has_inward_binding() const noexcept -> bool { return inward_binding_ != nullptr; }
   [[nodiscard]] inline auto has_outward_bindings() const noexcept -> bool { return !outward_bindings_.empty(); }
@@ -63,24 +71,46 @@ public:
   [[nodiscard]] inline auto dependencies() const noexcept -> const auto& { return dependencies_; }
   [[nodiscard]] inline auto anti_dependencies() const noexcept -> const auto& { return anti_dependencies_; }
   
-  inline void activate() const noexcept {
+  inline auto activate() const -> bool {
     if (active_ports_.active_ports_ != nullptr) {
-      std::lock_guard<std::mutex> lock(*active_ports_.mutex_);
-      active_ports_.active_ports_->push_back(index_);
+
+      auto calculated_index = (*active_ports_.size_)++;
+      {
+      //std::cout << calculated_index << "/" << active_ports_.active_ports_->capacity() << std::endl;
+      if (calculated_index == active_ports_.capacity_->load()) {
+          std::unique_lock<std::shared_mutex> lock(*active_ports_.mutex_);
+          std::cout << "locked: " << calculated_index << " cap: " << active_ports_.capacity_->load() << " rl: " << active_ports_.active_ports_->capacity() << std::endl;  
+          active_ports_.active_ports_->reserve(calculated_index + 300);
+          *active_ports_.capacity_ = calculated_index + 300;
+      }
+      }
+      {
+        std::shared_lock<std::shared_mutex> lock(*active_ports_.mutex_);
+        (*active_ports_.active_ports_)[calculated_index] = index_;
+      }
+      return true;
     }
+    return false;
   }
 
-  inline void clear() const noexcept {
+  inline void clear() noexcept {
+    present_ = false;
+
     if (active_ports_.active_ports_ != nullptr) {
-      std::lock_guard<std::mutex> lock(*active_ports_.mutex_);
+      if (*active_ports_.size_ == 0) {
+        return;
+      } 
+
+      active_ports_.size_->store(0);
+      std::unique_lock<std::shared_mutex> lock(*active_ports_.mutex_);
       active_ports_.active_ports_->clear();
     }
   }
 
   inline void deactivate() noexcept {
-    std::lock_guard<std::mutex> lock(*active_ports_.mutex_);
     active_ports_.active_ports_ = nullptr;
     active_ports_.mutex_ = nullptr;
+    active_ports_.size_ = nullptr;
   }
 
   friend class Reaction;
@@ -119,15 +149,12 @@ public:
   void shutdown() final {}
 
   auto get() const noexcept -> const ImmutableValuePtr<T>&;
-  [[nodiscard]] auto is_present() const noexcept -> bool;
 };
 
 template <> class Port<void> : public BasePort {
 private:
-  bool present_{false};
 
   void cleanup() noexcept final { 
-      present_ = false;
       clear();
   }
 
@@ -145,7 +172,6 @@ public:
   [[nodiscard]] auto typed_outward_bindings() const noexcept -> const std::set<Port<void>*>&;
 
   void set();
-  [[nodiscard]] auto is_present() const noexcept -> bool;
 
   void startup() final {}
   void shutdown() final {}
