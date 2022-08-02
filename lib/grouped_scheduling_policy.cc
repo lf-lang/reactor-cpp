@@ -203,7 +203,7 @@ void GroupedSchedulingPolicy::schedule_until_ready_or_terminate(std::vector<Reac
   do {
     if (continue_execution_.load(std::memory_order_acquire)) {
       schedule();
-      notify_groups(initial_groups_, ready_groups);
+      notify_groups(initial_groups_, ready_groups, 0);
     } else {
       terminate_workers();
       break;
@@ -215,7 +215,7 @@ auto GroupedSchedulingPolicy::finalize_group_and_notify_successors(ReactionGroup
                                                                    std::vector<ReactionGroup*>& out_ready_groups)
     -> bool {
   group->waiting_for.store(group->num_predecessors, std::memory_order_release);
-  notify_groups(group->successors, out_ready_groups);
+  notify_groups(group->successors, out_ready_groups, 1);
 
   // return true if the group was the last to be processed.
   return 1 == groups_to_process_.fetch_sub(1, std::memory_order_acq_rel);
@@ -236,43 +236,39 @@ void GroupedSchedulingPolicy::notify_super_group(ReactionGroup* group, std::vect
   // we do not need to process the untriggered subgroups and can directly decrement the counter
   const auto num_untriggered = group->sub_groups.size() - num_triggered;
   if (num_untriggered > 0) {
-    groups_to_process_.fetch_sub(num_untriggered, std::memory_order_acq_rel);
+    auto old = groups_to_process_.fetch_sub(num_untriggered, std::memory_order_acq_rel);
+    log::Debug() << "groups to be processed: " << old - num_untriggered << ", old:" << old;
   }
 
-  // update successor if there is any
-  if (!group->successors.empty()) {
-    for (auto* successor : group->successors) {
-      reactor_assert(successor->num_predecessors == 1);
-      reactor_assert(successor->sub_groups.empty());
-
-      successor->waiting_for.fetch_sub(num_untriggered, std::memory_order_acq_rel);
-    }
-
-    // if none of the groups was triggered, then we can directly notify the successors
-    if (num_triggered == 0) {
-      notify_groups(group->successors, out_ready_groups);
-    }
-  }
+  // notify all dependencies about untriggered sub groups
+  notify_groups(group->successors, out_ready_groups, num_untriggered);
 }
 
 void GroupedSchedulingPolicy::notify_groups(const std::vector<ReactionGroup*>& groups,
-                                            std::vector<ReactionGroup*>& out_ready_groups) {
+                                            std::vector<ReactionGroup*>& out_ready_groups,
+                                            std::size_t num_ready_dependencies) {
   for (auto* group : groups) {
     // decrement the waiting for counter
-    auto old = group->waiting_for.fetch_sub(1, std::memory_order_relaxed);
+    auto old = group->waiting_for.fetch_sub(num_ready_dependencies, std::memory_order_relaxed);
 
-    // If the old value was 1 (or 0), then all dependencies are fulfilled and the group is ready for execution
-    if (old <= 1) {
+    // If the old value was num_ready_dependencies, then all dependencies are now fulfilled and the group is ready for
+    // execution
+    if (old == num_ready_dependencies) {
       // If the group was triggered, then add it to the ready queue. Otherwise, we skip the group and check its
       // successors.
-      log::Debug() << "Group " << group->id << " is ready";
       if (group->triggered.exchange(false, std::memory_order_relaxed)) {
+        log::Debug() << "Group " << group->id << " is ready";
         out_ready_groups.emplace_back(group);
       } else if (!group->sub_groups.empty()) {
+        log::Debug() << "Super Group " << group->id << " is ready";
         notify_super_group(group, out_ready_groups);
       } else {
+        log::Debug() << "Skip Group " << group->id << " because it was not triggered";
         finalize_group_and_notify_successors(group, out_ready_groups);
       }
+    } else {
+      log::Debug() << "Group " << group->id << " is still waiting for " << old - num_ready_dependencies
+                   << " dependencies";
     }
   }
   std::atomic_thread_fence(std::memory_order_acquire);

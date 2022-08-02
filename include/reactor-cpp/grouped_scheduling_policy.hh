@@ -67,7 +67,8 @@ private:
   void schedule_until_ready_or_terminate(std::vector<ReactionGroup*>& ready_groups);
   auto finalize_group_and_notify_successors(ReactionGroup* group, std::vector<ReactionGroup*>& out_ready_groups)
       -> bool;
-  void notify_groups(const std::vector<ReactionGroup*>& groups, std::vector<ReactionGroup*>& out_ready_groups);
+  void notify_groups(const std::vector<ReactionGroup*>& groups, std::vector<ReactionGroup*>& out_ready_groups,
+                     std::size_t num_ready_dependencies);
   void notify_super_group(ReactionGroup* group, std::vector<ReactionGroup*>& out_ready_groups);
   void terminate_workers();
 
