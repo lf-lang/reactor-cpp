@@ -17,7 +17,7 @@ namespace reactor {
 
 class Semaphore {
 private:
-  int count_;
+  std::size_t count_;
   std::mutex mutex_{};
   std::condition_variable cv_{};
 
@@ -25,7 +25,7 @@ public:
   explicit Semaphore(int count)
       : count_(count) {}
 
-  void release(int increment) {
+  void release(std::size_t increment) {
     {
       std::lock_guard<std::mutex> lock_guard(mutex_);
       count_ += increment;

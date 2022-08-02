@@ -75,7 +75,6 @@ template <class T, class... Args> auto make_mutable_value(Args&&... args) -> Mut
   }
 }
 
-
 namespace detail {
 
 /**
@@ -510,7 +509,6 @@ public:
   friend auto reactor::make_immutable_value(Args&&... args) -> reactor::ImmutableValuePtr<U>;
 };
 
-
 // Comparison operators
 
 template <class T, class U, bool scalar>
@@ -529,16 +527,20 @@ template <class T, class U, bool scalar>
 auto operator==(const MutableValuePtr<T, scalar>& ptr1, const ImmutableValuePtr<U, scalar>& ptr2) noexcept -> bool {
   return ptr1.get() == ptr2.get();
 }
-template <class T, bool scalar> auto operator==(const MutableValuePtr<T, scalar>& ptr1, std::nullptr_t) noexcept -> bool {
+template <class T, bool scalar>
+auto operator==(const MutableValuePtr<T, scalar>& ptr1, std::nullptr_t) noexcept -> bool {
   return ptr1.get() == nullptr;
 }
-template <class T, bool scalar> auto operator==(std::nullptr_t, const MutableValuePtr<T, scalar>& ptr2) noexcept -> bool {
+template <class T, bool scalar>
+auto operator==(std::nullptr_t, const MutableValuePtr<T, scalar>& ptr2) noexcept -> bool {
   return ptr2.get() == nullptr;
 }
-template <class T, bool scalar> auto operator==(const ImmutableValuePtr<T, scalar>& ptr1, std::nullptr_t) noexcept -> bool {
+template <class T, bool scalar>
+auto operator==(const ImmutableValuePtr<T, scalar>& ptr1, std::nullptr_t) noexcept -> bool {
   return ptr1.get() == nullptr;
 }
-template <class T, bool scalar> auto operator==(std::nullptr_t, const ImmutableValuePtr<T, scalar>& ptr1) noexcept -> bool {
+template <class T, bool scalar>
+auto operator==(std::nullptr_t, const ImmutableValuePtr<T, scalar>& ptr1) noexcept -> bool {
   return ptr1.get() == nullptr;
 }
 
@@ -551,10 +553,12 @@ template <class T, class U, bool scalar>
 auto operator!=(const ImmutableValuePtr<T, scalar>& ptr1, const ImmutableValuePtr<U, scalar>& ptr2) -> bool {
   return ptr1.get() != ptr2.get();
 }
-template <class T, class U, bool scalar> auto operator!=(const ImmutableValuePtr<T, scalar>& ptr1, const MutableValuePtr<U, scalar>& ptr2) -> bool {
+template <class T, class U, bool scalar>
+auto operator!=(const ImmutableValuePtr<T, scalar>& ptr1, const MutableValuePtr<U, scalar>& ptr2) -> bool {
   return ptr1.get() != ptr2.get();
 }
-template <class T, class U, bool scalar> auto operator!=(const MutableValuePtr<T, scalar>& ptr1, const ImmutableValuePtr<U, scalar>& ptr2) -> bool {
+template <class T, class U, bool scalar>
+auto operator!=(const MutableValuePtr<T, scalar>& ptr1, const ImmutableValuePtr<U, scalar>& ptr2) -> bool {
   return ptr1.get() != ptr2.get();
 }
 template <class T, bool scalar> auto operator!=(const MutableValuePtr<T, scalar>& ptr1, std::nullptr_t) -> bool {
@@ -569,7 +573,6 @@ template <class T, bool scalar> auto operator!=(const ImmutableValuePtr<T, scala
 template <class T, bool scalar> auto operator!=(std::nullptr_t, const ImmutableValuePtr<T, scalar>& ptr1) -> bool {
   return ptr1.get() != nullptr;
 }
-
 
 } // namespace detail
 

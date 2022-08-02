@@ -14,7 +14,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest]
 
     steps:
     - uses: actions/checkout@v1
@@ -22,6 +22,11 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y clang-tidy
+      if: matrix.os == 'ubuntu-latest'
+    - name: Install boost on Ubuntu
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libboost-all-dev
       if: matrix.os == 'ubuntu-latest'
     - name: configure
       run: |
@@ -35,7 +40,7 @@ jobs:
         cmake --build build --target examples
 
   lf-tests-pull-request:
-    uses: lf-lang/lingua-franca/.github/workflows/cpp-tests.yml@master
+    uses: lf-lang/lingua-franca/.github/workflows/cpp-tests.yml@cpp-boost
     with:
       runtime-ref: ${{github.ref}}
       compiler-ref: master

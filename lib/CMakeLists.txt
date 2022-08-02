@@ -1,12 +1,15 @@
 set(SOURCE_FILES
     action.cc
     assert.cc
+    base_scheduler.cc
+    default_scheduling_policy.cc
+    dependency_graph.cc
+    grouped_scheduling_policy.cc
     environment.cc
     logical_time.cc
     port.cc
     reaction.cc
     reactor.cc
-    scheduler.cc
     time.cc
     )
 
@@ -34,7 +37,8 @@ else()
   target_compile_options(${LIB_TARGET} PRIVATE -Wall -Wextra -pedantic -Werror)
 endif()
 
-target_link_libraries(${LIB_TARGET} ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(${LIB_TARGET} LINK_PUBLIC ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(${LIB_TARGET} LINK_PRIVATE ${Boost_LIBRARIES})
 if(REACTOR_CPP_TRACE)
   target_link_libraries(${LIB_TARGET} LTTng::UST)
 endif()

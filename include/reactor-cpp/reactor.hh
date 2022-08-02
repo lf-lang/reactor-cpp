@@ -54,10 +54,17 @@ public:
 
 class Reactor : public ReactorElement { // NOLINT
 private:
+  /**
+   * Compare two reactions by their priority (order within a reactor).
+   *
+   * The output is only valid if both reactions have the same container
+   */
+  static auto compare_reaction_priority(const Reaction* a, const Reaction* b) -> bool;
+
   std::set<BaseAction*> actions_{};
   std::set<BasePort*> inputs_{};
   std::set<BasePort*> outputs_{};
-  std::set<Reaction*> reactions_{};
+  std::set<Reaction*, decltype(&compare_reaction_priority)> reactions_{&compare_reaction_priority};
   std::set<Reactor*> reactors_{};
 
   void register_action(BaseAction* action);

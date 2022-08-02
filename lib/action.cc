@@ -9,6 +9,7 @@
 #include "reactor-cpp/action.hh"
 
 #include "reactor-cpp/assert.hh"
+#include "reactor-cpp/base_scheduler.hh"
 #include "reactor-cpp/environment.hh"
 #include "reactor-cpp/reaction.hh"
 
@@ -37,9 +38,9 @@ void BaseAction::register_scheduler(Reaction* reaction) {
 void Timer::startup() {
   Tag tag_zero = Tag::from_physical_time(environment()->start_time());
   if (offset_ != Duration::zero()) {
-    environment()->scheduler()->schedule_sync(tag_zero.delay(offset_), this, nullptr);
+    environment()->scheduler().schedule_sync(tag_zero.delay(offset_), this, nullptr);
   } else {
-    environment()->scheduler()->schedule_sync(tag_zero, this, nullptr);
+    environment()->scheduler().schedule_sync(tag_zero, this, nullptr);
   }
 }
 
@@ -48,13 +49,13 @@ void Timer::cleanup() {
   if (period_ != Duration::zero()) {
     Tag now = Tag::from_logical_time(environment()->logical_time());
     Tag next = now.delay(period_);
-    environment()->scheduler()->schedule_sync(next, this, nullptr);
+    environment()->scheduler().schedule_sync(next, this, nullptr);
   }
 }
 
 void ShutdownAction::shutdown() {
   Tag tag = Tag::from_logical_time(environment()->logical_time()).delay();
-  environment()->scheduler()->schedule_sync(tag, this, nullptr);
+  environment()->scheduler().schedule_sync(tag, this, nullptr);
 }
 
 } // namespace reactor
