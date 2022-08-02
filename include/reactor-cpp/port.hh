@@ -72,22 +72,18 @@ public:
   [[nodiscard]] inline auto anti_dependencies() const noexcept -> const auto& { return anti_dependencies_; }
   
   inline auto activate() const -> bool {
-    if (active_ports_.active_ports_ != nullptr) {
+    if (this->is_present()) {
+        return false;
+    }
 
+    if (active_ports_.active_ports_ != nullptr) {
       auto calculated_index = (*active_ports_.size_)++;
-      {
-      //std::cout << calculated_index << "/" << active_ports_.active_ports_->capacity() << std::endl;
-      if (calculated_index == active_ports_.capacity_->load()) {
-          std::unique_lock<std::shared_mutex> lock(*active_ports_.mutex_);
-          std::cout << "locked: " << calculated_index << " cap: " << active_ports_.capacity_->load() << " rl: " << active_ports_.active_ports_->capacity() << std::endl;  
-          active_ports_.active_ports_->reserve(calculated_index + 300);
-          *active_ports_.capacity_ = calculated_index + 300;
+
+      if (calculated_index >= active_ports_.active_ports_->capacity()) {
+          throw std::runtime_error("setting to much ports");
       }
-      }
-      {
-        std::shared_lock<std::shared_mutex> lock(*active_ports_.mutex_);
-        (*active_ports_.active_ports_)[calculated_index] = index_;
-      }
+
+      (*active_ports_.active_ports_)[calculated_index] = index_;
       return true;
     }
     return false;
@@ -102,14 +98,12 @@ public:
       } 
 
       active_ports_.size_->store(0);
-      std::unique_lock<std::shared_mutex> lock(*active_ports_.mutex_);
       active_ports_.active_ports_->clear();
     }
   }
 
   inline void deactivate() noexcept {
     active_ports_.active_ports_ = nullptr;
-    active_ports_.mutex_ = nullptr;
     active_ports_.size_ = nullptr;
   }
 

@@ -36,8 +36,8 @@ template <class T> void Port<T>::set(const ImmutableValuePtr<T>& value_ptr) {
   reactor::validate(value_ptr != nullptr, "Ports may not be set to nullptr!");
   auto scheduler = environment()->scheduler();
   this->value_ptr_ = std::move(value_ptr);
-  this->present_ = true;
   scheduler->set_port(this);
+  this->present_ = true;
 }
 
 template <class T> auto Port<T>::get() const noexcept -> const ImmutableValuePtr<T>& {
