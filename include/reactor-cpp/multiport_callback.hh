@@ -11,11 +11,17 @@
 
 #include <algorithm>
 #include <atomic>
+#include <numeric>
 #include <iostream>
 #include <type_traits>
 #include <vector>
 
 namespace multiport {
+
+enum Strategy {
+    Callback,
+    Linear
+};
 
 // fancy custom type_trait taken from stackoverflow 
 // which checks if given class has the member function deactivate
@@ -37,6 +43,7 @@ public:
 struct LockedPortList {
     std::atomic<std::size_t>* size_ = nullptr;
     std::vector<std::size_t>* active_ports_ = nullptr;
+    Strategy* strategy_ = nullptr;
 };
 
 template <class T, class A = std::allocator<T>>
@@ -45,6 +52,7 @@ private:
   std::vector<T> data_{};
   std::vector<std::size_t> active_ports_{};
   std::atomic<std::size_t> size_ = 0;
+  Strategy strategy_ = Strategy::Callback;
 
 public:
   using allocator_type = A;
@@ -98,7 +106,8 @@ public:
   [[nodiscard]] inline auto get_active_ports() noexcept -> LockedPortList {
     return LockedPortList {
         &size_,
-        &active_ports_
+        &active_ports_,
+        &strategy_
     };
   }
 
@@ -122,6 +131,13 @@ public:
   }
 
   [[nodiscard]] inline auto active_ports_indices() const noexcept -> std::vector<std::size_t> { 
+    if (strategy_ == Strategy::Linear) {
+      std::vector<std::size_t> v(data_.size());
+      std::iota (std::begin(v), std::end(v), 0);
+    
+      return v;
+    }
+
     std::vector<std::size_t>ports_copy;
     ports_copy.reserve(active_ports_.capacity());
 

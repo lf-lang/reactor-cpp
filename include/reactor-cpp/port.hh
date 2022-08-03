@@ -76,11 +76,15 @@ public:
         return false;
     }
 
-    if (active_ports_.active_ports_ != nullptr) {
+    if (active_ports_.active_ports_ != nullptr && *active_ports_.strategy_ == multiport::Strategy::Callback) {
       auto calculated_index = (*active_ports_.size_)++;
 
       if (calculated_index >= active_ports_.active_ports_->capacity()) {
           throw std::runtime_error("setting to much ports");
+      }
+
+      if ( (calculated_index * 100) / active_ports_.active_ports_->capacity() > 20 ) {
+        *active_ports_.strategy_ = multiport::Strategy::Linear;
       }
 
       (*active_ports_.active_ports_)[calculated_index] = index_;
