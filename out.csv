@@ -1,4 +1,0 @@
-i,benchmark,target,total_iterations,threads,pings,runtime_version,min_time_ms,max_time_ms,median_time_ms,mean_time_ms,pieces,workers,left,right,messages,actors,columns,simulations,channels
-0,SleepingBarberReactorLFCppBenchmark,LF-CPP,12,1,,master,53.34,57.801,56.193,56.193,,,,,,,,,
-2,SleepingBarberReactorLFCppBenchmark,LF-CPP-new,12,1,,master,54.886,60.143,56.646,56.646,,,,,,,,,
-3,SleepingBarberReactorLFCppBenchmark,LF-CPP-old,12,1,,master,53.538,63.869,58.97,58.97,,,,,,,,,

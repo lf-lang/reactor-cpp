@@ -131,21 +131,20 @@ public:
 
     {
         std::size_t size = size_.load();
-
         for (auto i = 0; i < size; i++) {
             auto j = active_ports_[i];
-            if (data_[j].is_present() && not_contains(j)) {
-                ports_copy.push_back(j);
-            }
+            //if (data_[j].is_present() && not_contains(j)) {
+            ports_copy.push_back(j);
+            //}
         }
 
         // this is just ugly and higly dangerous 
         // but other wise I would need to strip out all the const qualifierts
         ((PortBankCallBack*)this)->size_ = ports_copy.size();
-        ((PortBankCallBack*)this)->active_ports_ = std::move(ports_copy);    
+        ((PortBankCallBack*)this)->active_ports_ = ports_copy;    
     }
 
-    return ports_copy; 
+    return std::move(ports_copy); 
   }
 };
 } // namespace multiport
