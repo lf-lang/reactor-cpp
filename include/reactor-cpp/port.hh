@@ -11,6 +11,7 @@
 
 #include <set>
 
+#include "assert.hh"
 #include "multiport_callback.hh"
 #include "reactor.hh"
 #include "value_ptr.hh"
@@ -77,11 +78,10 @@ public:
     }
 
     if (active_ports_.active_ports_ != nullptr && *active_ports_.strategy_ == multiport::Strategy::Callback) {
-      auto calculated_index = (*active_ports_.size_)++;
+      auto calculated_index = active_ports_.size_->fetch_add(1, std::memory_order_relaxed);
 
-      if (calculated_index >= active_ports_.active_ports_->capacity()) {
-          throw std::runtime_error("setting to much ports");
-      }
+      // triggering hard error if calculated_index tries to set a port out that is not in the list
+      reactor::reactor_assert(calculated_index < active_ports_.active_ports_->capacity());
 
       if ( (calculated_index * 100) / active_ports_.active_ports_->capacity() > 20 ) {
         *active_ports_.strategy_ = multiport::Strategy::Linear;
@@ -97,11 +97,11 @@ public:
     present_ = false;
 
     if (active_ports_.active_ports_ != nullptr) {
-      if (*active_ports_.size_ == 0) {
+      if (active_ports_.size_->load(std::memory_order_relaxed) == 0) {
         return;
       } 
 
-      active_ports_.size_->store(0);
+      active_ports_.size_->store(0, std::memory_order_relaxed);
       active_ports_.active_ports_->clear();
     }
   }

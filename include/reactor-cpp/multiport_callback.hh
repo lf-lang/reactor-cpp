@@ -113,7 +113,7 @@ public:
 
   inline void reserve(std::size_t size) noexcept {
     data_.reserve(size);
-    active_ports_.reserve(size * 2);
+    active_ports_.reserve(2 * size);
   }
 
   inline void push_back(const T& elem) noexcept {
@@ -134,33 +134,11 @@ public:
     if (strategy_ == Strategy::Linear) {
       std::vector<std::size_t> v(data_.size());
       std::iota (std::begin(v), std::end(v), 0);
-    
+
       return v;
     }
 
-    std::vector<std::size_t>ports_copy;
-    ports_copy.reserve(active_ports_.capacity());
-
-    auto not_contains = [&](std::size_t index) {
-        return std::find(std::begin(ports_copy),std::end(ports_copy), index) == std::end(ports_copy);
-    };
-
-    {
-        std::size_t size = size_.load();
-        for (auto i = 0; i < size; i++) {
-            auto j = active_ports_[i];
-            //if (data_[j].is_present() && not_contains(j)) {
-            ports_copy.push_back(j);
-            //}
-        }
-
-        // this is just ugly and higly dangerous 
-        // but other wise I would need to strip out all the const qualifierts
-        ((PortBankCallBack*)this)->size_ = ports_copy.size();
-        ((PortBankCallBack*)this)->active_ports_ = ports_copy;    
-    }
-
-    return std::move(ports_copy); 
+    return std::vector<std::size_t>(std::begin(active_ports_), std::begin(active_ports_) + size_.load());
   }
 };
 } // namespace multiport
