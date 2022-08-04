@@ -27,7 +27,7 @@ namespace detail {
 template <class T, bool is_trivial> class ImmutableValuePtr {};
 template <class T, bool is_trivial> class MutableValuePtr {};
 
-constexpr std::size_t SIZE_THRESHOLD = 64;
+constexpr std::size_t SIZE_THRESHOLD = 4096;
 
 template <class T> constexpr auto is_trivial() -> bool {
   return std::is_trivially_copyable<T>::value && sizeof(T) <= SIZE_THRESHOLD;
