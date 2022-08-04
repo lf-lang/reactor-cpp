@@ -223,13 +223,13 @@ void Scheduler::start() {
 }
 
 void Scheduler::next() { // NOLINT
-  static EventMap events{};
+  static std::vector<BaseAction*> actions{};
 
   // clean up before scheduling any new events
-  if (!events.empty()) {
+  if (!actions.empty()) {
     // cleanup all triggered actions
-    for (auto& vec_ports : events) {
-      vec_ports.first->cleanup();
+    for (auto* action : actions) {
+      action->cleanup();
     }
     // cleanup all set ports
     for (auto& vec_ports : set_ports_) {
@@ -238,7 +238,7 @@ void Scheduler::next() { // NOLINT
       }
       vec_ports.clear();
     }
-    events.clear();
+    actions.clear();
   }
 
   {
@@ -255,7 +255,7 @@ void Scheduler::next() { // NOLINT
       }
     }
 
-    while (events.empty()) {
+    while (actions.empty()) {
       if (stop_) {
         continue_execution_ = false;
         log::Debug() << "Shutting down the scheduler";
@@ -263,7 +263,7 @@ void Scheduler::next() { // NOLINT
         if (t_next == event_queue_.begin()->first) {
           log::Debug() << "Schedule the last round of reactions including all "
                           "termination reactions";
-          events = std::move(event_queue_.begin()->second);
+          actions = std::move(event_queue_.begin()->second);
           event_queue_.erase(event_queue_.begin());
           log::Debug() << "advance logical time to tag [" << t_next.time_point() << ", " << t_next.micro_step() << "]";
           logical_time_.advance_to(t_next);
@@ -303,7 +303,7 @@ void Scheduler::next() { // NOLINT
 
         // retrieve all events with tag equal to current logical time from the
         // queue
-        events = std::move(event_queue_.begin()->second);
+        actions = std::move(event_queue_.begin()->second);
         event_queue_.erase(event_queue_.begin());
 
         // advance logical time
@@ -315,17 +315,14 @@ void Scheduler::next() { // NOLINT
 
   // execute all setup functions; this sets the values of the corresponding
   // actions
-  for (auto& vec_reactor : events) {
-    auto& setup = vec_reactor.second;
-    if (setup != nullptr) {
-      setup();
-    }
+  for (auto* action : actions) {
+    action->setup();
   }
 
-  log::Debug() << "events: " << events.size();
-  for (auto& vec_reactor : events) {
-    log::Debug() << "Action " << vec_reactor.first->fqn();
-    for (auto* reaction : vec_reactor.first->triggers()) {
+  log::Debug() << "events: " << actions.size();
+  for (const auto* action : actions) {
+    log::Debug() << "Action " << action->fqn();
+    for (auto* reaction : action->triggers()) {
       // There is no need to acquire the mutex. At this point the scheduler
       // should be the only thread accessing the reaction queue as none of the
       // workers_ are running
@@ -342,7 +339,7 @@ Scheduler::Scheduler(Environment* env)
 
 Scheduler::~Scheduler() = default;
 
-void Scheduler::schedule_sync(const Tag& tag, BaseAction* action, std::function<void(void)> pre_handler) {
+void Scheduler::schedule_sync(const Tag& tag, BaseAction* action) {
   reactor_assert(logical_time_ < tag);
   // TODO verify that the action is indeed allowed to be scheduled by the
   // current reaction
@@ -352,20 +349,20 @@ void Scheduler::schedule_sync(const Tag& tag, BaseAction* action, std::function<
     auto unique_lock =
         using_workers_ ? std::unique_lock<std::mutex>(lock_event_queue_) : std::unique_lock<std::mutex>();
 
-    tracepoint(reactor_cpp, schedule_action, action->container()->fqn(), action->name(), tag); // NOLINT
+    tracepoint(reactor_cpp, schedule_action, action->container()->fqn(), action->name(), tag);
 
-    // create a new event map or retrieve the existing one
-    auto emplace_result = event_queue_.try_emplace(tag, EventMap());
-    auto& event_map = emplace_result.first->second;
+    // create a new action list or retrieve the existing one
+    auto emplace_result = event_queue_.try_emplace(tag, std::vector<BaseAction*>());
+    auto& action_list = emplace_result.first->second;
 
-    // insert the new event
-    event_map[action] = std::move(pre_handler);
+    // insert the new action
+    action_list.emplace_back(action);
   }
 }
 
-void Scheduler::schedule_async(const Tag& tag, BaseAction* action, std::function<void(void)> pre_handler) {
+void Scheduler::schedule_async(const Tag& tag, BaseAction* action) {
   std::lock_guard<std::mutex> lock_guard(scheduling_mutex_);
-  schedule_sync(tag, action, std::move(pre_handler));
+  schedule_sync(tag, action);
   cv_schedule_.notify_one();
 }
 

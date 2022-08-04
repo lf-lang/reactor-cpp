@@ -85,8 +85,6 @@ public:
   void fill_up(std::vector<Reaction*>& ready_reactions);
 };
 
-using EventMap = std::map<BaseAction*, std::function<void(void)>>;
-
 class Scheduler { // NOLINT
 private:
   const bool using_workers_;
@@ -100,7 +98,7 @@ private:
   std::condition_variable cv_schedule_;
 
   std::mutex lock_event_queue_;
-  std::map<Tag, EventMap> event_queue_;
+  std::map<Tag, std::vector<BaseAction*>> event_queue_;
 
   std::vector<std::vector<BasePort*>> set_ports_;
   std::vector<std::vector<Reaction*>> triggered_reactions_;
@@ -124,8 +122,8 @@ public:
   explicit Scheduler(Environment* env);
   ~Scheduler();
 
-  void schedule_sync(const Tag& tag, BaseAction* action, std::function<void(void)> pre_handler);
-  void schedule_async(const Tag& tag, BaseAction* action, std::function<void(void)> pre_handler);
+  void schedule_sync(const Tag& tag, BaseAction* action);
+  void schedule_async(const Tag& tag, BaseAction* action);
 
   void inline lock() noexcept { scheduling_lock_.lock(); }
   void inline unlock() noexcept { scheduling_lock_.unlock(); }
