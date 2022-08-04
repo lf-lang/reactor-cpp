@@ -6,6 +6,8 @@
  *   Christian Menard
  */
 
+#include <memory>
+#include <mutex>
 #include <utility>
 
 #include "reactor-cpp/scheduler.hh"
@@ -223,22 +225,23 @@ void Scheduler::start() {
 }
 
 void Scheduler::next() { // NOLINT
-  static std::vector<BaseAction*> actions{};
+  static ActionListPtr actions{};
 
   // clean up before scheduling any new events
-  if (!actions.empty()) {
+  if (actions != nullptr) {
     // cleanup all triggered actions
-    for (auto* action : actions) {
+    for (auto* action : *actions) {
       action->cleanup();
     }
-    // cleanup all set ports
-    for (auto& vec_ports : set_ports_) {
-      for (auto& port : vec_ports) {
-        port->cleanup();
-      }
-      vec_ports.clear();
+    actions = nullptr;
+  }
+
+  // cleanup all set ports
+  for (auto& vec_ports : set_ports_) {
+    for (auto& port : vec_ports) {
+      port->cleanup();
     }
-    actions.clear();
+    vec_ports.clear();
   }
 
   {
@@ -255,7 +258,7 @@ void Scheduler::next() { // NOLINT
       }
     }
 
-    while (actions.empty()) {
+    while (actions == nullptr || actions->empty()) {
       if (stop_) {
         continue_execution_ = false;
         log::Debug() << "Shutting down the scheduler";
@@ -303,8 +306,7 @@ void Scheduler::next() { // NOLINT
 
         // retrieve all events with tag equal to current logical time from the
         // queue
-        actions = std::move(event_queue_.begin()->second);
-        event_queue_.erase(event_queue_.begin());
+        actions = std::move(event_queue_.extract(event_queue_.begin()).mapped());
 
         // advance logical time
         log::Debug() << "advance logical time to tag [" << t_next.time_point() << ", " << t_next.micro_step() << "]";
@@ -315,12 +317,12 @@ void Scheduler::next() { // NOLINT
 
   // execute all setup functions; this sets the values of the corresponding
   // actions
-  for (auto* action : actions) {
+  for (auto* action : *actions) {
     action->setup();
   }
 
-  log::Debug() << "events: " << actions.size();
-  for (const auto* action : actions) {
+  log::Debug() << "events: " << actions->size();
+  for (const auto* action : *actions) {
     log::Debug() << "Action " << action->fqn();
     for (auto* reaction : action->triggers()) {
       // There is no need to acquire the mutex. At this point the scheduler
@@ -345,18 +347,23 @@ void Scheduler::schedule_sync(const Tag& tag, BaseAction* action) {
   // current reaction
   log::Debug() << "Schedule action " << action->fqn() << (action->is_logical() ? " synchronously " : " asynchronously ")
                << " with tag [" << tag.time_point() << ", " << tag.micro_step() << "]";
+  tracepoint(reactor_cpp, schedule_action, action->container()->fqn(), action->name(), tag);
   {
-    auto unique_lock =
-        using_workers_ ? std::unique_lock<std::mutex>(lock_event_queue_) : std::unique_lock<std::mutex>();
+    auto shared_lock = using_workers_ ? std::shared_lock<std::shared_mutex>(mutex_event_queue_)
+                                      : std::shared_lock<std::shared_mutex>();
 
-    tracepoint(reactor_cpp, schedule_action, action->container()->fqn(), action->name(), tag);
+    auto it = event_queue_.find(tag);
+    if (it == event_queue_.end()) {
+      shared_lock.unlock();
+      {
+        auto unique_lock = using_workers_ ? std::unique_lock<std::shared_mutex>(mutex_event_queue_)
+                                          : std::unique_lock<std::shared_mutex>();
+        it = event_queue_.emplace_hint(event_queue_.end(), tag, std::make_unique<ActionList>());
+      }
+      shared_lock.lock();
+    }
 
-    // create a new action list or retrieve the existing one
-    auto emplace_result = event_queue_.try_emplace(tag, std::vector<BaseAction*>());
-    auto& action_list = emplace_result.first->second;
-
-    // insert the new action
-    action_list.emplace_back(action);
+    it->second->push_back(action);
   }
 }
 
