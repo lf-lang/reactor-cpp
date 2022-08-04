@@ -56,7 +56,7 @@ class ReadyQueue {
 private:
   std::vector<Reaction*> queue_{};
   std::atomic<std::ptrdiff_t> size_{0};
-  Semaphore sem_{0};
+  std::counting_semaphore<65535> sem_{0}; // NOLINT
   std::ptrdiff_t waiting_workers_{0};
   const unsigned int num_workers_;
 
