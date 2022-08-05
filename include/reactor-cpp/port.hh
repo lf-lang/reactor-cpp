@@ -34,7 +34,7 @@ private:
   std::set<Reaction*> anti_dependencies_{};
 
 protected:
-  bool present_{false}; //NOLINT cppcoreguidelines-non-private-member-variables-in-classes
+  bool present_{false}; // NOLINT cppcoreguidelines-non-private-member-variables-in-classes
 
   BasePort(const std::string& name, PortType type, Reactor* container)
       : ReactorElement(name, (type == PortType::Input) ? ReactorElement::Type::Input : ReactorElement::Type::Output,
