@@ -33,7 +33,7 @@ public:
       deque_[pos] = value;
     } else {
       std::lock_guard<std::mutex> lock(mutex_);
-      while (pos < deque_size_) {
+      while (pos >= deque_size_) {
         deque_.resize(deque_size_);
         deque_size_.fetch_add(size_increment_, std::memory_order_release);
       }
