@@ -34,8 +34,8 @@ public:
     } else {
       std::lock_guard<std::mutex> lock(mutex_);
       while (pos >= vector_size_) {
-        vector_.resize(vector_size_);
         vector_size_.fetch_add(size_increment_, std::memory_order_release);
+        vector_.resize(vector_size_.load(std::memory_order_relaxed));
       }
       vector_[pos] = value;
     }
