@@ -6,6 +6,7 @@
  *   Christian Menard
  */
 
+#include <cstddef>
 #include <memory>
 #include <mutex>
 #include <utility>
@@ -233,7 +234,8 @@ void Scheduler::next() { // NOLINT
     for (auto* action : *actions) {
       action->cleanup();
     }
-    actions = nullptr;
+    actions->clear();
+    action_list_pool_.emplace_back(std::move(actions));
   }
 
   // cleanup all set ports
@@ -337,9 +339,17 @@ void Scheduler::next() { // NOLINT
 Scheduler::Scheduler(Environment* env)
     : using_workers_(env->num_workers() > 1)
     , environment_(env)
-    , ready_queue_(env->num_workers()) {}
+    , ready_queue_(env->num_workers()) {
+  fill_action_list_pool();
+}
 
 Scheduler::~Scheduler() = default;
+
+void Scheduler::fill_action_list_pool() {
+  for (std::size_t i{0}; i < action_list_pool_increment_; i++) {
+    action_list_pool_.emplace_back(std::make_unique<ActionList>());
+  }
+}
 
 void Scheduler::schedule_sync(const Tag& tag, BaseAction* action) {
   reactor_assert(logical_time_ < tag);
@@ -356,20 +366,28 @@ void Scheduler::schedule_sync(const Tag& tag, BaseAction* action) {
     if (it == event_queue_.end()) {
       shared_lock.unlock();
       {
-        auto unique_lock = using_workers_ ? std::unique_lock<std::shared_mutex>(mutex_event_queue_)
-                                          : std::unique_lock<std::shared_mutex>();
-        it = event_queue_.emplace_hint(event_queue_.end(), tag, std::make_unique<ActionList>());
+        auto unique_lock = std::unique_lock<std::shared_mutex>(mutex_event_queue_);
+        if (action_list_pool_.empty()) {
+          fill_action_list_pool();
+        }
+        const auto& result = event_queue_.try_emplace(tag, std::move(action_list_pool_.back()));
+        if (result.second) {
+          action_list_pool_.pop_back();
+        }
+        result.first->second->push_back(action);
       }
-      it->second->push_back(action);
     } else {
       it->second->push_back(action);
     }
   } else {
-    auto it = event_queue_.find(tag);
-    if (it == event_queue_.end()) {
-      it = event_queue_.emplace_hint(event_queue_.end(), tag, std::make_unique<ActionList>());
+    if (action_list_pool_.empty()) {
+      fill_action_list_pool();
     }
-    it->second->push_back(action);
+    const auto& result = event_queue_.try_emplace(tag, std::move(action_list_pool_.back()));
+    if (result.second) {
+      action_list_pool_.pop_back();
+    }
+    result.first->second->push_back(action);
   }
 }
 

@@ -105,6 +105,10 @@ private:
   std::shared_mutex mutex_event_queue_;
   std::map<Tag, ActionListPtr> event_queue_;
 
+  std::vector<ActionListPtr> action_list_pool_;
+  static constexpr std::size_t action_list_pool_increment_{10};
+  void fill_action_list_pool();
+
   std::vector<std::vector<BasePort*>> set_ports_;
   std::vector<std::vector<Reaction*>> triggered_reactions_;
 
