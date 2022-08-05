@@ -52,8 +52,9 @@ template <class Dur> void Action<void>::schedule(Dur delay) {
 }
 
 template <class T> void Action<T>::setup() noexcept {
-  const auto& node = events_.extract(events_.begin());
-  if (!node.empty()) {
+  if (value_ptr_ == nullptr) {
+    const auto& node = events_.extract(events_.begin());
+    reactor_assert(!node.empty());
     value_ptr_ = std::move(node.mapped());
   }
 }
