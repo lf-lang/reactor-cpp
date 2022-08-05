@@ -42,8 +42,8 @@ public:
   }
 
   // careful! Using the iterators is only safe if no more elements are added to the vector!
-  auto begin() -> auto{ return vector_.begin(); }
-  auto end() -> auto{ return vector_.begin() + write_pos_.load(std::memory_order_acquire); }
+  auto begin() -> auto { return vector_.begin(); }
+  auto end() -> auto { return vector_.begin() + write_pos_.load(std::memory_order_acquire); }
 
   auto size() -> std::size_t { return write_pos_.load(std::memory_order_acquire); }
   auto empty() -> bool { return size() == 0; }
