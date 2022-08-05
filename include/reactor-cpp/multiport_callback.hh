@@ -23,7 +23,7 @@ template <typename T> class has_deactivate {
   using one = char;
   struct two {
     char x[2]; // NOLINT avoid-c-arrays
-  }; // NOLINT modernize-use-using
+  };
 
   template <typename C> static auto test(decltype(&C::has_deactivate)) -> one;
   template <typename C> static auto test(...) -> two;
