@@ -348,9 +348,9 @@ void Scheduler::schedule_sync(const Tag& tag, BaseAction* action) {
   log::Debug() << "Schedule action " << action->fqn() << (action->is_logical() ? " synchronously " : " asynchronously ")
                << " with tag [" << tag.time_point() << ", " << tag.micro_step() << "]";
   tracepoint(reactor_cpp, schedule_action, action->container()->fqn(), action->name(), tag);
-  {
-    auto shared_lock = using_workers_ ? std::shared_lock<std::shared_mutex>(mutex_event_queue_)
-                                      : std::shared_lock<std::shared_mutex>();
+
+  if (using_workers_) {
+    auto shared_lock = std::shared_lock<std::shared_mutex>(mutex_event_queue_);
 
     auto it = event_queue_.find(tag);
     if (it == event_queue_.end()) {
@@ -360,9 +360,15 @@ void Scheduler::schedule_sync(const Tag& tag, BaseAction* action) {
                                           : std::unique_lock<std::shared_mutex>();
         it = event_queue_.emplace_hint(event_queue_.end(), tag, std::make_unique<ActionList>());
       }
-      shared_lock.lock();
+      it->second->push_back(action);
+    } else {
+      it->second->push_back(action);
     }
-
+  } else {
+    auto it = event_queue_.find(tag);
+    if (it == event_queue_.end()) {
+      it = event_queue_.emplace_hint(event_queue_.end(), tag, std::make_unique<ActionList>());
+    }
     it->second->push_back(action);
   }
 }
