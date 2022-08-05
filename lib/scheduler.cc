@@ -413,7 +413,7 @@ void Scheduler::set_port(BasePort* port) {
 void Scheduler::set_port_helper(BasePort* port) {
   if (!(port->triggers().empty() && port->dependencies().empty())) {
     if (port->activate()) {
-        set_ports_[Worker::current_worker_id()].push_back(port);
+      set_ports_[Worker::current_worker_id()].push_back(port);
     }
   }
 

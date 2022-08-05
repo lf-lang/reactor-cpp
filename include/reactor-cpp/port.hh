@@ -25,7 +25,7 @@ private:
   BasePort* inward_binding_{nullptr};
   std::set<BasePort*> outward_bindings_{};
   const PortType type_;
-  
+
   multiport::LockedPortList active_ports_{};
   std::size_t index_ = 0;
 
@@ -41,10 +41,13 @@ protected:
                        container)
       , type_(type) {}
 
-  BasePort(const std::string& name, PortType type, Reactor* container, multiport::LockedPortList active_ports, std::size_t index)
+  BasePort(const std::string& name, PortType type, Reactor* container, multiport::LockedPortList active_ports,
+           std::size_t index)
       : ReactorElement(name, (type == PortType::Input) ? ReactorElement::Type::Input : ReactorElement::Type::Output,
                        container)
-      , type_(type), active_ports_(active_ports), index_(index) {}
+      , type_(type)
+      , active_ports_(active_ports)
+      , index_(index) {}
   void base_bind_to(BasePort* port);
   void register_dependency(Reaction* reaction, bool is_trigger) noexcept;
   void register_antidependency(Reaction* reaction) noexcept;
@@ -71,10 +74,10 @@ public:
   [[nodiscard]] inline auto triggers() const noexcept -> const auto& { return triggers_; }
   [[nodiscard]] inline auto dependencies() const noexcept -> const auto& { return dependencies_; }
   [[nodiscard]] inline auto anti_dependencies() const noexcept -> const auto& { return anti_dependencies_; }
-  
+
   inline auto activate() const -> bool {
     if (this->is_present()) {
-        return false;
+      return false;
     }
 
     if (active_ports_.active_ports_ != nullptr) {
@@ -95,7 +98,7 @@ public:
     if (active_ports_.active_ports_ != nullptr) {
       if (active_ports_.size_->load(std::memory_order_relaxed) == 0) {
         return;
-      } 
+      }
 
       active_ports_.size_->store(0, std::memory_order_relaxed);
       active_ports_.active_ports_->clear();
@@ -116,8 +119,8 @@ private:
   ImmutableValuePtr<T> value_ptr_{nullptr};
 
   void cleanup() noexcept final {
-      value_ptr_ = nullptr; 
-      clear();
+    value_ptr_ = nullptr;
+    clear();
   }
 
 public:
@@ -125,9 +128,9 @@ public:
 
   Port(const std::string& name, PortType type, Reactor* container)
       : BasePort(name, type, container) {}
-  Port(const std::string& name, PortType type, Reactor* container, multiport::LockedPortList active_ports, std::size_t index)
+  Port(const std::string& name, PortType type, Reactor* container, multiport::LockedPortList active_ports,
+       std::size_t index)
       : BasePort(name, type, container, active_ports, index) {}
-
 
   void bind_to(Port<T>* port) { base_bind_to(port); }
   [[nodiscard]] auto typed_inward_binding() const noexcept -> Port<T>*;
@@ -147,10 +150,7 @@ public:
 
 template <> class Port<void> : public BasePort {
 private:
-
-  void cleanup() noexcept final { 
-      clear();
-  }
+  void cleanup() noexcept final { clear(); }
 
 public:
   using value_type = void;
@@ -158,7 +158,8 @@ public:
   Port(const std::string& name, PortType type, Reactor* container)
       : BasePort(name, type, container) {}
 
-  Port(const std::string& name, PortType type, Reactor* container, multiport::LockedPortList active_ports, std::size_t index)
+  Port(const std::string& name, PortType type, Reactor* container, multiport::LockedPortList active_ports,
+       std::size_t index)
       : BasePort(name, type, container, active_ports, index) {}
 
   void bind_to(Port<void>* port) { base_bind_to(port); }
