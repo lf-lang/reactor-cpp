@@ -491,7 +491,7 @@ public:
   ImmutableValuePtr(ImmutableValuePtr&& ptr) noexcept = default;
 
   explicit constexpr ImmutableValuePtr(std::nullptr_t) {}
-  explicit ImmutableValuePtr(MutableValuePtr<T, false>&& ptr)
+  explicit ImmutableValuePtr(MutableValuePtr<T, true>&& ptr)
       : value_(ptr.value_)
       , valid_(ptr.valid_) {}
 
@@ -520,66 +520,75 @@ public:
 
 // Comparison operators
 
-template <class T, class U, bool scalar>
-auto operator==(const MutableValuePtr<T, scalar>& ptr1, const MutableValuePtr<U, scalar>& ptr2) noexcept -> bool {
+template <class T, class U, bool is_trivial>
+auto operator==(const MutableValuePtr<T, is_trivial>& ptr1, const MutableValuePtr<U, is_trivial>& ptr2) noexcept
+    -> bool {
   return ptr1.get() == ptr2.get();
 }
-template <class T, class U, bool scalar>
-auto operator==(const ImmutableValuePtr<T, scalar>& ptr1, const ImmutableValuePtr<U, scalar>& ptr2) noexcept -> bool {
+template <class T, class U, bool is_trivial>
+auto operator==(const ImmutableValuePtr<T, is_trivial>& ptr1, const ImmutableValuePtr<U, is_trivial>& ptr2) noexcept
+    -> bool {
   return ptr1.get() == ptr2.get();
 }
-template <class T, class U, bool scalar>
-auto operator==(const ImmutableValuePtr<T, scalar>& ptr1, const MutableValuePtr<U, scalar>& ptr2) noexcept -> bool {
+template <class T, class U, bool is_trivial>
+auto operator==(const ImmutableValuePtr<T, is_trivial>& ptr1, const MutableValuePtr<U, is_trivial>& ptr2) noexcept
+    -> bool {
   return ptr1.get() == ptr2.get();
 }
-template <class T, class U, bool scalar>
-auto operator==(const MutableValuePtr<T, scalar>& ptr1, const ImmutableValuePtr<U, scalar>& ptr2) noexcept -> bool {
+template <class T, class U, bool is_trivial>
+auto operator==(const MutableValuePtr<T, is_trivial>& ptr1, const ImmutableValuePtr<U, is_trivial>& ptr2) noexcept
+    -> bool {
   return ptr1.get() == ptr2.get();
 }
-template <class T, bool scalar>
-auto operator==(const MutableValuePtr<T, scalar>& ptr1, std::nullptr_t) noexcept -> bool {
+template <class T, bool is_trivial>
+auto operator==(const MutableValuePtr<T, is_trivial>& ptr1, std::nullptr_t) noexcept -> bool {
   return ptr1.get() == nullptr;
 }
-template <class T, bool scalar>
-auto operator==(std::nullptr_t, const MutableValuePtr<T, scalar>& ptr2) noexcept -> bool {
+template <class T, bool is_trivial>
+auto operator==(std::nullptr_t, const MutableValuePtr<T, is_trivial>& ptr2) noexcept -> bool {
   return ptr2.get() == nullptr;
 }
-template <class T, bool scalar>
-auto operator==(const ImmutableValuePtr<T, scalar>& ptr1, std::nullptr_t) noexcept -> bool {
+template <class T, bool is_trivial>
+auto operator==(const ImmutableValuePtr<T, is_trivial>& ptr1, std::nullptr_t) noexcept -> bool {
   return ptr1.get() == nullptr;
 }
-template <class T, bool scalar>
-auto operator==(std::nullptr_t, const ImmutableValuePtr<T, scalar>& ptr1) noexcept -> bool {
+template <class T, bool is_trivial>
+auto operator==(std::nullptr_t, const ImmutableValuePtr<T, is_trivial>& ptr1) noexcept -> bool {
   return ptr1.get() == nullptr;
 }
 
-template <class T, class U, bool scalar>
-auto operator!=(const MutableValuePtr<T, scalar>& ptr1, const MutableValuePtr<U, scalar>& ptr2) noexcept -> bool {
+template <class T, class U, bool is_trivial>
+auto operator!=(const MutableValuePtr<T, is_trivial>& ptr1, const MutableValuePtr<U, is_trivial>& ptr2) noexcept
+    -> bool {
   return ptr1.get() != ptr2.get();
 }
 
-template <class T, class U, bool scalar>
-auto operator!=(const ImmutableValuePtr<T, scalar>& ptr1, const ImmutableValuePtr<U, scalar>& ptr2) -> bool {
+template <class T, class U, bool is_trivial>
+auto operator!=(const ImmutableValuePtr<T, is_trivial>& ptr1, const ImmutableValuePtr<U, is_trivial>& ptr2) -> bool {
   return ptr1.get() != ptr2.get();
 }
-template <class T, class U, bool scalar>
-auto operator!=(const ImmutableValuePtr<T, scalar>& ptr1, const MutableValuePtr<U, scalar>& ptr2) -> bool {
+template <class T, class U, bool is_trivial>
+auto operator!=(const ImmutableValuePtr<T, is_trivial>& ptr1, const MutableValuePtr<U, is_trivial>& ptr2) -> bool {
   return ptr1.get() != ptr2.get();
 }
-template <class T, class U, bool scalar>
-auto operator!=(const MutableValuePtr<T, scalar>& ptr1, const ImmutableValuePtr<U, scalar>& ptr2) -> bool {
+template <class T, class U, bool is_trivial>
+auto operator!=(const MutableValuePtr<T, is_trivial>& ptr1, const ImmutableValuePtr<U, is_trivial>& ptr2) -> bool {
   return ptr1.get() != ptr2.get();
 }
-template <class T, bool scalar> auto operator!=(const MutableValuePtr<T, scalar>& ptr1, std::nullptr_t) -> bool {
+template <class T, bool is_trivial>
+auto operator!=(const MutableValuePtr<T, is_trivial>& ptr1, std::nullptr_t) -> bool {
   return ptr1.get() != nullptr;
 }
-template <class T, bool scalar> auto operator!=(std::nullptr_t, const MutableValuePtr<T, scalar>& ptr1) -> bool {
+template <class T, bool is_trivial>
+auto operator!=(std::nullptr_t, const MutableValuePtr<T, is_trivial>& ptr1) -> bool {
   return ptr1.get() != nullptr;
 }
-template <class T, bool scalar> auto operator!=(const ImmutableValuePtr<T, scalar>& ptr1, std::nullptr_t) -> bool {
+template <class T, bool is_trivial>
+auto operator!=(const ImmutableValuePtr<T, is_trivial>& ptr1, std::nullptr_t) -> bool {
   return ptr1.get() != nullptr;
 }
-template <class T, bool scalar> auto operator!=(std::nullptr_t, const ImmutableValuePtr<T, scalar>& ptr1) -> bool {
+template <class T, bool is_trivial>
+auto operator!=(std::nullptr_t, const ImmutableValuePtr<T, is_trivial>& ptr1) -> bool {
   return ptr1.get() != nullptr;
 }
 
