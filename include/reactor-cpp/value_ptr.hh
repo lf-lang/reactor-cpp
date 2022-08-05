@@ -428,7 +428,7 @@ private:
   T value_{};
   bool valid_{false};
 
-  explicit MutableValuePtr(const T value)
+  explicit MutableValuePtr(const T& value)
       : value_{value}
       , valid_{true} {}
 
@@ -509,7 +509,7 @@ public:
   auto operator*() const -> const_T& { return value_; }
   auto operator->() const -> const_T* { return get(); }
 
-  [[nodiscard]] auto get_mutable_copy() const -> MutableValuePtr<T, true> { return MutableValuePtr<T, true>(get()); }
+  [[nodiscard]] auto get_mutable_copy() const -> MutableValuePtr<T, true> { return MutableValuePtr<T, true>(*get()); }
 
   // Give the factory function make_mutable_value() access to the private
   // constructor
