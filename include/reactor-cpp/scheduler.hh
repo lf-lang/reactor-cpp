@@ -15,11 +15,13 @@
 #include <map>
 #include <mutex>
 #include <set>
+#include <shared_mutex>
 #include <thread>
 #include <vector>
 
 #include "fwd.hh"
 #include "logical_time.hh"
+#include "safe_vector.hh"
 #include "semaphore.hh"
 
 namespace reactor {
@@ -85,7 +87,8 @@ public:
   void fill_up(std::vector<Reaction*>& ready_reactions);
 };
 
-using EventMap = std::map<BaseAction*, std::function<void(void)>>;
+using ActionList = SafeVector<BaseAction*>;
+using ActionListPtr = std::unique_ptr<ActionList>;
 
 class Scheduler { // NOLINT
 private:
@@ -99,8 +102,12 @@ private:
   std::unique_lock<std::mutex> scheduling_lock_{scheduling_mutex_, std::defer_lock};
   std::condition_variable cv_schedule_;
 
-  std::mutex lock_event_queue_;
-  std::map<Tag, EventMap> event_queue_;
+  std::shared_mutex mutex_event_queue_;
+  std::map<Tag, ActionListPtr> event_queue_;
+
+  std::vector<ActionListPtr> action_list_pool_;
+  static constexpr std::size_t action_list_pool_increment_{10};
+  void fill_action_list_pool();
 
   std::vector<std::vector<BasePort*>> set_ports_;
   std::vector<std::vector<Reaction*>> triggered_reactions_;
@@ -124,8 +131,8 @@ public:
   explicit Scheduler(Environment* env);
   ~Scheduler();
 
-  void schedule_sync(const Tag& tag, BaseAction* action, std::function<void(void)> pre_handler);
-  void schedule_async(const Tag& tag, BaseAction* action, std::function<void(void)> pre_handler);
+  void schedule_sync(const Tag& tag, BaseAction* action);
+  void schedule_async(const Tag& tag, BaseAction* action);
 
   void inline lock() noexcept { scheduling_lock_.lock(); }
   void inline unlock() noexcept { scheduling_lock_.unlock(); }
