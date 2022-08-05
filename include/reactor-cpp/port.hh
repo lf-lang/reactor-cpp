@@ -34,7 +34,7 @@ private:
   std::set<Reaction*> anti_dependencies_{};
 
 protected:
-  bool present_{false};
+  bool present_{false}; //NOLINT cppcoreguidelines-non-private-member-variables-in-classes
 
   BasePort(const std::string& name, PortType type, Reactor* container)
       : ReactorElement(name, (type == PortType::Input) ? ReactorElement::Type::Input : ReactorElement::Type::Output,
@@ -75,7 +75,7 @@ public:
   [[nodiscard]] inline auto dependencies() const noexcept -> const auto& { return dependencies_; }
   [[nodiscard]] inline auto anti_dependencies() const noexcept -> const auto& { return anti_dependencies_; }
 
-  inline auto activate() const -> bool {
+  [[nodiscard]] inline auto activate() const -> bool {
     if (this->is_present()) {
       return false;
     }
