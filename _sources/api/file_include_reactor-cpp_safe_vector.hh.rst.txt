@@ -1,0 +1,66 @@
+
+.. _file_include_reactor-cpp_safe_vector.hh:
+
+File safe_vector.hh
+===================
+
+|exhale_lsh| :ref:`Parent directory <dir_include_reactor-cpp>` (``include/reactor-cpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``include/reactor-cpp/safe_vector.hh``)
+---------------------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_include_reactor-cpp_safe_vector.hh.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``atomic``
+
+- ``cstddef``
+
+- ``mutex``
+
+- ``shared_mutex``
+
+- ``vector`` (:ref:`file_include_reactor-cpp_safe_vector.hh`)
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_include_reactor-cpp_scheduler.hh`
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_reactor`
+
+
+Classes
+-------
+
+
+- :ref:`exhale_class_classreactor_1_1SafeVector`
+

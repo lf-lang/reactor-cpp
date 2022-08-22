@@ -80,6 +80,7 @@
 <li class="toctree-l4"><a class="reference internal" href="api/classreactor_1_1Reactor.html">Class Reactor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/classreactor_1_1ReactorElement.html">Class ReactorElement</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/classreactor_1_1ReadyQueue.html">Class ReadyQueue</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/classreactor_1_1SafeVector.html">Template Class SafeVector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/classreactor_1_1Scheduler.html">Class Scheduler</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/classreactor_1_1Semaphore.html">Class Semaphore</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/classreactor_1_1ShutdownAction.html">Class ShutdownAction</a></li>
@@ -250,15 +251,17 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="api/library_root.html#typedefs">Typedefs</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/typedef_namespacereactor_1afa8a78591f7ec2256722b94ed4399ab5.html">Typedef ActionList</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/typedef_namespacereactor_1a10983ab4d2bcf67ec191f657c63e34ca.html">Typedef ActionListPtr</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/typedef_namespacereactor_1aa8375b807a80703545664096c5b5b779.html">Typedef Duration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/typedef_namespacereactor_1ab072f327f9d4a517d5960d6ac2c674f6.html">Typedef EnvPhase</a></li>
-<li class="toctree-l4"><a class="reference internal" href="api/typedef_namespacereactor_1aacd4ccaa9524924d88b5e8031f3f8569.html">Typedef EventMap</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/typedef_namespacereactor_1a1b3465628751e941bbd1dd4936f90ea5.html">Typedef ImmutableValuePtr</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/typedef_namespacereactor_1aaea1189d617982457b74127ba74a7340.html">Typedef mstep_t</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/typedef_namespacereactor_1af9e48efd603ad7ec203844ba9eb90006.html">Typedef MutableValuePtr</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/typedef_namespacereactor_1afa8a78591f7ec2256722b94ed4399ab5.html">Typedef ActionList</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/typedef_namespacereactor_1a10983ab4d2bcf67ec191f657c63e34ca.html">Typedef ActionListPtr</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/typedef_namespacereactor_1aa8375b807a80703545664096c5b5b779.html">Typedef Duration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/typedef_namespacereactor_1ab072f327f9d4a517d5960d6ac2c674f6.html">Typedef EnvPhase</a></li>
-<li class="toctree-l4"><a class="reference internal" href="api/typedef_namespacereactor_1aacd4ccaa9524924d88b5e8031f3f8569.html">Typedef EventMap</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/typedef_namespacereactor_1a1b3465628751e941bbd1dd4936f90ea5.html">Typedef ImmutableValuePtr</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/typedef_namespacereactor_1aaea1189d617982457b74127ba74a7340.html">Typedef mstep_t</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/typedef_namespacereactor_1af9e48efd603ad7ec203844ba9eb90006.html">Typedef MutableValuePtr</a></li>
@@ -312,11 +315,17 @@
 </li>
       <li><a href="api/classreactor_1_1Action.html#_CPPv4N7reactor6Action7cleanupEv">reactor::Action::cleanup (C++ function)</a>
 </li>
+      <li><a href="api/classreactor_1_1Action.html#_CPPv4N7reactor6Action7events_E">reactor::Action::events_ (C++ member)</a>
+</li>
       <li><a href="api/classreactor_1_1Action.html#_CPPv4NK7reactor6Action3getEv">reactor::Action::get (C++ function)</a>
 </li>
       <li><a href="api/classreactor_1_1Action.html#_CPPv4NK7reactor6Action10is_presentEv">reactor::Action::is_present (C++ function)</a>
 </li>
+      <li><a href="api/classreactor_1_1Action.html#_CPPv4N7reactor6Action13mutex_events_E">reactor::Action::mutex_events_ (C++ member)</a>
+</li>
       <li><a href="api/classreactor_1_1Action.html#_CPPv4I0EN7reactor6Action8scheduleEvNSt9nullptr_tE3Dur">reactor::Action::schedule (C++ function)</a>, <a href="api/classreactor_1_1Action.html#_CPPv4I0EN7reactor6Action8scheduleEvRK17ImmutableValuePtrI1TE3Dur">[1]</a>, <a href="api/classreactor_1_1Action.html#_CPPv4I0EN7reactor6Action8scheduleEvRK1T3Dur">[2]</a>, <a href="api/classreactor_1_1Action.html#_CPPv4I0EN7reactor6Action8scheduleEvRR15MutableValuePtrI1TE3Dur">[3]</a>, <a href="api/classreactor_1_1Action.html#_CPPv4I0EN7reactor6Action8scheduleEvRR1T3Dur">[4]</a>
+</li>
+      <li><a href="api/classreactor_1_1Action.html#_CPPv4N7reactor6Action5setupEv">reactor::Action::setup (C++ function)</a>
 </li>
       <li><a href="api/classreactor_1_1Action.html#_CPPv4N7reactor6Action8shutdownEv">reactor::Action::shutdown (C++ function)</a>
 </li>
@@ -336,9 +345,15 @@
 </li>
       <li><a href="api/classreactor_1_1Action_3_01void_01_4.html#_CPPv4I0EN7reactor6ActionIvE8scheduleEv3Dur">reactor::Action&lt;void&gt;::schedule (C++ function)</a>
 </li>
+      <li><a href="api/classreactor_1_1Action_3_01void_01_4.html#_CPPv4N7reactor6ActionIvE5setupEv">reactor::Action&lt;void&gt;::setup (C++ function)</a>
+</li>
       <li><a href="api/classreactor_1_1Action_3_01void_01_4.html#_CPPv4N7reactor6ActionIvE8shutdownEv">reactor::Action&lt;void&gt;::shutdown (C++ function)</a>
 </li>
       <li><a href="api/classreactor_1_1Action_3_01void_01_4.html#_CPPv4N7reactor6ActionIvE7startupEv">reactor::Action&lt;void&gt;::startup (C++ function)</a>
+</li>
+      <li><a href="api/typedef_namespacereactor_1afa8a78591f7ec2256722b94ed4399ab5.html#_CPPv4N7reactor10ActionListE">reactor::ActionList (C++ type)</a>
+</li>
+      <li><a href="api/typedef_namespacereactor_1a10983ab4d2bcf67ec191f657c63e34ca.html#_CPPv4N7reactor13ActionListPtrE">reactor::ActionListPtr (C++ type)</a>
 </li>
       <li><a href="api/classreactor_1_1BaseAction.html#_CPPv4N7reactor10BaseActionE">reactor::BaseAction (C++ class)</a>
 </li>
@@ -363,6 +378,8 @@
       <li><a href="api/classreactor_1_1BaseAction.html#_CPPv4NK7reactor10BaseAction10schedulersEv">reactor::BaseAction::schedulers (C++ function)</a>
 </li>
       <li><a href="api/classreactor_1_1BaseAction.html#_CPPv4N7reactor10BaseAction11schedulers_E">reactor::BaseAction::schedulers_ (C++ member)</a>
+</li>
+      <li><a href="api/classreactor_1_1BaseAction.html#_CPPv4N7reactor10BaseAction5setupEv">reactor::BaseAction::setup (C++ function)</a>
 </li>
       <li><a href="api/classreactor_1_1BaseAction.html#_CPPv4NK7reactor10BaseAction8triggersEv">reactor::BaseAction::triggers (C++ function)</a>
 </li>
@@ -610,8 +627,6 @@
 </li>
       <li><a href="api/typedef_namespacereactor_1ab072f327f9d4a517d5960d6ac2c674f6.html#_CPPv4N7reactor8EnvPhaseE">reactor::EnvPhase (C++ type)</a>
 </li>
-      <li><a href="api/typedef_namespacereactor_1aacd4ccaa9524924d88b5e8031f3f8569.html#_CPPv4N7reactor8EventMapE">reactor::EventMap (C++ type)</a>
-</li>
       <li><a href="api/typedef_namespacereactor_1a1b3465628751e941bbd1dd4936f90ea5.html#_CPPv4I0EN7reactor17ImmutableValuePtrE">reactor::ImmutableValuePtr (C++ type)</a>
 </li>
       <li><a href="api/classreactor_1_1Input.html#_CPPv4I0EN7reactor5InputE">reactor::Input (C++ class)</a>
@@ -706,8 +721,6 @@
 </li>
       <li><a href="api/classreactor_1_1Port.html#_CPPv4N7reactor4Port7cleanupEv">reactor::Port::cleanup (C++ function)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/classreactor_1_1Port.html#_CPPv4NK7reactor4Port3getEv">reactor::Port::get (C++ function)</a>
 </li>
       <li><a href="api/classreactor_1_1Port.html#_CPPv4NK7reactor4Port10is_presentEv">reactor::Port::is_present (C++ function)</a>
@@ -720,6 +733,8 @@
 </li>
       <li><a href="api/classreactor_1_1Port.html#_CPPv4N7reactor4Port7startupEv">reactor::Port::startup (C++ function)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/classreactor_1_1Port.html#_CPPv4NK7reactor4Port20typed_inward_bindingEv">reactor::Port::typed_inward_binding (C++ function)</a>
 </li>
       <li><a href="api/classreactor_1_1Port.html#_CPPv4NK7reactor4Port22typed_outward_bindingsEv">reactor::Port::typed_outward_bindings (C++ function)</a>
@@ -938,7 +953,35 @@
 </li>
       <li><a href="api/function_namespacereactor_1a50e4996eb605ff7e10a26dcdbae25340.html#_CPPv4N7reactor18recursive_assembleEP7Reactor">reactor::recursive_assemble (C++ function)</a>
 </li>
+      <li><a href="api/classreactor_1_1SafeVector.html#_CPPv4I0EN7reactor10SafeVectorE">reactor::SafeVector (C++ class)</a>
+</li>
+      <li><a href="api/classreactor_1_1SafeVector.html#_CPPv4N7reactor10SafeVector5beginEv">reactor::SafeVector::begin (C++ function)</a>
+</li>
+      <li><a href="api/classreactor_1_1SafeVector.html#_CPPv4N7reactor10SafeVector5clearEv">reactor::SafeVector::clear (C++ function)</a>
+</li>
+      <li><a href="api/classreactor_1_1SafeVector.html#_CPPv4N7reactor10SafeVector5emptyEv">reactor::SafeVector::empty (C++ function)</a>
+</li>
+      <li><a href="api/classreactor_1_1SafeVector.html#_CPPv4N7reactor10SafeVector3endEv">reactor::SafeVector::end (C++ function)</a>
+</li>
+      <li><a href="api/classreactor_1_1SafeVector.html#_CPPv4N7reactor10SafeVector6mutex_E">reactor::SafeVector::mutex_ (C++ member)</a>
+</li>
+      <li><a href="api/classreactor_1_1SafeVector.html#_CPPv4N7reactor10SafeVector9push_backERK1T">reactor::SafeVector::push_back (C++ function)</a>
+</li>
+      <li><a href="api/classreactor_1_1SafeVector.html#_CPPv4N7reactor10SafeVector4sizeEv">reactor::SafeVector::size (C++ function)</a>
+</li>
+      <li><a href="api/classreactor_1_1SafeVector.html#_CPPv4N7reactor10SafeVector15size_increment_E">reactor::SafeVector::size_increment_ (C++ member)</a>
+</li>
+      <li><a href="api/classreactor_1_1SafeVector.html#_CPPv4N7reactor10SafeVector7vector_E">reactor::SafeVector::vector_ (C++ member)</a>
+</li>
+      <li><a href="api/classreactor_1_1SafeVector.html#_CPPv4N7reactor10SafeVector12vector_size_E">reactor::SafeVector::vector_size_ (C++ member)</a>
+</li>
+      <li><a href="api/classreactor_1_1SafeVector.html#_CPPv4N7reactor10SafeVector10write_pos_E">reactor::SafeVector::write_pos_ (C++ member)</a>
+</li>
       <li><a href="api/classreactor_1_1Scheduler.html#_CPPv4N7reactor9SchedulerE">reactor::Scheduler (C++ class)</a>
+</li>
+      <li><a href="api/classreactor_1_1Scheduler.html#_CPPv4N7reactor9Scheduler17action_list_pool_E">reactor::Scheduler::action_list_pool_ (C++ member)</a>
+</li>
+      <li><a href="api/classreactor_1_1Scheduler.html#_CPPv4N7reactor9Scheduler27action_list_pool_increment_E">reactor::Scheduler::action_list_pool_increment_ (C++ member)</a>
 </li>
       <li><a href="api/classreactor_1_1Scheduler.html#_CPPv4N7reactor9Scheduler19continue_execution_E">reactor::Scheduler::continue_execution_ (C++ member)</a>
 </li>
@@ -948,13 +991,15 @@
 </li>
       <li><a href="api/classreactor_1_1Scheduler.html#_CPPv4N7reactor9Scheduler12event_queue_E">reactor::Scheduler::event_queue_ (C++ member)</a>
 </li>
-      <li><a href="api/classreactor_1_1Scheduler.html#_CPPv4N7reactor9Scheduler4lockEv">reactor::Scheduler::lock (C++ function)</a>
+      <li><a href="api/classreactor_1_1Scheduler.html#_CPPv4N7reactor9Scheduler21fill_action_list_poolEv">reactor::Scheduler::fill_action_list_pool (C++ function)</a>
 </li>
-      <li><a href="api/classreactor_1_1Scheduler.html#_CPPv4N7reactor9Scheduler17lock_event_queue_E">reactor::Scheduler::lock_event_queue_ (C++ member)</a>
+      <li><a href="api/classreactor_1_1Scheduler.html#_CPPv4N7reactor9Scheduler4lockEv">reactor::Scheduler::lock (C++ function)</a>
 </li>
       <li><a href="api/classreactor_1_1Scheduler.html#_CPPv4NK7reactor9Scheduler12logical_timeEv">reactor::Scheduler::logical_time (C++ function)</a>
 </li>
       <li><a href="api/classreactor_1_1Scheduler.html#_CPPv4N7reactor9Scheduler13logical_time_E">reactor::Scheduler::logical_time_ (C++ member)</a>
+</li>
+      <li><a href="api/classreactor_1_1Scheduler.html#_CPPv4N7reactor9Scheduler18mutex_event_queue_E">reactor::Scheduler::mutex_event_queue_ (C++ member)</a>
 </li>
       <li><a href="api/classreactor_1_1Scheduler.html#_CPPv4N7reactor9Scheduler4nextEv">reactor::Scheduler::next (C++ function)</a>
 </li>
@@ -968,11 +1013,11 @@
 </li>
       <li><a href="api/classreactor_1_1Scheduler.html#_CPPv4N7reactor9Scheduler8scheduleEv">reactor::Scheduler::schedule (C++ function)</a>
 </li>
-      <li><a href="api/classreactor_1_1Scheduler.html#_CPPv4N7reactor9Scheduler14schedule_asyncERK3TagP10BaseActionNSt8functionIFvvEEE">reactor::Scheduler::schedule_async (C++ function)</a>
+      <li><a href="api/classreactor_1_1Scheduler.html#_CPPv4N7reactor9Scheduler14schedule_asyncERK3TagP10BaseAction">reactor::Scheduler::schedule_async (C++ function)</a>
 </li>
       <li><a href="api/classreactor_1_1Scheduler.html#_CPPv4N7reactor9Scheduler24schedule_ready_reactionsEv">reactor::Scheduler::schedule_ready_reactions (C++ function)</a>
 </li>
-      <li><a href="api/classreactor_1_1Scheduler.html#_CPPv4N7reactor9Scheduler13schedule_syncERK3TagP10BaseActionNSt8functionIFvvEEE">reactor::Scheduler::schedule_sync (C++ function)</a>
+      <li><a href="api/classreactor_1_1Scheduler.html#_CPPv4N7reactor9Scheduler13schedule_syncERK3TagP10BaseAction">reactor::Scheduler::schedule_sync (C++ function)</a>
 </li>
       <li><a href="api/classreactor_1_1Scheduler.html#_CPPv4N7reactor9Scheduler9SchedulerEP11Environment">reactor::Scheduler::Scheduler (C++ function)</a>
 </li>
@@ -1022,6 +1067,8 @@
 </li>
       <li><a href="api/classreactor_1_1ShutdownAction.html#_CPPv4N7reactor14ShutdownAction7cleanupEv">reactor::ShutdownAction::cleanup (C++ function)</a>
 </li>
+      <li><a href="api/classreactor_1_1ShutdownAction.html#_CPPv4N7reactor14ShutdownAction5setupEv">reactor::ShutdownAction::setup (C++ function)</a>
+</li>
       <li><a href="api/classreactor_1_1ShutdownAction.html#_CPPv4N7reactor14ShutdownAction8shutdownEv">reactor::ShutdownAction::shutdown (C++ function)</a>
 </li>
       <li><a href="api/classreactor_1_1ShutdownAction.html#_CPPv4N7reactor14ShutdownAction14ShutdownActionERKNSt6stringEP7Reactor">reactor::ShutdownAction::ShutdownAction (C++ function)</a>
@@ -1067,6 +1114,8 @@
       <li><a href="api/classreactor_1_1Timer.html#_CPPv4NK7reactor5Timer6periodEv">reactor::Timer::period (C++ function)</a>
 </li>
       <li><a href="api/classreactor_1_1Timer.html#_CPPv4N7reactor5Timer7period_E">reactor::Timer::period_ (C++ member)</a>
+</li>
+      <li><a href="api/classreactor_1_1Timer.html#_CPPv4N7reactor5Timer5setupEv">reactor::Timer::setup (C++ function)</a>
 </li>
       <li><a href="api/classreactor_1_1Timer.html#_CPPv4N7reactor5Timer8shutdownEv">reactor::Timer::shutdown (C++ function)</a>
 </li>

@@ -81,6 +81,7 @@
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Reactor.html">Class Reactor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1ReactorElement.html">Class ReactorElement</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1ReadyQueue.html">Class ReadyQueue</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classreactor_1_1SafeVector.html">Template Class SafeVector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Scheduler.html">Class Scheduler</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Semaphore.html">Class Semaphore</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1ShutdownAction.html">Class ShutdownAction</a></li>
@@ -251,15 +252,17 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="library_root.html#typedefs">Typedefs</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1afa8a78591f7ec2256722b94ed4399ab5.html">Typedef ActionList</a></li>
+<li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1a10983ab4d2bcf67ec191f657c63e34ca.html">Typedef ActionListPtr</a></li>
 <li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1aa8375b807a80703545664096c5b5b779.html">Typedef Duration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1ab072f327f9d4a517d5960d6ac2c674f6.html">Typedef EnvPhase</a></li>
-<li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1aacd4ccaa9524924d88b5e8031f3f8569.html">Typedef EventMap</a></li>
 <li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1a1b3465628751e941bbd1dd4936f90ea5.html">Typedef ImmutableValuePtr</a></li>
 <li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1aaea1189d617982457b74127ba74a7340.html">Typedef mstep_t</a></li>
 <li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1af9e48efd603ad7ec203844ba9eb90006.html">Typedef MutableValuePtr</a></li>
+<li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1afa8a78591f7ec2256722b94ed4399ab5.html">Typedef ActionList</a></li>
+<li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1a10983ab4d2bcf67ec191f657c63e34ca.html">Typedef ActionListPtr</a></li>
 <li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1aa8375b807a80703545664096c5b5b779.html">Typedef Duration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1ab072f327f9d4a517d5960d6ac2c674f6.html">Typedef EnvPhase</a></li>
-<li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1aacd4ccaa9524924d88b5e8031f3f8569.html">Typedef EventMap</a></li>
 <li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1a1b3465628751e941bbd1dd4936f90ea5.html">Typedef ImmutableValuePtr</a></li>
 <li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1aaea1189d617982457b74127ba74a7340.html">Typedef mstep_t</a></li>
 <li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1af9e48efd603ad7ec203844ba9eb90006.html">Typedef MutableValuePtr</a></li>
@@ -308,6 +311,9 @@
 <span class="cm"> *   Christian Menard</span>
 <span class="cm"> */</span>
 
+<span class="cp">#include</span> <span class="cpf">&lt;cstddef&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;memory&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;mutex&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;utility&gt;</span><span class="cp"></span>
 
 <span class="cp">#include</span> <span class="cpf">&quot;reactor-cpp/scheduler.hh&quot;</span><span class="cp"></span>
@@ -525,22 +531,24 @@
 <span class="p">}</span>
 
 <span class="kt">void</span> <span class="n">Scheduler</span><span class="o">::</span><span class="n">next</span><span class="p">()</span> <span class="p">{</span> <span class="c1">// NOLINT</span>
-  <span class="k">static</span> <span class="n">EventMap</span> <span class="n">events</span><span class="p">{};</span>
+  <span class="k">static</span> <span class="n">ActionListPtr</span> <span class="n">actions</span><span class="p">{};</span>
 
   <span class="c1">// clean up before scheduling any new events</span>
-  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">events</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">actions</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">)</span> <span class="p">{</span>
     <span class="c1">// cleanup all triggered actions</span>
-    <span class="k">for</span> <span class="p">(</span><span class="k">auto</span><span class="o">&amp;</span> <span class="nl">vec_ports</span> <span class="p">:</span> <span class="n">events</span><span class="p">)</span> <span class="p">{</span>
-      <span class="n">vec_ports</span><span class="p">.</span><span class="n">first</span><span class="o">-&gt;</span><span class="n">cleanup</span><span class="p">();</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">auto</span><span class="o">*</span> <span class="nl">action</span> <span class="p">:</span> <span class="o">*</span><span class="n">actions</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">action</span><span class="o">-&gt;</span><span class="n">cleanup</span><span class="p">();</span>
     <span class="p">}</span>
-    <span class="c1">// cleanup all set ports</span>
-    <span class="k">for</span> <span class="p">(</span><span class="k">auto</span><span class="o">&amp;</span> <span class="nl">vec_ports</span> <span class="p">:</span> <span class="n">set_ports_</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">for</span> <span class="p">(</span><span class="k">auto</span><span class="o">&amp;</span> <span class="nl">port</span> <span class="p">:</span> <span class="n">vec_ports</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">port</span><span class="o">-&gt;</span><span class="n">cleanup</span><span class="p">();</span>
-      <span class="p">}</span>
-      <span class="n">vec_ports</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+    <span class="n">actions</span><span class="o">-&gt;</span><span class="n">clear</span><span class="p">();</span>
+    <span class="n">action_list_pool_</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">actions</span><span class="p">));</span>
+  <span class="p">}</span>
+
+  <span class="c1">// cleanup all set ports</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">auto</span><span class="o">&amp;</span> <span class="nl">vec_ports</span> <span class="p">:</span> <span class="n">set_ports_</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">auto</span><span class="o">&amp;</span> <span class="nl">port</span> <span class="p">:</span> <span class="n">vec_ports</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">port</span><span class="o">-&gt;</span><span class="n">cleanup</span><span class="p">();</span>
     <span class="p">}</span>
-    <span class="n">events</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+    <span class="n">vec_ports</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
   <span class="p">}</span>
 
   <span class="p">{</span>
@@ -557,7 +565,7 @@
       <span class="p">}</span>
     <span class="p">}</span>
 
-    <span class="k">while</span> <span class="p">(</span><span class="n">events</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span> <span class="p">{</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">actions</span> <span class="o">==</span> <span class="k">nullptr</span> <span class="o">||</span> <span class="n">actions</span><span class="o">-&gt;</span><span class="n">empty</span><span class="p">())</span> <span class="p">{</span>
       <span class="k">if</span> <span class="p">(</span><span class="n">stop_</span><span class="p">)</span> <span class="p">{</span>
         <span class="n">continue_execution_</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
         <span class="n">log</span><span class="o">::</span><span class="n">Debug</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Shutting down the scheduler&quot;</span><span class="p">;</span>
@@ -565,7 +573,7 @@
         <span class="k">if</span> <span class="p">(</span><span class="n">t_next</span> <span class="o">==</span> <span class="n">event_queue_</span><span class="p">.</span><span class="n">begin</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">first</span><span class="p">)</span> <span class="p">{</span>
           <span class="n">log</span><span class="o">::</span><span class="n">Debug</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Schedule the last round of reactions including all &quot;</span>
                           <span class="s">&quot;termination reactions&quot;</span><span class="p">;</span>
-          <span class="n">events</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">event_queue_</span><span class="p">.</span><span class="n">begin</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">);</span>
+          <span class="n">actions</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">event_queue_</span><span class="p">.</span><span class="n">begin</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">);</span>
           <span class="n">event_queue_</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="n">event_queue_</span><span class="p">.</span><span class="n">begin</span><span class="p">());</span>
           <span class="n">log</span><span class="o">::</span><span class="n">Debug</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;advance logical time to tag [&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">t_next</span><span class="p">.</span><span class="n">time_point</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;, &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">t_next</span><span class="p">.</span><span class="n">micro_step</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;]&quot;</span><span class="p">;</span>
           <span class="n">logical_time_</span><span class="p">.</span><span class="n">advance_to</span><span class="p">(</span><span class="n">t_next</span><span class="p">);</span>
@@ -605,8 +613,7 @@
 
         <span class="c1">// retrieve all events with tag equal to current logical time from the</span>
         <span class="c1">// queue</span>
-        <span class="n">events</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">event_queue_</span><span class="p">.</span><span class="n">begin</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">);</span>
-        <span class="n">event_queue_</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="n">event_queue_</span><span class="p">.</span><span class="n">begin</span><span class="p">());</span>
+        <span class="n">actions</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">event_queue_</span><span class="p">.</span><span class="n">extract</span><span class="p">(</span><span class="n">event_queue_</span><span class="p">.</span><span class="n">begin</span><span class="p">()).</span><span class="n">mapped</span><span class="p">());</span>
 
         <span class="c1">// advance logical time</span>
         <span class="n">log</span><span class="o">::</span><span class="n">Debug</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;advance logical time to tag [&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">t_next</span><span class="p">.</span><span class="n">time_point</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;, &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">t_next</span><span class="p">.</span><span class="n">micro_step</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;]&quot;</span><span class="p">;</span>
@@ -617,17 +624,14 @@
 
   <span class="c1">// execute all setup functions; this sets the values of the corresponding</span>
   <span class="c1">// actions</span>
-  <span class="k">for</span> <span class="p">(</span><span class="k">auto</span><span class="o">&amp;</span> <span class="nl">vec_reactor</span> <span class="p">:</span> <span class="n">events</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">auto</span><span class="o">&amp;</span> <span class="n">setup</span> <span class="o">=</span> <span class="n">vec_reactor</span><span class="p">.</span><span class="n">second</span><span class="p">;</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">setup</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">)</span> <span class="p">{</span>
-      <span class="n">setup</span><span class="p">();</span>
-    <span class="p">}</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">auto</span><span class="o">*</span> <span class="nl">action</span> <span class="p">:</span> <span class="o">*</span><span class="n">actions</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">action</span><span class="o">-&gt;</span><span class="n">setup</span><span class="p">();</span>
   <span class="p">}</span>
 
-  <span class="n">log</span><span class="o">::</span><span class="n">Debug</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;events: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">events</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
-  <span class="k">for</span> <span class="p">(</span><span class="k">auto</span><span class="o">&amp;</span> <span class="nl">vec_reactor</span> <span class="p">:</span> <span class="n">events</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">log</span><span class="o">::</span><span class="n">Debug</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Action &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">vec_reactor</span><span class="p">.</span><span class="n">first</span><span class="o">-&gt;</span><span class="n">fqn</span><span class="p">();</span>
-    <span class="k">for</span> <span class="p">(</span><span class="k">auto</span><span class="o">*</span> <span class="nl">reaction</span> <span class="p">:</span> <span class="n">vec_reactor</span><span class="p">.</span><span class="n">first</span><span class="o">-&gt;</span><span class="n">triggers</span><span class="p">())</span> <span class="p">{</span>
+  <span class="n">log</span><span class="o">::</span><span class="n">Debug</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;events: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">actions</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">();</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span><span class="o">*</span> <span class="nl">action</span> <span class="p">:</span> <span class="o">*</span><span class="n">actions</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">log</span><span class="o">::</span><span class="n">Debug</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Action &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">action</span><span class="o">-&gt;</span><span class="n">fqn</span><span class="p">();</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">auto</span><span class="o">*</span> <span class="nl">reaction</span> <span class="p">:</span> <span class="n">action</span><span class="o">-&gt;</span><span class="n">triggers</span><span class="p">())</span> <span class="p">{</span>
       <span class="c1">// There is no need to acquire the mutex. At this point the scheduler</span>
       <span class="c1">// should be the only thread accessing the reaction queue as none of the</span>
       <span class="c1">// workers_ are running</span>
@@ -640,34 +644,61 @@
 <span class="n">Scheduler</span><span class="o">::</span><span class="n">Scheduler</span><span class="p">(</span><span class="n">Environment</span><span class="o">*</span> <span class="n">env</span><span class="p">)</span>
     <span class="o">:</span> <span class="n">using_workers_</span><span class="p">(</span><span class="n">env</span><span class="o">-&gt;</span><span class="n">num_workers</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span>
     <span class="p">,</span> <span class="n">environment_</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
-    <span class="p">,</span> <span class="n">ready_queue_</span><span class="p">(</span><span class="n">env</span><span class="o">-&gt;</span><span class="n">num_workers</span><span class="p">())</span> <span class="p">{}</span>
+    <span class="p">,</span> <span class="n">ready_queue_</span><span class="p">(</span><span class="n">env</span><span class="o">-&gt;</span><span class="n">num_workers</span><span class="p">())</span> <span class="p">{</span>
+  <span class="n">fill_action_list_pool</span><span class="p">();</span>
+<span class="p">}</span>
 
 <span class="n">Scheduler</span><span class="o">::~</span><span class="n">Scheduler</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
 
-<span class="kt">void</span> <span class="n">Scheduler</span><span class="o">::</span><span class="n">schedule_sync</span><span class="p">(</span><span class="k">const</span> <span class="n">Tag</span><span class="o">&amp;</span> <span class="n">tag</span><span class="p">,</span> <span class="n">BaseAction</span><span class="o">*</span> <span class="n">action</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">pre_handler</span><span class="p">)</span> <span class="p">{</span>
+<span class="kt">void</span> <span class="n">Scheduler</span><span class="o">::</span><span class="n">fill_action_list_pool</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">i</span><span class="p">{</span><span class="mi">0</span><span class="p">};</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">action_list_pool_increment_</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">action_list_pool_</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">make_unique</span><span class="o">&lt;</span><span class="n">ActionList</span><span class="o">&gt;</span><span class="p">());</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">Scheduler</span><span class="o">::</span><span class="n">schedule_sync</span><span class="p">(</span><span class="k">const</span> <span class="n">Tag</span><span class="o">&amp;</span> <span class="n">tag</span><span class="p">,</span> <span class="n">BaseAction</span><span class="o">*</span> <span class="n">action</span><span class="p">)</span> <span class="p">{</span>
   <span class="n">reactor_assert</span><span class="p">(</span><span class="n">logical_time_</span> <span class="o">&lt;</span> <span class="n">tag</span><span class="p">);</span>
   <span class="c1">// TODO verify that the action is indeed allowed to be scheduled by the</span>
   <span class="c1">// current reaction</span>
   <span class="n">log</span><span class="o">::</span><span class="n">Debug</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Schedule action &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">action</span><span class="o">-&gt;</span><span class="n">fqn</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">action</span><span class="o">-&gt;</span><span class="n">is_logical</span><span class="p">()</span> <span class="o">?</span> <span class="s">&quot; synchronously &quot;</span> <span class="o">:</span> <span class="s">&quot; asynchronously &quot;</span><span class="p">)</span>
                <span class="o">&lt;&lt;</span> <span class="s">&quot; with tag [&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">tag</span><span class="p">.</span><span class="n">time_point</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;, &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">tag</span><span class="p">.</span><span class="n">micro_step</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;]&quot;</span><span class="p">;</span>
-  <span class="p">{</span>
-    <span class="k">auto</span> <span class="n">unique_lock</span> <span class="o">=</span>
-        <span class="n">using_workers_</span> <span class="o">?</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_lock</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span><span class="p">(</span><span class="n">lock_event_queue_</span><span class="p">)</span> <span class="o">:</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_lock</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span><span class="p">();</span>
+  <span class="n">tracepoint</span><span class="p">(</span><span class="n">reactor_cpp</span><span class="p">,</span> <span class="n">schedule_action</span><span class="p">,</span> <span class="n">action</span><span class="o">-&gt;</span><span class="n">container</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">fqn</span><span class="p">(),</span> <span class="n">action</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">(),</span> <span class="n">tag</span><span class="p">);</span>
 
-    <span class="n">tracepoint</span><span class="p">(</span><span class="n">reactor_cpp</span><span class="p">,</span> <span class="n">schedule_action</span><span class="p">,</span> <span class="n">action</span><span class="o">-&gt;</span><span class="n">container</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">fqn</span><span class="p">(),</span> <span class="n">action</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">(),</span> <span class="n">tag</span><span class="p">);</span> <span class="c1">// NOLINT</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">using_workers_</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">auto</span> <span class="n">shared_lock</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">shared_lock</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">shared_mutex</span><span class="o">&gt;</span><span class="p">(</span><span class="n">mutex_event_queue_</span><span class="p">);</span>
 
-    <span class="c1">// create a new event map or retrieve the existing one</span>
-    <span class="k">auto</span> <span class="n">emplace_result</span> <span class="o">=</span> <span class="n">event_queue_</span><span class="p">.</span><span class="n">try_emplace</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">EventMap</span><span class="p">());</span>
-    <span class="k">auto</span><span class="o">&amp;</span> <span class="n">event_map</span> <span class="o">=</span> <span class="n">emplace_result</span><span class="p">.</span><span class="n">first</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">;</span>
-
-    <span class="c1">// insert the new event</span>
-    <span class="n">event_map</span><span class="p">[</span><span class="n">action</span><span class="p">]</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">pre_handler</span><span class="p">);</span>
+    <span class="k">auto</span> <span class="n">it</span> <span class="o">=</span> <span class="n">event_queue_</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">tag</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">it</span> <span class="o">==</span> <span class="n">event_queue_</span><span class="p">.</span><span class="n">end</span><span class="p">())</span> <span class="p">{</span>
+      <span class="n">shared_lock</span><span class="p">.</span><span class="n">unlock</span><span class="p">();</span>
+      <span class="p">{</span>
+        <span class="k">auto</span> <span class="n">unique_lock</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_lock</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">shared_mutex</span><span class="o">&gt;</span><span class="p">(</span><span class="n">mutex_event_queue_</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">action_list_pool_</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span> <span class="p">{</span>
+          <span class="n">fill_action_list_pool</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">result</span> <span class="o">=</span> <span class="n">event_queue_</span><span class="p">.</span><span class="n">try_emplace</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">action_list_pool_</span><span class="p">.</span><span class="n">back</span><span class="p">()));</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">result</span><span class="p">.</span><span class="n">second</span><span class="p">)</span> <span class="p">{</span>
+          <span class="n">action_list_pool_</span><span class="p">.</span><span class="n">pop_back</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="n">result</span><span class="p">.</span><span class="n">first</span><span class="o">-&gt;</span><span class="n">second</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="n">action</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="n">it</span><span class="o">-&gt;</span><span class="n">second</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="n">action</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">action_list_pool_</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span> <span class="p">{</span>
+      <span class="n">fill_action_list_pool</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">result</span> <span class="o">=</span> <span class="n">event_queue_</span><span class="p">.</span><span class="n">try_emplace</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">action_list_pool_</span><span class="p">.</span><span class="n">back</span><span class="p">()));</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">result</span><span class="p">.</span><span class="n">second</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">action_list_pool_</span><span class="p">.</span><span class="n">pop_back</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="n">result</span><span class="p">.</span><span class="n">first</span><span class="o">-&gt;</span><span class="n">second</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="n">action</span><span class="p">);</span>
   <span class="p">}</span>
 <span class="p">}</span>
 
-<span class="kt">void</span> <span class="n">Scheduler</span><span class="o">::</span><span class="n">schedule_async</span><span class="p">(</span><span class="k">const</span> <span class="n">Tag</span><span class="o">&amp;</span> <span class="n">tag</span><span class="p">,</span> <span class="n">BaseAction</span><span class="o">*</span> <span class="n">action</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">pre_handler</span><span class="p">)</span> <span class="p">{</span>
+<span class="kt">void</span> <span class="n">Scheduler</span><span class="o">::</span><span class="n">schedule_async</span><span class="p">(</span><span class="k">const</span> <span class="n">Tag</span><span class="o">&amp;</span> <span class="n">tag</span><span class="p">,</span> <span class="n">BaseAction</span><span class="o">*</span> <span class="n">action</span><span class="p">)</span> <span class="p">{</span>
   <span class="n">std</span><span class="o">::</span><span class="n">lock_guard</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">lock_guard</span><span class="p">(</span><span class="n">scheduling_mutex_</span><span class="p">);</span>
-  <span class="n">schedule_sync</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">pre_handler</span><span class="p">));</span>
+  <span class="n">schedule_sync</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">action</span><span class="p">);</span>
   <span class="n">cv_schedule_</span><span class="p">.</span><span class="n">notify_one</span><span class="p">();</span>
 <span class="p">}</span>
 

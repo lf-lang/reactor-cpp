@@ -81,6 +81,7 @@
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Reactor.html">Class Reactor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1ReactorElement.html">Class ReactorElement</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1ReadyQueue.html">Class ReadyQueue</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classreactor_1_1SafeVector.html">Template Class SafeVector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Scheduler.html">Class Scheduler</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Semaphore.html">Class Semaphore</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1ShutdownAction.html">Class ShutdownAction</a></li>
@@ -251,15 +252,17 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="library_root.html#typedefs">Typedefs</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1afa8a78591f7ec2256722b94ed4399ab5.html">Typedef ActionList</a></li>
+<li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1a10983ab4d2bcf67ec191f657c63e34ca.html">Typedef ActionListPtr</a></li>
 <li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1aa8375b807a80703545664096c5b5b779.html">Typedef Duration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1ab072f327f9d4a517d5960d6ac2c674f6.html">Typedef EnvPhase</a></li>
-<li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1aacd4ccaa9524924d88b5e8031f3f8569.html">Typedef EventMap</a></li>
 <li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1a1b3465628751e941bbd1dd4936f90ea5.html">Typedef ImmutableValuePtr</a></li>
 <li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1aaea1189d617982457b74127ba74a7340.html">Typedef mstep_t</a></li>
 <li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1af9e48efd603ad7ec203844ba9eb90006.html">Typedef MutableValuePtr</a></li>
+<li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1afa8a78591f7ec2256722b94ed4399ab5.html">Typedef ActionList</a></li>
+<li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1a10983ab4d2bcf67ec191f657c63e34ca.html">Typedef ActionListPtr</a></li>
 <li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1aa8375b807a80703545664096c5b5b779.html">Typedef Duration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1ab072f327f9d4a517d5960d6ac2c674f6.html">Typedef EnvPhase</a></li>
-<li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1aacd4ccaa9524924d88b5e8031f3f8569.html">Typedef EventMap</a></li>
 <li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1a1b3465628751e941bbd1dd4936f90ea5.html">Typedef ImmutableValuePtr</a></li>
 <li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1aaea1189d617982457b74127ba74a7340.html">Typedef mstep_t</a></li>
 <li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1af9e48efd603ad7ec203844ba9eb90006.html">Typedef MutableValuePtr</a></li>
@@ -339,24 +342,24 @@
 <span class="kt">void</span> <span class="n">Timer</span><span class="o">::</span><span class="n">startup</span><span class="p">()</span> <span class="p">{</span>
   <span class="n">Tag</span> <span class="n">tag_zero</span> <span class="o">=</span> <span class="n">Tag</span><span class="o">::</span><span class="n">from_physical_time</span><span class="p">(</span><span class="n">environment</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">start_time</span><span class="p">());</span>
   <span class="k">if</span> <span class="p">(</span><span class="n">offset_</span> <span class="o">!=</span> <span class="n">Duration</span><span class="o">::</span><span class="n">zero</span><span class="p">())</span> <span class="p">{</span>
-    <span class="n">environment</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">scheduler</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">schedule_sync</span><span class="p">(</span><span class="n">tag_zero</span><span class="p">.</span><span class="n">delay</span><span class="p">(</span><span class="n">offset_</span><span class="p">),</span> <span class="k">this</span><span class="p">,</span> <span class="k">nullptr</span><span class="p">);</span>
+    <span class="n">environment</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">scheduler</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">schedule_sync</span><span class="p">(</span><span class="n">tag_zero</span><span class="p">.</span><span class="n">delay</span><span class="p">(</span><span class="n">offset_</span><span class="p">),</span> <span class="k">this</span><span class="p">);</span>
   <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-    <span class="n">environment</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">scheduler</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">schedule_sync</span><span class="p">(</span><span class="n">tag_zero</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">nullptr</span><span class="p">);</span>
+    <span class="n">environment</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">scheduler</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">schedule_sync</span><span class="p">(</span><span class="n">tag_zero</span><span class="p">,</span> <span class="k">this</span><span class="p">);</span>
   <span class="p">}</span>
 <span class="p">}</span>
 
-<span class="kt">void</span> <span class="n">Timer</span><span class="o">::</span><span class="n">cleanup</span><span class="p">()</span> <span class="p">{</span>
+<span class="kt">void</span> <span class="n">Timer</span><span class="o">::</span><span class="n">cleanup</span><span class="p">()</span> <span class="k">noexcept</span> <span class="p">{</span>
   <span class="c1">// schedule the timer again</span>
   <span class="k">if</span> <span class="p">(</span><span class="n">period_</span> <span class="o">!=</span> <span class="n">Duration</span><span class="o">::</span><span class="n">zero</span><span class="p">())</span> <span class="p">{</span>
     <span class="n">Tag</span> <span class="n">now</span> <span class="o">=</span> <span class="n">Tag</span><span class="o">::</span><span class="n">from_logical_time</span><span class="p">(</span><span class="n">environment</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">logical_time</span><span class="p">());</span>
     <span class="n">Tag</span> <span class="n">next</span> <span class="o">=</span> <span class="n">now</span><span class="p">.</span><span class="n">delay</span><span class="p">(</span><span class="n">period_</span><span class="p">);</span>
-    <span class="n">environment</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">scheduler</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">schedule_sync</span><span class="p">(</span><span class="n">next</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">nullptr</span><span class="p">);</span>
+    <span class="n">environment</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">scheduler</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">schedule_sync</span><span class="p">(</span><span class="n">next</span><span class="p">,</span> <span class="k">this</span><span class="p">);</span>
   <span class="p">}</span>
 <span class="p">}</span>
 
 <span class="kt">void</span> <span class="n">ShutdownAction</span><span class="o">::</span><span class="n">shutdown</span><span class="p">()</span> <span class="p">{</span>
   <span class="n">Tag</span> <span class="n">tag</span> <span class="o">=</span> <span class="n">Tag</span><span class="o">::</span><span class="n">from_logical_time</span><span class="p">(</span><span class="n">environment</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">logical_time</span><span class="p">()).</span><span class="n">delay</span><span class="p">();</span>
-  <span class="n">environment</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">scheduler</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">schedule_sync</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">nullptr</span><span class="p">);</span>
+  <span class="n">environment</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">scheduler</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">schedule_sync</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="k">this</span><span class="p">);</span>
 <span class="p">}</span>
 
 <span class="p">}</span> <span class="c1">// namespace reactor</span>

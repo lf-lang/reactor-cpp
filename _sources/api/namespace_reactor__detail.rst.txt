@@ -52,6 +52,14 @@ Functions
 
 - :ref:`exhale_function_namespacereactor_1_1detail_1a81c1cadad58d7a39ed1eff73d81f7b43`
 
+- :ref:`exhale_function_namespacereactor_1_1detail_1a163bfc92868abb0e221e8057ddd448cd`
+
+- :ref:`exhale_function_namespacereactor_1_1detail_1a3fccb0c5a4ee4d9cf908d352ab46903f`
+
+- :ref:`exhale_function_namespacereactor_1_1detail_1a3cf959b535b6d487d8c0be0e48c32488`
+
+- :ref:`exhale_function_namespacereactor_1_1detail_1a411cb6d0d76f8c68179c648c4c514572`
+
 - :ref:`exhale_function_namespacereactor_1_1detail_1a1e7fe7f52fee96a82b1861169554247e`
 
 - :ref:`exhale_function_namespacereactor_1_1detail_1a1ad7e9966f8a0958554107643d50499f`
@@ -59,14 +67,6 @@ Functions
 - :ref:`exhale_function_namespacereactor_1_1detail_1a35870122b0fe719d08402c95daf3eeb9`
 
 - :ref:`exhale_function_namespacereactor_1_1detail_1aa5c652c85391bb54fdd44feefcc21c99`
-
-- :ref:`exhale_function_namespacereactor_1_1detail_1a163bfc92868abb0e221e8057ddd448cd`
-
-- :ref:`exhale_function_namespacereactor_1_1detail_1a411cb6d0d76f8c68179c648c4c514572`
-
-- :ref:`exhale_function_namespacereactor_1_1detail_1a3fccb0c5a4ee4d9cf908d352ab46903f`
-
-- :ref:`exhale_function_namespacereactor_1_1detail_1a3cf959b535b6d487d8c0be0e48c32488`
 
 
 Variables

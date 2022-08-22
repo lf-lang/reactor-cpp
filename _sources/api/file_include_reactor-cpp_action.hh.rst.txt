@@ -34,6 +34,10 @@ Includes
 
 - ``logical_time.hh`` (:ref:`file_include_reactor-cpp_logical_time.hh`)
 
+- ``map`` (:ref:`file_include_reactor-cpp_semaphore.hh`)
+
+- ``mutex``
+
 - ``reactor.hh`` (:ref:`file_include_reactor-cpp_reactor.hh`)
 
 - ``value_ptr.hh`` (:ref:`file_include_reactor-cpp_value_ptr.hh`)

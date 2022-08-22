@@ -130,6 +130,11 @@ Files
 .. toctree::
    :maxdepth: 5
 
+   file_include_reactor-cpp_safe_vector.hh.rst
+
+.. toctree::
+   :maxdepth: 5
+
    file_lib_scheduler.cc.rst
 
 .. toctree::

@@ -83,6 +83,7 @@
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Reactor.html">Class Reactor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1ReactorElement.html">Class ReactorElement</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1ReadyQueue.html">Class ReadyQueue</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classreactor_1_1SafeVector.html">Template Class SafeVector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Scheduler.html">Class Scheduler</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Semaphore.html">Class Semaphore</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">Class ShutdownAction</a></li>
@@ -253,15 +254,17 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="library_root.html#typedefs">Typedefs</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1afa8a78591f7ec2256722b94ed4399ab5.html">Typedef ActionList</a></li>
+<li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1a10983ab4d2bcf67ec191f657c63e34ca.html">Typedef ActionListPtr</a></li>
 <li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1aa8375b807a80703545664096c5b5b779.html">Typedef Duration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1ab072f327f9d4a517d5960d6ac2c674f6.html">Typedef EnvPhase</a></li>
-<li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1aacd4ccaa9524924d88b5e8031f3f8569.html">Typedef EventMap</a></li>
 <li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1a1b3465628751e941bbd1dd4936f90ea5.html">Typedef ImmutableValuePtr</a></li>
 <li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1aaea1189d617982457b74127ba74a7340.html">Typedef mstep_t</a></li>
 <li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1af9e48efd603ad7ec203844ba9eb90006.html">Typedef MutableValuePtr</a></li>
+<li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1afa8a78591f7ec2256722b94ed4399ab5.html">Typedef ActionList</a></li>
+<li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1a10983ab4d2bcf67ec191f657c63e34ca.html">Typedef ActionListPtr</a></li>
 <li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1aa8375b807a80703545664096c5b5b779.html">Typedef Duration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1ab072f327f9d4a517d5960d6ac2c674f6.html">Typedef EnvPhase</a></li>
-<li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1aacd4ccaa9524924d88b5e8031f3f8569.html">Typedef EventMap</a></li>
 <li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1a1b3465628751e941bbd1dd4936f90ea5.html">Typedef ImmutableValuePtr</a></li>
 <li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1aaea1189d617982457b74127ba74a7340.html">Typedef mstep_t</a></li>
 <li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1af9e48efd603ad7ec203844ba9eb90006.html">Typedef MutableValuePtr</a></li>
@@ -327,8 +330,13 @@
 <dd></dd></dl>
 
 <dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N7reactor14ShutdownAction5setupEv">
+<span id="_CPPv3N7reactor14ShutdownAction5setupEv"></span><span id="_CPPv2N7reactor14ShutdownAction5setupEv"></span><span id="reactor::ShutdownAction::setup"></span><span class="target" id="classreactor_1_1ShutdownAction_1a2cccf921d2490ad12e7cb3fc88203dca"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">setup</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="k"><span class="pre">final</span></span><a class="headerlink" href="#_CPPv4N7reactor14ShutdownAction5setupEv" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N7reactor14ShutdownAction7cleanupEv">
-<span id="_CPPv3N7reactor14ShutdownAction7cleanupEv"></span><span id="_CPPv2N7reactor14ShutdownAction7cleanupEv"></span><span id="reactor::ShutdownAction::cleanup"></span><span class="target" id="classreactor_1_1ShutdownAction_1a5193f6f35b8dcd5ba3675621edc58db5"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cleanup</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">final</span></span><a class="headerlink" href="#_CPPv4N7reactor14ShutdownAction7cleanupEv" title="Permalink to this definition"></a><br /></dt>
+<span id="_CPPv3N7reactor14ShutdownAction7cleanupEv"></span><span id="_CPPv2N7reactor14ShutdownAction7cleanupEv"></span><span id="reactor::ShutdownAction::cleanup"></span><span class="target" id="classreactor_1_1ShutdownAction_1a7ee5d7ee00cefce387ba61c72b90c231"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cleanup</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="k"><span class="pre">final</span></span><a class="headerlink" href="#_CPPv4N7reactor14ShutdownAction7cleanupEv" title="Permalink to this definition"></a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp function">

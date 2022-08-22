@@ -38,7 +38,7 @@ Includes
 
 - ``string``
 
-- ``vector``
+- ``vector`` (:ref:`file_include_reactor-cpp_safe_vector.hh`)
 
 
 

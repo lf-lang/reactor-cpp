@@ -81,6 +81,7 @@
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Reactor.html">Class Reactor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1ReactorElement.html">Class ReactorElement</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1ReadyQueue.html">Class ReadyQueue</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classreactor_1_1SafeVector.html">Template Class SafeVector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Scheduler.html">Class Scheduler</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Semaphore.html">Class Semaphore</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1ShutdownAction.html">Class ShutdownAction</a></li>
@@ -251,15 +252,17 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="library_root.html#typedefs">Typedefs</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1afa8a78591f7ec2256722b94ed4399ab5.html">Typedef ActionList</a></li>
+<li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1a10983ab4d2bcf67ec191f657c63e34ca.html">Typedef ActionListPtr</a></li>
 <li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1aa8375b807a80703545664096c5b5b779.html">Typedef Duration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1ab072f327f9d4a517d5960d6ac2c674f6.html">Typedef EnvPhase</a></li>
-<li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1aacd4ccaa9524924d88b5e8031f3f8569.html">Typedef EventMap</a></li>
 <li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1a1b3465628751e941bbd1dd4936f90ea5.html">Typedef ImmutableValuePtr</a></li>
 <li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1aaea1189d617982457b74127ba74a7340.html">Typedef mstep_t</a></li>
 <li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1af9e48efd603ad7ec203844ba9eb90006.html">Typedef MutableValuePtr</a></li>
+<li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1afa8a78591f7ec2256722b94ed4399ab5.html">Typedef ActionList</a></li>
+<li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1a10983ab4d2bcf67ec191f657c63e34ca.html">Typedef ActionListPtr</a></li>
 <li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1aa8375b807a80703545664096c5b5b779.html">Typedef Duration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1ab072f327f9d4a517d5960d6ac2c674f6.html">Typedef EnvPhase</a></li>
-<li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1aacd4ccaa9524924d88b5e8031f3f8569.html">Typedef EventMap</a></li>
 <li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1a1b3465628751e941bbd1dd4936f90ea5.html">Typedef ImmutableValuePtr</a></li>
 <li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1aaea1189d617982457b74127ba74a7340.html">Typedef mstep_t</a></li>
 <li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1af9e48efd603ad7ec203844ba9eb90006.html">Typedef MutableValuePtr</a></li>
@@ -329,10 +332,12 @@
 <li><p><code class="docutils literal notranslate"><span class="pre">logical_time.hh</span></code> (<a class="reference internal" href="file_include_reactor-cpp_logical_time.hh.html#file-include-reactor-cpp-logical-time-hh"><span class="std std-ref">File logical_time.hh</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">map</span></code> (<a class="reference internal" href="file_include_reactor-cpp_semaphore.hh.html#file-include-reactor-cpp-semaphore-hh"><span class="std std-ref">File semaphore.hh</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">mutex</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">safe_vector.hh</span></code> (<a class="reference internal" href="file_include_reactor-cpp_safe_vector.hh.html#file-include-reactor-cpp-safe-vector-hh"><span class="std std-ref">File safe_vector.hh</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">semaphore.hh</span></code> (<a class="reference internal" href="file_include_reactor-cpp_semaphore.hh.html#file-include-reactor-cpp-semaphore-hh"><span class="std std-ref">File semaphore.hh</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">set</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">shared_mutex</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">thread</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">vector</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">vector</span></code> (<a class="reference internal" href="file_include_reactor-cpp_safe_vector.hh.html#file-include-reactor-cpp-safe-vector-hh"><span class="std std-ref">File safe_vector.hh</span></a>)</p></li>
 </ul>
 </section>
 <section id="included-by">
@@ -359,7 +364,8 @@
 <section id="typedefs">
 <h2>Typedefs<a class="headerlink" href="#typedefs" title="Permalink to this heading"></a></h2>
 <ul class="simple">
-<li><p><a class="reference internal" href="typedef_namespacereactor_1aacd4ccaa9524924d88b5e8031f3f8569.html#exhale-typedef-namespacereactor-1aacd4ccaa9524924d88b5e8031f3f8569"><span class="std std-ref">Typedef EventMap</span></a></p></li>
+<li><p><a class="reference internal" href="typedef_namespacereactor_1afa8a78591f7ec2256722b94ed4399ab5.html#exhale-typedef-namespacereactor-1afa8a78591f7ec2256722b94ed4399ab5"><span class="std std-ref">Typedef ActionList</span></a></p></li>
+<li><p><a class="reference internal" href="typedef_namespacereactor_1a10983ab4d2bcf67ec191f657c63e34ca.html#exhale-typedef-namespacereactor-1a10983ab4d2bcf67ec191f657c63e34ca"><span class="std std-ref">Typedef ActionListPtr</span></a></p></li>
 </ul>
 </section>
 </section>

@@ -23,7 +23,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Class Semaphore" href="classreactor_1_1Semaphore.html" />
-    <link rel="prev" title="Class ReadyQueue" href="classreactor_1_1ReadyQueue.html" /> 
+    <link rel="prev" title="Template Class SafeVector" href="classreactor_1_1SafeVector.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -83,6 +83,7 @@
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Reactor.html">Class Reactor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1ReactorElement.html">Class ReactorElement</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1ReadyQueue.html">Class ReadyQueue</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classreactor_1_1SafeVector.html">Template Class SafeVector</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">Class Scheduler</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Semaphore.html">Class Semaphore</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1ShutdownAction.html">Class ShutdownAction</a></li>
@@ -253,15 +254,17 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="library_root.html#typedefs">Typedefs</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1afa8a78591f7ec2256722b94ed4399ab5.html">Typedef ActionList</a></li>
+<li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1a10983ab4d2bcf67ec191f657c63e34ca.html">Typedef ActionListPtr</a></li>
 <li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1aa8375b807a80703545664096c5b5b779.html">Typedef Duration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1ab072f327f9d4a517d5960d6ac2c674f6.html">Typedef EnvPhase</a></li>
-<li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1aacd4ccaa9524924d88b5e8031f3f8569.html">Typedef EventMap</a></li>
 <li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1a1b3465628751e941bbd1dd4936f90ea5.html">Typedef ImmutableValuePtr</a></li>
 <li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1aaea1189d617982457b74127ba74a7340.html">Typedef mstep_t</a></li>
 <li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1af9e48efd603ad7ec203844ba9eb90006.html">Typedef MutableValuePtr</a></li>
+<li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1afa8a78591f7ec2256722b94ed4399ab5.html">Typedef ActionList</a></li>
+<li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1a10983ab4d2bcf67ec191f657c63e34ca.html">Typedef ActionListPtr</a></li>
 <li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1aa8375b807a80703545664096c5b5b779.html">Typedef Duration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1ab072f327f9d4a517d5960d6ac2c674f6.html">Typedef EnvPhase</a></li>
-<li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1aacd4ccaa9524924d88b5e8031f3f8569.html">Typedef EventMap</a></li>
 <li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1a1b3465628751e941bbd1dd4936f90ea5.html">Typedef ImmutableValuePtr</a></li>
 <li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1aaea1189d617982457b74127ba74a7340.html">Typedef mstep_t</a></li>
 <li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1af9e48efd603ad7ec203844ba9eb90006.html">Typedef MutableValuePtr</a></li>
@@ -323,13 +326,13 @@
 <dd></dd></dl>
 
 <dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N7reactor9Scheduler13schedule_syncERK3TagP10BaseActionNSt8functionIFvvEEE">
-<span id="_CPPv3N7reactor9Scheduler13schedule_syncERK3TagP10BaseActionNSt8functionIFvvEEE"></span><span id="_CPPv2N7reactor9Scheduler13schedule_syncERK3TagP10BaseActionNSt8functionIFvvEEE"></span><span class="target" id="classreactor_1_1Scheduler_1ab77f16103f0eb0631886805bc94f231c"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">schedule_sync</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="classreactor_1_1Tag.html#_CPPv4N7reactor3TagE" title="reactor::Tag"><span class="n"><span class="pre">Tag</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">tag</span></span>, <a class="reference internal" href="classreactor_1_1BaseAction.html#_CPPv4N7reactor10BaseActionE" title="reactor::BaseAction"><span class="n"><span class="pre">BaseAction</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">action</span></span>, <span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">pre_handler</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7reactor9Scheduler13schedule_syncERK3TagP10BaseActionNSt8functionIFvvEEE" title="Permalink to this definition"></a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N7reactor9Scheduler13schedule_syncERK3TagP10BaseAction">
+<span id="_CPPv3N7reactor9Scheduler13schedule_syncERK3TagP10BaseAction"></span><span id="_CPPv2N7reactor9Scheduler13schedule_syncERK3TagP10BaseAction"></span><span id="reactor::Scheduler::schedule_sync__TagCR.BaseActionP"></span><span class="target" id="classreactor_1_1Scheduler_1a39402beddf3bdd49a57f81765240c053"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">schedule_sync</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="classreactor_1_1Tag.html#_CPPv4N7reactor3TagE" title="reactor::Tag"><span class="n"><span class="pre">Tag</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">tag</span></span>, <a class="reference internal" href="classreactor_1_1BaseAction.html#_CPPv4N7reactor10BaseActionE" title="reactor::BaseAction"><span class="n"><span class="pre">BaseAction</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">action</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7reactor9Scheduler13schedule_syncERK3TagP10BaseAction" title="Permalink to this definition"></a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N7reactor9Scheduler14schedule_asyncERK3TagP10BaseActionNSt8functionIFvvEEE">
-<span id="_CPPv3N7reactor9Scheduler14schedule_asyncERK3TagP10BaseActionNSt8functionIFvvEEE"></span><span id="_CPPv2N7reactor9Scheduler14schedule_asyncERK3TagP10BaseActionNSt8functionIFvvEEE"></span><span class="target" id="classreactor_1_1Scheduler_1a1ca117318ce71ab3c63b7b8160d413af"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">schedule_async</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="classreactor_1_1Tag.html#_CPPv4N7reactor3TagE" title="reactor::Tag"><span class="n"><span class="pre">Tag</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">tag</span></span>, <a class="reference internal" href="classreactor_1_1BaseAction.html#_CPPv4N7reactor10BaseActionE" title="reactor::BaseAction"><span class="n"><span class="pre">BaseAction</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">action</span></span>, <span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">pre_handler</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7reactor9Scheduler14schedule_asyncERK3TagP10BaseActionNSt8functionIFvvEEE" title="Permalink to this definition"></a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N7reactor9Scheduler14schedule_asyncERK3TagP10BaseAction">
+<span id="_CPPv3N7reactor9Scheduler14schedule_asyncERK3TagP10BaseAction"></span><span id="_CPPv2N7reactor9Scheduler14schedule_asyncERK3TagP10BaseAction"></span><span id="reactor::Scheduler::schedule_async__TagCR.BaseActionP"></span><span class="target" id="classreactor_1_1Scheduler_1a71eb8bf58157912d6f72caa4123d52b0"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">schedule_async</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="classreactor_1_1Tag.html#_CPPv4N7reactor3TagE" title="reactor::Tag"><span class="n"><span class="pre">Tag</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">tag</span></span>, <a class="reference internal" href="classreactor_1_1BaseAction.html#_CPPv4N7reactor10BaseActionE" title="reactor::BaseAction"><span class="n"><span class="pre">BaseAction</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">action</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7reactor9Scheduler14schedule_asyncERK3TagP10BaseAction" title="Permalink to this definition"></a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp function">
@@ -373,6 +376,11 @@
 </div>
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-functions">Private Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N7reactor9Scheduler21fill_action_list_poolEv">
+<span id="_CPPv3N7reactor9Scheduler21fill_action_list_poolEv"></span><span id="_CPPv2N7reactor9Scheduler21fill_action_list_poolEv"></span><span id="reactor::Scheduler::fill_action_list_pool"></span><span class="target" id="classreactor_1_1Scheduler_1a5695c83b2e42fc13aba1b3e6642d76f9"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fill_action_list_pool</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7reactor9Scheduler21fill_action_list_poolEv" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N7reactor9Scheduler8scheduleEv">
 <span id="_CPPv3N7reactor9Scheduler8scheduleEv"></span><span id="_CPPv2N7reactor9Scheduler8scheduleEv"></span><span id="reactor::Scheduler::schedule"></span><span class="target" id="classreactor_1_1Scheduler_1a1ee0e4b57d4419780b9b3b45bd4ae825"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">schedule</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><a class="headerlink" href="#_CPPv4N7reactor9Scheduler8scheduleEv" title="Permalink to this definition"></a><br /></dt>
@@ -437,13 +445,18 @@
 <dd></dd></dl>
 
 <dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N7reactor9Scheduler17lock_event_queue_E">
-<span id="_CPPv3N7reactor9Scheduler17lock_event_queue_E"></span><span id="_CPPv2N7reactor9Scheduler17lock_event_queue_E"></span><span id="reactor::Scheduler::lock_event_queue___std::mutex"></span><span class="target" id="classreactor_1_1Scheduler_1abfc594f243a394ae52918866b73bc174"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mutex</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">lock_event_queue_</span></span></span><a class="headerlink" href="#_CPPv4N7reactor9Scheduler17lock_event_queue_E" title="Permalink to this definition"></a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N7reactor9Scheduler18mutex_event_queue_E">
+<span id="_CPPv3N7reactor9Scheduler18mutex_event_queue_E"></span><span id="_CPPv2N7reactor9Scheduler18mutex_event_queue_E"></span><span id="reactor::Scheduler::mutex_event_queue___std::shared_mutex"></span><span class="target" id="classreactor_1_1Scheduler_1add321321b0048d5cbbb5a00634ef265f"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_mutex</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">mutex_event_queue_</span></span></span><a class="headerlink" href="#_CPPv4N7reactor9Scheduler18mutex_event_queue_E" title="Permalink to this definition"></a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N7reactor9Scheduler12event_queue_E">
-<span id="_CPPv3N7reactor9Scheduler12event_queue_E"></span><span id="_CPPv2N7reactor9Scheduler12event_queue_E"></span><span id="reactor::Scheduler::event_queue___std::map:Tag.EventMap:"></span><span class="target" id="classreactor_1_1Scheduler_1a341ab01a8d86d0197b5802f0df7e2c44"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">map</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="classreactor_1_1Tag.html#_CPPv4N7reactor3TagE" title="reactor::Tag"><span class="n"><span class="pre">Tag</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="typedef_namespacereactor_1aacd4ccaa9524924d88b5e8031f3f8569.html#_CPPv4N7reactor8EventMapE" title="reactor::EventMap"><span class="n"><span class="pre">EventMap</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">event_queue_</span></span></span><a class="headerlink" href="#_CPPv4N7reactor9Scheduler12event_queue_E" title="Permalink to this definition"></a><br /></dt>
+<span id="_CPPv3N7reactor9Scheduler12event_queue_E"></span><span id="_CPPv2N7reactor9Scheduler12event_queue_E"></span><span id="reactor::Scheduler::event_queue___std::map:Tag.ActionListPtr:"></span><span class="target" id="classreactor_1_1Scheduler_1a2d06818338026faee3b3c2eb1af9de45"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">map</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="classreactor_1_1Tag.html#_CPPv4N7reactor3TagE" title="reactor::Tag"><span class="n"><span class="pre">Tag</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="typedef_namespacereactor_1a10983ab4d2bcf67ec191f657c63e34ca.html#_CPPv4N7reactor13ActionListPtrE" title="reactor::ActionListPtr"><span class="n"><span class="pre">ActionListPtr</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">event_queue_</span></span></span><a class="headerlink" href="#_CPPv4N7reactor9Scheduler12event_queue_E" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N7reactor9Scheduler17action_list_pool_E">
+<span id="_CPPv3N7reactor9Scheduler17action_list_pool_E"></span><span id="_CPPv2N7reactor9Scheduler17action_list_pool_E"></span><span id="reactor::Scheduler::action_list_pool___std::vector:ActionListPtr:"></span><span class="target" id="classreactor_1_1Scheduler_1ae169414dc159c8bbf2e9ccab33c211ee"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="typedef_namespacereactor_1a10983ab4d2bcf67ec191f657c63e34ca.html#_CPPv4N7reactor13ActionListPtrE" title="reactor::ActionListPtr"><span class="n"><span class="pre">ActionListPtr</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">action_list_pool_</span></span></span><a class="headerlink" href="#_CPPv4N7reactor9Scheduler17action_list_pool_E" title="Permalink to this definition"></a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp var">
@@ -487,6 +500,14 @@
 <dd></dd></dl>
 
 </div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-static-attributes">Private Static Attributes</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N7reactor9Scheduler27action_list_pool_increment_E">
+<span id="_CPPv3N7reactor9Scheduler27action_list_pool_increment_E"></span><span id="_CPPv2N7reactor9Scheduler27action_list_pool_increment_E"></span><span id="reactor::Scheduler::action_list_pool_increment___std::s"></span><span class="target" id="classreactor_1_1Scheduler_1a316541e148d47d45186d2dbfa7c11245"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">action_list_pool_increment_</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><span class="m"><span class="pre">10</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N7reactor9Scheduler27action_list_pool_increment_E" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
 </dd></dl>
 
 </section>
@@ -496,7 +517,7 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="classreactor_1_1ReadyQueue.html" class="btn btn-neutral float-left" title="Class ReadyQueue" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="classreactor_1_1SafeVector.html" class="btn btn-neutral float-left" title="Template Class SafeVector" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="classreactor_1_1Semaphore.html" class="btn btn-neutral float-right" title="Class Semaphore" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

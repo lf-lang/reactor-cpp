@@ -31,6 +31,7 @@ Files
 - :ref:`file_include_reactor-cpp_reaction.hh`
 - :ref:`file_include_reactor-cpp_reactor-cpp.hh`
 - :ref:`file_include_reactor-cpp_reactor.hh`
+- :ref:`file_include_reactor-cpp_safe_vector.hh`
 - :ref:`file_include_reactor-cpp_scheduler.hh`
 - :ref:`file_include_reactor-cpp_semaphore.hh`
 - :ref:`file_include_reactor-cpp_time.hh`

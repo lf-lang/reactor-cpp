@@ -44,13 +44,17 @@ Includes
 
 - ``mutex``
 
+- ``safe_vector.hh`` (:ref:`file_include_reactor-cpp_safe_vector.hh`)
+
 - ``semaphore.hh`` (:ref:`file_include_reactor-cpp_semaphore.hh`)
 
 - ``set``
 
+- ``shared_mutex``
+
 - ``thread``
 
-- ``vector``
+- ``vector`` (:ref:`file_include_reactor-cpp_safe_vector.hh`)
 
 
 
@@ -87,5 +91,7 @@ Typedefs
 --------
 
 
-- :ref:`exhale_typedef_namespacereactor_1aacd4ccaa9524924d88b5e8031f3f8569`
+- :ref:`exhale_typedef_namespacereactor_1afa8a78591f7ec2256722b94ed4399ab5`
+
+- :ref:`exhale_typedef_namespacereactor_1a10983ab4d2bcf67ec191f657c63e34ca`
 

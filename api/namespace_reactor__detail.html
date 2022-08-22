@@ -83,6 +83,7 @@
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Reactor.html">Class Reactor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1ReactorElement.html">Class ReactorElement</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1ReadyQueue.html">Class ReadyQueue</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classreactor_1_1SafeVector.html">Template Class SafeVector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Scheduler.html">Class Scheduler</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Semaphore.html">Class Semaphore</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1ShutdownAction.html">Class ShutdownAction</a></li>
@@ -253,15 +254,17 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="library_root.html#typedefs">Typedefs</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1afa8a78591f7ec2256722b94ed4399ab5.html">Typedef ActionList</a></li>
+<li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1a10983ab4d2bcf67ec191f657c63e34ca.html">Typedef ActionListPtr</a></li>
 <li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1aa8375b807a80703545664096c5b5b779.html">Typedef Duration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1ab072f327f9d4a517d5960d6ac2c674f6.html">Typedef EnvPhase</a></li>
-<li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1aacd4ccaa9524924d88b5e8031f3f8569.html">Typedef EventMap</a></li>
 <li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1a1b3465628751e941bbd1dd4936f90ea5.html">Typedef ImmutableValuePtr</a></li>
 <li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1aaea1189d617982457b74127ba74a7340.html">Typedef mstep_t</a></li>
 <li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1af9e48efd603ad7ec203844ba9eb90006.html">Typedef MutableValuePtr</a></li>
+<li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1afa8a78591f7ec2256722b94ed4399ab5.html">Typedef ActionList</a></li>
+<li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1a10983ab4d2bcf67ec191f657c63e34ca.html">Typedef ActionListPtr</a></li>
 <li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1aa8375b807a80703545664096c5b5b779.html">Typedef Duration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1ab072f327f9d4a517d5960d6ac2c674f6.html">Typedef EnvPhase</a></li>
-<li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1aacd4ccaa9524924d88b5e8031f3f8569.html">Typedef EventMap</a></li>
 <li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1a1b3465628751e941bbd1dd4936f90ea5.html">Typedef ImmutableValuePtr</a></li>
 <li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1aaea1189d617982457b74127ba74a7340.html">Typedef mstep_t</a></li>
 <li class="toctree-l4"><a class="reference internal" href="typedef_namespacereactor_1af9e48efd603ad7ec203844ba9eb90006.html">Typedef MutableValuePtr</a></li>
@@ -333,14 +336,14 @@
 <li><p><a class="reference internal" href="function_namespacereactor_1_1detail_1a8182907edce8efa618bafba560aafc47.html#exhale-function-namespacereactor-1-1detail-1a8182907edce8efa618bafba560aafc47"><span class="std std-ref">Template Function operator!=(std::nullptr_t, const MutableValuePtr&lt;T, is_trivial&gt;&amp;)</span></a></p></li>
 <li><p><a class="reference internal" href="function_namespacereactor_1_1detail_1ac5a0b9c9379cfd743ce5840c1f6cd3a3.html#exhale-function-namespacereactor-1-1detail-1ac5a0b9c9379cfd743ce5840c1f6cd3a3"><span class="std std-ref">Template Function operator!=(const ImmutableValuePtr&lt;T, is_trivial&gt;&amp;, std::nullptr_t)</span></a></p></li>
 <li><p><a class="reference internal" href="function_namespacereactor_1_1detail_1a81c1cadad58d7a39ed1eff73d81f7b43.html#exhale-function-namespacereactor-1-1detail-1a81c1cadad58d7a39ed1eff73d81f7b43"><span class="std std-ref">Template Function operator!=(std::nullptr_t, const ImmutableValuePtr&lt;T, is_trivial&gt;&amp;)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacereactor_1_1detail_1a163bfc92868abb0e221e8057ddd448cd.html#exhale-function-namespacereactor-1-1detail-1a163bfc92868abb0e221e8057ddd448cd"><span class="std std-ref">Template Function operator==(std::nullptr_t, const MutableValuePtr&lt;T, is_trivial&gt;&amp;)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacereactor_1_1detail_1a3fccb0c5a4ee4d9cf908d352ab46903f.html#exhale-function-namespacereactor-1-1detail-1a3fccb0c5a4ee4d9cf908d352ab46903f"><span class="std std-ref">Template Function operator==(const ImmutableValuePtr&lt;T, is_trivial&gt;&amp;, std::nullptr_t)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacereactor_1_1detail_1a3cf959b535b6d487d8c0be0e48c32488.html#exhale-function-namespacereactor-1-1detail-1a3cf959b535b6d487d8c0be0e48c32488"><span class="std std-ref">Template Function operator==(std::nullptr_t, const ImmutableValuePtr&lt;T, is_trivial&gt;&amp;)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacereactor_1_1detail_1a411cb6d0d76f8c68179c648c4c514572.html#exhale-function-namespacereactor-1-1detail-1a411cb6d0d76f8c68179c648c4c514572"><span class="std std-ref">Template Function operator==(const MutableValuePtr&lt;T, is_trivial&gt;&amp;, const MutableValuePtr&lt;U, is_trivial&gt;&amp;)</span></a></p></li>
 <li><p><a class="reference internal" href="function_namespacereactor_1_1detail_1a1e7fe7f52fee96a82b1861169554247e.html#exhale-function-namespacereactor-1-1detail-1a1e7fe7f52fee96a82b1861169554247e"><span class="std std-ref">Template Function operator==(const ImmutableValuePtr&lt;T, is_trivial&gt;&amp;, const ImmutableValuePtr&lt;U, is_trivial&gt;&amp;)</span></a></p></li>
 <li><p><a class="reference internal" href="function_namespacereactor_1_1detail_1a1ad7e9966f8a0958554107643d50499f.html#exhale-function-namespacereactor-1-1detail-1a1ad7e9966f8a0958554107643d50499f"><span class="std std-ref">Template Function operator==(const ImmutableValuePtr&lt;T, is_trivial&gt;&amp;, const MutableValuePtr&lt;U, is_trivial&gt;&amp;)</span></a></p></li>
 <li><p><a class="reference internal" href="function_namespacereactor_1_1detail_1a35870122b0fe719d08402c95daf3eeb9.html#exhale-function-namespacereactor-1-1detail-1a35870122b0fe719d08402c95daf3eeb9"><span class="std std-ref">Template Function operator==(const MutableValuePtr&lt;T, is_trivial&gt;&amp;, const ImmutableValuePtr&lt;U, is_trivial&gt;&amp;)</span></a></p></li>
 <li><p><a class="reference internal" href="function_namespacereactor_1_1detail_1aa5c652c85391bb54fdd44feefcc21c99.html#exhale-function-namespacereactor-1-1detail-1aa5c652c85391bb54fdd44feefcc21c99"><span class="std std-ref">Template Function operator==(const MutableValuePtr&lt;T, is_trivial&gt;&amp;, std::nullptr_t)</span></a></p></li>
-<li><p><a class="reference internal" href="function_namespacereactor_1_1detail_1a163bfc92868abb0e221e8057ddd448cd.html#exhale-function-namespacereactor-1-1detail-1a163bfc92868abb0e221e8057ddd448cd"><span class="std std-ref">Template Function operator==(std::nullptr_t, const MutableValuePtr&lt;T, is_trivial&gt;&amp;)</span></a></p></li>
-<li><p><a class="reference internal" href="function_namespacereactor_1_1detail_1a411cb6d0d76f8c68179c648c4c514572.html#exhale-function-namespacereactor-1-1detail-1a411cb6d0d76f8c68179c648c4c514572"><span class="std std-ref">Template Function operator==(const MutableValuePtr&lt;T, is_trivial&gt;&amp;, const MutableValuePtr&lt;U, is_trivial&gt;&amp;)</span></a></p></li>
-<li><p><a class="reference internal" href="function_namespacereactor_1_1detail_1a3fccb0c5a4ee4d9cf908d352ab46903f.html#exhale-function-namespacereactor-1-1detail-1a3fccb0c5a4ee4d9cf908d352ab46903f"><span class="std std-ref">Template Function operator==(const ImmutableValuePtr&lt;T, is_trivial&gt;&amp;, std::nullptr_t)</span></a></p></li>
-<li><p><a class="reference internal" href="function_namespacereactor_1_1detail_1a3cf959b535b6d487d8c0be0e48c32488.html#exhale-function-namespacereactor-1-1detail-1a3cf959b535b6d487d8c0be0e48c32488"><span class="std std-ref">Template Function operator==(std::nullptr_t, const ImmutableValuePtr&lt;T, is_trivial&gt;&amp;)</span></a></p></li>
 </ul>
 </section>
 <section id="variables">
