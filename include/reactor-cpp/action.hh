@@ -13,6 +13,9 @@
 #include "reactor.hh"
 #include "value_ptr.hh"
 
+#include <map>
+#include <mutex>
+
 namespace reactor {
 
 class BaseAction : public ReactorElement {
@@ -25,7 +28,9 @@ private:
 protected:
   void register_trigger(Reaction* reaction);
   void register_scheduler(Reaction* reaction);
-  virtual void cleanup() = 0;
+
+  virtual void setup() noexcept = 0;
+  virtual void cleanup() noexcept = 0;
 
   BaseAction(const std::string& name, Reactor* container, bool logical, Duration min_delay)
       : ReactorElement(name, ReactorElement::Type::Action, container)
@@ -51,6 +56,10 @@ template <class T> class Action : public BaseAction {
 private:
   ImmutableValuePtr<T> value_ptr_{nullptr};
 
+  std::map<Tag, ImmutableValuePtr<T>> events_;
+  std::mutex mutex_events_;
+
+  void setup() noexcept final;
   void cleanup() noexcept final { value_ptr_ = nullptr; }
 
 protected:
@@ -88,6 +97,7 @@ private:
   bool present_{false};
 
   void cleanup() noexcept final { present_ = false; }
+  void setup() noexcept final { present_ = true; }
 
 protected:
   Action(const std::string& name, Reactor* container, bool logical, Duration min_delay)
@@ -119,7 +129,7 @@ private:
   const Duration offset_{};
   const Duration period_{};
 
-  void cleanup() final;
+  void cleanup() noexcept final;
 
 public:
   Timer(const std::string& name, Reactor* container, Duration period = Duration::zero(),
@@ -130,6 +140,7 @@ public:
 
   void startup() final;
   void shutdown() final {}
+  void setup() noexcept final {}
 
   [[nodiscard]] auto offset() const noexcept -> const Duration& { return offset_; }
 
@@ -147,7 +158,8 @@ public:
   ShutdownAction(const std::string& name, Reactor* container)
       : BaseAction(name, container, true, Duration::zero()) {}
 
-  void cleanup() final {}
+  void setup() noexcept final {}
+  void cleanup() noexcept final {}
   void startup() final {}
   void shutdown() final;
 };
