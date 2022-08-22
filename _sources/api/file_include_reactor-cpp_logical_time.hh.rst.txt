@@ -89,11 +89,11 @@ Functions
 
 - :ref:`exhale_function_namespacereactor_1a811a15b092501a2da229d87b18cedd13`
 
-- :ref:`exhale_function_namespacereactor_1acfe15dcb3841300d555abce8e27ca04d`
-
 - :ref:`exhale_function_namespacereactor_1a027dcf34ad33002738bf617920d4eac2`
 
 - :ref:`exhale_function_namespacereactor_1a6d563483d60684e446e9331f9b434804`
+
+- :ref:`exhale_function_namespacereactor_1acfe15dcb3841300d555abce8e27ca04d`
 
 - :ref:`exhale_function_namespacereactor_1a76e90493829fb5fefdf96ac4643dc122`
 

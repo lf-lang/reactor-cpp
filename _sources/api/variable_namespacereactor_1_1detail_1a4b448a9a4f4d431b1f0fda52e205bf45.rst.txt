@@ -1,0 +1,14 @@
+.. _exhale_variable_namespacereactor_1_1detail_1a4b448a9a4f4d431b1f0fda52e205bf45:
+
+Variable SIZE_THRESHOLD
+=======================
+
+- Defined in :ref:`file_include_reactor-cpp_value_ptr.hh`
+
+
+Variable Documentation
+----------------------
+
+
+.. doxygenvariable:: SIZE_THRESHOLD
+   :project: reactor-cpp

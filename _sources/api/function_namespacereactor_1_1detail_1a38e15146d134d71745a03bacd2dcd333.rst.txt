@@ -1,0 +1,14 @@
+.. _exhale_function_namespacereactor_1_1detail_1a38e15146d134d71745a03bacd2dcd333:
+
+Template Function is_trivial
+============================
+
+- Defined in :ref:`file_include_reactor-cpp_value_ptr.hh`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: is_trivial()
+   :project: reactor-cpp

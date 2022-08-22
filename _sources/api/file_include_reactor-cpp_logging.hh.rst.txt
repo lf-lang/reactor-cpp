@@ -54,6 +54,8 @@ Included By
 
 - :ref:`file_lib_scheduler.cc`
 
+- :ref:`file_include_reactor-cpp_value_ptr.hh`
+
 
 
 

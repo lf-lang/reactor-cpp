@@ -30,7 +30,11 @@ Includes
 --------
 
 
+- ``cstddef``
+
 - ``memory``
+
+- ``reactor-cpp/logging.hh`` (:ref:`file_include_reactor-cpp_logging.hh`)
 
 - ``type_traits``
 
@@ -77,48 +81,57 @@ Functions
 ---------
 
 
+- :ref:`exhale_function_namespacereactor_1_1detail_1a38e15146d134d71745a03bacd2dcd333`
+
 - :ref:`exhale_function_namespacereactor_1acbe803639c9b25417767814a5887a2cb`
 
 - :ref:`exhale_function_namespacereactor_1a423923d74709265265a52445c1bfd35c`
 
-- :ref:`exhale_function_namespacereactor_1_1detail_1a550e6ee3d03b08171376cf881838ed08`
+- :ref:`exhale_function_namespacereactor_1_1detail_1aa191be18fadb8f5d0105b49c62d2411f`
 
-- :ref:`exhale_function_namespacereactor_1_1detail_1a8b73b202734bab7f81ffa2344d3d8af0`
+- :ref:`exhale_function_namespacereactor_1_1detail_1a8c38cf944861f1e2a7a4f9fe0a380e8a`
 
-- :ref:`exhale_function_namespacereactor_1_1detail_1a455fa691a02bb48c21c1a32a66ef45c2`
+- :ref:`exhale_function_namespacereactor_1_1detail_1a79b8754dcbd823a1704f9bd6b29c19e6`
 
-- :ref:`exhale_function_namespacereactor_1_1detail_1aca9665dc765dc78c524b64385ad25461`
+- :ref:`exhale_function_namespacereactor_1_1detail_1a2abfcd95a08909e589944535853a8dfa`
 
-- :ref:`exhale_function_namespacereactor_1_1detail_1a67bc411905f4846a7264f14ec6da2553`
+- :ref:`exhale_function_namespacereactor_1_1detail_1afa8fb51bfa71120055e9e037602088f4`
 
-- :ref:`exhale_function_namespacereactor_1_1detail_1a5c8fed1db1a5f3a7b773d7dfbd781fea`
+- :ref:`exhale_function_namespacereactor_1_1detail_1a8182907edce8efa618bafba560aafc47`
 
-- :ref:`exhale_function_namespacereactor_1_1detail_1af6300cb7d36971812559b4f23a3325a6`
+- :ref:`exhale_function_namespacereactor_1_1detail_1ac5a0b9c9379cfd743ce5840c1f6cd3a3`
 
-- :ref:`exhale_function_namespacereactor_1_1detail_1abbb2c6c775cfbd8aae55eb07e76ecafc`
+- :ref:`exhale_function_namespacereactor_1_1detail_1a81c1cadad58d7a39ed1eff73d81f7b43`
 
-- :ref:`exhale_function_namespacereactor_1_1detail_1aa99c836d0f4965edb8edba9aabb600fa`
+- :ref:`exhale_function_namespacereactor_1_1detail_1a411cb6d0d76f8c68179c648c4c514572`
 
-- :ref:`exhale_function_namespacereactor_1_1detail_1ad90988006d9994adaf6937dcf0ce8765`
+- :ref:`exhale_function_namespacereactor_1_1detail_1a1e7fe7f52fee96a82b1861169554247e`
 
-- :ref:`exhale_function_namespacereactor_1_1detail_1aab1b95318c0a71c8571ed48c26c108e5`
+- :ref:`exhale_function_namespacereactor_1_1detail_1a1ad7e9966f8a0958554107643d50499f`
 
-- :ref:`exhale_function_namespacereactor_1_1detail_1ac02b25b82c732813f0d84a6d55bc2d4b`
+- :ref:`exhale_function_namespacereactor_1_1detail_1a35870122b0fe719d08402c95daf3eeb9`
 
-- :ref:`exhale_function_namespacereactor_1_1detail_1aee88d46af2268c3cae7b938aab34154d`
+- :ref:`exhale_function_namespacereactor_1_1detail_1aa5c652c85391bb54fdd44feefcc21c99`
 
-- :ref:`exhale_function_namespacereactor_1_1detail_1a75f84bf235d6b1637076a77927fb33d4`
+- :ref:`exhale_function_namespacereactor_1_1detail_1a163bfc92868abb0e221e8057ddd448cd`
 
-- :ref:`exhale_function_namespacereactor_1_1detail_1a4009710d3f43951439229c44e4a6cb4d`
+- :ref:`exhale_function_namespacereactor_1_1detail_1a3fccb0c5a4ee4d9cf908d352ab46903f`
 
-- :ref:`exhale_function_namespacereactor_1_1detail_1a495aecaa129518eba45a7e17808997df`
+- :ref:`exhale_function_namespacereactor_1_1detail_1a3cf959b535b6d487d8c0be0e48c32488`
 
 
 Typedefs
 --------
 
 
-- :ref:`exhale_typedef_namespacereactor_1a5d43d70a734f81ffe4c1f8960ed161b8`
+- :ref:`exhale_typedef_namespacereactor_1a1b3465628751e941bbd1dd4936f90ea5`
 
-- :ref:`exhale_typedef_namespacereactor_1a71beb4e9cb1b0a75b5981513005280ee`
+- :ref:`exhale_typedef_namespacereactor_1af9e48efd603ad7ec203844ba9eb90006`
+
+
+Variables
+---------
+
+
+- :ref:`exhale_variable_namespacereactor_1_1detail_1a4b448a9a4f4d431b1f0fda52e205bf45`
 

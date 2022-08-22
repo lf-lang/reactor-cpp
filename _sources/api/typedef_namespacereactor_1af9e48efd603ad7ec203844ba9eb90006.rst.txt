@@ -1,0 +1,14 @@
+.. _exhale_typedef_namespacereactor_1af9e48efd603ad7ec203844ba9eb90006:
+
+Typedef MutableValuePtr
+=======================
+
+- Defined in :ref:`file_include_reactor-cpp_value_ptr.hh`
+
+
+Typedef Documentation
+---------------------
+
+
+.. doxygentypedef:: MutableValuePtr
+   :project: reactor-cpp

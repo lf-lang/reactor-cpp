@@ -163,11 +163,11 @@ Typedefs
 
 - :ref:`exhale_typedef_namespacereactor_1aacd4ccaa9524924d88b5e8031f3f8569`
 
-- :ref:`exhale_typedef_namespacereactor_1a5d43d70a734f81ffe4c1f8960ed161b8`
+- :ref:`exhale_typedef_namespacereactor_1a1b3465628751e941bbd1dd4936f90ea5`
 
 - :ref:`exhale_typedef_namespacereactor_1aaea1189d617982457b74127ba74a7340`
 
-- :ref:`exhale_typedef_namespacereactor_1a71beb4e9cb1b0a75b5981513005280ee`
+- :ref:`exhale_typedef_namespacereactor_1af9e48efd603ad7ec203844ba9eb90006`
 
 - :ref:`exhale_typedef_namespacereactor_1ad950f8d1a46612500286a4af0f167080`
 

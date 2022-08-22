@@ -1,0 +1,14 @@
+.. _exhale_function_namespacereactor_1_1detail_1a3cf959b535b6d487d8c0be0e48c32488:
+
+Template Function operator==(std::nullptr_t, const ImmutableValuePtr<T, is_trivial>&)
+=====================================================================================
+
+- Defined in :ref:`file_include_reactor-cpp_value_ptr.hh`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: operator==(std::nullptr_t, const ImmutableValuePtr<T, is_trivial>&)
+   :project: reactor-cpp
