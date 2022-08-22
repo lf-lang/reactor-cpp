@@ -18,7 +18,7 @@ let
     reactor-cpp-src = reactor-cpp-src;
   };
 
-  hashed-inputs =builtins.hashString "sha1" (rev-reactor + rev-lingua-franca);
+  hashed-inputs = builtins.hashString "sha1" (rev-reactor + rev-lingua-franca);
 
   mkDerivation = library.mkDerivation;
 
