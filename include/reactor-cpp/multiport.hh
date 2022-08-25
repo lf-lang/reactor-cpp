@@ -114,6 +114,6 @@ public:
     return std::vector<std::size_t>(std::begin(active_ports_), std::begin(active_ports_) + size_.load());
   }
 };
-} // namespace multiport
+} // namespace reactor
 
 #endif // REACTOR_CPP_MULTIPORT_HH
