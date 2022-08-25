@@ -12,7 +12,7 @@
 #include <set>
 
 #include "assert.hh"
-#include "multiport_callback.hh"
+#include "multiport.hh"
 #include "reactor.hh"
 #include "value_ptr.hh"
 
@@ -26,7 +26,7 @@ private:
   std::set<BasePort*> outward_bindings_{};
   const PortType type_;
 
-  multiport::LockedPortList active_ports_{};
+  LockedPortList active_ports_{};
   std::size_t index_ = 0;
 
   std::set<Reaction*> dependencies_{};
@@ -41,7 +41,7 @@ protected:
                        container)
       , type_(type) {}
 
-  BasePort(const std::string& name, PortType type, Reactor* container, multiport::LockedPortList active_ports,
+  BasePort(const std::string& name, PortType type, Reactor* container, LockedPortList active_ports,
            std::size_t index)
       : ReactorElement(name, (type == PortType::Input) ? ReactorElement::Type::Input : ReactorElement::Type::Output,
                        container)
@@ -128,7 +128,7 @@ public:
 
   Port(const std::string& name, PortType type, Reactor* container)
       : BasePort(name, type, container) {}
-  Port(const std::string& name, PortType type, Reactor* container, multiport::LockedPortList active_ports,
+  Port(const std::string& name, PortType type, Reactor* container, LockedPortList active_ports,
        std::size_t index)
       : BasePort(name, type, container, active_ports, index) {}
 
@@ -158,7 +158,7 @@ public:
   Port(const std::string& name, PortType type, Reactor* container)
       : BasePort(name, type, container) {}
 
-  Port(const std::string& name, PortType type, Reactor* container, multiport::LockedPortList active_ports,
+  Port(const std::string& name, PortType type, Reactor* container, LockedPortList active_ports,
        std::size_t index)
       : BasePort(name, type, container, active_ports, index) {}
 
@@ -176,7 +176,7 @@ template <class T> class Input : public Port<T> { // NOLINT
 public:
   Input(const std::string& name, Reactor* container)
       : Port<T>(name, PortType::Input, container) {}
-  Input(const std::string& name, Reactor* container, multiport::LockedPortList active_ports, std::size_t index)
+  Input(const std::string& name, Reactor* container, LockedPortList active_ports, std::size_t index)
       : Port<T>(name, PortType::Input, container, active_ports, index) {}
 
   Input(Input&&) = default; // NOLINT(performance-noexcept-move-constructor)
@@ -186,7 +186,7 @@ template <class T> class Output : public Port<T> { // NOLINT
 public:
   Output(const std::string& name, Reactor* container)
       : Port<T>(name, PortType::Output, container) {}
-  Output(const std::string& name, Reactor* container, multiport::LockedPortList active_ports, std::size_t index)
+  Output(const std::string& name, Reactor* container, LockedPortList active_ports, std::size_t index)
       : Port<T>(name, PortType::Output, container, active_ports, index) {}
 
   Output(Output&&) = default; // NOLINT(performance-noexcept-move-constructor)

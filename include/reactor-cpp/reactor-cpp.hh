@@ -14,7 +14,7 @@
 #include "environment.hh"
 #include "logging.hh"
 #include "logical_time.hh"
-#include "multiport_callback.hh"
+#include "multiport.hh"
 #include "port.hh"
 #include "reaction.hh"
 #include "reactor.hh"

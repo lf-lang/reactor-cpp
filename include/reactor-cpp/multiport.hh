@@ -6,8 +6,8 @@
  *   Tassilo Tanneberger
  */
 
-#ifndef REACTOR_CPP_MULTIPORT_CALLBACK_HH
-#define REACTOR_CPP_MULTIPORT_CALLBACK_HH
+#ifndef REACTOR_CPP_MULTIPORT_HH
+#define REACTOR_CPP_MULTIPORT_HH
 
 #include <algorithm>
 #include <atomic>
@@ -15,7 +15,7 @@
 #include <type_traits>
 #include <vector>
 
-namespace multiport {
+namespace reactor {
 
 // fancy custom type_trait taken from stackoverflow
 // which checks if given class has the member function deactivate
@@ -40,7 +40,7 @@ struct LockedPortList {
 };
 
 template <class T, class A = std::allocator<T>>
-class PortBankCallBack { // NOLINT cppcoreguidelines-special-member-functions
+class Multiport { // NOLINT cppcoreguidelines-special-member-functions
 private:
   std::vector<T> data_{};
   std::vector<std::size_t> active_ports_{};
@@ -57,9 +57,9 @@ public:
   using iterator = typename std::vector<T>::iterator;
   using const_iterator = typename std::vector<T>::const_iterator;
 
-  PortBankCallBack() noexcept = default;
+  Multiport() noexcept = default;
 
-  ~PortBankCallBack() noexcept {
+  ~Multiport() noexcept {
     // we need to tell all the connected ports that this portbank is freed
     if constexpr (std::is_pointer<T>::value) {
       if constexpr (!has_deactivate<std::remove_pointer_t<T>>::value) {
@@ -76,10 +76,10 @@ public:
     }
   };
 
-  auto operator==(const PortBankCallBack& other) const noexcept -> bool {
+  auto operator==(const Multiport& other) const noexcept -> bool {
     return std::equal(std::begin(data_), std::end(data_), std::begin(other.data_), std::end(other.data_));
   }
-  auto operator!=(const PortBankCallBack& other) const noexcept -> bool { return !(*this == other); };
+  auto operator!=(const Multiport& other) const noexcept -> bool { return !(*this == other); };
   inline auto operator[](std::size_t index) noexcept -> T& { return data_[index]; }
   inline auto operator[](std::size_t index) const noexcept -> const T& { return data_[index]; }
 
@@ -90,7 +90,7 @@ public:
   inline auto end() const noexcept -> const_iterator { return data_.end(); };
   inline auto cend() const noexcept -> const_iterator { return data_.cend(); };
 
-  inline void swap(PortBankCallBack& other) { std::swap(data_, other.data_); };
+  inline void swap(Multiport& other) { std::swap(data_, other.data_); };
   inline auto size() const noexcept -> size_type { return data_.size(); };
   inline auto max_size() const noexcept -> size_type { return data_.size(); };
   [[nodiscard]] inline auto empty() const noexcept -> bool { return data_.empty(); };
@@ -116,4 +116,4 @@ public:
 };
 } // namespace multiport
 
-#endif // REACTOR_CPP_MULTIPORT_CALLBACK_HH
+#endif // REACTOR_CPP_MULTIPORT_HH
