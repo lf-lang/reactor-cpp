@@ -33,6 +33,14 @@ jobs:
     - name: build examples
       run:
         cmake --build build --target examples
+    - name: build with tracing enabled
+      run: |
+        sudo apt-get install -y liblttng-ust-dev
+        cd build
+        cmake -DREACTOR_CPP_TRACE=ON ..
+        cd ..
+        cmake --build build --target examples
+      if: matrix.os == 'ubuntu-latest'
 
   lf-tests-pull-request:
     uses: lf-lang/lingua-franca/.github/workflows/cpp-tests.yml@master
