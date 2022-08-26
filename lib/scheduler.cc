@@ -362,8 +362,8 @@ void Scheduler::schedule_sync(const Tag& tag, BaseAction* action) {
   if (using_workers_) {
     auto shared_lock = std::shared_lock<std::shared_mutex>(mutex_event_queue_);
 
-    auto it = event_queue_.find(tag);
-    if (it == event_queue_.end()) {
+    auto event_it = event_queue_.find(tag);
+    if (event_it == event_queue_.end()) {
       shared_lock.unlock();
       {
         auto unique_lock = std::unique_lock<std::shared_mutex>(mutex_event_queue_);
@@ -377,7 +377,7 @@ void Scheduler::schedule_sync(const Tag& tag, BaseAction* action) {
         result.first->second->push_back(action);
       }
     } else {
-      it->second->push_back(action);
+      event_it->second->push_back(action);
     }
   } else {
     if (action_list_pool_.empty()) {

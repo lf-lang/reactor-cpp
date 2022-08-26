@@ -29,7 +29,7 @@ template <class T> template <class Dur> void Action<T>::schedule(const Immutable
   } else {
     auto tag = Tag::from_physical_time(get_physical_time() + time_delay);
     {
-      std::lock_guard<std::mutex> lg(mutex_events_);
+      std::lock_guard<std::mutex> lock(mutex_events_);
       events_[tag] = value_ptr;
     }
     scheduler->schedule_async(tag, this);
