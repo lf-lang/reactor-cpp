@@ -334,7 +334,7 @@
   <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
     <span class="k">auto</span> <span class="n">tag</span> <span class="o">=</span> <span class="n">Tag</span><span class="o">::</span><span class="n">from_physical_time</span><span class="p">(</span><span class="n">get_physical_time</span><span class="p">()</span> <span class="o">+</span> <span class="n">time_delay</span><span class="p">);</span>
     <span class="p">{</span>
-      <span class="n">std</span><span class="o">::</span><span class="n">lock_guard</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">lg</span><span class="p">(</span><span class="n">mutex_events_</span><span class="p">);</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">lock_guard</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">lock</span><span class="p">(</span><span class="n">mutex_events_</span><span class="p">);</span>
       <span class="n">events_</span><span class="p">[</span><span class="n">tag</span><span class="p">]</span> <span class="o">=</span> <span class="n">value_ptr</span><span class="p">;</span>
     <span class="p">}</span>
     <span class="n">scheduler</span><span class="o">-&gt;</span><span class="n">schedule_async</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="k">this</span><span class="p">);</span>
