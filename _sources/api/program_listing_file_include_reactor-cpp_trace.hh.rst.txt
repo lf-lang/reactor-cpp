@@ -18,12 +18,22 @@ Program Listing for File trace.hh
     *   Christian Menard
     */
    
+   // NOTE: This file is named trace.hpp (with the hpp file extension) on purpose.
+   // This is to exclude the file from all clang-tidy checks. This is more a hacky
+   // workaround than an actual solution, but apparently clang-tidy does not allow
+   // something nicer at the moment.
+   
    #include <string>
    
    #include "reactor-cpp/config.hh"
    #include "reactor-cpp/logical_time.hh"
    
-   #ifdef REACTOR_CPP_TRACE
+   // Only enable tracing if REACTOR_CPP_TRACE is set.
+   // Also, disable tracing if clang analytics are run as it produces many errors.
+   #if defined(REACTOR_CPP_TRACE) && !defined(__clang_analyzer__)
+   
+   #undef LTTNG_UST_COMPAT_API_VERSION
+   #define LTTNG_UST_COMPAT_API_VERSION 0
    
    #undef TRACEPOINT_PROVIDER
    #define TRACEPOINT_PROVIDER reactor_cpp
@@ -31,8 +41,7 @@ Program Listing for File trace.hh
    #undef TRACEPOINT_INCLUDE
    #define TRACEPOINT_INCLUDE "reactor-cpp/trace.hh"
    
-   // LTTng requires this header to be included multiple times. Therfore, we cannot
-   // use `#praga once`, unfortunantely.
+   // LTTng requires this header to be included multiple times.
    #ifndef REACTOR_CPP_TRACE_HH
    namespace reactor {
    constexpr bool tracing_enabled = true;
@@ -57,11 +66,6 @@ Program Listing for File trace.hh
        TP_FIELDS(ctf_string(reaction_name, reaction_name_arg.c_str()) ctf_integer(int, worker_id, worker_id_arg)
                      ctf_integer(unsigned long, timestamp_ns, tag_arg.time_point().time_since_epoch().count())
                          ctf_integer(unsigned, timestamp_microstep, tag_arg.micro_step())))
-   
-   TRACEPOINT_EVENT(reactor_cpp, reaction_execution_finishes,
-                    TP_ARGS(int, worker_id_arg, const std::string&, reaction_name_arg),
-                    TP_FIELDS(ctf_string(reaction_name, reaction_name_arg.c_str())
-                                  ctf_integer(int, worker_id, worker_id_arg)))
    
    TRACEPOINT_EVENT(
        reactor_cpp, schedule_action,

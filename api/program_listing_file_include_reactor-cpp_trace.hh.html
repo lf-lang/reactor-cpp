@@ -311,12 +311,22 @@
 <span class="cm"> *   Christian Menard</span>
 <span class="cm"> */</span>
 
+<span class="c1">// NOTE: This file is named trace.hpp (with the hpp file extension) on purpose.</span>
+<span class="c1">// This is to exclude the file from all clang-tidy checks. This is more a hacky</span>
+<span class="c1">// workaround than an actual solution, but apparently clang-tidy does not allow</span>
+<span class="c1">// something nicer at the moment.</span>
+
 <span class="cp">#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp"></span>
 
 <span class="cp">#include</span> <span class="cpf">&quot;reactor-cpp/config.hh&quot;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&quot;reactor-cpp/logical_time.hh&quot;</span><span class="cp"></span>
 
-<span class="cp">#ifdef REACTOR_CPP_TRACE</span>
+<span class="c1">// Only enable tracing if REACTOR_CPP_TRACE is set.</span>
+<span class="c1">// Also, disable tracing if clang analytics are run as it produces many errors.</span>
+<span class="cp">#if defined(REACTOR_CPP_TRACE) &amp;&amp; !defined(__clang_analyzer__)</span>
+
+<span class="cp">#undef LTTNG_UST_COMPAT_API_VERSION</span>
+<span class="cp">#define LTTNG_UST_COMPAT_API_VERSION 0</span>
 
 <span class="cp">#undef TRACEPOINT_PROVIDER</span>
 <span class="cp">#define TRACEPOINT_PROVIDER reactor_cpp</span>
@@ -324,8 +334,7 @@
 <span class="cp">#undef TRACEPOINT_INCLUDE</span>
 <span class="cp">#define TRACEPOINT_INCLUDE &quot;reactor-cpp/trace.hh&quot;</span>
 
-<span class="c1">// LTTng requires this header to be included multiple times. Therfore, we cannot</span>
-<span class="c1">// use `#praga once`, unfortunantely.</span>
+<span class="c1">// LTTng requires this header to be included multiple times.</span>
 <span class="cp">#ifndef REACTOR_CPP_TRACE_HH</span>
 <span class="k">namespace</span> <span class="n">reactor</span> <span class="p">{</span>
 <span class="k">constexpr</span> <span class="kt">bool</span> <span class="n">tracing_enabled</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
@@ -350,11 +359,6 @@
     <span class="n">TP_FIELDS</span><span class="p">(</span><span class="n">ctf_string</span><span class="p">(</span><span class="n">reaction_name</span><span class="p">,</span> <span class="n">reaction_name_arg</span><span class="p">.</span><span class="n">c_str</span><span class="p">())</span> <span class="n">ctf_integer</span><span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="n">worker_id</span><span class="p">,</span> <span class="n">worker_id_arg</span><span class="p">)</span>
                   <span class="n">ctf_integer</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="p">,</span> <span class="n">timestamp_ns</span><span class="p">,</span> <span class="n">tag_arg</span><span class="p">.</span><span class="n">time_point</span><span class="p">().</span><span class="n">time_since_epoch</span><span class="p">().</span><span class="n">count</span><span class="p">())</span>
                       <span class="n">ctf_integer</span><span class="p">(</span><span class="kt">unsigned</span><span class="p">,</span> <span class="n">timestamp_microstep</span><span class="p">,</span> <span class="n">tag_arg</span><span class="p">.</span><span class="n">micro_step</span><span class="p">())))</span>
-
-<span class="n">TRACEPOINT_EVENT</span><span class="p">(</span><span class="n">reactor_cpp</span><span class="p">,</span> <span class="n">reaction_execution_finishes</span><span class="p">,</span>
-                 <span class="n">TP_ARGS</span><span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="n">worker_id_arg</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="p">,</span> <span class="n">reaction_name_arg</span><span class="p">),</span>
-                 <span class="n">TP_FIELDS</span><span class="p">(</span><span class="n">ctf_string</span><span class="p">(</span><span class="n">reaction_name</span><span class="p">,</span> <span class="n">reaction_name_arg</span><span class="p">.</span><span class="n">c_str</span><span class="p">())</span>
-                               <span class="n">ctf_integer</span><span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="n">worker_id</span><span class="p">,</span> <span class="n">worker_id_arg</span><span class="p">)))</span>
 
 <span class="n">TRACEPOINT_EVENT</span><span class="p">(</span>
     <span class="n">reactor_cpp</span><span class="p">,</span> <span class="n">schedule_action</span><span class="p">,</span>
