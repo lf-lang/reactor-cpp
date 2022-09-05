@@ -18,14 +18,14 @@
 namespace reactor {
 
 // fancy custom type_trait taken from stackoverflow
-// which checks if given class has the member function deactivate
-template <typename T> class has_deactivate {
+// which checks if given class has the member function disconnect_multiport
+template <typename T> class has_disconnect {
   using one = char;
   struct two {
     char x[2]; // NOLINT avoid-c-arrays
   };
 
-  template <typename C> static auto test(decltype(&C::has_deactivate)) -> one;
+  template <typename C> static auto test(decltype(&C::has_disconnect)) -> one;
   template <typename C> static auto test(...) -> two;
 
 public:
@@ -62,15 +62,15 @@ public:
   ~Multiport() noexcept {
     // we need to tell all the connected ports that this portbank is freed
     if constexpr (std::is_pointer<T>::value) {
-      if constexpr (!has_deactivate<std::remove_pointer_t<T>>::value) {
+      if constexpr (!has_disconnect<std::remove_pointer_t<T>>::value) {
         for (auto i = 0; i < data_.size(); i++) {
-          data_[i]->deactivate();
+          data_[i]->disconnect_multiport();
         }
       }
     } else {
-      if constexpr (has_deactivate<T>::value) {
+      if constexpr (has_disconnect<T>::value) {
         for (auto i = 0; i < data_.size(); i++) {
-          data_[i].deactivate();
+          data_[i].disconnect_multiport();
         }
       }
     }
@@ -110,7 +110,7 @@ public:
 
   template <class... Args> inline void set(std::size_t index, Args&&... args) noexcept { data_[index].set(args...); }
 
-  [[nodiscard]] inline auto active_ports_indices() const noexcept -> std::vector<std::size_t> {
+  [[nodiscard]] inline auto  get_present_port_indices() const noexcept -> std::vector<std::size_t> {
     return std::vector<std::size_t>(std::begin(active_ports_), std::begin(active_ports_) + size_.load());
   }
 };

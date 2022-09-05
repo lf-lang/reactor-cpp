@@ -74,8 +74,9 @@ public:
   [[nodiscard]] inline auto triggers() const noexcept -> const auto& { return triggers_; }
   [[nodiscard]] inline auto dependencies() const noexcept -> const auto& { return dependencies_; }
   [[nodiscard]] inline auto anti_dependencies() const noexcept -> const auto& { return anti_dependencies_; }
-
-  [[nodiscard]] inline auto activate() const -> bool {
+  
+  // tells the parent multiport that this port has been set. 
+  [[nodiscard]] inline auto message_multiport() const -> bool {
     if (this->is_present()) {
       return false;
     }
@@ -92,7 +93,8 @@ public:
     return false;
   }
 
-  inline void clear() noexcept {
+  // resets parent multiport 
+  inline void clear_multiport() noexcept {
     present_ = false;
 
     if (active_ports_.active_ports_ != nullptr) {
@@ -105,7 +107,8 @@ public:
     }
   }
 
-  inline void deactivate() noexcept {
+  // tells this port that it is not connected to a parent multiport
+  inline void disconnect_multiport() noexcept {
     active_ports_.active_ports_ = nullptr;
     active_ports_.size_ = nullptr;
   }
@@ -120,7 +123,7 @@ private:
 
   void cleanup() noexcept final {
     value_ptr_ = nullptr;
-    clear();
+    clear_multiport();
   }
 
 public:
@@ -150,7 +153,7 @@ public:
 
 template <> class Port<void> : public BasePort {
 private:
-  void cleanup() noexcept final { clear(); }
+  void cleanup() noexcept final { clear_multiport(); }
 
 public:
   using value_type = void;
