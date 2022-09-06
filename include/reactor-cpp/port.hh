@@ -41,8 +41,7 @@ protected:
                        container)
       , type_(type) {}
 
-  BasePort(const std::string& name, PortType type, Reactor* container, BaseMultiport* multiport,
-           std::size_t index)
+  BasePort(const std::string& name, PortType type, Reactor* container, BaseMultiport* multiport, std::size_t index)
       : ReactorElement(name, (type == PortType::Input) ? ReactorElement::Type::Input : ReactorElement::Type::Output,
                        container)
       , type_(type)
@@ -74,21 +73,21 @@ public:
   [[nodiscard]] inline auto triggers() const noexcept -> const auto& { return triggers_; }
   [[nodiscard]] inline auto dependencies() const noexcept -> const auto& { return dependencies_; }
   [[nodiscard]] inline auto anti_dependencies() const noexcept -> const auto& { return anti_dependencies_; }
-  
-  // tells the parent multiport that this port has been set. 
+
+  // tells the parent multiport that this port has been set.
   [[nodiscard]] inline auto message_multiport() -> bool {
     if (this->is_present()) {
       return false;
     }
 
     if (multiport_ != nullptr) {
-        return multiport_->set_present(index_);
+      return multiport_->set_present(index_);
     }
 
     return false;
   }
 
-  // resets parent multiport 
+  // resets parent multiport
   inline void clear_multiport() noexcept {
     present_ = false;
 
@@ -98,9 +97,7 @@ public:
   }
 
   // tells this port that it is not connected to a parent multiport
-  inline void disconnect_multiport() noexcept {
-    multiport_ = nullptr;
-  }
+  inline void disconnect_multiport() noexcept { multiport_ = nullptr; }
 
   friend class Reaction;
   friend class Scheduler;
@@ -120,8 +117,7 @@ public:
 
   Port(const std::string& name, PortType type, Reactor* container)
       : BasePort(name, type, container) {}
-  Port(const std::string& name, PortType type, Reactor* container, BaseMultiport* multiport,
-       std::size_t index)
+  Port(const std::string& name, PortType type, Reactor* container, BaseMultiport* multiport, std::size_t index)
       : BasePort(name, type, container, multiport, index) {}
 
   void bind_to(Port<T>* port) { base_bind_to(port); }
@@ -150,8 +146,7 @@ public:
   Port(const std::string& name, PortType type, Reactor* container)
       : BasePort(name, type, container) {}
 
-  Port(const std::string& name, PortType type, Reactor* container, BaseMultiport* multiport,
-       std::size_t index)
+  Port(const std::string& name, PortType type, Reactor* container, BaseMultiport* multiport, std::size_t index)
       : BasePort(name, type, container, multiport, index) {}
 
   void bind_to(Port<void>* port) { base_bind_to(port); }

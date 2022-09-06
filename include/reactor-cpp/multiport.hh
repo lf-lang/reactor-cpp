@@ -35,27 +35,27 @@ public:
 // struct which gets handed to the ports to they can talk back
 // to the portbank
 //
-class BaseMultiport { //NOLINT cppcoreguidelines-special-member-functions,-warnings-as-errors
+class BaseMultiport { // NOLINT cppcoreguidelines-special-member-functions,-warnings-as-errors
 protected:
-  std::atomic<std::size_t> size_{0}; //NOLINT
-  std::vector<std::size_t> present_ports_{}; //NOLINT
+  std::atomic<std::size_t> size_{0};         // NOLINT
+  std::vector<std::size_t> present_ports_{}; // NOLINT
 
 public:
   BaseMultiport() = default;
   ~BaseMultiport() = default;
 
-  // tells the parent multiport that this port has been set. 
+  // tells the parent multiport that this port has been set.
   [[nodiscard]] inline auto set_present(std::size_t index) -> bool {
-      auto calculated_index = size_.fetch_add(1, std::memory_order_relaxed);
+    auto calculated_index = size_.fetch_add(1, std::memory_order_relaxed);
 
-      // triggering hard error if calculated_index tries to set a port out that is not in the list
-      reactor::reactor_assert(calculated_index < present_ports_.capacity());
+    // triggering hard error if calculated_index tries to set a port out that is not in the list
+    reactor::reactor_assert(calculated_index < present_ports_.capacity());
 
-      present_ports_[calculated_index] = index;
-      return true;
+    present_ports_[calculated_index] = index;
+    return true;
   }
 
-  // resets parent multiport 
+  // resets parent multiport
   inline void clear() noexcept {
     size_.store(0, std::memory_order_relaxed);
     present_ports_.clear();
@@ -100,9 +100,7 @@ public:
   inline auto max_size() const noexcept -> size_type { return data_.size(); };
   [[nodiscard]] inline auto empty() const noexcept -> bool { return data_.empty(); };
 
-  [[nodiscard]] inline auto get_active_ports() noexcept -> BaseMultiport* {
-    return (BaseMultiport*)this;
-  }
+  [[nodiscard]] inline auto get_active_ports() noexcept -> BaseMultiport* { return (BaseMultiport*)this; }
 
   inline void reserve(std::size_t size) noexcept {
     data_.reserve(size);
@@ -115,7 +113,7 @@ public:
 
   template <class... Args> inline void set(std::size_t index, Args&&... args) noexcept { data_[index].set(args...); }
 
-  [[nodiscard]] inline auto  get_present_port_indices() const noexcept -> std::vector<std::size_t> {
+  [[nodiscard]] inline auto get_present_port_indices() const noexcept -> std::vector<std::size_t> {
     return std::vector<std::size_t>(std::begin(present_ports_), std::begin(present_ports_) + size_.load());
   }
 };
