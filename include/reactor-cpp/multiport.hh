@@ -35,10 +35,10 @@ public:
 // struct which gets handed to the ports to they can talk back
 // to the portbank
 //
-class BaseMultiport {
+class BaseMultiport { //NOLINT cppcoreguidelines-special-member-functions,-warnings-as-errors
 protected:
-  std::atomic<std::size_t> size_{0};
-  std::vector<std::size_t> present_ports_{};
+  std::atomic<std::size_t> size_{0}; //NOLINT
+  std::vector<std::size_t> present_ports_{}; //NOLINT
 
 public:
   BaseMultiport() = default;
