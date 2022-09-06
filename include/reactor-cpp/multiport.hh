@@ -34,17 +34,38 @@ public:
 
 // struct which gets handed to the ports to they can talk back
 // to the portbank
-struct LockedPortList {
-  std::atomic<std::size_t>* size_ = nullptr;
-  std::vector<std::size_t>* active_ports_ = nullptr;
+//
+class BaseMultiport {
+protected:
+  std::atomic<std::size_t> size_{0};
+  std::vector<std::size_t> present_ports_{};
+
+public:
+  BaseMultiport() = default;
+  ~BaseMultiport() = default;
+
+  // tells the parent multiport that this port has been set. 
+  [[nodiscard]] inline auto set_present(std::size_t index) -> bool {
+      auto calculated_index = size_.fetch_add(1, std::memory_order_relaxed);
+
+      // triggering hard error if calculated_index tries to set a port out that is not in the list
+      reactor::reactor_assert(calculated_index < present_ports_.capacity());
+
+      present_ports_[calculated_index] = index;
+      return true;
+  }
+
+  // resets parent multiport 
+  inline void clear() noexcept {
+    size_.store(0, std::memory_order_relaxed);
+    present_ports_.clear();
+  }
 };
 
 template <class T, class A = std::allocator<T>>
-class Multiport { // NOLINT cppcoreguidelines-special-member-functions
+class Multiport : public BaseMultiport { // NOLINT cppcoreguidelines-special-member-functions
 private:
   std::vector<T> data_{};
-  std::vector<std::size_t> active_ports_{};
-  std::atomic<std::size_t> size_ = 0;
 
 public:
   using allocator_type = A;
@@ -58,23 +79,7 @@ public:
   using const_iterator = typename std::vector<T>::const_iterator;
 
   Multiport() noexcept = default;
-
-  ~Multiport() noexcept {
-    // we need to tell all the connected ports that this portbank is freed
-    if constexpr (std::is_pointer<T>::value) {
-      if constexpr (!has_disconnect<std::remove_pointer_t<T>>::value) {
-        for (auto i = 0; i < data_.size(); i++) {
-          data_[i]->disconnect_multiport();
-        }
-      }
-    } else {
-      if constexpr (has_disconnect<T>::value) {
-        for (auto i = 0; i < data_.size(); i++) {
-          data_[i].disconnect_multiport();
-        }
-      }
-    }
-  };
+  ~Multiport() noexcept = default;
 
   auto operator==(const Multiport& other) const noexcept -> bool {
     return std::equal(std::begin(data_), std::end(data_), std::begin(other.data_), std::end(other.data_));
@@ -95,13 +100,13 @@ public:
   inline auto max_size() const noexcept -> size_type { return data_.size(); };
   [[nodiscard]] inline auto empty() const noexcept -> bool { return data_.empty(); };
 
-  [[nodiscard]] inline auto get_active_ports() noexcept -> LockedPortList {
-    return LockedPortList{&size_, &active_ports_};
+  [[nodiscard]] inline auto get_active_ports() noexcept -> BaseMultiport* {
+    return (BaseMultiport*)this;
   }
 
   inline void reserve(std::size_t size) noexcept {
     data_.reserve(size);
-    active_ports_.reserve(2 * size);
+    present_ports_.reserve(2 * size);
   }
 
   inline void push_back(const T& elem) noexcept { data_.push_back(elem); }
@@ -111,7 +116,7 @@ public:
   template <class... Args> inline void set(std::size_t index, Args&&... args) noexcept { data_[index].set(args...); }
 
   [[nodiscard]] inline auto  get_present_port_indices() const noexcept -> std::vector<std::size_t> {
-    return std::vector<std::size_t>(std::begin(active_ports_), std::begin(active_ports_) + size_.load());
+    return std::vector<std::size_t>(std::begin(present_ports_), std::begin(present_ports_) + size_.load());
   }
 };
 } // namespace reactor

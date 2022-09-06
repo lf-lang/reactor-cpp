@@ -26,7 +26,7 @@ private:
   std::set<BasePort*> outward_bindings_{};
   const PortType type_;
 
-  LockedPortList active_ports_{};
+  BaseMultiport* multiport_ = nullptr;
   std::size_t index_ = 0;
 
   std::set<Reaction*> dependencies_{};
@@ -41,12 +41,12 @@ protected:
                        container)
       , type_(type) {}
 
-  BasePort(const std::string& name, PortType type, Reactor* container, LockedPortList active_ports,
+  BasePort(const std::string& name, PortType type, Reactor* container, BaseMultiport* multiport,
            std::size_t index)
       : ReactorElement(name, (type == PortType::Input) ? ReactorElement::Type::Input : ReactorElement::Type::Output,
                        container)
       , type_(type)
-      , active_ports_(active_ports)
+      , multiport_(multiport)
       , index_(index) {}
   void base_bind_to(BasePort* port);
   void register_dependency(Reaction* reaction, bool is_trigger) noexcept;
@@ -76,20 +76,15 @@ public:
   [[nodiscard]] inline auto anti_dependencies() const noexcept -> const auto& { return anti_dependencies_; }
   
   // tells the parent multiport that this port has been set. 
-  [[nodiscard]] inline auto message_multiport() const -> bool {
+  [[nodiscard]] inline auto message_multiport() -> bool {
     if (this->is_present()) {
       return false;
     }
 
-    if (active_ports_.active_ports_ != nullptr) {
-      auto calculated_index = active_ports_.size_->fetch_add(1, std::memory_order_relaxed);
-
-      // triggering hard error if calculated_index tries to set a port out that is not in the list
-      reactor::reactor_assert(calculated_index < active_ports_.active_ports_->capacity());
-
-      (*active_ports_.active_ports_)[calculated_index] = index_;
-      return true;
+    if (multiport_ != nullptr) {
+        return multiport_->set_present(index_);
     }
+
     return false;
   }
 
@@ -97,20 +92,14 @@ public:
   inline void clear_multiport() noexcept {
     present_ = false;
 
-    if (active_ports_.active_ports_ != nullptr) {
-      if (active_ports_.size_->load(std::memory_order_relaxed) == 0) {
-        return;
-      }
-
-      active_ports_.size_->store(0, std::memory_order_relaxed);
-      active_ports_.active_ports_->clear();
+    if (multiport_ != nullptr) {
+      multiport_->clear();
     }
   }
 
   // tells this port that it is not connected to a parent multiport
   inline void disconnect_multiport() noexcept {
-    active_ports_.active_ports_ = nullptr;
-    active_ports_.size_ = nullptr;
+    multiport_ = nullptr;
   }
 
   friend class Reaction;
@@ -131,9 +120,9 @@ public:
 
   Port(const std::string& name, PortType type, Reactor* container)
       : BasePort(name, type, container) {}
-  Port(const std::string& name, PortType type, Reactor* container, LockedPortList active_ports,
+  Port(const std::string& name, PortType type, Reactor* container, BaseMultiport* multiport,
        std::size_t index)
-      : BasePort(name, type, container, active_ports, index) {}
+      : BasePort(name, type, container, multiport, index) {}
 
   void bind_to(Port<T>* port) { base_bind_to(port); }
   [[nodiscard]] auto typed_inward_binding() const noexcept -> Port<T>*;
@@ -161,9 +150,9 @@ public:
   Port(const std::string& name, PortType type, Reactor* container)
       : BasePort(name, type, container) {}
 
-  Port(const std::string& name, PortType type, Reactor* container, LockedPortList active_ports,
+  Port(const std::string& name, PortType type, Reactor* container, BaseMultiport* multiport,
        std::size_t index)
-      : BasePort(name, type, container, active_ports, index) {}
+      : BasePort(name, type, container, multiport, index) {}
 
   void bind_to(Port<void>* port) { base_bind_to(port); }
   [[nodiscard]] auto typed_inward_binding() const noexcept -> Port<void>*;
@@ -179,8 +168,8 @@ template <class T> class Input : public Port<T> { // NOLINT
 public:
   Input(const std::string& name, Reactor* container)
       : Port<T>(name, PortType::Input, container) {}
-  Input(const std::string& name, Reactor* container, LockedPortList active_ports, std::size_t index)
-      : Port<T>(name, PortType::Input, container, active_ports, index) {}
+  Input(const std::string& name, Reactor* container, BaseMultiport* multiport, std::size_t index)
+      : Port<T>(name, PortType::Input, container, multiport, index) {}
 
   Input(Input&&) = default; // NOLINT(performance-noexcept-move-constructor)
 };
@@ -189,8 +178,8 @@ template <class T> class Output : public Port<T> { // NOLINT
 public:
   Output(const std::string& name, Reactor* container)
       : Port<T>(name, PortType::Output, container) {}
-  Output(const std::string& name, Reactor* container, LockedPortList active_ports, std::size_t index)
-      : Port<T>(name, PortType::Output, container, active_ports, index) {}
+  Output(const std::string& name, Reactor* container, BaseMultiport* multiport, std::size_t index)
+      : Port<T>(name, PortType::Output, container, multiport, index) {}
 
   Output(Output&&) = default; // NOLINT(performance-noexcept-move-constructor)
 };
