@@ -327,18 +327,22 @@
   <span class="n">assert_phase</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="n">Environment</span><span class="o">::</span><span class="n">Phase</span><span class="o">::</span><span class="n">Assembly</span><span class="p">);</span>
   <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">is_input</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="n">port</span><span class="o">-&gt;</span><span class="n">is_input</span><span class="p">())</span> <span class="p">{</span>
     <span class="n">validate</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">container</span><span class="p">()</span> <span class="o">==</span> <span class="n">port</span><span class="o">-&gt;</span><span class="n">container</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">container</span><span class="p">(),</span>
-             <span class="s">&quot;An input port A may only be bound to another input port B if B is &quot;</span>
-             <span class="s">&quot;contained by a reactor that in turn is contained by the reactor of A&quot;</span><span class="p">);</span>
+             <span class="s">&quot;An input port A may only be bound to another input port B if B is contained by a reactor that in turn is &quot;</span>
+             <span class="s">&quot;contained by the reactor of A&quot;</span><span class="p">);</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">is_input</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="n">port</span><span class="o">-&gt;</span><span class="n">is_output</span><span class="p">())</span> <span class="p">{</span>
+    <span class="n">validate</span><span class="p">(</span>
+        <span class="k">this</span><span class="o">-&gt;</span><span class="n">container</span><span class="p">()</span> <span class="o">==</span> <span class="n">port</span><span class="o">-&gt;</span><span class="n">container</span><span class="p">(),</span>
+        <span class="s">&quot;An input port A may only be bound directly to an output port B if A and B are contained by the same reactor.&quot;</span><span class="p">);</span>
   <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">is_output</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="n">port</span><span class="o">-&gt;</span><span class="n">is_input</span><span class="p">())</span> <span class="p">{</span>
     <span class="n">validate</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">container</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">container</span><span class="p">()</span> <span class="o">==</span> <span class="n">port</span><span class="o">-&gt;</span><span class="n">container</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">container</span><span class="p">(),</span>
-             <span class="s">&quot;An output port can only be bound to an input port if both ports &quot;</span>
-             <span class="s">&quot;belong to reactors in the same hierarichal level&quot;</span><span class="p">);</span>
+             <span class="s">&quot;An output port can only be bound to an input port if both ports belong to reactors in the same &quot;</span>
+             <span class="s">&quot;hierarichal level&quot;</span><span class="p">);</span>
   <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">is_output</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="n">port</span><span class="o">-&gt;</span><span class="n">is_output</span><span class="p">())</span> <span class="p">{</span>
     <span class="n">validate</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">container</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">container</span><span class="p">()</span> <span class="o">==</span> <span class="n">port</span><span class="o">-&gt;</span><span class="n">container</span><span class="p">(),</span>
-             <span class="s">&quot;An output port A may only be bound to another output port B if A is &quot;</span>
-             <span class="s">&quot;contained by a reactor that in turn is contained by the reactor of B&quot;</span><span class="p">);</span>
+             <span class="s">&quot;An output port A may only be bound to another output port B if A is contained by a reactor that in turn &quot;</span>
+             <span class="s">&quot;is contained by the reactor of B&quot;</span><span class="p">);</span>
   <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-    <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;unexpected case&quot;</span><span class="p">);</span>
+    <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;invalid connection&quot;</span><span class="p">);</span>
   <span class="p">}</span>
 
   <span class="n">port</span><span class="o">-&gt;</span><span class="n">inward_binding_</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
