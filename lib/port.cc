@@ -22,18 +22,22 @@ void BasePort::base_bind_to(BasePort* port) {
   assert_phase(this, Environment::Phase::Assembly);
   if (this->is_input() && port->is_input()) {
     validate(this->container() == port->container()->container(),
-             "An input port A may only be bound to another input port B if B is "
-             "contained by a reactor that in turn is contained by the reactor of A");
+             "An input port A may only be bound to another input port B if B is contained by a reactor that in turn is "
+             "contained by the reactor of A");
+  } else if (this->is_input() && port->is_output()) {
+    validate(
+        this->container() == port->container(),
+        "An input port A may only be bound directly to an output port B if A and B are contained by the same reactor.");
   } else if (this->is_output() && port->is_input()) {
     validate(this->container()->container() == port->container()->container(),
-             "An output port can only be bound to an input port if both ports "
-             "belong to reactors in the same hierarichal level");
+             "An output port can only be bound to an input port if both ports belong to reactors in the same "
+             "hierarichal level");
   } else if (this->is_output() && port->is_output()) {
     validate(this->container()->container() == port->container(),
-             "An output port A may only be bound to another output port B if A is "
-             "contained by a reactor that in turn is contained by the reactor of B");
+             "An output port A may only be bound to another output port B if A is contained by a reactor that in turn "
+             "is contained by the reactor of B");
   } else {
-    throw std::runtime_error("unexpected case");
+    throw std::runtime_error("invalid connection");
   }
 
   port->inward_binding_ = this;
