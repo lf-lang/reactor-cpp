@@ -234,6 +234,7 @@ void Scheduler::next() { // NOLINT
     for (auto* action : *actions) {
       action->cleanup();
     }
+
     actions->clear();
     action_list_pool_.emplace_back(std::move(actions));
   }
@@ -410,6 +411,12 @@ void Scheduler::set_port(BasePort* port) {
 }
 
 void Scheduler::set_port_helper(BasePort* port) {
+  if (!(port->triggers().empty() && port->dependencies().empty())) {
+    if (port->message_multiport()) {
+      set_ports_[Worker::current_worker_id()].push_back(port);
+    }
+  }
+
   for (auto* reaction : port->triggers()) {
     triggered_reactions_[Worker::current_worker_id()].push_back(reaction);
   }

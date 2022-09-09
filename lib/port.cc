@@ -18,7 +18,7 @@ void BasePort::base_bind_to(BasePort* port) {
   reactor_assert(port != nullptr);
   reactor_assert(this->environment() == port->environment()); // NOLINT
   validate(!port->has_inward_binding(), "Ports may only be connected once");
-  validate(!port->has_antidependencies(), "Ports with antidependencies may not be connected to other ports");
+  validate(!port->has_anti_dependencies(), "Ports with anti dependencies may not be connected to other ports");
   assert_phase(this, Environment::Phase::Assembly);
   if (this->is_input() && port->is_input()) {
     validate(this->container() == port->container()->container(),
@@ -44,7 +44,7 @@ void BasePort::base_bind_to(BasePort* port) {
   reactor_assert(this->outward_bindings_.insert(port).second);
 }
 
-void BasePort::register_dependency(Reaction* reaction, bool is_trigger) {
+void BasePort::register_dependency(Reaction* reaction, bool is_trigger) noexcept {
   reactor_assert(reaction != nullptr);
   reactor_assert(this->environment() == reaction->environment()); // NOLINT
   validate(!this->has_outward_bindings(), "Dependencies may no be declared on ports with an outward binding!");
@@ -64,7 +64,7 @@ void BasePort::register_dependency(Reaction* reaction, bool is_trigger) {
   }
 }
 
-void BasePort::register_antidependency(Reaction* reaction) {
+void BasePort::register_antidependency(Reaction* reaction) noexcept {
   reactor_assert(reaction != nullptr);
   reactor_assert(this->environment() == reaction->environment()); // NOLINT
   validate(!this->has_inward_binding(), "Antidependencies may no be declared on ports with an inward binding!");
@@ -79,10 +79,10 @@ void BasePort::register_antidependency(Reaction* reaction) {
              "Antidependent input ports must belong to a contained reactor");
   }
 
-  reactor_assert(antidependencies_.insert(reaction).second);
+  reactor_assert(anti_dependencies_.insert(reaction).second);
 }
 
-auto Port<void>::typed_outward_bindings() const noexcept -> const auto& {
+[[maybe_unused]] auto Port<void>::typed_outward_bindings() const noexcept -> const std::set<Port<void>*>& {
   // this is undefined behavior and should be changed
   return reinterpret_cast<const std::set<Port<void>*>&>(outward_bindings()); // NOLINT C++20 std::bit_cast
 }
@@ -97,15 +97,8 @@ void Port<void>::set() {
   validate(!has_inward_binding(), "set() may only be called on a ports that do not have an inward "
                                   "binding!");
   auto* scheduler = environment()->scheduler();
-  this->present_ = true;
   scheduler->set_port(this);
-}
-
-auto Port<void>::is_present() const noexcept -> bool {
-  if (has_inward_binding()) {
-    return typed_inward_binding()->is_present();
-  }
-  return present_;
+  this->present_ = true;
 }
 
 } // namespace reactor

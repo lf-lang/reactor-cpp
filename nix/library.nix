@@ -21,9 +21,9 @@ let
   };
 
   # list of compiler for which packages are generated
-  compilers = with pkgs; [ gcc10 gcc9 gcc8 clang_11 clang_12 clang_13 ];
+  compilers = with pkgs; [ gcc11 gcc10 gcc9 clang_11 clang_12 clang_13 ];
 
-  default_compiler = pkgs.gcc;
+  default_compiler = pkgs.gcc11;
 
   mkDerivation = stdenv.mkDerivation;
 
@@ -85,6 +85,8 @@ let
 
         installPhase = ''
           mkdir -p $out/bin
+          mkdir -p $out/debug
+          cp -r ./src-gen/* $out/debug/
           cp -r ./bin/${file_name} $out/bin/${file_name}-${compiler.pname}
           cp -r ./bin/${file_name} $out/bin/${package_name}
         '';

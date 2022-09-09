@@ -11,10 +11,11 @@
 
 #include "../assert.hh"
 #include "../environment.hh"
+#include "reactor-cpp/port.hh"
 
 namespace reactor {
 
-template <class T> auto Port<T>::typed_outward_bindings() const noexcept -> const std::set<Port<T>*>& {
+template <class T> [[maybe_unused]] auto Port<T>::typed_outward_bindings() const noexcept -> const std::set<Port<T>*>& {
   // HACK this cast is ugly but should be safe as long as we only allow to
   // bind with Port<T>*. The alternative would be to copy the entire set and
   // cast each element individually, which is also ugly...
@@ -34,6 +35,7 @@ template <class T> void Port<T>::set(const ImmutableValuePtr<T>& value_ptr) {
   auto scheduler = environment()->scheduler();
   this->value_ptr_ = std::move(value_ptr);
   scheduler->set_port(this);
+  this->present_ = true;
 }
 
 template <class T> auto Port<T>::get() const noexcept -> const ImmutableValuePtr<T>& {
@@ -41,13 +43,6 @@ template <class T> auto Port<T>::get() const noexcept -> const ImmutableValuePtr
     return typed_inward_binding()->get();
   }
   return value_ptr_;
-}
-
-template <class T> auto Port<T>::is_present() const noexcept -> bool {
-  if (has_inward_binding()) {
-    return typed_inward_binding()->is_present();
-  }
-  return value_ptr_ != nullptr;
 }
 
 } // namespace reactor

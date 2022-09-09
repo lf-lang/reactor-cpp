@@ -7,6 +7,8 @@
 , lingua-franca-src
 , lingua-franca-benchmarks
 , valgrind
+, rev-reactor
+, rev-lingua-franca
 }:
 let
 
@@ -15,6 +17,8 @@ let
     lingua-franca-src = lingua-franca-src;
     reactor-cpp-src = reactor-cpp-src;
   };
+
+  hashed-inputs = builtins.hashString "sha1" (rev-reactor + rev-lingua-franca);
 
   mkDerivation = library.mkDerivation;
 
@@ -74,9 +78,19 @@ let
       ${pkgs.coreutils}/bin/cp ${run_all}/bin/* $out/bin/
     '' + install_command;
   };
+  
+  # package that builds all backages
+  build-all-benchmarks = mkDerivation {
+    src = ./.;
+    name = "build-all-benchmarks";
+    buildInputs = list_of_derivations;
+    installPhase = ''
+      ${pkgs.coreutils}/bin/mkdir -p $out/bin
+    '' + install_command;
+  };
 
   # runs our custom benchmark data extractor on the specified benchmark
-  benchmark_command = (benchmark: "${lf-benchmark-runner}/bin/lf-benchmark-runner --target lf-cpp --binary ${benchmark}/bin/${benchmark.name} --file ./result.csv");
+  benchmark_command = (benchmark: "${lf-benchmark-runner}/bin/lf-benchmark-runner --target lf-cpp-${hashed-inputs} --binary ${benchmark}/bin/${benchmark.name} --file ./result.csv");
 
   # compiles a giant script to run every benchmark and collect their results into on csv file
   benchmark_commands = lib.strings.concatStringsSep "\n" (builtins.map benchmark_command list_of_derivations);
@@ -93,6 +107,23 @@ let
       cp result.csv $out/data/
     '';
   };
+
+  individual-benchmark = (package: {
+    name = "benchmark-${package.name}";
+    value = mkDerivation {
+      name = "benchmark-${package.name}";
+      src = ./.;
+
+      buildPhase = ''
+        ${lf-benchmark-runner}/bin/lf-benchmark-runner --target lf-cpp --binary ${package}/bin/${package.name} --file ./result.csv --image result.svg
+      '';
+
+      installPhase = ''
+        mkdir -p $out/data
+        cp result.csv $out/data
+      '';
+    };
+  });
 
   # derivation for call and cachegrind. measuring a given package
   profiler = (package: valgrind_check:
@@ -120,11 +151,14 @@ let
 
   attribute_set_cachegrind = (builtins.map (x: profiler x "cachegrind") (extract_derivations attribute_set_derivations));
   attribute_set_callgrind = (builtins.map (x: profiler x "callgrind") (extract_derivations attribute_set_derivations));
+  attribute_set_benchmarks = (builtins.map individual-benchmark (extract_derivations attribute_set_derivations));
   attribute_set_memory = (builtins.map library.memtest (extract_derivations attribute_set_derivations));
 in
-lib.listToAttrs (attribute_set_derivations
+  lib.listToAttrs (
+     attribute_set_derivations
   ++ attribute_set_cachegrind
   ++ attribute_set_callgrind
+  ++ attribute_set_benchmarks
   ++ attribute_set_memory
   ++ [
   { name = "all-benchmarks"; value = all-benchmarks; }
@@ -132,4 +166,3 @@ lib.listToAttrs (attribute_set_derivations
   { name = "list-compilers"; value = library.list-compilers; }
   { name = "make-benchmark"; value = make-benchmark; }
 ])
-

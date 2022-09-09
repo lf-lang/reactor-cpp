@@ -7,11 +7,11 @@
         "utils": "utils"
       },
       "locked": {
-        "lastModified": 1650028179,
-        "narHash": "sha256-p8jQBiVwk0GQQjsK4gS1wk76bwPqr6J5Jn1UDlAWxjc=",
+        "lastModified": 1659456277,
+        "narHash": "sha256-V8aOHKj/+tYvo5dCkIiVkMX0+0wIWI/i1t7CwYjZS4c=",
         "owner": "revol-xut",
         "repo": "lf-benchmark-runner",
-        "rev": "7317490b9e4407c90b9bf51cd56d00b726a20aaf",
+        "rev": "754fecc48abfaa0334d757cba1d2ce79afde4c78",
         "type": "github"
       },
       "original": {
@@ -23,11 +23,11 @@
     "lingua-franca-benchmarks": {
       "flake": false,
       "locked": {
-        "lastModified": 1655897482,
-        "narHash": "sha256-11oLNV2uyn53i5nMBFf+LDMTbj+SvG0i6tXi/SDc8T8=",
+        "lastModified": 1659449182,
+        "narHash": "sha256-xtz0ZlyNXT1n0o8pX6zw1zDb1bJmaBQHhmECcuDNBMU=",
         "owner": "lf-lang",
         "repo": "benchmarks-lingua-franca",
-        "rev": "a2efd884d9f0f20d60e290023e664002ca4a7249",
+        "rev": "27bb6121366e357f24210eeab8ae2e1f87909031",
         "type": "github"
       },
       "original": {
@@ -51,11 +51,11 @@
     "lingua-franca-tests": {
       "flake": false,
       "locked": {
-        "lastModified": 1655939712,
-        "narHash": "sha256-pP/0ViheABA425YyNYKKbMVbhBn/cD+Ir9n0Lri6LL0=",
+        "lastModified": 1659455197,
+        "narHash": "sha256-wEsvgfVL/iZUE+5Nv3H6OljANP6eWzArDqVMGWX3FpE=",
         "owner": "lf-lang",
         "repo": "lingua-franca",
-        "rev": "9cb9ae782940721a771793e44153a3fc85d4d321",
+        "rev": "cf7d3a5e6f246b3dba54efe79d5851ab23bdba68",
         "type": "github"
       },
       "original": {
@@ -103,11 +103,11 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1655895887,
-        "narHash": "sha256-AbihSVmPKFcQmaVgzNSLQ8sLAaVTTELPSzZ+/gRVfyk=",
+        "lastModified": 1659305579,
+        "narHash": "sha256-SFeQTmh7hc9Y2fSkooHaoS8mDfPa04sfmUCtQ8MA6Pg=",
         "owner": "NixOs",
         "repo": "nixpkgs",
-        "rev": "e1e08fe28bf0588a41cd556eac40b98d2793da99",
+        "rev": "5857574d45925585baffde730369414319228a84",
         "type": "github"
       },
       "original": {
@@ -120,11 +120,11 @@
     "reactor-cpp": {
       "flake": false,
       "locked": {
-        "lastModified": 1655730047,
-        "narHash": "sha256-GzqCobPjrMhzJEvugmy4ArFFjfD8oNGySSk32ZiKR+U=",
+        "lastModified": 1658153708,
+        "narHash": "sha256-3t+nXCkZKCtEqry/Q8jGDnu6syfvHzG0aZg/xdrVsSA=",
         "owner": "lf-lang",
         "repo": "reactor-cpp",
-        "rev": "eebdca0cac21488cc7258c938ef6f959e000b1cc",
+        "rev": "0097e793caa38b11948e6933715cef52684d647c",
         "type": "github"
       },
       "original": {
@@ -161,11 +161,11 @@
     },
     "utils_2": {
       "locked": {
-        "lastModified": 1653893745,
-        "narHash": "sha256-0jntwV3Z8//YwuOjzhV2sgJJPt+HY6KhU7VZUL0fKZQ=",
+        "lastModified": 1656928814,
+        "narHash": "sha256-RIFfgBuKz6Hp89yRr7+NR5tzIAbn52h8vT6vXkYjZoM=",
         "owner": "numtide",
         "repo": "flake-utils",
-        "rev": "1ed9fb1935d260de5fe1c2f7ee0ebaae17ed2fa1",
+        "rev": "7e2a3b3dfd9af950a856d66b0a7d01e3c18aa249",
         "type": "github"
       },
       "original": {

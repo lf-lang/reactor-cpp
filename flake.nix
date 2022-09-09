@@ -4,7 +4,9 @@
   inputs = {
     utils.url = "github:numtide/flake-utils";
     nixpkgs.url = "github:NixOs/nixpkgs/nixos-unstable";
-    lf-benchmark-runner.url = "github:revol-xut/lf-benchmark-runner";
+    lf-benchmark-runner = {
+      url = "github:revol-xut/lf-benchmark-runner";
+    };
 
     # input for the reactor-cpp
     reactor-cpp = {
@@ -31,7 +33,7 @@
     };
   };
 
-  outputs = { utils, nixpkgs, lf-benchmark-runner, reactor-cpp, lingua-franca-src, lingua-franca-tests, lingua-franca-benchmarks, ... }:
+  outputs = { utils, nixpkgs, lf-benchmark-runner, reactor-cpp, lingua-franca-src, lingua-franca-tests, lingua-franca-benchmarks, ... }@inputs:
     utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
@@ -45,8 +47,16 @@
           lingua-franca-src = lingua-franca-src;
           lingua-franca-benchmarks = lingua-franca-benchmarks;
           lf-benchmark-runner = lf-benchmark-runner.packages."${system}".lf-benchmark-runner;
+          rev-reactor = reactor-cpp.narHash;
+          rev-lingua-franca = lingua-franca-src.narHash;
         };
-        customPackages = pkgs.lib.mergeAttrs allBenchmarks allTests;
+        customPackages = allBenchmarks // allTests // {
+          reactor-cpp = pkgs.callPackage ./nix/reactor-cpp.nix {
+            mkDerivation = pkgs.stdenv.mkDerivation;
+            debug = false;
+            reactor-cpp-src = ./.;
+          };
+        };
       in
       rec {
         checks = packages;
