@@ -80,7 +80,7 @@ Program Listing for File environment.cc
          while (source->has_inward_binding()) {
            source = source->inward_binding();
          }
-         for (auto* antidependency : source->antidependencies()) {
+         for (auto* antidependency : source->anti_dependencies()) {
            dependencies_.emplace_back(reaction, antidependency);
          }
        }
@@ -321,7 +321,7 @@ Program Listing for File environment.cc
        }
      }
      yaml << "        effect_of: " << std::endl;
-     for (auto* const antidepencency : port.antidependencies()) {
+     for (auto* const antidepencency : port.anti_dependencies()) {
        yaml << "          - " << antidepencency->fqn() << std::endl;
      }
    }

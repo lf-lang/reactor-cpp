@@ -38,7 +38,9 @@ Includes
 
 - ``logical_time.hh`` (:ref:`file_include_reactor-cpp_logical_time.hh`)
 
-- ``port.hh`` (:ref:`file_include_reactor-cpp_port.hh`)
+- ``multiport.hh`` (:ref:`file_include_reactor-cpp_multiport.hh`)
+
+- ``port.hh`` (:ref:`file_include_reactor-cpp_multiport.hh`)
 
 - ``reaction.hh`` (:ref:`file_include_reactor-cpp_reaction.hh`)
 

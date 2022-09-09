@@ -59,6 +59,7 @@
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Action.html">Template Class Action</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Action_3_01void_01_4.html">Template Class Action&lt; void &gt;</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1BaseAction.html">Class BaseAction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classreactor_1_1BaseMultiport.html">Class BaseMultiport</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1BasePort.html">Class BasePort</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1detail_1_1ImmutableValuePtr.html">Template Class ImmutableValuePtr</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1detail_1_1ImmutableValuePtr_3_01T_00_01false_01_4.html">Template Class ImmutableValuePtr&lt; T, false &gt;</a></li>
@@ -73,6 +74,7 @@
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1log_1_1BaseLogger_3_01true_01_4.html">Template Class BaseLogger&lt; true &gt;</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1LogicalAction.html">Template Class LogicalAction</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1LogicalTime.html">Class LogicalTime</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Multiport.html">Template Class Multiport</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Output.html">Template Class Output</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1PhysicalAction.html">Template Class PhysicalAction</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Port.html">Template Class Port</a></li>
@@ -316,10 +318,11 @@
 
 <span class="cp">#include</span> <span class="cpf">&quot;../assert.hh&quot;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&quot;../environment.hh&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;reactor-cpp/port.hh&quot;</span><span class="cp"></span>
 
 <span class="k">namespace</span> <span class="n">reactor</span> <span class="p">{</span>
 
-<span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span> <span class="k">auto</span> <span class="n">Port</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">typed_outward_bindings</span><span class="p">()</span> <span class="k">const</span> <span class="k">noexcept</span> <span class="o">-&gt;</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">Port</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;*&gt;&amp;</span> <span class="p">{</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span> <span class="p">[[</span><span class="n">maybe_unused</span><span class="p">]]</span> <span class="k">auto</span> <span class="n">Port</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">typed_outward_bindings</span><span class="p">()</span> <span class="k">const</span> <span class="k">noexcept</span> <span class="o">-&gt;</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">Port</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;*&gt;&amp;</span> <span class="p">{</span>
   <span class="c1">// HACK this cast is ugly but should be safe as long as we only allow to</span>
   <span class="c1">// bind with Port&lt;T&gt;*. The alternative would be to copy the entire set and</span>
   <span class="c1">// cast each element individually, which is also ugly...</span>
@@ -339,6 +342,7 @@
   <span class="k">auto</span> <span class="n">scheduler</span> <span class="o">=</span> <span class="n">environment</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">scheduler</span><span class="p">();</span>
   <span class="k">this</span><span class="o">-&gt;</span><span class="n">value_ptr_</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">value_ptr</span><span class="p">);</span>
   <span class="n">scheduler</span><span class="o">-&gt;</span><span class="n">set_port</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">present_</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
 <span class="p">}</span>
 
 <span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span> <span class="k">auto</span> <span class="n">Port</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">get</span><span class="p">()</span> <span class="k">const</span> <span class="k">noexcept</span> <span class="o">-&gt;</span> <span class="k">const</span> <span class="n">ImmutableValuePtr</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="p">{</span>
@@ -346,13 +350,6 @@
     <span class="k">return</span> <span class="n">typed_inward_binding</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">get</span><span class="p">();</span>
   <span class="p">}</span>
   <span class="k">return</span> <span class="n">value_ptr_</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span> <span class="k">auto</span> <span class="n">Port</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">is_present</span><span class="p">()</span> <span class="k">const</span> <span class="k">noexcept</span> <span class="o">-&gt;</span> <span class="kt">bool</span> <span class="p">{</span>
-  <span class="k">if</span> <span class="p">(</span><span class="n">has_inward_binding</span><span class="p">())</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="n">typed_inward_binding</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">is_present</span><span class="p">();</span>
-  <span class="p">}</span>
-  <span class="k">return</span> <span class="n">value_ptr_</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">;</span>
 <span class="p">}</span>
 
 <span class="p">}</span> <span class="c1">// namespace reactor</span>

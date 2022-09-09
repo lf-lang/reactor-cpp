@@ -34,6 +34,8 @@ Classes
 
 - :ref:`exhale_class_classreactor_1_1BaseAction`
 
+- :ref:`exhale_class_classreactor_1_1BaseMultiport`
+
 - :ref:`exhale_class_classreactor_1_1BasePort`
 
 - :ref:`exhale_class_classreactor_1_1Environment`
@@ -43,6 +45,8 @@ Classes
 - :ref:`exhale_class_classreactor_1_1LogicalAction`
 
 - :ref:`exhale_class_classreactor_1_1LogicalTime`
+
+- :ref:`exhale_class_classreactor_1_1Multiport`
 
 - :ref:`exhale_class_classreactor_1_1Output`
 

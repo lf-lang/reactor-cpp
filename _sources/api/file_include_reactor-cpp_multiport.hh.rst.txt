@@ -1,0 +1,68 @@
+
+.. _file_include_reactor-cpp_multiport.hh:
+
+File multiport.hh
+=================
+
+|exhale_lsh| :ref:`Parent directory <dir_include_reactor-cpp>` (``include/reactor-cpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``include/reactor-cpp/multiport.hh``)
+-------------------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_include_reactor-cpp_multiport.hh.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``algorithm``
+
+- ``atomic``
+
+- ``iostream``
+
+- ``type_traits``
+
+- ``vector`` (:ref:`file_include_reactor-cpp_safe_vector.hh`)
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_include_reactor-cpp_port.hh`
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_reactor`
+
+
+Classes
+-------
+
+
+- :ref:`exhale_class_classreactor_1_1BaseMultiport`
+
+- :ref:`exhale_class_classreactor_1_1Multiport`
+

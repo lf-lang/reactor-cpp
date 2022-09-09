@@ -66,6 +66,8 @@ Included By
 
 - :ref:`file_include_reactor-cpp_impl_port_impl.hh`
 
+- :ref:`file_include_reactor-cpp_port.hh`
+
 
 
 

@@ -59,6 +59,7 @@
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Action.html">Template Class Action</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Action_3_01void_01_4.html">Template Class Action&lt; void &gt;</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1BaseAction.html">Class BaseAction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classreactor_1_1BaseMultiport.html">Class BaseMultiport</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1BasePort.html">Class BasePort</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1detail_1_1ImmutableValuePtr.html">Template Class ImmutableValuePtr</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1detail_1_1ImmutableValuePtr_3_01T_00_01false_01_4.html">Template Class ImmutableValuePtr&lt; T, false &gt;</a></li>
@@ -73,6 +74,7 @@
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1log_1_1BaseLogger_3_01true_01_4.html">Template Class BaseLogger&lt; true &gt;</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1LogicalAction.html">Template Class LogicalAction</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1LogicalTime.html">Class LogicalTime</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Multiport.html">Template Class Multiport</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Output.html">Template Class Output</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1PhysicalAction.html">Template Class PhysicalAction</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Port.html">Template Class Port</a></li>
@@ -539,6 +541,7 @@
     <span class="k">for</span> <span class="p">(</span><span class="k">auto</span><span class="o">*</span> <span class="nl">action</span> <span class="p">:</span> <span class="o">*</span><span class="n">actions</span><span class="p">)</span> <span class="p">{</span>
       <span class="n">action</span><span class="o">-&gt;</span><span class="n">cleanup</span><span class="p">();</span>
     <span class="p">}</span>
+
     <span class="n">actions</span><span class="o">-&gt;</span><span class="n">clear</span><span class="p">();</span>
     <span class="n">action_list_pool_</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">actions</span><span class="p">));</span>
   <span class="p">}</span>
@@ -715,6 +718,12 @@
 <span class="p">}</span>
 
 <span class="kt">void</span> <span class="n">Scheduler</span><span class="o">::</span><span class="n">set_port_helper</span><span class="p">(</span><span class="n">BasePort</span><span class="o">*</span> <span class="n">port</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">port</span><span class="o">-&gt;</span><span class="n">triggers</span><span class="p">().</span><span class="n">empty</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="n">port</span><span class="o">-&gt;</span><span class="n">dependencies</span><span class="p">().</span><span class="n">empty</span><span class="p">()))</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">port</span><span class="o">-&gt;</span><span class="n">message_multiport</span><span class="p">())</span> <span class="p">{</span>
+      <span class="n">set_ports_</span><span class="p">[</span><span class="n">Worker</span><span class="o">::</span><span class="n">current_worker_id</span><span class="p">()].</span><span class="n">push_back</span><span class="p">(</span><span class="n">port</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
   <span class="k">for</span> <span class="p">(</span><span class="k">auto</span><span class="o">*</span> <span class="nl">reaction</span> <span class="p">:</span> <span class="n">port</span><span class="o">-&gt;</span><span class="n">triggers</span><span class="p">())</span> <span class="p">{</span>
     <span class="n">triggered_reactions_</span><span class="p">[</span><span class="n">Worker</span><span class="o">::</span><span class="n">current_worker_id</span><span class="p">()].</span><span class="n">push_back</span><span class="p">(</span><span class="n">reaction</span><span class="p">);</span>
   <span class="p">}</span>

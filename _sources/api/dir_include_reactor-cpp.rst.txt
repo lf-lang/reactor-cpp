@@ -27,6 +27,7 @@ Files
 - :ref:`file_include_reactor-cpp_fwd.hh`
 - :ref:`file_include_reactor-cpp_logging.hh`
 - :ref:`file_include_reactor-cpp_logical_time.hh`
+- :ref:`file_include_reactor-cpp_multiport.hh`
 - :ref:`file_include_reactor-cpp_port.hh`
 - :ref:`file_include_reactor-cpp_reaction.hh`
 - :ref:`file_include_reactor-cpp_reactor-cpp.hh`

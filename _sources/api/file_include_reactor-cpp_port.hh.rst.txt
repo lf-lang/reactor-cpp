@@ -30,7 +30,11 @@ Includes
 --------
 
 
+- ``assert.hh`` (:ref:`file_include_reactor-cpp_assert.hh`)
+
 - ``impl/port_impl.hh`` (:ref:`file_include_reactor-cpp_impl_port_impl.hh`)
+
+- ``multiport.hh`` (:ref:`file_include_reactor-cpp_multiport.hh`)
 
 - ``reactor.hh`` (:ref:`file_include_reactor-cpp_reactor.hh`)
 
@@ -53,6 +57,8 @@ Included By
 - :ref:`file_lib_reactor.cc`
 
 - :ref:`file_lib_scheduler.cc`
+
+- :ref:`file_include_reactor-cpp_impl_port_impl.hh`
 
 
 

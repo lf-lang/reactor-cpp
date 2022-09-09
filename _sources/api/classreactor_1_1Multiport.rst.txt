@@ -1,0 +1,27 @@
+.. _exhale_class_classreactor_1_1Multiport:
+
+Template Class Multiport
+========================
+
+- Defined in :ref:`file_include_reactor-cpp_multiport.hh`
+
+
+Inheritance Relationships
+-------------------------
+
+Base Type
+*********
+
+- ``public reactor::BaseMultiport`` (:ref:`exhale_class_classreactor_1_1BaseMultiport`)
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: reactor::Multiport
+   :project: reactor-cpp
+   :members:
+   :protected-members:
+   :private-members:
+   :undoc-members:
