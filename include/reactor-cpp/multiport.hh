@@ -84,8 +84,6 @@ public:
   inline auto max_size() const noexcept -> size_type { return data_.size(); };
   [[nodiscard]] inline auto empty() const noexcept -> bool { return data_.empty(); };
 
-  [[nodiscard]] inline auto get_active_ports() noexcept -> BaseMultiport* { return (BaseMultiport*)this; }
-
   inline void reserve(std::size_t size) noexcept {
     data_.reserve(size);
     present_ports_.reserve(size);
