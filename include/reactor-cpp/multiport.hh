@@ -16,22 +16,6 @@
 #include <vector>
 
 namespace reactor {
-
-// fancy custom type_trait taken from stackoverflow
-// which checks if given class has the member function disconnect_multiport
-template <typename T> class has_disconnect {
-  using one = char;
-  struct two {
-    char x[2]; // NOLINT avoid-c-arrays
-  };
-
-  template <typename C> static auto test(decltype(&C::has_disconnect)) -> one;
-  template <typename C> static auto test(...) -> two;
-
-public:
-  enum { value = sizeof(test<T>(0)) == sizeof(char) };
-};
-
 // struct which gets handed to the ports to they can talk back
 // to the portbank
 //
@@ -104,7 +88,7 @@ public:
 
   inline void reserve(std::size_t size) noexcept {
     data_.reserve(size);
-    present_ports_.reserve(2 * size);
+    present_ports_.reserve(size);
   }
 
   inline void push_back(const T& elem) noexcept { data_.push_back(elem); }
