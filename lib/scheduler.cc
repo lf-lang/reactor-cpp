@@ -89,6 +89,7 @@ void Scheduler::schedule() noexcept {
   while (!found_ready_reactions) {
     log::Debug() << "(Scheduler) call next()";
     next();
+    log::Debug() << "(Scheduler) returned from next()";
     reaction_queue_pos_ = 0;
 
     found_ready_reactions = schedule_ready_reactions();
@@ -98,7 +99,11 @@ void Scheduler::schedule() noexcept {
       terminate_all_workers();
       break;
     }
+
+    log::Debug() << "(Scheduler) loop again in schedule()";
   }
+
+  log::Debug() << "(Scheduler) return from schedule()";
 }
 
 auto ReadyQueue::pop() -> Reaction* {
@@ -254,6 +259,7 @@ void Scheduler::next() { // NOLINT
     if (event_queue_.empty() && !stop_) {
       if (environment_->run_forever()) {
         // wait for a new asynchronous event
+        log::Debug() << "Wait for new asynchronous events.";
         cv_schedule_.wait(lock, [this]() { return !event_queue_.empty() || stop_; });
       } else {
         log::Debug() << "No more events in queue_. -> Terminate!";
@@ -279,6 +285,7 @@ void Scheduler::next() { // NOLINT
       } else {
         // collect events of the next tag
         auto t_next = event_queue_.begin()->first;
+        log::Debug() << "The first event on the event queue has tag [" << t_next.time_point() << ", " << t_next.micro_step() << "]";
 
         // synchronize with physical time if not in fast forward mode
         if (!environment_->fast_fwd_execution()) {
@@ -297,6 +304,7 @@ void Scheduler::next() { // NOLINT
           // point, then wait until the next tag or until a new event is
           // inserted asynchronously into the queue
           if (physical_time < t_next.time_point()) {
+            log::Debug() << "Wait for physical time to catch up.";
             auto status = cv_schedule_.wait_until(lock, t_next.time_point());
             // Start over if the event queue was modified
             if (status == std::cv_status::no_timeout) {
@@ -312,8 +320,8 @@ void Scheduler::next() { // NOLINT
         actions = std::move(event_queue_.extract(event_queue_.begin()).mapped());
 
         // advance logical time
-        log::Debug() << "advance logical time to tag [" << t_next.time_point() << ", " << t_next.micro_step() << "]";
         logical_time_.advance_to(t_next);
+        log::Debug() << "advance logical time to tag [" << t_next.time_point() << ", " << t_next.micro_step() << "]";
       }
     }
   } // mutex schedule_
