@@ -280,6 +280,7 @@ void Scheduler::next() { // NOLINT
           log::Debug() << "advance logical time to tag [" << t_next.time_point() << ", " << t_next.micro_step() << "]";
           logical_time_.advance_to(t_next);
         } else {
+          log::Debug() << "Return from next()";
           return;
         }
       } else {
