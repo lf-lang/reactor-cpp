@@ -266,7 +266,7 @@ void Scheduler::next() { // NOLINT
         continue_execution_ = false;
         log::Debug() << "Shutting down the scheduler";
         Tag t_next = Tag::from_logical_time(logical_time_).delay();
-        if (t_next == event_queue_.begin()->first) {
+        if (!event_queue_.empty() && t_next == event_queue_.begin()->first) {
           log::Debug() << "Schedule the last round of reactions including all "
                           "termination reactions";
           actions = std::move(event_queue_.begin()->second);
