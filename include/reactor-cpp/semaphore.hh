@@ -10,6 +10,7 @@
 #define REACTOR_CPP_SEMAPHORE_HH
 
 #include <atomic>
+#include <chrono>
 #include <condition_variable>
 #include <mutex>
 
@@ -35,7 +36,8 @@ public:
 
   void acquire() {
     std::unique_lock<std::mutex> lock_guard(mutex_);
-    cv_.wait(lock_guard, [&]() { return count_ != 0; });
+    while (!cv_.wait_for(lock_guard, std::chrono::seconds(1), [&]() { return count_ != 0; })) {
+    }
     count_--;
   }
 };
