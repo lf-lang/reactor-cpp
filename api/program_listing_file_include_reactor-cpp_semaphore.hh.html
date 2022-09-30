@@ -17,6 +17,7 @@
         <script src="../_static/underscore.js"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
         <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
         <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
     <script src="../_static/js/theme.js"></script>
@@ -311,43 +312,43 @@
 <span class="cm"> *</span>
 <span class="cm"> * Authors:</span>
 <span class="cm"> *   Christian Menard</span>
-<span class="cm"> */</span>
+<span class="cm"> */</span><span class="w"></span>
 
 <span class="cp">#ifndef REACTOR_CPP_SEMAPHORE_HH</span>
 <span class="cp">#define REACTOR_CPP_SEMAPHORE_HH</span>
 
-<span class="cp">#include</span> <span class="cpf">&lt;atomic&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;condition_variable&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;mutex&gt;</span><span class="cp"></span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;atomic&gt;</span><span class="cp"></span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;condition_variable&gt;</span><span class="cp"></span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;mutex&gt;</span><span class="cp"></span>
 
-<span class="k">namespace</span> <span class="n">reactor</span> <span class="p">{</span>
+<span class="k">namespace</span><span class="w"> </span><span class="nn">reactor</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 
-<span class="k">class</span> <span class="nc">Semaphore</span> <span class="p">{</span>
-<span class="k">private</span><span class="o">:</span>
-  <span class="kt">int</span> <span class="n">count_</span><span class="p">;</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">mutex</span> <span class="n">mutex_</span><span class="p">{};</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">condition_variable</span> <span class="n">cv_</span><span class="p">{};</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Semaphore</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="k">private</span><span class="o">:</span><span class="w"></span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">count_</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="w"> </span><span class="n">mutex_</span><span class="p">{};</span><span class="w"></span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">condition_variable</span><span class="w"> </span><span class="n">cv_</span><span class="p">{};</span><span class="w"></span>
 
-<span class="k">public</span><span class="o">:</span>
-  <span class="k">explicit</span> <span class="n">Semaphore</span><span class="p">(</span><span class="kt">int</span> <span class="n">count</span><span class="p">)</span>
-      <span class="o">:</span> <span class="n">count_</span><span class="p">(</span><span class="n">count</span><span class="p">)</span> <span class="p">{}</span>
+<span class="k">public</span><span class="o">:</span><span class="w"></span>
+<span class="w">  </span><span class="k">explicit</span><span class="w"> </span><span class="n">Semaphore</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="p">)</span><span class="w"></span>
+<span class="w">      </span><span class="o">:</span><span class="w"> </span><span class="n">count_</span><span class="p">(</span><span class="n">count</span><span class="p">)</span><span class="w"> </span><span class="p">{}</span><span class="w"></span>
 
-  <span class="kt">void</span> <span class="n">release</span><span class="p">(</span><span class="kt">int</span> <span class="n">increment</span><span class="p">)</span> <span class="p">{</span>
-    <span class="p">{</span>
-      <span class="n">std</span><span class="o">::</span><span class="n">lock_guard</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">lock_guard</span><span class="p">(</span><span class="n">mutex_</span><span class="p">);</span>
-      <span class="n">count_</span> <span class="o">+=</span> <span class="n">increment</span><span class="p">;</span>
-    <span class="p">}</span>
-    <span class="n">cv_</span><span class="p">.</span><span class="n">notify_all</span><span class="p">();</span>
-  <span class="p">}</span>
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="n">release</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">increment</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="n">std</span><span class="o">::</span><span class="n">lock_guard</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span><span class="w"> </span><span class="n">lock_guard</span><span class="p">(</span><span class="n">mutex_</span><span class="p">);</span><span class="w"></span>
+<span class="w">      </span><span class="n">count_</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">increment</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="n">cv_</span><span class="p">.</span><span class="n">notify_all</span><span class="p">();</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
 
-  <span class="kt">void</span> <span class="n">acquire</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">unique_lock</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">lock_guard</span><span class="p">(</span><span class="n">mutex_</span><span class="p">);</span>
-    <span class="n">cv_</span><span class="p">.</span><span class="n">wait</span><span class="p">(</span><span class="n">lock_guard</span><span class="p">,</span> <span class="p">[</span><span class="o">&amp;</span><span class="p">]()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">count_</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span> <span class="p">});</span>
-    <span class="n">count_</span><span class="o">--</span><span class="p">;</span>
-  <span class="p">}</span>
-<span class="p">};</span>
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="n">acquire</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">unique_lock</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span><span class="w"> </span><span class="n">lock_guard</span><span class="p">(</span><span class="n">mutex_</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="n">cv_</span><span class="p">.</span><span class="n">wait</span><span class="p">(</span><span class="n">lock_guard</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="o">&amp;</span><span class="p">]()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">count_</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="p">});</span><span class="w"></span>
+<span class="w">    </span><span class="n">count_</span><span class="o">--</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
+<span class="p">};</span><span class="w"></span>
 
-<span class="p">}</span> <span class="c1">// namespace reactor</span>
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace reactor</span>
 
 <span class="cp">#endif </span><span class="c1">// REACTOR_CPP_SEMAPHORE_HH</span>
 </pre></div>

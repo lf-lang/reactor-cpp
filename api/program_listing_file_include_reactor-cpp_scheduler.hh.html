@@ -17,6 +17,7 @@
         <script src="../_static/underscore.js"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
         <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
         <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
     <script src="../_static/js/theme.js"></script>
@@ -311,134 +312,134 @@
 <span class="cm"> *</span>
 <span class="cm"> * Authors:</span>
 <span class="cm"> *   Christian Menard</span>
-<span class="cm"> */</span>
+<span class="cm"> */</span><span class="w"></span>
 
 <span class="cp">#ifndef REACTOR_CPP_SCHEDULER_HH</span>
 <span class="cp">#define REACTOR_CPP_SCHEDULER_HH</span>
 
-<span class="cp">#include</span> <span class="cpf">&lt;condition_variable&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;functional&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;future&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;map&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;mutex&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;set&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;shared_mutex&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;thread&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;condition_variable&gt;</span><span class="cp"></span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;functional&gt;</span><span class="cp"></span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;future&gt;</span><span class="cp"></span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;map&gt;</span><span class="cp"></span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;mutex&gt;</span><span class="cp"></span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;set&gt;</span><span class="cp"></span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;shared_mutex&gt;</span><span class="cp"></span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;thread&gt;</span><span class="cp"></span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
 
-<span class="cp">#include</span> <span class="cpf">&quot;fwd.hh&quot;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&quot;logical_time.hh&quot;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&quot;safe_vector.hh&quot;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&quot;semaphore.hh&quot;</span><span class="cp"></span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;fwd.hh&quot;</span><span class="cp"></span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;logical_time.hh&quot;</span><span class="cp"></span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;safe_vector.hh&quot;</span><span class="cp"></span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;semaphore.hh&quot;</span><span class="cp"></span>
 
-<span class="k">namespace</span> <span class="n">reactor</span> <span class="p">{</span>
+<span class="k">namespace</span><span class="w"> </span><span class="nn">reactor</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 
 <span class="c1">// forward declarations</span>
-<span class="k">class</span> <span class="nc">Scheduler</span><span class="p">;</span>
-<span class="k">class</span> <span class="nc">Worker</span><span class="p">;</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Scheduler</span><span class="p">;</span><span class="w"></span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Worker</span><span class="p">;</span><span class="w"></span>
 
-<span class="k">class</span> <span class="nc">Worker</span> <span class="p">{</span> <span class="c1">// NOLINT</span>
-<span class="k">public</span><span class="o">:</span>
-  <span class="n">Scheduler</span><span class="o">&amp;</span> <span class="n">scheduler_</span><span class="p">;</span>
-  <span class="k">const</span> <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">identity_</span><span class="p">{</span><span class="mi">0</span><span class="p">};</span>
-  <span class="n">std</span><span class="o">::</span><span class="kr">thread</span> <span class="n">thread_</span><span class="p">{};</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Worker</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// NOLINT</span>
+<span class="k">public</span><span class="o">:</span><span class="w"></span>
+<span class="w">  </span><span class="n">Scheduler</span><span class="o">&amp;</span><span class="w"> </span><span class="n">scheduler_</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">identity_</span><span class="p">{</span><span class="mi">0</span><span class="p">};</span><span class="w"></span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="kr">thread</span><span class="w"> </span><span class="n">thread_</span><span class="p">{};</span><span class="w"></span>
 
-  <span class="c1">// NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)</span>
-  <span class="k">static</span> <span class="k">thread_local</span> <span class="k">const</span> <span class="n">Worker</span><span class="o">*</span> <span class="n">current_worker</span><span class="p">;</span>
+<span class="w">  </span><span class="c1">// NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)</span>
+<span class="w">  </span><span class="k">static</span><span class="w"> </span><span class="k">thread_local</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">Worker</span><span class="o">*</span><span class="w"> </span><span class="n">current_worker</span><span class="p">;</span><span class="w"></span>
 
-  <span class="kt">void</span> <span class="nf">work</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
-  <span class="kt">void</span> <span class="nf">execute_reaction</span><span class="p">(</span><span class="n">Reaction</span><span class="o">*</span> <span class="n">reaction</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">work</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">execute_reaction</span><span class="p">(</span><span class="n">Reaction</span><span class="o">*</span><span class="w"> </span><span class="n">reaction</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="p">;</span><span class="w"></span>
 
-  <span class="n">Worker</span><span class="p">(</span><span class="n">Scheduler</span><span class="o">&amp;</span> <span class="n">scheduler</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">identity</span><span class="p">)</span>
-      <span class="o">:</span> <span class="n">scheduler_</span><span class="p">{</span><span class="n">scheduler</span><span class="p">}</span>
-      <span class="p">,</span> <span class="n">identity_</span><span class="p">{</span><span class="n">identity</span><span class="p">}</span> <span class="p">{}</span>
-  <span class="n">Worker</span><span class="p">(</span><span class="n">Worker</span><span class="o">&amp;&amp;</span> <span class="n">worker</span><span class="p">);</span> <span class="c1">// NOLINT(performance-noexcept-move-constructor)</span>
-  <span class="n">Worker</span><span class="p">(</span><span class="k">const</span> <span class="n">Worker</span><span class="o">&amp;</span> <span class="n">worker</span><span class="p">)</span> <span class="o">=</span> <span class="k">delete</span><span class="p">;</span>
+<span class="w">  </span><span class="n">Worker</span><span class="p">(</span><span class="n">Scheduler</span><span class="o">&amp;</span><span class="w"> </span><span class="n">scheduler</span><span class="p">,</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">identity</span><span class="p">)</span><span class="w"></span>
+<span class="w">      </span><span class="o">:</span><span class="w"> </span><span class="n">scheduler_</span><span class="p">{</span><span class="n">scheduler</span><span class="p">}</span><span class="w"></span>
+<span class="w">      </span><span class="p">,</span><span class="w"> </span><span class="n">identity_</span><span class="p">{</span><span class="n">identity</span><span class="p">}</span><span class="w"> </span><span class="p">{}</span><span class="w"></span>
+<span class="w">  </span><span class="n">Worker</span><span class="p">(</span><span class="n">Worker</span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">worker</span><span class="p">);</span><span class="w"> </span><span class="c1">// NOLINT(performance-noexcept-move-constructor)</span>
+<span class="w">  </span><span class="n">Worker</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">Worker</span><span class="o">&amp;</span><span class="w"> </span><span class="n">worker</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">delete</span><span class="p">;</span><span class="w"></span>
 
-  <span class="kt">void</span> <span class="nf">start_thread</span><span class="p">()</span> <span class="p">{</span> <span class="n">thread_</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="kr">thread</span><span class="p">(</span><span class="o">&amp;</span><span class="n">Worker</span><span class="o">::</span><span class="n">work</span><span class="p">,</span> <span class="k">this</span><span class="p">);</span> <span class="p">}</span>
-  <span class="kt">void</span> <span class="nf">join_thread</span><span class="p">()</span> <span class="p">{</span> <span class="n">thread_</span><span class="p">.</span><span class="n">join</span><span class="p">();</span> <span class="p">}</span>
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">start_thread</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">thread_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="kr">thread</span><span class="p">(</span><span class="o">&amp;</span><span class="n">Worker</span><span class="o">::</span><span class="n">work</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">);</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">join_thread</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">thread_</span><span class="p">.</span><span class="n">join</span><span class="p">();</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
 
-  <span class="k">static</span> <span class="k">auto</span> <span class="nf">current_worker_id</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">unsigned</span> <span class="p">{</span> <span class="k">return</span> <span class="n">current_worker</span><span class="o">-&gt;</span><span class="n">identity_</span><span class="p">;</span> <span class="p">}</span>
-<span class="p">};</span>
+<span class="w">  </span><span class="k">static</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">current_worker_id</span><span class="p">()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">current_worker</span><span class="o">-&gt;</span><span class="n">identity_</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="p">};</span><span class="w"></span>
 
-<span class="k">class</span> <span class="nc">ReadyQueue</span> <span class="p">{</span>
-<span class="k">private</span><span class="o">:</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Reaction</span><span class="o">*&gt;</span> <span class="n">queue_</span><span class="p">{};</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">atomic</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="kt">ptrdiff_t</span><span class="o">&gt;</span> <span class="n">size_</span><span class="p">{</span><span class="mi">0</span><span class="p">};</span>
-  <span class="n">Semaphore</span> <span class="n">sem_</span><span class="p">{</span><span class="mi">0</span><span class="p">};</span>
-  <span class="n">std</span><span class="o">::</span><span class="kt">ptrdiff_t</span> <span class="n">waiting_workers_</span><span class="p">{</span><span class="mi">0</span><span class="p">};</span>
-  <span class="k">const</span> <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">num_workers_</span><span class="p">;</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ReadyQueue</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="k">private</span><span class="o">:</span><span class="w"></span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Reaction</span><span class="o">*&gt;</span><span class="w"> </span><span class="n">queue_</span><span class="p">{};</span><span class="w"></span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">atomic</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="kt">ptrdiff_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">size_</span><span class="p">{</span><span class="mi">0</span><span class="p">};</span><span class="w"></span>
+<span class="w">  </span><span class="n">Semaphore</span><span class="w"> </span><span class="n">sem_</span><span class="p">{</span><span class="mi">0</span><span class="p">};</span><span class="w"></span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="kt">ptrdiff_t</span><span class="w"> </span><span class="n">waiting_workers_</span><span class="p">{</span><span class="mi">0</span><span class="p">};</span><span class="w"></span>
+<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">num_workers_</span><span class="p">;</span><span class="w"></span>
 
-<span class="k">public</span><span class="o">:</span>
-  <span class="k">explicit</span> <span class="n">ReadyQueue</span><span class="p">(</span><span class="kt">unsigned</span> <span class="n">num_workers</span><span class="p">)</span>
-      <span class="o">:</span> <span class="n">num_workers_</span><span class="p">(</span><span class="n">num_workers</span><span class="p">)</span> <span class="p">{}</span>
+<span class="k">public</span><span class="o">:</span><span class="w"></span>
+<span class="w">  </span><span class="k">explicit</span><span class="w"> </span><span class="n">ReadyQueue</span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="n">num_workers</span><span class="p">)</span><span class="w"></span>
+<span class="w">      </span><span class="o">:</span><span class="w"> </span><span class="n">num_workers_</span><span class="p">(</span><span class="n">num_workers</span><span class="p">)</span><span class="w"> </span><span class="p">{}</span><span class="w"></span>
 
-  <span class="k">auto</span> <span class="n">pop</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Reaction</span><span class="o">*</span><span class="p">;</span>
+<span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">pop</span><span class="p">()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Reaction</span><span class="o">*</span><span class="p">;</span><span class="w"></span>
 
-  <span class="kt">void</span> <span class="nf">fill_up</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Reaction</span><span class="o">*&gt;&amp;</span> <span class="n">ready_reactions</span><span class="p">);</span>
-<span class="p">};</span>
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">fill_up</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Reaction</span><span class="o">*&gt;&amp;</span><span class="w"> </span><span class="n">ready_reactions</span><span class="p">);</span><span class="w"></span>
+<span class="p">};</span><span class="w"></span>
 
-<span class="k">using</span> <span class="n">ActionList</span> <span class="o">=</span> <span class="n">SafeVector</span><span class="o">&lt;</span><span class="n">BaseAction</span><span class="o">*&gt;</span><span class="p">;</span>
-<span class="k">using</span> <span class="n">ActionListPtr</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">ActionList</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="k">using</span><span class="w"> </span><span class="n">ActionList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SafeVector</span><span class="o">&lt;</span><span class="n">BaseAction</span><span class="o">*&gt;</span><span class="p">;</span><span class="w"></span>
+<span class="k">using</span><span class="w"> </span><span class="n">ActionListPtr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">ActionList</span><span class="o">&gt;</span><span class="p">;</span><span class="w"></span>
 
-<span class="k">class</span> <span class="nc">Scheduler</span> <span class="p">{</span> <span class="c1">// NOLINT</span>
-<span class="k">private</span><span class="o">:</span>
-  <span class="k">const</span> <span class="kt">bool</span> <span class="n">using_workers_</span><span class="p">;</span>
-  <span class="n">LogicalTime</span> <span class="n">logical_time_</span><span class="p">{};</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Scheduler</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// NOLINT</span>
+<span class="k">private</span><span class="o">:</span><span class="w"></span>
+<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">using_workers_</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="n">LogicalTime</span><span class="w"> </span><span class="n">logical_time_</span><span class="p">{};</span><span class="w"></span>
 
-  <span class="n">Environment</span><span class="o">*</span> <span class="n">environment_</span><span class="p">;</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Worker</span><span class="o">&gt;</span> <span class="n">workers_</span><span class="p">{};</span>
+<span class="w">  </span><span class="n">Environment</span><span class="o">*</span><span class="w"> </span><span class="n">environment_</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Worker</span><span class="o">&gt;</span><span class="w"> </span><span class="n">workers_</span><span class="p">{};</span><span class="w"></span>
 
-  <span class="n">std</span><span class="o">::</span><span class="n">mutex</span> <span class="n">scheduling_mutex_</span><span class="p">;</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">unique_lock</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">scheduling_lock_</span><span class="p">{</span><span class="n">scheduling_mutex_</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">defer_lock</span><span class="p">};</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">condition_variable</span> <span class="n">cv_schedule_</span><span class="p">;</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="w"> </span><span class="n">scheduling_mutex_</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">unique_lock</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span><span class="w"> </span><span class="n">scheduling_lock_</span><span class="p">{</span><span class="n">scheduling_mutex_</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">defer_lock</span><span class="p">};</span><span class="w"></span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">condition_variable</span><span class="w"> </span><span class="n">cv_schedule_</span><span class="p">;</span><span class="w"></span>
 
-  <span class="n">std</span><span class="o">::</span><span class="n">shared_mutex</span> <span class="n">mutex_event_queue_</span><span class="p">;</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="n">Tag</span><span class="p">,</span> <span class="n">ActionListPtr</span><span class="o">&gt;</span> <span class="n">event_queue_</span><span class="p">;</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">shared_mutex</span><span class="w"> </span><span class="n">mutex_event_queue_</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="n">Tag</span><span class="p">,</span><span class="w"> </span><span class="n">ActionListPtr</span><span class="o">&gt;</span><span class="w"> </span><span class="n">event_queue_</span><span class="p">;</span><span class="w"></span>
 
-  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">ActionListPtr</span><span class="o">&gt;</span> <span class="n">action_list_pool_</span><span class="p">;</span>
-  <span class="k">static</span> <span class="k">constexpr</span> <span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">action_list_pool_increment_</span><span class="p">{</span><span class="mi">10</span><span class="p">};</span>
-  <span class="kt">void</span> <span class="nf">fill_action_list_pool</span><span class="p">();</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">ActionListPtr</span><span class="o">&gt;</span><span class="w"> </span><span class="n">action_list_pool_</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="k">static</span><span class="w"> </span><span class="k">constexpr</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span><span class="w"> </span><span class="n">action_list_pool_increment_</span><span class="p">{</span><span class="mi">10</span><span class="p">};</span><span class="w"></span>
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">fill_action_list_pool</span><span class="p">();</span><span class="w"></span>
 
-  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">BasePort</span><span class="o">*&gt;&gt;</span> <span class="n">set_ports_</span><span class="p">;</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Reaction</span><span class="o">*&gt;&gt;</span> <span class="n">triggered_reactions_</span><span class="p">;</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">BasePort</span><span class="o">*&gt;&gt;</span><span class="w"> </span><span class="n">set_ports_</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Reaction</span><span class="o">*&gt;&gt;</span><span class="w"> </span><span class="n">triggered_reactions_</span><span class="p">;</span><span class="w"></span>
 
-  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Reaction</span><span class="o">*&gt;&gt;</span> <span class="n">reaction_queue_</span><span class="p">;</span>
-  <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">reaction_queue_pos_</span><span class="p">{</span><span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="kt">unsigned</span><span class="o">&gt;::</span><span class="n">max</span><span class="p">()};</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Reaction</span><span class="o">*&gt;&gt;</span><span class="w"> </span><span class="n">reaction_queue_</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">reaction_queue_pos_</span><span class="p">{</span><span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="kt">unsigned</span><span class="o">&gt;::</span><span class="n">max</span><span class="p">()};</span><span class="w"></span>
 
-  <span class="n">ReadyQueue</span> <span class="n">ready_queue_</span><span class="p">;</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">atomic</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="kt">ptrdiff_t</span><span class="o">&gt;</span> <span class="n">reactions_to_process_</span><span class="p">{</span><span class="mi">0</span><span class="p">};</span> <span class="c1">// NOLINT</span>
+<span class="w">  </span><span class="n">ReadyQueue</span><span class="w"> </span><span class="n">ready_queue_</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">atomic</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="kt">ptrdiff_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">reactions_to_process_</span><span class="p">{</span><span class="mi">0</span><span class="p">};</span><span class="w"> </span><span class="c1">// NOLINT</span>
 
-  <span class="n">std</span><span class="o">::</span><span class="n">atomic</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">stop_</span><span class="p">{</span><span class="nb">false</span><span class="p">};</span>
-  <span class="kt">bool</span> <span class="n">continue_execution_</span><span class="p">{</span><span class="nb">true</span><span class="p">};</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">atomic</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span><span class="w"> </span><span class="n">stop_</span><span class="p">{</span><span class="nb">false</span><span class="p">};</span><span class="w"></span>
+<span class="w">  </span><span class="kt">bool</span><span class="w"> </span><span class="n">continue_execution_</span><span class="p">{</span><span class="nb">true</span><span class="p">};</span><span class="w"></span>
 
-  <span class="kt">void</span> <span class="nf">schedule</span><span class="p">()</span> <span class="k">noexcept</span><span class="p">;</span>
-  <span class="k">auto</span> <span class="nf">schedule_ready_reactions</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">bool</span><span class="p">;</span>
-  <span class="kt">void</span> <span class="nf">next</span><span class="p">();</span>
-  <span class="kt">void</span> <span class="nf">terminate_all_workers</span><span class="p">();</span>
-  <span class="kt">void</span> <span class="nf">set_port_helper</span><span class="p">(</span><span class="n">BasePort</span><span class="o">*</span> <span class="n">port</span><span class="p">);</span>
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">schedule</span><span class="p">()</span><span class="w"> </span><span class="k">noexcept</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">schedule_ready_reactions</span><span class="p">()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="kt">bool</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">next</span><span class="p">();</span><span class="w"></span>
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">terminate_all_workers</span><span class="p">();</span><span class="w"></span>
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">set_port_helper</span><span class="p">(</span><span class="n">BasePort</span><span class="o">*</span><span class="w"> </span><span class="n">port</span><span class="p">);</span><span class="w"></span>
 
-<span class="k">public</span><span class="o">:</span>
-  <span class="k">explicit</span> <span class="n">Scheduler</span><span class="p">(</span><span class="n">Environment</span><span class="o">*</span> <span class="n">env</span><span class="p">);</span>
-  <span class="o">~</span><span class="n">Scheduler</span><span class="p">();</span>
+<span class="k">public</span><span class="o">:</span><span class="w"></span>
+<span class="w">  </span><span class="k">explicit</span><span class="w"> </span><span class="n">Scheduler</span><span class="p">(</span><span class="n">Environment</span><span class="o">*</span><span class="w"> </span><span class="n">env</span><span class="p">);</span><span class="w"></span>
+<span class="w">  </span><span class="o">~</span><span class="n">Scheduler</span><span class="p">();</span><span class="w"></span>
 
-  <span class="kt">void</span> <span class="nf">schedule_sync</span><span class="p">(</span><span class="k">const</span> <span class="n">Tag</span><span class="o">&amp;</span> <span class="n">tag</span><span class="p">,</span> <span class="n">BaseAction</span><span class="o">*</span> <span class="n">action</span><span class="p">);</span>
-  <span class="kt">void</span> <span class="nf">schedule_async</span><span class="p">(</span><span class="k">const</span> <span class="n">Tag</span><span class="o">&amp;</span> <span class="n">tag</span><span class="p">,</span> <span class="n">BaseAction</span><span class="o">*</span> <span class="n">action</span><span class="p">);</span>
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">schedule_sync</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">Tag</span><span class="o">&amp;</span><span class="w"> </span><span class="n">tag</span><span class="p">,</span><span class="w"> </span><span class="n">BaseAction</span><span class="o">*</span><span class="w"> </span><span class="n">action</span><span class="p">);</span><span class="w"></span>
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">schedule_async</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">Tag</span><span class="o">&amp;</span><span class="w"> </span><span class="n">tag</span><span class="p">,</span><span class="w"> </span><span class="n">BaseAction</span><span class="o">*</span><span class="w"> </span><span class="n">action</span><span class="p">);</span><span class="w"></span>
 
-  <span class="kt">void</span> <span class="kr">inline</span> <span class="nf">lock</span><span class="p">()</span> <span class="k">noexcept</span> <span class="p">{</span> <span class="n">scheduling_lock_</span><span class="p">.</span><span class="n">lock</span><span class="p">();</span> <span class="p">}</span>
-  <span class="kt">void</span> <span class="kr">inline</span> <span class="nf">unlock</span><span class="p">()</span> <span class="k">noexcept</span> <span class="p">{</span> <span class="n">scheduling_lock_</span><span class="p">.</span><span class="n">unlock</span><span class="p">();</span> <span class="p">}</span>
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="kr">inline</span><span class="w"> </span><span class="n">lock</span><span class="p">()</span><span class="w"> </span><span class="k">noexcept</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">scheduling_lock_</span><span class="p">.</span><span class="n">lock</span><span class="p">();</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="kr">inline</span><span class="w"> </span><span class="n">unlock</span><span class="p">()</span><span class="w"> </span><span class="k">noexcept</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">scheduling_lock_</span><span class="p">.</span><span class="n">unlock</span><span class="p">();</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
 
-  <span class="kt">void</span> <span class="nf">set_port</span><span class="p">(</span><span class="n">BasePort</span><span class="o">*</span> <span class="n">port</span><span class="p">);</span>
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="n">set_port</span><span class="p">(</span><span class="n">BasePort</span><span class="o">*</span><span class="w"> </span><span class="n">port</span><span class="p">);</span><span class="w"></span>
 
-  <span class="p">[[</span><span class="n">nodiscard</span><span class="p">]]</span> <span class="kr">inline</span> <span class="k">auto</span> <span class="n">logical_time</span><span class="p">()</span> <span class="k">const</span> <span class="k">noexcept</span> <span class="o">-&gt;</span> <span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="p">{</span> <span class="k">return</span> <span class="n">logical_time_</span><span class="p">;</span> <span class="p">}</span>
+<span class="w">  </span><span class="p">[[</span><span class="n">nodiscard</span><span class="p">]]</span><span class="w"> </span><span class="kr">inline</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">logical_time</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">noexcept</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="o">&amp;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">logical_time_</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
 
-  <span class="kt">void</span> <span class="n">start</span><span class="p">();</span>
-  <span class="kt">void</span> <span class="nf">stop</span><span class="p">();</span>
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="n">start</span><span class="p">();</span><span class="w"></span>
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">stop</span><span class="p">();</span><span class="w"></span>
 
-  <span class="k">friend</span> <span class="n">Worker</span><span class="p">;</span>
-<span class="p">};</span>
+<span class="w">  </span><span class="k">friend</span><span class="w"> </span><span class="n">Worker</span><span class="p">;</span><span class="w"></span>
+<span class="p">};</span><span class="w"></span>
 
-<span class="p">}</span> <span class="c1">// namespace reactor</span>
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace reactor</span>
 
 <span class="cp">#endif </span><span class="c1">// REACTOR_CPP_SCHEDULER_HH</span>
 </pre></div>

@@ -17,6 +17,7 @@
         <script src="../_static/underscore.js"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
         <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
         <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
     <script src="../_static/js/theme.js"></script>
@@ -311,19 +312,19 @@
 <span class="cm"> *</span>
 <span class="cm"> * Authors:</span>
 <span class="cm"> *   Christian Menard</span>
-<span class="cm"> */</span>
+<span class="cm"> */</span><span class="w"></span>
 
-<span class="cp">#include</span> <span class="cpf">&quot;reactor-cpp/assert.hh&quot;</span><span class="cp"></span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;reactor-cpp/assert.hh&quot;</span><span class="cp"></span>
 
-<span class="k">namespace</span> <span class="n">reactor</span> <span class="p">{</span>
+<span class="k">namespace</span><span class="w"> </span><span class="nn">reactor</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 
-<span class="k">auto</span> <span class="n">ValidationError</span><span class="o">::</span><span class="n">build_message</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">msg</span><span class="p">)</span> <span class="k">noexcept</span> <span class="o">-&gt;</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="p">{</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">stringstream</span> <span class="n">string_stream</span><span class="p">;</span>
-  <span class="n">string_stream</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Validation Error! </span><span class="se">\&quot;</span><span class="s">&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">msg</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\&quot;</span><span class="s">&quot;</span><span class="p">;</span>
-  <span class="k">return</span> <span class="n">string_stream</span><span class="p">.</span><span class="n">str</span><span class="p">();</span>
-<span class="p">}</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">ValidationError</span><span class="o">::</span><span class="n">build_message</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">msg</span><span class="p">)</span><span class="w"> </span><span class="k">noexcept</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">stringstream</span><span class="w"> </span><span class="n">string_stream</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="n">string_stream</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Validation Error! </span><span class="se">\&quot;</span><span class="s">&quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">msg</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;</span><span class="se">\&quot;</span><span class="s">&quot;</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">string_stream</span><span class="p">.</span><span class="n">str</span><span class="p">();</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 
-<span class="p">}</span> <span class="c1">// namespace reactor</span>
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace reactor</span>
 </pre></div>
 </div>
 </section>

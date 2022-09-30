@@ -17,6 +17,7 @@
         <script src="../_static/underscore.js"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
         <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
         <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
     <script src="../_static/js/theme.js"></script>
@@ -305,70 +306,70 @@
   <section id="program-listing-for-file-time-cc">
 <span id="program-listing-file-lib-time-cc"></span><h1>Program Listing for File time.cc<a class="headerlink" href="#program-listing-for-file-time-cc" title="Permalink to this heading"></a></h1>
 <p>↰ <a class="reference internal" href="file_lib_time.cc.html#file-lib-time-cc"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">lib/time.cc</span></code>)</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span>/*
- * Copyright (C) 2019 TU Dresden
- * All rights reserved.
- *
- * Authors:
- *   Christian Menard
- */
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/*</span>
+<span class="cm"> * Copyright (C) 2019 TU Dresden</span>
+<span class="cm"> * All rights reserved.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Authors:</span>
+<span class="cm"> *   Christian Menard</span>
+<span class="cm"> */</span><span class="w"></span>
 
-// tell MSCV not to worry about the potential unsafe use of localtime
-#ifdef _MSC_VER
-#pragma warning(disable : 4996)
-#endif
+<span class="c1">// tell MSCV not to worry about the potential unsafe use of localtime</span>
+<span class="cp">#ifdef _MSC_VER</span>
+<span class="cp">#pragma warning(disable : 4996)</span>
+<span class="cp">#endif</span>
 
-#include &quot;reactor-cpp/time.hh&quot;
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;reactor-cpp/time.hh&quot;</span><span class="cp"></span>
 
-#include &lt;array&gt;
-#include &lt;ctime&gt;
-#include &lt;iomanip&gt;
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;array&gt;</span><span class="cp"></span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ctime&gt;</span><span class="cp"></span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;iomanip&gt;</span><span class="cp"></span>
 
-namespace reactor {
+<span class="k">namespace</span><span class="w"> </span><span class="nn">reactor</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 
-constexpr size_t TIME_TO_STR_BUFFER_SIZE{20};
-constexpr size_t NANOSECONDS_IN_ONE_SECOND{1&#39;000&#39;000&#39;000UL};
-constexpr size_t NANOSECOND_DIGITS{9};
+<span class="k">constexpr</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">TIME_TO_STR_BUFFER_SIZE</span><span class="p">{</span><span class="mi">20</span><span class="p">};</span><span class="w"></span>
+<span class="k">constexpr</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">NANOSECONDS_IN_ONE_SECOND</span><span class="p">{</span><span class="mi">1&#39;000&#39;000&#39;000UL</span><span class="p">};</span><span class="w"></span>
+<span class="k">constexpr</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">NANOSECOND_DIGITS</span><span class="p">{</span><span class="mi">9</span><span class="p">};</span><span class="w"></span>
 
-inline namespace operators {
+<span class="kr">inline</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">operators</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 
-auto operator&lt;&lt;(std::ostream&amp; os, TimePoint tp) -&gt; std::ostream&amp; {
-  std::array&lt;char, TIME_TO_STR_BUFFER_SIZE&gt; buf{};
-  time_t time =
-      std::chrono::system_clock::to_time_t(std::chrono::time_point_cast&lt;std::chrono::system_clock::duration&gt;(tp));
-  auto res = std::strftime(buf.data(), sizeof(buf), &quot;%Y-%m-%d %H:%M:%S&quot;, std::localtime(&amp;time));
-  auto epoch = std::chrono::duration_cast&lt;Duration&gt;(tp.time_since_epoch());
+<span class="k">auto</span><span class="w"> </span><span class="k">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="o">&amp;</span><span class="w"> </span><span class="n">os</span><span class="p">,</span><span class="w"> </span><span class="n">TimePoint</span><span class="w"> </span><span class="n">tp</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="o">&amp;</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">char</span><span class="p">,</span><span class="w"> </span><span class="n">TIME_TO_STR_BUFFER_SIZE</span><span class="o">&gt;</span><span class="w"> </span><span class="n">buf</span><span class="p">{};</span><span class="w"></span>
+<span class="w">  </span><span class="kt">time_t</span><span class="w"> </span><span class="n">time</span><span class="w"> </span><span class="o">=</span><span class="w"></span>
+<span class="w">      </span><span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">system_clock</span><span class="o">::</span><span class="n">to_time_t</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">time_point_cast</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">system_clock</span><span class="o">::</span><span class="n">duration</span><span class="o">&gt;</span><span class="p">(</span><span class="n">tp</span><span class="p">));</span><span class="w"></span>
+<span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">strftime</span><span class="p">(</span><span class="n">buf</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">buf</span><span class="p">),</span><span class="w"> </span><span class="s">&quot;%Y-%m-%d %H:%M:%S&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">localtime</span><span class="p">(</span><span class="o">&amp;</span><span class="n">time</span><span class="p">));</span><span class="w"></span>
+<span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">epoch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">duration_cast</span><span class="o">&lt;</span><span class="n">Duration</span><span class="o">&gt;</span><span class="p">(</span><span class="n">tp</span><span class="p">.</span><span class="n">time_since_epoch</span><span class="p">());</span><span class="w"></span>
 
-  if (res != 0) {
-    os &lt;&lt; buf.data() &lt;&lt; &#39;.&#39; &lt;&lt; std::setw(NANOSECOND_DIGITS) &lt;&lt; std::setfill(&#39;0&#39;)
-       &lt;&lt; epoch.count() % NANOSECONDS_IN_ONE_SECOND;
-  } else {
-    os &lt;&lt; &quot;[INVALID TIME]&quot;;
-  }
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">res</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">buf</span><span class="p">.</span><span class="n">data</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="sc">&#39;.&#39;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">setw</span><span class="p">(</span><span class="n">NANOSECOND_DIGITS</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">setfill</span><span class="p">(</span><span class="sc">&#39;0&#39;</span><span class="p">)</span><span class="w"></span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">epoch</span><span class="p">.</span><span class="n">count</span><span class="p">()</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">NANOSECONDS_IN_ONE_SECOND</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;[INVALID TIME]&quot;</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
 
-  return os;
-}
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">os</span><span class="p">;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 
-auto operator&lt;&lt;(std::ostream&amp; os, std::chrono::seconds dur) -&gt; std::ostream&amp; {
-  os &lt;&lt; dur.count() &lt;&lt; &quot; secs&quot;;
-  return os;
-}
-auto operator&lt;&lt;(std::ostream&amp; os, std::chrono::milliseconds dur) -&gt; std::ostream&amp; {
-  os &lt;&lt; dur.count() &lt;&lt; &quot; msecs&quot;;
-  return os;
-}
-auto operator&lt;&lt;(std::ostream&amp; os, std::chrono::microseconds dur) -&gt; std::ostream&amp; {
-  os &lt;&lt; dur.count() &lt;&lt; &quot; usecs&quot;;
-  return os;
-}
-auto operator&lt;&lt;(std::ostream&amp; os, std::chrono::nanoseconds dur) -&gt; std::ostream&amp; {
-  os &lt;&lt; dur.count() &lt;&lt; &quot; nsecs&quot;;
-  return os;
-}
+<span class="k">auto</span><span class="w"> </span><span class="k">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="o">&amp;</span><span class="w"> </span><span class="n">os</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">seconds</span><span class="w"> </span><span class="n">dur</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="o">&amp;</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">dur</span><span class="p">.</span><span class="n">count</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot; secs&quot;</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">os</span><span class="p">;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+<span class="k">auto</span><span class="w"> </span><span class="k">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="o">&amp;</span><span class="w"> </span><span class="n">os</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">milliseconds</span><span class="w"> </span><span class="n">dur</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="o">&amp;</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">dur</span><span class="p">.</span><span class="n">count</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot; msecs&quot;</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">os</span><span class="p">;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+<span class="k">auto</span><span class="w"> </span><span class="k">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="o">&amp;</span><span class="w"> </span><span class="n">os</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">microseconds</span><span class="w"> </span><span class="n">dur</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="o">&amp;</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">dur</span><span class="p">.</span><span class="n">count</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot; usecs&quot;</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">os</span><span class="p">;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+<span class="k">auto</span><span class="w"> </span><span class="k">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="o">&amp;</span><span class="w"> </span><span class="n">os</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">nanoseconds</span><span class="w"> </span><span class="n">dur</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="o">&amp;</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">dur</span><span class="p">.</span><span class="n">count</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot; nsecs&quot;</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">os</span><span class="p">;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 
-} // namespace operators
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace operators</span>
 
-} // namespace reactor
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace reactor</span>
 </pre></div>
 </div>
 </section>
