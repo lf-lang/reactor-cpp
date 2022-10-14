@@ -304,6 +304,7 @@ void Scheduler::next() { // NOLINT
             }
             // update physical time and continue otherwise
             physical_time = t_next.time_point();
+            reactor_assert(t_next == event_queue_.begin()->first);
           }
         }
 
