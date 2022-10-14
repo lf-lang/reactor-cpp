@@ -50,12 +50,13 @@
           rev-reactor = reactor-cpp.narHash;
           rev-lingua-franca = lingua-franca-src.narHash;
         };
-        customPackages = allBenchmarks // allTests // {
+        customPackages = allBenchmarks // allTests // rec {
           reactor-cpp = pkgs.callPackage ./nix/reactor-cpp.nix {
             mkDerivation = pkgs.stdenv.mkDerivation;
             debug = false;
             reactor-cpp-src = ./.;
           };
+          default = reactor-cpp;
         };
       in
       rec {
