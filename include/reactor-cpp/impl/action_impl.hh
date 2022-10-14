@@ -23,16 +23,15 @@ template <class T> template <class Dur> void Action<T>::schedule(const Immutable
   auto* scheduler = environment()->scheduler();
   if (is_logical()) {
     time_delay += this->min_delay();
-    auto tag = Tag::from_logical_time(scheduler->logical_time()).delay(time_delay); // NOLINT
+    auto tag = Tag::from_logical_time(scheduler->logical_time()).delay(time_delay);
     events_[tag] = value_ptr;
-    scheduler->schedule_sync(tag, this);
+    scheduler->schedule_sync(this, tag);
   } else {
-    auto tag = Tag::from_physical_time(get_physical_time() + time_delay);
+    auto tag = scheduler->schedule_async(this, time_delay);
     {
       std::lock_guard<std::mutex> lock(mutex_events_);
       events_[tag] = value_ptr;
     }
-    scheduler->schedule_async(tag, this);
   }
 }
 
@@ -43,11 +42,10 @@ template <class Dur> void Action<void>::schedule(Dur delay) {
   if (is_logical()) {
     time_delay += this->min_delay();
     auto tag = Tag::from_logical_time(scheduler->logical_time()).delay(time_delay);
-    scheduler->schedule_sync(tag, this);
+    scheduler->schedule_sync(this, tag);
   } else {
     // physical action
-    auto tag = Tag::from_physical_time(get_physical_time() + time_delay);
-    scheduler->schedule_async(tag, this);
+    scheduler->schedule_async(this, time_delay);
   }
 }
 

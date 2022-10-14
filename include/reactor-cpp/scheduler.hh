@@ -21,6 +21,7 @@
 
 #include "fwd.hh"
 #include "logical_time.hh"
+#include "reactor-cpp/time.hh"
 #include "safe_vector.hh"
 #include "semaphore.hh"
 
@@ -99,7 +100,6 @@ private:
   std::vector<Worker> workers_{};
 
   std::mutex scheduling_mutex_;
-  std::unique_lock<std::mutex> scheduling_lock_{scheduling_mutex_, std::defer_lock};
   std::condition_variable cv_schedule_;
 
   std::shared_mutex mutex_event_queue_;
@@ -116,7 +116,7 @@ private:
   unsigned int reaction_queue_pos_{std::numeric_limits<unsigned>::max()};
 
   ReadyQueue ready_queue_;
-  std::atomic<std::ptrdiff_t> reactions_to_process_{0}; // NOLINT
+  std::atomic<std::ptrdiff_t> reactions_to_process_{0};
 
   std::atomic<bool> stop_{false};
   bool continue_execution_{true};
@@ -131,11 +131,10 @@ public:
   explicit Scheduler(Environment* env);
   ~Scheduler();
 
-  void schedule_sync(const Tag& tag, BaseAction* action);
-  void schedule_async(const Tag& tag, BaseAction* action);
+  void schedule_sync(BaseAction* action, const Tag& tag);
+  auto schedule_async(BaseAction* action, const Duration& delay) -> Tag;
 
-  void inline lock() noexcept { scheduling_lock_.lock(); }
-  void inline unlock() noexcept { scheduling_lock_.unlock(); }
+  auto inline lock() noexcept -> auto{ return std::unique_lock<std::mutex>(scheduling_mutex_); }
 
   void set_port(BasePort* port);
 

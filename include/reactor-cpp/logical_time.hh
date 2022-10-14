@@ -15,21 +15,22 @@ namespace reactor {
 using mstep_t = unsigned long; // at least 32 bit
 class LogicalTime;
 
-class Tag { // NOLINT
+class Tag {
 private:
-  const TimePoint time_point_{};
-  const mstep_t micro_step_;
+  TimePoint time_point_{};
+  mstep_t micro_step_{0};
 
   Tag(const TimePoint& time_point, const mstep_t& micro_step)
       : time_point_{time_point}
       , micro_step_{micro_step} {}
 
 public:
-  // no default constructor, not assignable, but movable and copyable
-  Tag() = delete;
-  auto operator=(const Tag&) -> Tag& = delete;
+  Tag() = default;
   Tag(Tag&&) = default;
   Tag(const Tag&) = default;
+  auto operator=(const Tag&) -> Tag& = default;
+  auto operator=(Tag&&) -> Tag& = default;
+  ~Tag() = default;
 
   [[nodiscard]] auto time_point() const noexcept -> const TimePoint& { return time_point_; }
   [[nodiscard]] auto micro_step() const noexcept -> const mstep_t& { return micro_step_; }
