@@ -134,7 +134,7 @@ public:
   void schedule_sync(BaseAction* action, const Tag& tag);
   auto schedule_async(BaseAction* action, const Duration& delay) -> Tag;
 
-  auto inline lock() noexcept -> auto{ return std::unique_lock<std::mutex>(scheduling_mutex_); }
+  auto inline lock() noexcept -> auto { return std::unique_lock<std::mutex>(scheduling_mutex_); }
 
   void set_port(BasePort* port);
 
