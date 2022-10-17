@@ -9,9 +9,10 @@ Class BaseMultiport
 Inheritance Relationships
 -------------------------
 
-Derived Type
-************
+Derived Types
+*************
 
+- ``public reactor::Multiport< A >`` (:ref:`exhale_class_classreactor_1_1Multiport`)
 - ``public reactor::Multiport< T, A >`` (:ref:`exhale_class_classreactor_1_1Multiport`)
 
 

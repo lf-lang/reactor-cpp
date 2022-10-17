@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Class Tag &mdash; reactor-cpp  documentation</title>
+  <title>Template Class RestrictedMultiport &mdash; reactor-cpp  documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
@@ -23,8 +23,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Class Timer" href="classreactor_1_1Timer.html" />
-    <link rel="prev" title="Class StartupAction" href="classreactor_1_1StartupAction.html" /> 
+    <link rel="next" title="Template Class SafeVector" href="classreactor_1_1SafeVector.html" />
+    <link rel="prev" title="Class ReadyQueue" href="classreactor_1_1ReadyQueue.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -86,13 +86,13 @@
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Reactor.html">Class Reactor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1ReactorElement.html">Class ReactorElement</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1ReadyQueue.html">Class ReadyQueue</a></li>
-<li class="toctree-l4"><a class="reference internal" href="classreactor_1_1RestrictedMultiport.html">Template Class RestrictedMultiport</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Template Class RestrictedMultiport</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1SafeVector.html">Template Class SafeVector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Scheduler.html">Class Scheduler</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Semaphore.html">Class Semaphore</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1ShutdownAction.html">Class ShutdownAction</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1StartupAction.html">Class StartupAction</a></li>
-<li class="toctree-l4 current"><a class="current reference internal" href="#">Class Tag</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Tag.html">Class Tag</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Timer.html">Class Timer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1ValidationError.html">Class ValidationError</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Worker.html">Class Worker</a></li>
@@ -297,9 +297,9 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="library_root.html">Library API</a> &raquo;</li>
-      <li>Class Tag</li>
+      <li>Template Class RestrictedMultiport</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/api/classreactor_1_1Tag.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/api/classreactor_1_1RestrictedMultiport.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -307,85 +307,78 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="class-tag">
-<span id="exhale-class-classreactor-1-1tag"></span><h1>Class Tag<a class="headerlink" href="#class-tag" title="Permalink to this heading"></a></h1>
+  <section id="template-class-restrictedmultiport">
+<span id="exhale-class-classreactor-1-1restrictedmultiport"></span><h1>Template Class RestrictedMultiport<a class="headerlink" href="#template-class-restrictedmultiport" title="Permalink to this heading"></a></h1>
 <ul class="simple">
-<li><p>Defined in <a class="reference internal" href="file_include_reactor-cpp_logical_time.hh.html#file-include-reactor-cpp-logical-time-hh"><span class="std std-ref">File logical_time.hh</span></a></p></li>
+<li><p>Defined in <a class="reference internal" href="file_include_reactor-cpp_multiport.hh.html#file-include-reactor-cpp-multiport-hh"><span class="std std-ref">File multiport.hh</span></a></p></li>
 </ul>
+<section id="inheritance-relationships">
+<h2>Inheritance Relationships<a class="headerlink" href="#inheritance-relationships" title="Permalink to this heading"></a></h2>
+<section id="base-type">
+<h3>Base Type<a class="headerlink" href="#base-type" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">private</span> <span class="pre">reactor::Multiport&lt;</span> <span class="pre">A</span> <span class="pre">&gt;</span></code> (<a class="reference internal" href="classreactor_1_1Multiport.html#exhale-class-classreactor-1-1multiport"><span class="std std-ref">Template Class Multiport</span></a>)</p></li>
+</ul>
+</section>
+</section>
 <section id="class-documentation">
 <h2>Class Documentation<a class="headerlink" href="#class-documentation" title="Permalink to this heading"></a></h2>
 <dl class="cpp class">
-<dt class="sig sig-object cpp" id="_CPPv4N7reactor3TagE">
-<span id="_CPPv3N7reactor3TagE"></span><span id="_CPPv2N7reactor3TagE"></span><span id="reactor::Tag"></span><span class="target" id="classreactor_1_1Tag"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Tag</span></span></span><a class="headerlink" href="#_CPPv4N7reactor3TagE" title="Permalink to this definition"></a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4I0EN7reactor19RestrictedMultiportE">
+<span id="_CPPv3I0EN7reactor19RestrictedMultiportE"></span><span id="_CPPv2I0EN7reactor19RestrictedMultiportE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">A</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="classreactor_1_1RestrictedMultiport"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">RestrictedMultiport</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">private</span></span><span class="w"> </span><span class="n"><span class="pre">reactor</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="classreactor_1_1Multiport.html#_CPPv4I00EN7reactor9MultiportE" title="reactor::Multiport"><span class="n"><span class="pre">Multiport</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0EN7reactor19RestrictedMultiportE" title="reactor::RestrictedMultiport::A"><span class="n"><span class="pre">A</span></span></a><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4I0EN7reactor19RestrictedMultiportE" title="Permalink to this definition"></a><br /></dt>
 <dd><div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N7reactor3Tag3TagEv">
-<span id="_CPPv3N7reactor3Tag3TagEv"></span><span id="_CPPv2N7reactor3Tag3TagEv"></span><span id="reactor::Tag::Tag"></span><span class="target" id="classreactor_1_1Tag_1a25458048eeb77969069faee12894f6d4"></span><span class="sig-name descname"><span class="n"><span class="pre">Tag</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">delete</span></span><a class="headerlink" href="#_CPPv4N7reactor3Tag3TagEv" title="Permalink to this definition"></a><br /></dt>
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-types">Private Types</p>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N7reactor19RestrictedMultiport14allocator_typeE">
+<span id="_CPPv3N7reactor19RestrictedMultiport14allocator_typeE"></span><span id="_CPPv2N7reactor19RestrictedMultiport14allocator_typeE"></span><span class="target" id="classreactor_1_1RestrictedMultiport_1aa1216ae9fa21782d4fd12f8650b7a59d"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">allocator_type</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN7reactor19RestrictedMultiportE" title="reactor::RestrictedMultiport::A"><span class="n"><span class="pre">A</span></span></a><a class="headerlink" href="#_CPPv4N7reactor19RestrictedMultiport14allocator_typeE" title="Permalink to this definition"></a><br /></dt>
 <dd></dd></dl>
 
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N7reactor3TagaSERK3Tag">
-<span id="_CPPv3N7reactor3TagaSERK3Tag"></span><span id="_CPPv2N7reactor3TagaSERK3Tag"></span><span id="reactor::Tag::assign-operator__TagCR"></span><span class="target" id="classreactor_1_1Tag_1ae3f92ff9716f2f2da605cc1bb73bf319"></span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">=</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N7reactor3TagE" title="reactor::Tag"><span class="n"><span class="pre">Tag</span></span></a><span class="p"><span class="pre">&amp;</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N7reactor3TagE" title="reactor::Tag"><span class="n"><span class="pre">Tag</span></span></a><span class="p"><span class="pre">&amp;</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">delete</span></span><a class="headerlink" href="#_CPPv4N7reactor3TagaSERK3Tag" title="Permalink to this definition"></a><br /></dt>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N7reactor19RestrictedMultiport10value_typeE">
+<span id="_CPPv3N7reactor19RestrictedMultiport10value_typeE"></span><span id="_CPPv2N7reactor19RestrictedMultiport10value_typeE"></span><span class="target" id="classreactor_1_1RestrictedMultiport_1abe34b5c723aba7ed58f5613f118509f3"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">value_type</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN7reactor19RestrictedMultiportE" title="reactor::RestrictedMultiport::A"><span class="n"><span class="pre">A</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">value_type</span></span><a class="headerlink" href="#_CPPv4N7reactor19RestrictedMultiport10value_typeE" title="Permalink to this definition"></a><br /></dt>
 <dd></dd></dl>
 
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N7reactor3Tag3TagERR3Tag">
-<span id="_CPPv3N7reactor3Tag3TagERR3Tag"></span><span id="_CPPv2N7reactor3Tag3TagERR3Tag"></span><span id="reactor::Tag::Tag__TagRR"></span><span class="target" id="classreactor_1_1Tag_1aa810576d4b247523df94a623e36acbb3"></span><span class="sig-name descname"><span class="n"><span class="pre">Tag</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N7reactor3Tag3TagERR3Tag" title="reactor::Tag::Tag"><span class="n"><span class="pre">Tag</span></span></a><span class="p"><span class="pre">&amp;</span></span><span class="p"><span class="pre">&amp;</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">default</span></span><a class="headerlink" href="#_CPPv4N7reactor3Tag3TagERR3Tag" title="Permalink to this definition"></a><br /></dt>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N7reactor19RestrictedMultiport9referenceE">
+<span id="_CPPv3N7reactor19RestrictedMultiport9referenceE"></span><span id="_CPPv2N7reactor19RestrictedMultiport9referenceE"></span><span class="target" id="classreactor_1_1RestrictedMultiport_1a4c01fb5a77788457975d5d00f1f70871"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">reference</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN7reactor19RestrictedMultiportE" title="reactor::RestrictedMultiport::A"><span class="n"><span class="pre">A</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">reference</span></span><a class="headerlink" href="#_CPPv4N7reactor19RestrictedMultiport9referenceE" title="Permalink to this definition"></a><br /></dt>
 <dd></dd></dl>
 
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N7reactor3Tag3TagERK3Tag">
-<span id="_CPPv3N7reactor3Tag3TagERK3Tag"></span><span id="_CPPv2N7reactor3Tag3TagERK3Tag"></span><span id="reactor::Tag::Tag__TagCR"></span><span class="target" id="classreactor_1_1Tag_1a83b08304268878143b98f83b0e6400ba"></span><span class="sig-name descname"><span class="n"><span class="pre">Tag</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N7reactor3Tag3TagERK3Tag" title="reactor::Tag::Tag"><span class="n"><span class="pre">Tag</span></span></a><span class="p"><span class="pre">&amp;</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">default</span></span><a class="headerlink" href="#_CPPv4N7reactor3Tag3TagERK3Tag" title="Permalink to this definition"></a><br /></dt>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N7reactor19RestrictedMultiport15const_referenceE">
+<span id="_CPPv3N7reactor19RestrictedMultiport15const_referenceE"></span><span id="_CPPv2N7reactor19RestrictedMultiport15const_referenceE"></span><span class="target" id="classreactor_1_1RestrictedMultiport_1a4841f9f349d234342d61ccd9132f4b65"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">const_reference</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN7reactor19RestrictedMultiportE" title="reactor::RestrictedMultiport::A"><span class="n"><span class="pre">A</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">const_reference</span></span><a class="headerlink" href="#_CPPv4N7reactor19RestrictedMultiport15const_referenceE" title="Permalink to this definition"></a><br /></dt>
 <dd></dd></dl>
 
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4NK7reactor3Tag10time_pointEv">
-<span id="_CPPv3NK7reactor3Tag10time_pointEv"></span><span id="_CPPv2NK7reactor3Tag10time_pointEv"></span><span id="reactor::Tag::time_pointC"></span><span class="target" id="classreactor_1_1Tag_1a30e13240124977e3ff2f5fdbdd810e58"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">time_point</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="typedef_namespacereactor_1ad950f8d1a46612500286a4af0f167080.html#_CPPv4N7reactor9TimePointE" title="reactor::TimePoint"><span class="n"><span class="pre">TimePoint</span></span></a><span class="p"><span class="pre">&amp;</span></span><a class="headerlink" href="#_CPPv4NK7reactor3Tag10time_pointEv" title="Permalink to this definition"></a><br /></dt>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N7reactor19RestrictedMultiport15difference_typeE">
+<span id="_CPPv3N7reactor19RestrictedMultiport15difference_typeE"></span><span id="_CPPv2N7reactor19RestrictedMultiport15difference_typeE"></span><span class="target" id="classreactor_1_1RestrictedMultiport_1a130ffdb50cf84a8e15e712cc53682711"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">difference_type</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN7reactor19RestrictedMultiportE" title="reactor::RestrictedMultiport::A"><span class="n"><span class="pre">A</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">difference_type</span></span><a class="headerlink" href="#_CPPv4N7reactor19RestrictedMultiport15difference_typeE" title="Permalink to this definition"></a><br /></dt>
 <dd></dd></dl>
 
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4NK7reactor3Tag10micro_stepEv">
-<span id="_CPPv3NK7reactor3Tag10micro_stepEv"></span><span id="_CPPv2NK7reactor3Tag10micro_stepEv"></span><span id="reactor::Tag::micro_stepC"></span><span class="target" id="classreactor_1_1Tag_1a46418ace6d819d6e628e437509f5f8eb"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">micro_step</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="typedef_namespacereactor_1aaea1189d617982457b74127ba74a7340.html#_CPPv4N7reactor7mstep_tE" title="reactor::mstep_t"><span class="n"><span class="pre">mstep_t</span></span></a><span class="p"><span class="pre">&amp;</span></span><a class="headerlink" href="#_CPPv4NK7reactor3Tag10micro_stepEv" title="Permalink to this definition"></a><br /></dt>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N7reactor19RestrictedMultiport9size_typeE">
+<span id="_CPPv3N7reactor19RestrictedMultiport9size_typeE"></span><span id="_CPPv2N7reactor19RestrictedMultiport9size_typeE"></span><span class="target" id="classreactor_1_1RestrictedMultiport_1a6fdc77e8bb1331b0e3559639aeb39a84"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">size_type</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN7reactor19RestrictedMultiportE" title="reactor::RestrictedMultiport::A"><span class="n"><span class="pre">A</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">size_type</span></span><a class="headerlink" href="#_CPPv4N7reactor19RestrictedMultiport9size_typeE" title="Permalink to this definition"></a><br /></dt>
 <dd></dd></dl>
 
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4NK7reactor3Tag5delayE8Duration">
-<span id="_CPPv3NK7reactor3Tag5delayE8Duration"></span><span id="_CPPv2NK7reactor3Tag5delayE8Duration"></span><span id="reactor::Tag::delay__DurationC"></span><span class="target" id="classreactor_1_1Tag_1a82ed62610b87ba94fd9dd3639522bf49"></span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">delay</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="typedef_namespacereactor_1aa8375b807a80703545664096c5b5b779.html#_CPPv4N7reactor8DurationE" title="reactor::Duration"><span class="n"><span class="pre">Duration</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">offset</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="typedef_namespacereactor_1aa8375b807a80703545664096c5b5b779.html#_CPPv4N7reactor8DurationE" title="reactor::Duration"><span class="n"><span class="pre">Duration</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">zero</span></span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">)</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N7reactor3TagE" title="reactor::Tag"><span class="n"><span class="pre">Tag</span></span></a><a class="headerlink" href="#_CPPv4NK7reactor3Tag5delayE8Duration" title="Permalink to this definition"></a><br /></dt>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N7reactor19RestrictedMultiport8iteratorE">
+<span id="_CPPv3N7reactor19RestrictedMultiport8iteratorE"></span><span id="_CPPv2N7reactor19RestrictedMultiport8iteratorE"></span><span class="target" id="classreactor_1_1RestrictedMultiport_1a1e4ff9188322b8ece892cc90412acc01"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">iterator</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0EN7reactor19RestrictedMultiportE" title="reactor::RestrictedMultiport::A"><span class="n"><span class="pre">A</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">iterator</span></span><a class="headerlink" href="#_CPPv4N7reactor19RestrictedMultiport8iteratorE" title="Permalink to this definition"></a><br /></dt>
 <dd></dd></dl>
 
-</div>
-<div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-static-functions">Public Static Functions</p>
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N7reactor3Tag18from_physical_timeE9TimePoint">
-<span id="_CPPv3N7reactor3Tag18from_physical_timeE9TimePoint"></span><span id="_CPPv2N7reactor3Tag18from_physical_timeE9TimePoint"></span><span id="reactor::Tag::from_physical_time__TimePoint"></span><span class="target" id="classreactor_1_1Tag_1aeb32312753abafde2fd451a1728ab749"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">from_physical_time</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="typedef_namespacereactor_1ad950f8d1a46612500286a4af0f167080.html#_CPPv4N7reactor9TimePointE" title="reactor::TimePoint"><span class="n"><span class="pre">TimePoint</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">time_point</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N7reactor3TagE" title="reactor::Tag"><span class="n"><span class="pre">Tag</span></span></a><a class="headerlink" href="#_CPPv4N7reactor3Tag18from_physical_timeE9TimePoint" title="Permalink to this definition"></a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N7reactor3Tag17from_logical_timeERK11LogicalTime">
-<span id="_CPPv3N7reactor3Tag17from_logical_timeERK11LogicalTime"></span><span id="_CPPv2N7reactor3Tag17from_logical_timeERK11LogicalTime"></span><span id="reactor::Tag::from_logical_time__LogicalTimeCR"></span><span class="target" id="classreactor_1_1Tag_1a004ec9d597090a1b9a304f02509bc91f"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">from_logical_time</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="classreactor_1_1LogicalTime.html#_CPPv4N7reactor11LogicalTimeE" title="reactor::LogicalTime"><span class="n"><span class="pre">LogicalTime</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">logical_time</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N7reactor3TagE" title="reactor::Tag"><span class="n"><span class="pre">Tag</span></span></a><a class="headerlink" href="#_CPPv4N7reactor3Tag17from_logical_timeERK11LogicalTime" title="Permalink to this definition"></a><br /></dt>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N7reactor19RestrictedMultiport14const_iteratorE">
+<span id="_CPPv3N7reactor19RestrictedMultiport14const_iteratorE"></span><span id="_CPPv2N7reactor19RestrictedMultiport14const_iteratorE"></span><span class="target" id="classreactor_1_1RestrictedMultiport_1a17c6fa2d7ba7677a6642acf80c9abb74"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">const_iterator</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0EN7reactor19RestrictedMultiportE" title="reactor::RestrictedMultiport::A"><span class="n"><span class="pre">A</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">const_iterator</span></span><a class="headerlink" href="#_CPPv4N7reactor19RestrictedMultiport14const_iteratorE" title="Permalink to this definition"></a><br /></dt>
 <dd></dd></dl>
 
 </div>
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-functions">Private Functions</p>
 <dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N7reactor3Tag3TagERK9TimePointRK7mstep_t">
-<span id="_CPPv3N7reactor3Tag3TagERK9TimePointRK7mstep_t"></span><span id="_CPPv2N7reactor3Tag3TagERK9TimePointRK7mstep_t"></span><span id="reactor::Tag::Tag__TimePointCR.mstep_tCR"></span><span class="target" id="classreactor_1_1Tag_1ae9912e50f1398a241205e8fae7ad9cea"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Tag</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="typedef_namespacereactor_1ad950f8d1a46612500286a4af0f167080.html#_CPPv4N7reactor9TimePointE" title="reactor::TimePoint"><span class="n"><span class="pre">TimePoint</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">time_point</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="typedef_namespacereactor_1aaea1189d617982457b74127ba74a7340.html#_CPPv4N7reactor7mstep_tE" title="reactor::mstep_t"><span class="n"><span class="pre">mstep_t</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">micro_step</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7reactor3Tag3TagERK9TimePointRK7mstep_t" title="Permalink to this definition"></a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N7reactor19RestrictedMultiport19RestrictedMultiportEv">
+<span id="_CPPv3N7reactor19RestrictedMultiport19RestrictedMultiportEv"></span><span id="_CPPv2N7reactor19RestrictedMultiport19RestrictedMultiportEv"></span><span id="reactor::RestrictedMultiport::RestrictedMultiport"></span><span class="target" id="classreactor_1_1RestrictedMultiport_1a7e8354f1c2a699b73c324001a30312d5"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">RestrictedMultiport</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7reactor19RestrictedMultiport19RestrictedMultiportEv" title="Permalink to this definition"></a><br /></dt>
 <dd></dd></dl>
 
-</div>
-<div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-members">Private Members</p>
-<dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N7reactor3Tag11time_point_E">
-<span id="_CPPv3N7reactor3Tag11time_point_E"></span><span id="_CPPv2N7reactor3Tag11time_point_E"></span><span id="reactor::Tag::time_point___TimePointC"></span><span class="target" id="classreactor_1_1Tag_1ac9d4b55ef0336f19a3679cababc856fd"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="typedef_namespacereactor_1ad950f8d1a46612500286a4af0f167080.html#_CPPv4N7reactor9TimePointE" title="reactor::TimePoint"><span class="n"><span class="pre">TimePoint</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">time_point_</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N7reactor3Tag11time_point_E" title="Permalink to this definition"></a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N7reactor3Tag11micro_step_E">
-<span id="_CPPv3N7reactor3Tag11micro_step_E"></span><span id="_CPPv2N7reactor3Tag11micro_step_E"></span><span id="reactor::Tag::micro_step___mstep_tC"></span><span class="target" id="classreactor_1_1Tag_1a2525bbdc65c9bdb0622eabc0b3323965"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="typedef_namespacereactor_1aaea1189d617982457b74127ba74a7340.html#_CPPv4N7reactor7mstep_tE" title="reactor::mstep_t"><span class="n"><span class="pre">mstep_t</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">micro_step_</span></span></span><a class="headerlink" href="#_CPPv4N7reactor3Tag11micro_step_E" title="Permalink to this definition"></a><br /></dt>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N7reactor19RestrictedMultiportD0Ev">
+<span id="_CPPv3N7reactor19RestrictedMultiportD0Ev"></span><span id="_CPPv2N7reactor19RestrictedMultiportD0Ev"></span><span id="reactor::RestrictedMultiport::~RestrictedMultiport"></span><span class="target" id="classreactor_1_1RestrictedMultiport_1aadb967d4517b8fd5d48ee17d7243e6a0"></span><span class="sig-name descname"><span class="n"><span class="pre">~RestrictedMultiport</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">default</span></span><a class="headerlink" href="#_CPPv4N7reactor19RestrictedMultiportD0Ev" title="Permalink to this definition"></a><br /></dt>
 <dd></dd></dl>
 
 </div>
@@ -398,8 +391,8 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="classreactor_1_1StartupAction.html" class="btn btn-neutral float-left" title="Class StartupAction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="classreactor_1_1Timer.html" class="btn btn-neutral float-right" title="Class Timer" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="classreactor_1_1ReadyQueue.html" class="btn btn-neutral float-left" title="Class ReadyQueue" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="classreactor_1_1SafeVector.html" class="btn btn-neutral float-right" title="Template Class SafeVector" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

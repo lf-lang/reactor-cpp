@@ -1,0 +1,27 @@
+.. _exhale_class_classreactor_1_1RestrictedMultiport:
+
+Template Class RestrictedMultiport
+==================================
+
+- Defined in :ref:`file_include_reactor-cpp_multiport.hh`
+
+
+Inheritance Relationships
+-------------------------
+
+Base Type
+*********
+
+- ``private reactor::Multiport< A >`` (:ref:`exhale_class_classreactor_1_1Multiport`)
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: reactor::RestrictedMultiport
+   :project: reactor-cpp
+   :members:
+   :protected-members:
+   :private-members:
+   :undoc-members:

@@ -93,7 +93,6 @@ Program Listing for File multiport.hh
    
      inline void swap(Multiport& other) { std::swap(data_, other.data_); };
      inline auto size() const noexcept -> size_type { return data_.size(); };
-     inline auto max_size() const noexcept -> size_type { return data_.size(); };
      [[nodiscard]] inline auto empty() const noexcept -> bool { return data_.empty(); };
    
      inline void reserve(std::size_t size) noexcept {
@@ -104,13 +103,36 @@ Program Listing for File multiport.hh
      inline void push_back(const T& elem) noexcept { data_.push_back(elem); }
    
      template <class... Args> inline void emplace_back(Args&&... args) noexcept { data_.emplace_back(args...); }
-   
-     template <class... Args> inline void set(std::size_t index, Args&&... args) noexcept { data_[index].set(args...); }
-   
-     [[nodiscard]] inline auto get_present_port_indices() const noexcept -> std::vector<std::size_t> {
-       return std::vector<std::size_t>(std::begin(present_ports_), std::begin(present_ports_) + size_.load());
-     }
    };
+   
+   // this class is used inside the scope of the reaction and restricts modification
+   template <class A>
+   class RestrictedMultiport : private Multiport<A> {
+     using allocator_type = A;
+     using value_type = typename A::value_type;
+     using reference = typename A::reference;
+     using const_reference = typename A::const_reference;
+     using difference_type = typename A::difference_type;
+     using size_type = typename A::size_type;
+   
+     using iterator = typename std::vector<A>::iterator;
+     using const_iterator = typename std::vector<A>::const_iterator;
+   
+     RestrictedMultiport() : Multiport<A>() {}
+     ~RestrictedMultiport() noexcept = default;
+   
+     using Multiport<A>::operator==;
+     using Multiport<A>::operator!=;
+     using Multiport<A>::operator[];
+     using Multiport<A>::begin;
+     using Multiport<A>::cbegin;
+     using Multiport<A>::end;
+     using Multiport<A>::cend;
+     using Multiport<A>::size;
+     using Multiport<A>::empty;
+     using Multiport<A>::get_present_port_indices;
+   };
+   
    } // namespace reactor
    
    #endif // REACTOR_CPP_MULTIPORT_HH
