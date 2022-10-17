@@ -39,13 +39,13 @@
     "lingua-franca-src": {
       "flake": false,
       "locked": {
-        "narHash": "sha256-3vQ8jNibc5ZIDi29TT1o6PUGlZBLHh/GYjZ6AqaMv4w=",
+        "narHash": "sha256-jSINlwHfSOPbti3LJTXpSk6lcUtwKfz7CMLtq2OuNns=",
         "type": "tarball",
-        "url": "https://github.com/lf-lang/lingua-franca/releases/download/v0.2.1/lfc_0.2.1.tar.gz"
+        "url": "https://github.com/lf-lang/lingua-franca/releases/download/v0.3.0/lfc_0.3.0.tar.gz"
       },
       "original": {
         "type": "tarball",
-        "url": "https://github.com/lf-lang/lingua-franca/releases/download/v0.2.1/lfc_0.2.1.tar.gz"
+        "url": "https://github.com/lf-lang/lingua-franca/releases/download/v0.3.0/lfc_0.3.0.tar.gz"
       }
     },
     "lingua-franca-tests": {
