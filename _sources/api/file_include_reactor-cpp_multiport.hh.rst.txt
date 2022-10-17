@@ -66,5 +66,3 @@ Classes
 
 - :ref:`exhale_class_classreactor_1_1Multiport`
 
-- :ref:`exhale_class_classreactor_1_1RestrictedMultiport`
-
