@@ -50,11 +50,16 @@ template <class Dur> void Action<void>::schedule(Dur delay) {
 }
 
 template <class T> void Action<T>::setup() noexcept {
-  if (value_ptr_ == nullptr) {
+  if (value_ptr_ == nullptr) { // only do this once, even if the action was triggered multiple times
+    // lock if this is a physical action
+    std::unique_lock<std::mutex> lock =
+        is_logical() ? std::unique_lock<std::mutex>() : std::unique_lock<std::mutex>(mutex_events_);
     const auto& node = events_.extract(events_.begin());
     reactor_assert(!node.empty());
+    reactor_assert(node.key() == environment()->scheduler()->logical_time());
     value_ptr_ = std::move(node.mapped());
   }
+  reactor_assert(value_ptr_ != nullptr);
 }
 
 } // namespace reactor
