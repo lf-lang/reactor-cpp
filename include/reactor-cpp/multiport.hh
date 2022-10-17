@@ -12,6 +12,7 @@
 #include <algorithm>
 #include <atomic>
 #include <iostream>
+#include <memory>
 #include <type_traits>
 #include <vector>
 
@@ -52,12 +53,12 @@ private:
   std::vector<T> data_{};
 
 public:
-  using allocator_type = A;
-  using value_type = typename A::value_type;
-  using reference = typename A::reference;
-  using const_reference = typename A::const_reference;
-  using difference_type = typename A::difference_type;
-  using size_type = typename A::size_type;
+  using allocator_type = typename std::allocator_traits<A>::allocator_type;
+  using value_type = typename std::allocator_traits<A>::value_type;
+  using reference = typename std::allocator_traits<A>::reference;
+  using const_reference = typename std::allocator_traits<A>::const_reference;
+  using difference_type = typename std::allocator_traits<A>::difference_type;
+  using size_type = typename std::allocator_traits<A>::size_type;
 
   using iterator = typename std::vector<T>::iterator;
   using const_iterator = typename std::vector<T>::const_iterator;
