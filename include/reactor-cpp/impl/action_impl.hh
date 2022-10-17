@@ -27,9 +27,15 @@ template <class T> template <class Dur> void Action<T>::schedule(const Immutable
     events_[tag] = value_ptr;
     scheduler->schedule_sync(this, tag);
   } else {
-    auto tag = scheduler->schedule_async(this, time_delay);
     {
       std::lock_guard<std::mutex> lock(mutex_events_);
+      // We must call schedule_async while holding the mutex, because otherwise
+      // the scheduler could already start processing the event that we schedule
+      // and call setup() on this action before we insert the value in events_.
+      // Holding both the local mutex mutex_events_ and them scheduler mutes (in
+      // schedule async) should not lead to a deadlock as the scheduler will
+      // only hold one of the two mutexes at once.
+      auto tag = scheduler->schedule_async(this, time_delay);
       events_[tag] = value_ptr;
     }
   }
