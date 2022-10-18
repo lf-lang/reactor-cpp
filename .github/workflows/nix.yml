@@ -21,7 +21,6 @@ jobs:
         #signingKey: '${{ secrets.CACHIX_SIGNING_KEY }}'
         # If you chose API tokens for write access OR if you have a private cache
         #authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
-    - run: nix flake update
     - run: nix run .#packages.x86_64-linux.all-tests --override-input reactor-cpp github:lf-lang/reactor-cpp/${{ steps.extract_branch.outputs.branch }}
 
 
