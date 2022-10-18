@@ -304,6 +304,7 @@ void Scheduler::next() { // NOLINT
             }
             // update physical time and continue otherwise
             physical_time = t_next.time_point();
+            reactor_assert(t_next == event_queue_.begin()->first);
           }
         }
 
@@ -352,10 +353,8 @@ void Scheduler::fill_action_list_pool() {
   }
 }
 
-void Scheduler::schedule_sync(const Tag& tag, BaseAction* action) {
+void Scheduler::schedule_sync(BaseAction* action, const Tag& tag) {
   reactor_assert(logical_time_ < tag);
-  // TODO verify that the action is indeed allowed to be scheduled by the
-  // current reaction
   log::Debug() << "Schedule action " << action->fqn() << (action->is_logical() ? " synchronously " : " asynchronously ")
                << " with tag [" << tag.time_point() << ", " << tag.micro_step() << "]";
   tracepoint(reactor_cpp, schedule_action, action->container()->fqn(), action->name(), tag);
@@ -392,10 +391,15 @@ void Scheduler::schedule_sync(const Tag& tag, BaseAction* action) {
   }
 }
 
-void Scheduler::schedule_async(const Tag& tag, BaseAction* action) {
-  std::lock_guard<std::mutex> lock_guard(scheduling_mutex_);
-  schedule_sync(tag, action);
+auto Scheduler::schedule_async(BaseAction* action, const Duration& delay) -> Tag {
+  Tag tag;
+  {
+    std::lock_guard<std::mutex> lock_guard(scheduling_mutex_);
+    tag = Tag::from_physical_time(get_physical_time() + delay);
+    schedule_sync(action, tag);
+  }
   cv_schedule_.notify_one();
+  return tag;
 }
 
 void Scheduler::set_port(BasePort* port) {
