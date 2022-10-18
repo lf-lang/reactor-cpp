@@ -36,7 +36,7 @@ reactor-cpp can be build with [tracing support](https://github.com/lf-lang/react
 
 ## Contributing
 
-The best place to start contributing to this repo is probally the [CONTRIBUTING.md](CONTRIBUTING.md)
+For general guidelines about contributing, see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Documentation
 
