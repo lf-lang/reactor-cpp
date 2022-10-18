@@ -35,16 +35,21 @@ Program Listing for File action_impl.hh
      auto* scheduler = environment()->scheduler();
      if (is_logical()) {
        time_delay += this->min_delay();
-       auto tag = Tag::from_logical_time(scheduler->logical_time()).delay(time_delay); // NOLINT
+       auto tag = Tag::from_logical_time(scheduler->logical_time()).delay(time_delay);
        events_[tag] = value_ptr;
-       scheduler->schedule_sync(tag, this);
+       scheduler->schedule_sync(this, tag);
      } else {
-       auto tag = Tag::from_physical_time(get_physical_time() + time_delay);
        {
          std::lock_guard<std::mutex> lock(mutex_events_);
+         // We must call schedule_async while holding the mutex, because otherwise
+         // the scheduler could already start processing the event that we schedule
+         // and call setup() on this action before we insert the value in events_.
+         // Holding both the local mutex mutex_events_ and them scheduler mutes (in
+         // schedule async) should not lead to a deadlock as the scheduler will
+         // only hold one of the two mutexes at once.
+         auto tag = scheduler->schedule_async(this, time_delay);
          events_[tag] = value_ptr;
        }
-       scheduler->schedule_async(tag, this);
      }
    }
    
@@ -55,20 +60,24 @@ Program Listing for File action_impl.hh
      if (is_logical()) {
        time_delay += this->min_delay();
        auto tag = Tag::from_logical_time(scheduler->logical_time()).delay(time_delay);
-       scheduler->schedule_sync(tag, this);
+       scheduler->schedule_sync(this, tag);
      } else {
        // physical action
-       auto tag = Tag::from_physical_time(get_physical_time() + time_delay);
-       scheduler->schedule_async(tag, this);
+       scheduler->schedule_async(this, time_delay);
      }
    }
    
    template <class T> void Action<T>::setup() noexcept {
-     if (value_ptr_ == nullptr) {
+     if (value_ptr_ == nullptr) { // only do this once, even if the action was triggered multiple times
+       // lock if this is a physical action
+       std::unique_lock<std::mutex> lock =
+           is_logical() ? std::unique_lock<std::mutex>() : std::unique_lock<std::mutex>(mutex_events_);
        const auto& node = events_.extract(events_.begin());
        reactor_assert(!node.empty());
+       reactor_assert(node.key() == environment()->scheduler()->logical_time());
        value_ptr_ = std::move(node.mapped());
      }
+     reactor_assert(value_ptr_ != nullptr);
    }
    
    } // namespace reactor

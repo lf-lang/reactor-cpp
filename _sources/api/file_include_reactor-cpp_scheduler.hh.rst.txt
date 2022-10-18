@@ -44,6 +44,8 @@ Includes
 
 - ``mutex``
 
+- ``reactor-cpp/time.hh`` (:ref:`file_include_reactor-cpp_time.hh`)
+
 - ``safe_vector.hh`` (:ref:`file_include_reactor-cpp_safe_vector.hh`)
 
 - ``semaphore.hh`` (:ref:`file_include_reactor-cpp_semaphore.hh`)

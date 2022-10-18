@@ -409,9 +409,8 @@
 <span class="p">}</span><span class="w"></span>
 
 <span class="kt">void</span><span class="w"> </span><span class="nf">Environment::async_shutdown</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">  </span><span class="n">scheduler_</span><span class="p">.</span><span class="n">lock</span><span class="p">();</span><span class="w"></span>
+<span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">lock_guard</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">scheduler_</span><span class="p">.</span><span class="n">lock</span><span class="p">();</span><span class="w"></span>
 <span class="w">  </span><span class="n">sync_shutdown</span><span class="p">();</span><span class="w"></span>
-<span class="w">  </span><span class="n">scheduler_</span><span class="p">.</span><span class="n">unlock</span><span class="p">();</span><span class="w"></span>
 <span class="p">}</span><span class="w"></span>
 
 <span class="k">auto</span><span class="w"> </span><span class="n">dot_name</span><span class="p">([[</span><span class="n">maybe_unused</span><span class="p">]]</span><span class="w"> </span><span class="n">ReactorElement</span><span class="o">*</span><span class="w"> </span><span class="n">reactor_element</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
