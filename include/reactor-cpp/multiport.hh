@@ -99,6 +99,28 @@ public:
     return std::vector<std::size_t>(std::begin(present_ports_), std::begin(present_ports_) + size_.load());
   }
 };
+
+template <class T>
+class MultiportInterface : private Multiport<T> {
+
+public:
+    MultiportInterface() : Multiport<T>() {}
+    ~MultiportInterface() = default;
+
+    using Multiport<T>::operator==;
+    using Multiport<T>::operator!=;
+    using Multiport<T>::operator[];
+    using Multiport<T>::begin;
+    using Multiport<T>::cbegin;
+    using Multiport<T>::end;
+    using Multiport<T>::cend;
+    using Multiport<T>::swap;
+    using Multiport<T>::size;
+    using Multiport<T>::empty;
+    using Multiport<T>::get_present_port_indices;
+
+};
+
 } // namespace reactor
 
 #endif // REACTOR_CPP_MULTIPORT_HH
