@@ -48,7 +48,7 @@ public:
 
 template <class T, class A = std::allocator<T>>
 class Multiport : public BaseMultiport { // NOLINT cppcoreguidelines-special-member-functions
-private:
+protected:
   std::vector<T> data_{};
 
 public:
@@ -79,48 +79,46 @@ public:
   inline auto end() const noexcept -> const_iterator { return data_.end(); };
   inline auto cend() const noexcept -> const_iterator { return data_.cend(); };
 
-  inline void swap(Multiport& other) { std::swap(data_, other.data_); };
   inline auto size() const noexcept -> size_type { return data_.size(); };
   inline auto max_size() const noexcept -> size_type { return data_.size(); };
   [[nodiscard]] inline auto empty() const noexcept -> bool { return data_.empty(); };
 
-  inline void reserve(std::size_t size) noexcept {
-    data_.reserve(size);
-    present_ports_.reserve(size);
-  }
-
-  inline void push_back(const T& elem) noexcept { data_.push_back(elem); }
-
-  template <class... Args> inline void emplace_back(Args&&... args) noexcept { data_.emplace_back(args...); }
-
-  template <class... Args> inline void set(std::size_t index, Args&&... args) noexcept { data_[index].set(args...); }
-
-  [[nodiscard]] inline auto get_present_port_indices() const noexcept -> std::vector<std::size_t> {
+  // present_indices_unsorted
+  [[nodiscard]] inline auto present_indices_unsorted() const noexcept -> std::vector<std::size_t> {
     return std::vector<std::size_t>(std::begin(present_ports_), std::begin(present_ports_) + size_.load());
   }
+
+  // present_indices_sorted
+  [[nodiscard]] inline auto present_indices_sorted() const noexcept -> std::vector<std::size_t> {
+    std::sort(std::begin(present_ports_), std::begin(present_ports_) + size_.load());
+    return std::vector<std::size_t>(std::begin(present_ports_), std::begin(present_ports_) + size_.load());
+  }
+
+  // present_ports_sorted
+  // present_ports_unsorted
 };
 
-template <class T>
-class MultiportInterface : private Multiport<T> {
-
+template <class T, class A = std::allocator<T>>
+class ModifableMultiport: public Multiport<T, A> {
 public:
-    MultiportInterface() : Multiport<T>() {}
-    ~MultiportInterface() = default;
+    ModifableMultiport() : Multiport<T>() {}
+    ~ModifableMultiport() = default;
 
-    using Multiport<T>::operator==;
-    using Multiport<T>::operator!=;
-    using Multiport<T>::operator[];
-    using Multiport<T>::begin;
-    using Multiport<T>::cbegin;
-    using Multiport<T>::end;
-    using Multiport<T>::cend;
-    using Multiport<T>::swap;
-    using Multiport<T>::size;
-    using Multiport<T>::empty;
-    using Multiport<T>::get_present_port_indices;
+    inline void reserve(std::size_t size) noexcept {
+      this->data_.reserve(size);
+      this->present_ports_.reserve(size);
+    }
 
-};
+    inline void push_back(const T& elem) noexcept { 
+      this->data_.push_back(elem); 
+      this->present_ports_.emplace_back(0);
+    }
 
+    template <class... Args> inline void emplace_back(Args&&... args) noexcept { 
+      this->data_.emplace_back(args...);
+      this->present_ports_.emplace_back(0);
+    }
+  };
 } // namespace reactor
 
 #endif // REACTOR_CPP_MULTIPORT_HH
