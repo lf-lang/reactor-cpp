@@ -97,27 +97,27 @@ public:
   // present_ports_unsorted
 };
 
-template <class T, class A = std::allocator<T>>
-class ModifableMultiport: public Multiport<T, A> {
+template <class T, class A = std::allocator<T>> class ModifableMultiport : public Multiport<T, A> {
 public:
-    ModifableMultiport() : Multiport<T>() {}
-    ~ModifableMultiport() = default;
+  ModifableMultiport()
+      : Multiport<T>() {}
+  ~ModifableMultiport() = default;
 
-    inline void reserve(std::size_t size) noexcept {
-      this->data_.reserve(size);
-      this->present_ports_.reserve(size);
-    }
+  inline void reserve(std::size_t size) noexcept {
+    this->data_.reserve(size);
+    this->present_ports_.reserve(size);
+  }
 
-    inline void push_back(const T& elem) noexcept { 
-      this->data_.push_back(elem); 
-      this->present_ports_.emplace_back(0);
-    }
+  inline void push_back(const T& elem) noexcept {
+    this->data_.push_back(elem);
+    this->present_ports_.emplace_back(0);
+  }
 
-    template <class... Args> inline void emplace_back(Args&&... args) noexcept { 
-      this->data_.emplace_back(args...);
-      this->present_ports_.emplace_back(0);
-    }
-  };
+  template <class... Args> inline void emplace_back(Args&&... args) noexcept {
+    this->data_.emplace_back(args...);
+    this->present_ports_.emplace_back(0);
+  }
+};
 } // namespace reactor
 
 #endif // REACTOR_CPP_MULTIPORT_HH
