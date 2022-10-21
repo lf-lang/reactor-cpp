@@ -101,9 +101,8 @@ void Environment::sync_shutdown() {
 }
 
 void Environment::async_shutdown() {
-  scheduler_.lock();
+  auto lock_guard = scheduler_.lock();
   sync_shutdown();
-  scheduler_.unlock();
 }
 
 auto dot_name([[maybe_unused]] ReactorElement* reactor_element) -> std::string {

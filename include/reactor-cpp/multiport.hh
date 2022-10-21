@@ -80,7 +80,6 @@ public:
   inline auto cend() const noexcept -> const_iterator { return data_.cend(); };
 
   inline auto size() const noexcept -> size_type { return data_.size(); };
-  inline auto max_size() const noexcept -> size_type { return data_.size(); };
   [[nodiscard]] inline auto empty() const noexcept -> bool { return data_.empty(); };
 
   // present_indices_unsorted
