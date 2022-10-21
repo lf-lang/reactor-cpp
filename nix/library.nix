@@ -80,15 +80,15 @@ let
         '';
 
         buildPhase = ''
-          ${lingua-franca}/bin/lfc --external-runtime-path ${cpp-runtime}/ --no-compile --output ./ ${test_file}
+          ${lingua-franca}/bin/lfc --external-runtime-path ${cpp-runtime}/ --output ./ ${test_file}
         '';
 
         installPhase = ''
           mkdir -p $out/bin
           mkdir -p $out/debug
           cp -r ./src-gen/* $out/debug/
-          # cp -r ./bin/${file_name} $out/bin/${file_name}-${compiler.pname}
-          # cp -r ./bin/${file_name} $out/bin/${package_name}
+          cp -r ./bin/${file_name} $out/bin/${file_name}-${compiler.pname}
+          cp -r ./bin/${file_name} $out/bin/${package_name}
         '';
       };
     });
