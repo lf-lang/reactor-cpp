@@ -97,7 +97,7 @@ public:
   // present_ports_unsorted
 };
 
-template <class T, class A = std::allocator<T>> class ModifableMultiport : public Multiport<T, A> {
+template <class T, class A = std::allocator<T>> class ModifableMultiport : public Multiport<T, A> { //NOLINT
 public:
   ModifableMultiport()
       : Multiport<T>() {} //NOLINT
