@@ -49,7 +49,7 @@ public:
 template <class T, class A = std::allocator<T>>
 class Multiport : public BaseMultiport { // NOLINT cppcoreguidelines-special-member-functions
 protected:
-  std::vector<T> data_{};
+  std::vector<T> data_{}; //NOLINT cppcoreguidelines-non-private-member-variables-in-classes
 
 public:
   using allocator_type = A;
@@ -100,7 +100,7 @@ public:
 template <class T, class A = std::allocator<T>> class ModifableMultiport : public Multiport<T, A> {
 public:
   ModifableMultiport()
-      : Multiport<T>() {}
+      : Multiport<T>() {} //NOLINT
   ~ModifableMultiport() = default;
 
   inline void reserve(std::size_t size) noexcept {
