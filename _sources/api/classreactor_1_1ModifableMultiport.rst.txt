@@ -1,7 +1,7 @@
-.. _exhale_class_classreactor_1_1BaseMultiport:
+.. _exhale_class_classreactor_1_1ModifableMultiport:
 
-Class BaseMultiport
-===================
+Template Class ModifableMultiport
+=================================
 
 - Defined in :ref:`file_include_reactor-cpp_multiport.hh`
 
@@ -9,18 +9,17 @@ Class BaseMultiport
 Inheritance Relationships
 -------------------------
 
-Derived Types
-*************
+Base Type
+*********
 
 - ``public reactor::Multiport< T, std::allocator< T > >`` (:ref:`exhale_class_classreactor_1_1Multiport`)
-- ``public reactor::Multiport< T, A >`` (:ref:`exhale_class_classreactor_1_1Multiport`)
 
 
 Class Documentation
 -------------------
 
 
-.. doxygenclass:: reactor::BaseMultiport
+.. doxygenclass:: reactor::ModifableMultiport
    :project: reactor-cpp
    :members:
    :protected-members:
