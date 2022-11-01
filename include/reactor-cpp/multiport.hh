@@ -16,9 +16,7 @@
 #include <vector>
 
 namespace reactor {
-// struct which gets handed to the ports to they can talk back
-// to the portbank
-//
+
 class BaseMultiport { // NOLINT cppcoreguidelines-special-member-functions,-warnings-as-errors
 protected:
   std::atomic<std::size_t> size_{0};         // NOLINT
@@ -82,19 +80,14 @@ public:
   inline auto size() const noexcept -> size_type { return data_.size(); };
   [[nodiscard]] inline auto empty() const noexcept -> bool { return data_.empty(); };
 
-  // present_indices_unsorted
   [[nodiscard]] inline auto present_indices_unsorted() const noexcept -> std::vector<std::size_t> {
     return std::vector<std::size_t>(std::begin(present_ports_), std::begin(present_ports_) + size_.load());
   }
 
-  // present_indices_sorted
   [[nodiscard]] inline auto present_indices_sorted() const noexcept -> std::vector<std::size_t> {
     std::sort(std::begin(present_ports_), std::begin(present_ports_) + size_.load());
     return std::vector<std::size_t>(std::begin(present_ports_), std::begin(present_ports_) + size_.load());
   }
-
-  // present_ports_sorted
-  // present_ports_unsorted
 };
 
 template <class T, class A = std::allocator<T>> class ModifableMultiport : public Multiport<T, A> { // NOLINT
