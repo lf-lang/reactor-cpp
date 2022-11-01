@@ -46,11 +46,9 @@ jobs:
     uses: lf-lang/lingua-franca/.github/workflows/cpp-tests.yml@master
     with:
       runtime-ref: ${{github.ref}}
-      compiler-ref: protected-multiports
     if: ${{ github.event_name == 'pull_request' }}
   lf-tests-push:
     uses: lf-lang/lingua-franca/.github/workflows/cpp-tests.yml@master
     with:
       runtime-ref: ${{github.ref_name}}
-      compiler-ref: protected-multiports
     if: ${{ github.event_name == 'push' }}
