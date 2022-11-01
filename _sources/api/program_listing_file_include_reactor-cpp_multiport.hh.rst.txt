@@ -42,8 +42,7 @@ Program Listing for File multiport.hh
      [[nodiscard]] inline auto set_present(std::size_t index) -> bool {
        auto calculated_index = size_.fetch_add(1, std::memory_order_relaxed);
    
-       // triggering hard error if calculated_index tries to set a port out that is not in the list
-       reactor::reactor_assert(calculated_index < present_ports_.capacity());
+       reactor_assert(calculated_index < present_ports_.size());
    
        present_ports_[calculated_index] = index;
        return true;
@@ -52,7 +51,6 @@ Program Listing for File multiport.hh
      // resets parent multiport
      inline void clear() noexcept {
        size_.store(0, std::memory_order_relaxed);
-       present_ports_.clear();
      }
    };
    

@@ -339,8 +339,7 @@
 <span class="w">  </span><span class="p">[[</span><span class="n">nodiscard</span><span class="p">]]</span><span class="w"> </span><span class="kr">inline</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">set_present</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span><span class="w"> </span><span class="n">index</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">calculated_index</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size_</span><span class="p">.</span><span class="n">fetch_add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">memory_order_relaxed</span><span class="p">);</span><span class="w"></span>
 
-<span class="w">    </span><span class="c1">// triggering hard error if calculated_index tries to set a port out that is not in the list</span>
-<span class="w">    </span><span class="n">reactor</span><span class="o">::</span><span class="n">reactor_assert</span><span class="p">(</span><span class="n">calculated_index</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">present_ports_</span><span class="p">.</span><span class="n">capacity</span><span class="p">());</span><span class="w"></span>
+<span class="w">    </span><span class="n">reactor_assert</span><span class="p">(</span><span class="n">calculated_index</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">present_ports_</span><span class="p">.</span><span class="n">size</span><span class="p">());</span><span class="w"></span>
 
 <span class="w">    </span><span class="n">present_ports_</span><span class="p">[</span><span class="n">calculated_index</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">index</span><span class="p">;</span><span class="w"></span>
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span><span class="w"></span>
@@ -349,7 +348,6 @@
 <span class="w">  </span><span class="c1">// resets parent multiport</span>
 <span class="w">  </span><span class="kr">inline</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">clear</span><span class="p">()</span><span class="w"> </span><span class="k">noexcept</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="w">    </span><span class="n">size_</span><span class="p">.</span><span class="n">store</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">memory_order_relaxed</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="n">present_ports_</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span><span class="w"></span>
 <span class="w">  </span><span class="p">}</span><span class="w"></span>
 <span class="p">};</span><span class="w"></span>
 
