@@ -39,7 +39,7 @@ class ReactorElement {
 
   // not copyable or movable
   ReactorElement(const ReactorElement&) = delete;
-  ReactorElement(ReactorElement&&) = delete;
+  ReactorElement(ReactorElement&&) = default;
 
   Reactor* container() const { return _container; }
 
