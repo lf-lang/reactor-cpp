@@ -12,7 +12,7 @@
 #include <memory>
 #include <mutex>
 
-#include "config.hh"
+#include "reactor-cpp/config.hh"
 
 namespace reactor {
 
