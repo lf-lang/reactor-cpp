@@ -379,7 +379,7 @@
 <span class="c1">// Use plain assert on Windows and when assertions are enabled.</span>
 <span class="c1">// Otherwise, the locations of assertion errors are not properly reported.</span>
 <span class="cp">#if defined(_WIN32) &amp;&amp; !defined(NDEBUG)</span>
-<span class="cp">#define reactor_asssert(condition) assert(condition)</span>
+<span class="cp">#define reactor_assert(condition) assert(condition)</span>
 <span class="cp">#else</span>
 <span class="k">constexpr</span><span class="w"> </span><span class="kr">inline</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">reactor_assert</span><span class="p">([[</span><span class="n">maybe_unused</span><span class="p">]]</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">condition</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="k">constexpr</span><span class="w"> </span><span class="p">(</span><span class="n">runtime_assertion</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// NOLINT</span>

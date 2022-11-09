@@ -82,7 +82,7 @@ Program Listing for File assert.hh
    // Use plain assert on Windows and when assertions are enabled.
    // Otherwise, the locations of assertion errors are not properly reported.
    #if defined(_WIN32) && !defined(NDEBUG)
-   #define reactor_asssert(condition) assert(condition)
+   #define reactor_assert(condition) assert(condition)
    #else
    constexpr inline void reactor_assert([[maybe_unused]] bool condition) {
      if constexpr (runtime_assertion) { // NOLINT
