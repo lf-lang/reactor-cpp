@@ -67,11 +67,17 @@ constexpr inline void validate([[maybe_unused]] bool condition, [[maybe_unused]]
   }
 }
 
+// Use plain assert on Windows and when assertions are enabled.
+// Otherwise, the locations of assertion errors are not properly reported.
+#if defined(_WIN32) && !defined(NDEBUG)
+#define reactor_assert(condition) assert(condition)
+#else
 constexpr inline void reactor_assert([[maybe_unused]] bool condition) {
   if constexpr (runtime_assertion) { // NOLINT
     assert(condition);               // NOLINT
   }
 }
+#endif
 
 template <typename E> constexpr auto extract_value(E enum_value) -> typename std::underlying_type<E>::type {
   return static_cast<typename std::underlying_type<E>::type>(enum_value);
