@@ -79,7 +79,11 @@ Program Listing for File assert.hh
      }
    }
    
-   #define reactor_assert(arg) assert(arg) // NOLINT
+   constexpr inline void reactor_assert([[maybe_unused]] bool condition) {
+     if constexpr (runtime_assertion) { // NOLINT
+       assert(condition);               // NOLINT
+     }
+   }
    
    template <typename E> constexpr auto extract_value(E enum_value) -> typename std::underlying_type<E>::type {
      return static_cast<typename std::underlying_type<E>::type>(enum_value);

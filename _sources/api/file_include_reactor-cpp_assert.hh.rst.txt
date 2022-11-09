@@ -93,14 +93,9 @@ Functions
 
 - :ref:`exhale_function_namespacereactor_1a22cd1a801f1f06fb87c907e57bb15275`
 
+- :ref:`exhale_function_namespacereactor_1afd5cbaf8947a4e2d0f32f341da69a089`
+
 - :ref:`exhale_function_namespacereactor_1af326245a887bf46d8e861383306c71f1`
-
-
-Defines
--------
-
-
-- :ref:`exhale_define_assert_8hh_1a9d65089d8c5f3f88ddf5a8b911c99859`
 
 
 Typedefs

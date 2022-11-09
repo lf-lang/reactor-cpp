@@ -154,6 +154,8 @@ Functions
 
 - :ref:`exhale_function_namespacereactor_1a866ad9ecbb2d89966cbc60366d98ee27`
 
+- :ref:`exhale_function_namespacereactor_1afd5cbaf8947a4e2d0f32f341da69a089`
+
 - :ref:`exhale_function_namespacereactor_1a50e4996eb605ff7e10a26dcdbae25340`
 
 - :ref:`exhale_function_namespacereactor_1af326245a887bf46d8e861383306c71f1`

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Define reactor_assert &mdash; reactor-cpp  documentation</title>
+  <title>Function reactor_assert &mdash; reactor-cpp  documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
@@ -23,8 +23,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Define REACTOR_CPP_TRACE_HH" href="define_trace_8hh_1a266ae7d3b9f30b05a13074d2964bd9d4.html" />
-    <link rel="prev" title="Variable runtime_validation" href="variable_assert_8hh_1a205d29e2ebaeda57283c3fe9c80888f0.html" /> 
+    <link rel="next" title="Function recursive_assemble" href="function_namespacereactor_1a50e4996eb605ff7e10a26dcdbae25340.html" />
+    <link rel="prev" title="Function operator&gt;=(const Tag&amp;, const LogicalTime&amp;)" href="function_namespacereactor_1a866ad9ecbb2d89966cbc60366d98ee27.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -103,7 +103,7 @@
 <li class="toctree-l4"><a class="reference internal" href="enum_namespacereactor_1a08c8e2d85e5bc706b1af8a87e40eec6d.html">Enum PortType</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="library_root.html#functions">Functions</a><ul>
+<li class="toctree-l3 current"><a class="reference internal" href="library_root.html#functions">Functions</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a3c6f0cc5edbbcfdb7b4fc079833c6e57.html">Function assert_phase</a></li>
 <li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a802dd0a731f49a2b6e3faa684c1ad073.html">Function dot_name</a></li>
 <li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a22cd1a801f1f06fb87c907e57bb15275.html">Template Function extract_value</a></li>
@@ -211,8 +211,10 @@
 <li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1_1operators_1af173b20ed97060e8d23a611e7d5093fc.html">Function operator&lt;&lt;(std::ostream&amp;, std::chrono::milliseconds)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1_1operators_1a4ecfbf4999d3789a03eadffe0898cf18.html">Function operator&lt;&lt;(std::ostream&amp;, std::chrono::microseconds)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1_1operators_1a4ed650f56e454a38b251b80336885bc6.html">Function operator&lt;&lt;(std::ostream&amp;, std::chrono::nanoseconds)</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Function reactor_assert</a></li>
 <li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a50e4996eb605ff7e10a26dcdbae25340.html">Function recursive_assemble</a></li>
 <li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1af326245a887bf46d8e861383306c71f1.html">Function validate</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Function reactor_assert</a></li>
 <li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1a50e4996eb605ff7e10a26dcdbae25340.html">Function recursive_assemble</a></li>
 <li class="toctree-l4"><a class="reference internal" href="function_namespacereactor_1af326245a887bf46d8e861383306c71f1.html">Function validate</a></li>
 </ul>
@@ -248,8 +250,7 @@
 <li class="toctree-l4"><a class="reference internal" href="variable_namespacereactor_1_1log_1a88a5f4b17305527201bcb473d079d49d.html">Variable warning_enabled</a></li>
 </ul>
 </li>
-<li class="toctree-l3 current"><a class="reference internal" href="library_root.html#defines">Defines</a><ul class="current">
-<li class="toctree-l4 current"><a class="current reference internal" href="#">Define reactor_assert</a></li>
+<li class="toctree-l3"><a class="reference internal" href="library_root.html#defines">Defines</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="define_trace_8hh_1a266ae7d3b9f30b05a13074d2964bd9d4.html">Define REACTOR_CPP_TRACE_HH</a></li>
 <li class="toctree-l4"><a class="reference internal" href="define_trace_8hh_1aeae0efb071b08e657d36788eee20c1a7.html">Define tracepoint</a></li>
 <li class="toctree-l4"><a class="reference internal" href="define_trace_8cc_1aeb980b4a64d9b54d660780a30415b0bc.html">Define TRACEPOINT_CREATE_PROBES</a></li>
@@ -296,9 +297,9 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a></li>
           <li class="breadcrumb-item"><a href="library_root.html">Library API</a></li>
-      <li class="breadcrumb-item active">Define reactor_assert</li>
+      <li class="breadcrumb-item active">Function reactor_assert</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/api/define_assert_8hh_1a9d65089d8c5f3f88ddf5a8b911c99859.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/api/function_namespacereactor_1afd5cbaf8947a4e2d0f32f341da69a089.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -306,18 +307,21 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="define-reactor-assert">
-<span id="exhale-define-assert-8hh-1a9d65089d8c5f3f88ddf5a8b911c99859"></span><h1>Define reactor_assert<a class="headerlink" href="#define-reactor-assert" title="Permalink to this heading"></a></h1>
+  <section id="function-reactor-assert">
+<span id="exhale-function-namespacereactor-1afd5cbaf8947a4e2d0f32f341da69a089"></span><h1>Function reactor_assert<a class="headerlink" href="#function-reactor-assert" title="Permalink to this heading"></a></h1>
 <ul class="simple">
 <li><p>Defined in <a class="reference internal" href="file_include_reactor-cpp_assert.hh.html#file-include-reactor-cpp-assert-hh"><span class="std std-ref">File assert.hh</span></a></p></li>
 </ul>
-<section id="define-documentation">
-<h2>Define Documentation<a class="headerlink" href="#define-documentation" title="Permalink to this heading"></a></h2>
-<dl class="cpp macro">
-<dt class="sig sig-object cpp" id="c.reactor_assert">
-<span class="target" id="assert_8hh_1a9d65089d8c5f3f88ddf5a8b911c99859"></span><span class="sig-name descname"><span class="n"><span class="pre">reactor_assert</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">arg</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.reactor_assert" title="Permalink to this definition"></a><br /></dt>
-<dd></dd></dl>
-
+<section id="function-documentation">
+<h2>Function Documentation<a class="headerlink" href="#function-documentation" title="Permalink to this heading"></a></h2>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>doxygenfunction: Unable to resolve function “reactor_assert” with arguments “(] bool)”.
+Could not parse arguments. Parsing eror is
+Invalid C++ declaration: Expected identifier in nested name. [error at 1]
+  (] bool)
+  -^</p>
+</div>
 </section>
 </section>
 
@@ -325,8 +329,8 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="variable_assert_8hh_1a205d29e2ebaeda57283c3fe9c80888f0.html" class="btn btn-neutral float-left" title="Variable runtime_validation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="define_trace_8hh_1a266ae7d3b9f30b05a13074d2964bd9d4.html" class="btn btn-neutral float-right" title="Define REACTOR_CPP_TRACE_HH" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="function_namespacereactor_1a866ad9ecbb2d89966cbc60366d98ee27.html" class="btn btn-neutral float-left" title="Function operator&gt;=(const Tag&amp;, const LogicalTime&amp;)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="function_namespacereactor_1a50e4996eb605ff7e10a26dcdbae25340.html" class="btn btn-neutral float-right" title="Function recursive_assemble" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
