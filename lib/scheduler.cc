@@ -297,13 +297,14 @@ void Scheduler::next() { // NOLINT
           // point, then wait until the next tag or until a new event is
           // inserted asynchronously into the queue
           if (physical_time < t_next.time_point()) {
-            cv_schedule_.wait_until(lock, t_next.time_point());
-            // Start over if an earlier event was inserted into the event queue by a physical action
-            if (t_next != event_queue_.begin()->first) {
+            auto status = cv_schedule_.wait_until(lock, t_next.time_point());
+            // Start over if an event was inserted into the event queue by a physical action
+            if (status == std::cv_status::no_timeout || t_next != event_queue_.begin()->first) {
               continue;
             }
             // update physical time and continue otherwise
             physical_time = t_next.time_point();
+            reactor_assert(t_next == event_queue_.begin()->first);
           }
         }
 
