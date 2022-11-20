@@ -22,7 +22,7 @@
 
     # determines the the lingua-franca version from which the test are taken from
     lingua-franca-tests = {
-      url = "github:lf-lang/lingua-franca/protected-multiports";
+      url = "github:lf-lang/lingua-franca";
       flake = false;
     };
 
