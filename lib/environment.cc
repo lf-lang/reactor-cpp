@@ -57,6 +57,7 @@ void recursive_assemble(Reactor* container) { // NOLINT
 }
 
 void Environment::assemble() {
+  log_.debug() << "Assemble";
   validate(this->phase() == Phase::Construction, "assemble() may only be called during construction phase!");
   phase_ = Phase::Assembly;
   for (auto* reactor : top_level_reactors_) {
