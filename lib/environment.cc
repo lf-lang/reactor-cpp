@@ -11,6 +11,8 @@
 #include <algorithm>
 #include <fstream>
 #include <map>
+#include <thread>
+#include <vector>
 
 #include "reactor-cpp/action.hh"
 #include "reactor-cpp/assert.hh"
@@ -63,6 +65,11 @@ void Environment::assemble() {
     build_dependency_graph(reactor);
   }
   calculate_indexes();
+
+  // assemble all contained environments
+  for (auto* env : contained_environments_) {
+    env->assemble();
+  }
 }
 
 void Environment::build_dependency_graph(Reactor* reactor) { // NOLINT
@@ -243,7 +250,20 @@ auto Environment::startup() -> std::thread {
 
   // start processing events
   phase_ = Phase::Execution;
-  return std::thread([this]() { this->scheduler_.start(); });
+
+  return std::thread([this]() {
+    std::vector<std::thread> threads;
+    // startup all contained environments recursively
+    for (auto* env : contained_environments_) {
+      threads.emplace_back(env->startup());
+    }
+    // start the local scheduler and wait until it returns
+    this->scheduler_.start();
+    // then join all the created threads
+    for (auto& thread : threads) {
+      thread.join();
+    }
+  });
 }
 
 void Environment::dump_trigger_to_yaml(std::ofstream& yaml, const BaseAction& trigger) {
