@@ -114,7 +114,7 @@ void Environment::sync_shutdown() {
   validate(this->phase() == Phase::Execution, "sync_shutdown() may only be called during execution phase!");
   phase_ = Phase::Shutdown;
 
-  log::Info() << "Terminating the execution";
+  log::Debug() << "Terminating the execution";
 
   for (auto* reactor : top_level_reactors_) {
     reactor->shutdown();
@@ -239,7 +239,7 @@ auto Environment::startup() -> std::thread {
   }
   calculate_indexes();
 
-  log::Info() << "Starting the execution";
+  log::Debug() << "Starting the execution";
   phase_ = Phase::Startup;
 
   start_time_ = get_physical_time();
