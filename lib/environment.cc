@@ -237,12 +237,6 @@ void Environment::calculate_indexes() {
 auto Environment::startup() -> std::thread {
   validate(this->phase() == Phase::Assembly, "startup() may only be called during assembly phase!");
 
-  // build the dependency graph
-  for (auto* reactor : top_level_reactors_) {
-    build_dependency_graph(reactor);
-  }
-  calculate_indexes();
-
   log_.info() << "Starting the execution";
   phase_ = Phase::Startup;
 
