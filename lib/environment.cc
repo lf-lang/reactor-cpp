@@ -23,14 +23,17 @@
 namespace reactor {
 
 Environment::Environment(unsigned int num_workers, bool run_forever, bool fast_fwd_execution)
-    : num_workers_(num_workers)
+    : log_("Environment")
+    , num_workers_(num_workers)
     , run_forever_(run_forever)
     , fast_fwd_execution_(fast_fwd_execution)
     , top_environment_(this)
     , scheduler_(this) {}
 
-Environment::Environment(Environment* containing_environment)
-    : num_workers_(containing_environment->num_workers_)
+Environment::Environment(std::string name, Environment* containing_environment)
+    : name_(std::move(name))
+    , log_("Environment " + name)
+    , num_workers_(containing_environment->num_workers_)
     , run_forever_(containing_environment->run_forever_)
     , fast_fwd_execution_(containing_environment->fast_fwd_execution_)
     , containing_environment_(containing_environment)
@@ -114,7 +117,7 @@ void Environment::sync_shutdown() {
   validate(this->phase() == Phase::Execution, "sync_shutdown() may only be called during execution phase!");
   phase_ = Phase::Shutdown;
 
-  log::Debug() << "Terminating the execution";
+  log_.debug() << "Terminating the execution";
 
   for (auto* reactor : top_level_reactors_) {
     reactor->shutdown();
@@ -177,7 +180,7 @@ void Environment::export_dependency_graph(const std::string& path) {
 
   dot.close();
 
-  log::Info() << "Reaction graph was written to " << path;
+  log_.info() << "Reaction graph was written to " << path;
 }
 
 void Environment::calculate_indexes() {
@@ -190,7 +193,7 @@ void Environment::calculate_indexes() {
     graph[dependencies.first].insert(dependencies.second);
   }
 
-  log::Debug() << "Reactions sorted by index:";
+  log_.debug() << "Reactions sorted by index:";
   unsigned int index = 0;
   while (!graph.empty()) {
     // find nodes with degree zero and assign index
@@ -208,7 +211,7 @@ void Environment::calculate_indexes() {
                             "/tmp/reactor_dependency_graph.dot");
     }
 
-    log::Debug dbg;
+    auto dbg = log_.debug();
     dbg << index << ": ";
     for (auto* reaction : degree_zero) {
       dbg << reaction->fqn() << ", ";
@@ -239,7 +242,7 @@ auto Environment::startup() -> std::thread {
   }
   calculate_indexes();
 
-  log::Debug() << "Starting the execution";
+  log_.info() << "Starting the execution";
   phase_ = Phase::Startup;
 
   start_time_ = get_physical_time();
@@ -393,7 +396,7 @@ void Environment::dump_to_yaml(const std::string& path) {
     yaml << "  - to: " << iterator.second->fqn() << std::endl;
   }
 
-  log::Info() << "Program structure was dumped to " << path;
+  log_.info() << "Program structure was dumped to " << path;
 }
 
 } // namespace reactor

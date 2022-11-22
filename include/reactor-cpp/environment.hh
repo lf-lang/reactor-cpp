@@ -13,6 +13,7 @@
 #include <string>
 #include <vector>
 
+#include "reactor-cpp/logging.hh"
 #include "reactor.hh"
 #include "scheduler.hh"
 
@@ -29,6 +30,9 @@ public:
 
 private:
   using Dependency = std::pair<Reaction*, Reaction*>;
+
+  const std::string name_{};
+  const log::NamedLogger log_;
   const unsigned int num_workers_{default_number_worker};
   unsigned int max_reaction_index_{default_max_reaction_index};
   const bool run_forever_{default_run_forever};
@@ -55,7 +59,7 @@ private:
 public:
   explicit Environment(unsigned int num_workers, bool run_forever = default_run_forever,
                        bool fast_fwd_execution = default_fast_fwd_execution);
-  explicit Environment(Environment* containing_environment);
+  explicit Environment(std::string name, Environment* containing_environment);
 
   void register_reactor(Reactor* reactor);
   void assemble();
