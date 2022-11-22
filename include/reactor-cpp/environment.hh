@@ -59,7 +59,9 @@ private:
 public:
   explicit Environment(unsigned int num_workers, bool run_forever = default_run_forever,
                        bool fast_fwd_execution = default_fast_fwd_execution);
-  explicit Environment(std::string name, Environment* containing_environment);
+  explicit Environment(const std::string& name, Environment* containing_environment);
+
+  auto name() -> const std::string& { return name_; }
 
   void register_reactor(Reactor* reactor);
   void assemble();

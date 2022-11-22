@@ -30,8 +30,8 @@ Environment::Environment(unsigned int num_workers, bool run_forever, bool fast_f
     , top_environment_(this)
     , scheduler_(this) {}
 
-Environment::Environment(std::string name, Environment* containing_environment)
-    : name_(std::move(name))
+Environment::Environment(const std::string& name, Environment* containing_environment)
+    : name_(name)
     , log_("Environment " + name)
     , num_workers_(containing_environment->num_workers_)
     , run_forever_(containing_environment->run_forever_)
