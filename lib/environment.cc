@@ -20,6 +20,23 @@
 
 namespace reactor {
 
+Environment::Environment(unsigned int num_workers, bool run_forever, bool fast_fwd_execution)
+    : num_workers_(num_workers)
+    , run_forever_(run_forever)
+    , fast_fwd_execution_(fast_fwd_execution)
+    , top_environment_(this)
+    , scheduler_(this) {}
+
+Environment::Environment(Environment* containing_environment)
+    : num_workers_(containing_environment->num_workers_)
+    , run_forever_(containing_environment->run_forever_)
+    , fast_fwd_execution_(containing_environment->fast_fwd_execution_)
+    , containing_environment_(containing_environment)
+    , top_environment_(containing_environment_->top_environment_)
+    , scheduler_(this) {
+  reactor_assert(containing_environment->contained_environments_.insert(this).second);
+}
+
 void Environment::register_reactor(Reactor* reactor) {
   reactor_assert(reactor != nullptr);
   validate(this->phase() == Phase::Construction, "Reactors may only be registered during construction phase!");

@@ -38,6 +38,13 @@ private:
   std::set<Reaction*> reactions_{};
   std::vector<Dependency> dependencies_{};
 
+  /// The environment containing this environment. nullptr if this is the top environment
+  Environment* containing_environment_{nullptr};
+  /// Set of all environments contained by this environment
+  std::set<Environment*> contained_environments_{};
+  /// Pointer to the top level environment
+  Environment* top_environment_{nullptr};
+
   Scheduler scheduler_;
   Phase phase_{Phase::Construction};
   TimePoint start_time_{};
@@ -47,11 +54,8 @@ private:
 
 public:
   explicit Environment(unsigned int num_workers, bool run_forever = default_run_forever,
-                       bool fast_fwd_execution = default_fast_fwd_execution)
-      : num_workers_(num_workers)
-      , run_forever_(run_forever)
-      , fast_fwd_execution_(fast_fwd_execution)
-      , scheduler_(this) {}
+                       bool fast_fwd_execution = default_fast_fwd_execution);
+  explicit Environment(Environment* containing_environment);
 
   void register_reactor(Reactor* reactor);
   void assemble();
