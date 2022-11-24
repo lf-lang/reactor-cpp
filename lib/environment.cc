@@ -237,7 +237,7 @@ void Environment::calculate_indexes() {
 auto Environment::startup() -> std::thread {
   validate(this->phase() == Phase::Assembly, "startup() may only be called during assembly phase!");
 
-  log_.info() << "Starting the execution";
+  log_.debug() << "Starting the execution";
   phase_ = Phase::Startup;
 
   start_time_ = get_physical_time();
