@@ -111,6 +111,8 @@ private:
 
   std::shared_mutex mutex_event_queue_;
   std::map<Tag, ActionListPtr> event_queue_;
+  /// stores the actions triggered at the current tag
+  ActionListPtr triggered_actions_{nullptr};
 
   std::vector<ActionListPtr> action_list_pool_;
   static constexpr std::size_t action_list_pool_increment_{10};

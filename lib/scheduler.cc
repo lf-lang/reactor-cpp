@@ -227,17 +227,15 @@ void Scheduler::start() {
 }
 
 void Scheduler::next() { // NOLINT
-  static ActionListPtr actions{};
-
-  // clean up before scheduling any new events
-  if (actions != nullptr) {
+  // clean up all actions triggered at the current tag (if there are any remaining)
+  if (triggered_actions_ != nullptr) {
     // cleanup all triggered actions
-    for (auto* action : *actions) {
+    for (auto* action : *triggered_actions_) {
       action->cleanup();
     }
 
-    actions->clear();
-    action_list_pool_.emplace_back(std::move(actions));
+    triggered_actions_->clear();
+    action_list_pool_.emplace_back(std::move(triggered_actions_));
   }
 
   // cleanup all set ports
@@ -262,7 +260,7 @@ void Scheduler::next() { // NOLINT
       }
     }
 
-    while (actions == nullptr || actions->empty()) {
+    while (triggered_actions_ == nullptr || triggered_actions_->empty()) {
       if (stop_) {
         continue_execution_ = false;
         log_.debug() << "Shutting down the scheduler";
@@ -270,7 +268,7 @@ void Scheduler::next() { // NOLINT
         if (!event_queue_.empty() && t_next == event_queue_.begin()->first) {
           log_.debug() << "Schedule the last round of reactions including all "
                           "termination reactions";
-          actions = std::move(event_queue_.begin()->second);
+          triggered_actions_ = std::move(event_queue_.begin()->second);
           event_queue_.erase(event_queue_.begin());
           log_.debug() << "advance logical time to tag [" << t_next.time_point() << ", " << t_next.micro_step() << "]";
           logical_time_.advance_to(t_next);
@@ -311,7 +309,7 @@ void Scheduler::next() { // NOLINT
 
         // retrieve all events with tag equal to current logical time from the
         // queue
-        actions = std::move(event_queue_.extract(event_queue_.begin()).mapped());
+        triggered_actions_ = std::move(event_queue_.extract(event_queue_.begin()).mapped());
 
         // advance logical time
         log_.debug() << "advance logical time to tag [" << t_next.time_point() << ", " << t_next.micro_step() << "]";
@@ -322,12 +320,12 @@ void Scheduler::next() { // NOLINT
 
   // execute all setup functions; this sets the values of the corresponding
   // actions
-  for (auto* action : *actions) {
+  for (auto* action : *triggered_actions_) {
     action->setup();
   }
 
-  log_.debug() << "events: " << actions->size();
-  for (const auto* action : *actions) {
+  log_.debug() << "events: " << triggered_actions_->size();
+  for (const auto* action : *triggered_actions_) {
     log_.debug() << "Action " << action->fqn();
     for (auto* reaction : action->triggers()) {
       // There is no need to acquire the mutex. At this point the scheduler
