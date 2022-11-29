@@ -13,6 +13,7 @@
 #include <string>
 #include <vector>
 
+#include "reactor-cpp/time.hh"
 #include "reactor.hh"
 #include "scheduler.hh"
 
@@ -42,16 +43,19 @@ private:
   Phase phase_{Phase::Construction};
   TimePoint start_time_{};
 
+  const Duration timeout_{};
+
   void build_dependency_graph(Reactor* reactor);
   void calculate_indexes();
 
 public:
   explicit Environment(unsigned int num_workers, bool run_forever = default_run_forever,
-                       bool fast_fwd_execution = default_fast_fwd_execution)
+                       bool fast_fwd_execution = default_fast_fwd_execution, const Duration& timeout = Duration::max())
       : num_workers_(num_workers)
       , run_forever_(run_forever)
       , fast_fwd_execution_(fast_fwd_execution)
-      , scheduler_(this) {}
+      , scheduler_(this)
+      , timeout_(timeout) {}
 
   void register_reactor(Reactor* reactor);
   void assemble();
@@ -76,6 +80,7 @@ public:
 
   [[nodiscard]] auto logical_time() const noexcept -> const LogicalTime& { return scheduler_.logical_time(); }
   [[nodiscard]] auto start_time() const noexcept -> const TimePoint& { return start_time_; }
+  [[nodiscard]] auto timeout() const noexcept -> const Duration& { return timeout_; }
 
   static auto physical_time() noexcept -> TimePoint { return get_physical_time(); }
 
