@@ -281,28 +281,25 @@ void Scheduler::next() { // NOLINT
 
         // synchronize with physical time if not in fast forward mode
         if (!environment_->fast_fwd_execution()) {
-          // keep track of the current physical time in a static variable
-          static auto physical_time = TimePoint::min();
-
           // If physical time is smaller than the next logical time point,
           // then update the physical time. This step is small optimization to
           // avoid calling get_physical_time() in every iteration as this
           // would add a significant overhead.
-          if (physical_time < t_next.time_point()) {
-            physical_time = get_physical_time();
+          if (last_observed_physical_time_ < t_next.time_point()) {
+            last_observed_physical_time_ = get_physical_time();
           }
 
           // If physical time is still smaller than the next logical time
           // point, then wait until the next tag or until a new event is
           // inserted asynchronously into the queue
-          if (physical_time < t_next.time_point()) {
+          if (last_observed_physical_time_ < t_next.time_point()) {
             auto status = cv_schedule_.wait_until(lock, t_next.time_point());
             // Start over if an event was inserted into the event queue by a physical action
             if (status == std::cv_status::no_timeout || t_next != event_queue_.begin()->first) {
               continue;
             }
             // update physical time and continue otherwise
-            physical_time = t_next.time_point();
+            last_observed_physical_time_ = t_next.time_point();
             reactor_assert(t_next == event_queue_.begin()->first);
           }
         }

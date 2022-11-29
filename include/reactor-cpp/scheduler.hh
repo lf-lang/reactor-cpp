@@ -101,6 +101,7 @@ class Scheduler { // NOLINT
 private:
   const bool using_workers_;
   LogicalTime logical_time_{};
+  TimePoint last_observed_physical_time_{TimePoint::min()};
 
   Environment* environment_;
   std::vector<Worker> workers_{};
