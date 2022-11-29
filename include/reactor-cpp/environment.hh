@@ -14,6 +14,7 @@
 #include <vector>
 
 #include "reactor-cpp/logging.hh"
+#include "reactor-cpp/time.hh"
 #include "reactor.hh"
 #include "scheduler.hh"
 
@@ -55,6 +56,8 @@ private:
 
   void build_dependency_graph(Reactor* reactor);
   void calculate_indexes();
+
+  auto startup(const TimePoint& start_time) -> std::thread;
 
 public:
   explicit Environment(unsigned int num_workers, bool run_forever = default_run_forever,

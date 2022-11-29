@@ -235,12 +235,18 @@ void Environment::calculate_indexes() {
 }
 
 auto Environment::startup() -> std::thread {
+  validate(this == top_environment_, "startup() may only be called on the top environment");
+  auto start_time = get_physical_time();
+  return startup(start_time);
+}
+
+auto Environment::startup(const TimePoint& start_time) -> std::thread {
   validate(this->phase() == Phase::Assembly, "startup() may only be called during assembly phase!");
 
   log_.debug() << "Starting the execution";
   phase_ = Phase::Startup;
 
-  start_time_ = get_physical_time();
+  start_time_ = start_time;
   // start up initialize all reactors
   for (auto* reactor : top_level_reactors_) {
     reactor->startup();
@@ -253,7 +259,7 @@ auto Environment::startup() -> std::thread {
     std::vector<std::thread> threads;
     // startup all contained environments recursively
     for (auto* env : contained_environments_) {
-      threads.emplace_back(env->startup());
+      threads.emplace_back(env->startup(start_time_));
     }
     // start the local scheduler and wait until it returns
     this->scheduler_.start();
