@@ -68,8 +68,10 @@ void ShutdownTrigger::setup() noexcept {
 }
 
 void ShutdownTrigger::shutdown() {
-  Tag tag = Tag::from_logical_time(environment()->logical_time()).delay();
-  environment()->scheduler()->schedule_sync(this, tag);
+  if (!is_present()) {
+    Tag tag = Tag::from_logical_time(environment()->logical_time()).delay();
+    environment()->scheduler()->schedule_sync(this, tag);
+  }
 }
 
 } // namespace reactor
