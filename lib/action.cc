@@ -11,6 +11,7 @@
 #include "reactor-cpp/assert.hh"
 #include "reactor-cpp/environment.hh"
 #include "reactor-cpp/reaction.hh"
+#include "reactor-cpp/time.hh"
 
 namespace reactor {
 
@@ -35,6 +36,11 @@ void BaseAction::register_scheduler(Reaction* reaction) {
 }
 
 void Timer::startup() {
+  // abort if the offset is the maximum duration
+  if (offset_ == Duration::max()) {
+    return;
+  }
+
   Tag tag_zero = Tag::from_physical_time(environment()->start_time());
   if (offset_ != Duration::zero()) {
     environment()->scheduler()->schedule_sync(this, tag_zero.delay(offset_));
@@ -52,7 +58,10 @@ void Timer::cleanup() noexcept {
   }
 }
 
-void ShutdownAction::shutdown() {
+ShutdownTrigger::ShutdownTrigger(const std::string& name, Reactor* container)
+  : Timer(name, container, Duration::zero(), container->environment()->timeout()) {}
+
+void ShutdownTrigger::shutdown() {
   Tag tag = Tag::from_logical_time(environment()->logical_time()).delay();
   environment()->scheduler()->schedule_sync(this, tag);
 }

@@ -232,9 +232,9 @@ auto Environment::startup() -> std::thread {
 
 void Environment::dump_trigger_to_yaml(std::ofstream& yaml, const BaseAction& trigger) {
   yaml << "      - name: " << trigger.name() << std::endl;
-  if (dynamic_cast<const StartupAction*>(&trigger) != nullptr) {
+  if (dynamic_cast<const StartupTrigger*>(&trigger) != nullptr) {
     yaml << "        type: startup" << std::endl;
-  } else if (dynamic_cast<const ShutdownAction*>(&trigger) != nullptr) {
+  } else if (dynamic_cast<const ShutdownTrigger*>(&trigger) != nullptr) {
     yaml << "        type: shutdown" << std::endl;
   } else if (dynamic_cast<const Timer*>(&trigger) != nullptr) {
     yaml << "        type: timer" << std::endl;

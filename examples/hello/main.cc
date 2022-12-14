@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include "reactor-cpp/action.hh"
 #include "reactor-cpp/reactor-cpp.hh"
 
 using namespace reactor;
@@ -9,7 +10,7 @@ class Hello : public Reactor {
 private:
   // actions
   Timer timer{"timer", this, 1s, 2s};
-  ShutdownAction sa{"terminate", this};
+  ShutdownTrigger sa{"terminate", this};
 
   // reactions
   Reaction r_hello{"r_hello", 1, this, [this]() { hello(); }};

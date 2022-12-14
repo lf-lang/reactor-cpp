@@ -139,7 +139,7 @@ public:
       , period_(period) {}
 
   void startup() final;
-  void shutdown() final {}
+  void shutdown() override {}
   void setup() noexcept final {}
 
   [[nodiscard]] auto offset() const noexcept -> const Duration& { return offset_; }
@@ -147,20 +147,16 @@ public:
   [[nodiscard]] auto period() const noexcept -> const Duration& { return period_; }
 };
 
-class StartupAction : public Timer {
+class StartupTrigger : public Timer {
 public:
-  StartupAction(const std::string& name, Reactor* container)
+  StartupTrigger(const std::string& name, Reactor* container)
       : Timer(name, container) {}
 };
 
-class ShutdownAction : public BaseAction {
+class ShutdownTrigger : public Timer {
 public:
-  ShutdownAction(const std::string& name, Reactor* container)
-      : BaseAction(name, container, true, Duration::zero()) {}
+  ShutdownTrigger(const std::string& name, Reactor* container);
 
-  void setup() noexcept final {}
-  void cleanup() noexcept final {}
-  void startup() final {}
   void shutdown() final;
 };
 
