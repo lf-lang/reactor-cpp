@@ -48,6 +48,8 @@ private:
   void build_dependency_graph(Reactor* reactor);
   void calculate_indexes();
 
+  std::mutex shutdown_mutex_{};
+
 public:
   explicit Environment(unsigned int num_workers, bool run_forever = default_run_forever,
                        bool fast_fwd_execution = default_fast_fwd_execution, const Duration& timeout = Duration::max())
