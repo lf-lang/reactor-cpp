@@ -50,6 +50,7 @@ void Timer::startup() {
 }
 
 void Timer::cleanup() noexcept {
+  BaseAction::cleanup();
   // schedule the timer again
   if (period_ != Duration::zero()) {
     Tag now = Tag::from_logical_time(environment()->logical_time());
@@ -59,7 +60,12 @@ void Timer::cleanup() noexcept {
 }
 
 ShutdownTrigger::ShutdownTrigger(const std::string& name, Reactor* container)
-  : Timer(name, container, Duration::zero(), container->environment()->timeout()) {}
+    : Timer(name, container, Duration::zero(), container->environment()->timeout()) {}
+
+void ShutdownTrigger::setup() noexcept {
+  BaseAction::setup();
+  environment()->sync_shutdown();
+}
 
 void ShutdownTrigger::shutdown() {
   Tag tag = Tag::from_logical_time(environment()->logical_time()).delay();
