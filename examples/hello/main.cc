@@ -30,25 +30,10 @@ public:
   static void terminate() { std::cout << "Good Bye!" << std::endl; }
 };
 
-class Timeout : public Reactor {
-private:
-  Timer timer;
-
-  Reaction r_timer{"r_timer", 1, this, [this]() { environment()->sync_shutdown(); }};
-
-public:
-  Timeout(Environment* env, Duration timeout)
-      : Reactor("Timeout", env)
-      , timer{"timer", this, Duration::zero(), timeout} {}
-
-  void assemble() override { r_timer.declare_trigger(&timer); }
-};
-
 auto main() -> int {
-  Environment env{4};
+  Environment env{4, false, false, 5s};
 
   Hello hello{&env};
-  Timeout timeout{&env, 5s};
   env.assemble();
 
   auto thread = env.startup();
