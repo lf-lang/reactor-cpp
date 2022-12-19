@@ -11,6 +11,7 @@
 #include "reactor-cpp/assert.hh"
 #include "reactor-cpp/environment.hh"
 #include "reactor-cpp/reaction.hh"
+#include "reactor-cpp/time.hh"
 
 namespace reactor {
 
@@ -35,6 +36,11 @@ void BaseAction::register_scheduler(Reaction* reaction) {
 }
 
 void Timer::startup() {
+  // abort if the offset is the maximum duration
+  if (offset_ == Duration::max()) {
+    return;
+  }
+
   Tag tag_zero = Tag::from_physical_time(environment()->start_time());
   if (offset_ != Duration::zero()) {
     environment()->scheduler()->schedule_sync(this, tag_zero.delay(offset_));
@@ -44,6 +50,7 @@ void Timer::startup() {
 }
 
 void Timer::cleanup() noexcept {
+  BaseAction::cleanup();
   // schedule the timer again
   if (period_ != Duration::zero()) {
     Tag now = Tag::from_logical_time(environment()->logical_time());
@@ -52,9 +59,19 @@ void Timer::cleanup() noexcept {
   }
 }
 
-void ShutdownAction::shutdown() {
-  Tag tag = Tag::from_logical_time(environment()->logical_time()).delay();
-  environment()->scheduler()->schedule_sync(this, tag);
+ShutdownTrigger::ShutdownTrigger(const std::string& name, Reactor* container)
+    : Timer(name, container, Duration::zero(), container->environment()->timeout()) {}
+
+void ShutdownTrigger::setup() noexcept {
+  BaseAction::setup();
+  environment()->sync_shutdown();
+}
+
+void ShutdownTrigger::shutdown() {
+  if (!is_present()) {
+    Tag tag = Tag::from_logical_time(environment()->logical_time()).delay();
+    environment()->scheduler()->schedule_sync(this, tag);
+  }
 }
 
 } // namespace reactor

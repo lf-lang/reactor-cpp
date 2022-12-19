@@ -37,9 +37,7 @@ public:
   }
 
   // resets parent multiport
-  inline void clear() noexcept {
-    size_.store(0, std::memory_order_relaxed);
-  }
+  inline void clear() noexcept { size_.store(0, std::memory_order_relaxed); }
 };
 
 template <class T, class A = std::allocator<T>>
@@ -48,11 +46,7 @@ protected:
   std::vector<T> data_{}; // NOLINT cppcoreguidelines-non-private-member-variables-in-classes
 
 public:
-  using allocator_type = A;
   using value_type = typename A::value_type;
-  using reference = typename A::reference;
-  using const_reference = typename A::const_reference;
-  using difference_type = typename A::difference_type;
   using size_type = typename A::size_type;
 
   using iterator = typename std::vector<T>::iterator;

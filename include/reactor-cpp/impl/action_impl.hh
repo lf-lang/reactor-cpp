@@ -56,6 +56,7 @@ template <class Dur> void Action<void>::schedule(Dur delay) {
 }
 
 template <class T> void Action<T>::setup() noexcept {
+  BaseAction::setup();
   if (value_ptr_ == nullptr) { // only do this once, even if the action was triggered multiple times
     // lock if this is a physical action
     std::unique_lock<std::mutex> lock =
@@ -66,6 +67,11 @@ template <class T> void Action<T>::setup() noexcept {
     value_ptr_ = std::move(node.mapped());
   }
   reactor_assert(value_ptr_ != nullptr);
+}
+
+template <class T> void Action<T>::cleanup() noexcept {
+  BaseAction::cleanup();
+  value_ptr_ = nullptr;
 }
 
 } // namespace reactor

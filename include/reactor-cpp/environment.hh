@@ -54,14 +54,18 @@ private:
   Phase phase_{Phase::Construction};
   TimePoint start_time_{};
 
+  const Duration timeout_{};
+
   void build_dependency_graph(Reactor* reactor);
   void calculate_indexes();
+
+  std::mutex shutdown_mutex_{};
 
   auto startup(const TimePoint& start_time) -> std::thread;
 
 public:
   explicit Environment(unsigned int num_workers, bool run_forever = default_run_forever,
-                       bool fast_fwd_execution = default_fast_fwd_execution);
+                       bool fast_fwd_execution = default_fast_fwd_execution, const Duration& timeout = Duration::max());
   explicit Environment(const std::string& name, Environment* containing_environment);
 
   auto name() -> const std::string& { return name_; }
@@ -89,6 +93,7 @@ public:
 
   [[nodiscard]] auto logical_time() const noexcept -> const LogicalTime& { return scheduler_.logical_time(); }
   [[nodiscard]] auto start_time() const noexcept -> const TimePoint& { return start_time_; }
+  [[nodiscard]] auto timeout() const noexcept -> const Duration& { return timeout_; }
 
   static auto physical_time() noexcept -> TimePoint { return get_physical_time(); }
 

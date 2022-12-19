@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include "reactor-cpp/action.hh"
 #include "reactor-cpp/reactor-cpp.hh"
 
 using namespace reactor;
@@ -9,7 +10,7 @@ class Hello : public Reactor {
 private:
   // actions
   Timer timer{"timer", this, 1s, 2s};
-  ShutdownAction sa{"terminate", this};
+  ShutdownTrigger sa{"terminate", this};
 
   // reactions
   Reaction r_hello{"r_hello", 1, this, [this]() { hello(); }};
@@ -29,25 +30,10 @@ public:
   static void terminate() { std::cout << "Good Bye!" << std::endl; }
 };
 
-class Timeout : public Reactor {
-private:
-  Timer timer;
-
-  Reaction r_timer{"r_timer", 1, this, [this]() { environment()->sync_shutdown(); }};
-
-public:
-  Timeout(Environment* env, Duration timeout)
-      : Reactor("Timeout", env)
-      , timer{"timer", this, Duration::zero(), timeout} {}
-
-  void assemble() override { r_timer.declare_trigger(&timer); }
-};
-
 auto main() -> int {
-  Environment env{4};
+  Environment env{4, false, false, 5s};
 
   Hello hello{&env};
-  Timeout timeout{&env, 5s};
   env.assemble();
 
   auto thread = env.startup();

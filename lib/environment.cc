@@ -19,16 +19,18 @@
 #include "reactor-cpp/logging.hh"
 #include "reactor-cpp/port.hh"
 #include "reactor-cpp/reaction.hh"
+#include "reactor-cpp/time.hh"
 
 namespace reactor {
 
-Environment::Environment(unsigned int num_workers, bool run_forever, bool fast_fwd_execution)
+Environment::Environment(unsigned int num_workers, bool run_forever, bool fast_fwd_execution, const Duration& timeout)
     : log_("Environment")
     , num_workers_(num_workers)
     , run_forever_(run_forever)
     , fast_fwd_execution_(fast_fwd_execution)
     , top_environment_(this)
-    , scheduler_(this) {}
+    , scheduler_(this)
+    , timeout_(timeout) {}
 
 Environment::Environment(const std::string& name, Environment* containing_environment)
     : name_(name)
@@ -38,7 +40,8 @@ Environment::Environment(const std::string& name, Environment* containing_enviro
     , fast_fwd_execution_(containing_environment->fast_fwd_execution_)
     , containing_environment_(containing_environment)
     , top_environment_(containing_environment_->top_environment_)
-    , scheduler_(this) {
+    , scheduler_(this)
+    , timeout_(containing_environment->timeout()) {
   reactor_assert(containing_environment->contained_environments_.insert(this).second);
 }
 
@@ -115,9 +118,19 @@ void Environment::build_dependency_graph(Reactor* reactor) { // NOLINT
 }
 
 void Environment::sync_shutdown() {
-  validate(this->phase() == Phase::Execution, "sync_shutdown() may only be called during execution phase!");
-  phase_ = Phase::Shutdown;
+  {
+    std::lock_guard<std::mutex> lock{shutdown_mutex_};
 
+    if (phase_ >= Phase::Shutdown) {
+      // sync_shutdown() was already called -> abort
+      return;
+    }
+
+    validate(phase_ == Phase::Execution, "sync_shutdown() may only be called during execution phase!");
+    phase_ = Phase::Shutdown;
+  }
+
+  // the following will only be executed once
   log_.debug() << "Terminating the execution";
 
   for (auto* reactor : top_level_reactors_) {
@@ -272,9 +285,9 @@ auto Environment::startup(const TimePoint& start_time) -> std::thread {
 
 void Environment::dump_trigger_to_yaml(std::ofstream& yaml, const BaseAction& trigger) {
   yaml << "      - name: " << trigger.name() << std::endl;
-  if (dynamic_cast<const StartupAction*>(&trigger) != nullptr) {
+  if (dynamic_cast<const StartupTrigger*>(&trigger) != nullptr) {
     yaml << "        type: startup" << std::endl;
-  } else if (dynamic_cast<const ShutdownAction*>(&trigger) != nullptr) {
+  } else if (dynamic_cast<const ShutdownTrigger*>(&trigger) != nullptr) {
     yaml << "        type: shutdown" << std::endl;
   } else if (dynamic_cast<const Timer*>(&trigger) != nullptr) {
     yaml << "        type: timer" << std::endl;
