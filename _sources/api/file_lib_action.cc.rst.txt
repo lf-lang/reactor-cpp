@@ -38,6 +38,8 @@ Includes
 
 - ``reactor-cpp/reaction.hh`` (:ref:`file_include_reactor-cpp_reaction.hh`)
 
+- ``reactor-cpp/time.hh`` (:ref:`file_include_reactor-cpp_time.hh`)
+
 
 
 

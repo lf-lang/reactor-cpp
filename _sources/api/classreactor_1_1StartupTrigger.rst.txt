@@ -1,6 +1,6 @@
-.. _exhale_class_classreactor_1_1ShutdownAction:
+.. _exhale_class_classreactor_1_1StartupTrigger:
 
-Class ShutdownAction
+Class StartupTrigger
 ====================
 
 - Defined in :ref:`file_include_reactor-cpp_action.hh`
@@ -12,14 +12,14 @@ Inheritance Relationships
 Base Type
 *********
 
-- ``public reactor::BaseAction`` (:ref:`exhale_class_classreactor_1_1BaseAction`)
+- ``public reactor::Timer`` (:ref:`exhale_class_classreactor_1_1Timer`)
 
 
 Class Documentation
 -------------------
 
 
-.. doxygenclass:: reactor::ShutdownAction
+.. doxygenclass:: reactor::StartupTrigger
    :project: reactor-cpp
    :members:
    :protected-members:

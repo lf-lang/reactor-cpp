@@ -82,9 +82,9 @@ Classes
 
 - :ref:`exhale_class_classreactor_1_1PhysicalAction`
 
-- :ref:`exhale_class_classreactor_1_1ShutdownAction`
+- :ref:`exhale_class_classreactor_1_1ShutdownTrigger`
 
-- :ref:`exhale_class_classreactor_1_1StartupAction`
+- :ref:`exhale_class_classreactor_1_1StartupTrigger`
 
 - :ref:`exhale_class_classreactor_1_1Timer`
 

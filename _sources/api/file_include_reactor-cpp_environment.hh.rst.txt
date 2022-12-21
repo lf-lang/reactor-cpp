@@ -30,6 +30,8 @@ Includes
 --------
 
 
+- ``reactor-cpp/time.hh`` (:ref:`file_include_reactor-cpp_time.hh`)
+
 - ``reactor.hh`` (:ref:`file_include_reactor-cpp_reactor.hh`)
 
 - ``scheduler.hh`` (:ref:`file_include_reactor-cpp_scheduler.hh`)

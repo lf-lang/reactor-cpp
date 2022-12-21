@@ -88,8 +88,8 @@
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1SafeVector.html">Template Class SafeVector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Scheduler.html">Class Scheduler</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Semaphore.html">Class Semaphore</a></li>
-<li class="toctree-l4"><a class="reference internal" href="classreactor_1_1ShutdownAction.html">Class ShutdownAction</a></li>
-<li class="toctree-l4"><a class="reference internal" href="classreactor_1_1StartupAction.html">Class StartupAction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classreactor_1_1ShutdownTrigger.html">Class ShutdownTrigger</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classreactor_1_1StartupTrigger.html">Class StartupTrigger</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Tag.html">Class Tag</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Timer.html">Class Timer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1ValidationError.html">Class ValidationError</a></li>
@@ -320,6 +320,7 @@
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;reactor-cpp/assert.hh&quot;</span><span class="cp"></span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;reactor-cpp/environment.hh&quot;</span><span class="cp"></span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;reactor-cpp/reaction.hh&quot;</span><span class="cp"></span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;reactor-cpp/time.hh&quot;</span><span class="cp"></span>
 
 <span class="k">namespace</span><span class="w"> </span><span class="nn">reactor</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 
@@ -344,6 +345,11 @@
 <span class="p">}</span><span class="w"></span>
 
 <span class="kt">void</span><span class="w"> </span><span class="nf">Timer::startup</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="c1">// abort if the offset is the maximum duration</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">offset_</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">Duration</span><span class="o">::</span><span class="n">max</span><span class="p">())</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">return</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
+
 <span class="w">  </span><span class="n">Tag</span><span class="w"> </span><span class="n">tag_zero</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Tag</span><span class="o">::</span><span class="n">from_physical_time</span><span class="p">(</span><span class="n">environment</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">start_time</span><span class="p">());</span><span class="w"></span>
 <span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">offset_</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">Duration</span><span class="o">::</span><span class="n">zero</span><span class="p">())</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="w">    </span><span class="n">environment</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">scheduler</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">schedule_sync</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">tag_zero</span><span class="p">.</span><span class="n">delay</span><span class="p">(</span><span class="n">offset_</span><span class="p">));</span><span class="w"></span>
@@ -353,6 +359,7 @@
 <span class="p">}</span><span class="w"></span>
 
 <span class="kt">void</span><span class="w"> </span><span class="nf">Timer::cleanup</span><span class="p">()</span><span class="w"> </span><span class="k">noexcept</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="n">BaseAction</span><span class="o">::</span><span class="n">cleanup</span><span class="p">();</span><span class="w"></span>
 <span class="w">  </span><span class="c1">// schedule the timer again</span>
 <span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">period_</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">Duration</span><span class="o">::</span><span class="n">zero</span><span class="p">())</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="w">    </span><span class="n">Tag</span><span class="w"> </span><span class="n">now</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Tag</span><span class="o">::</span><span class="n">from_logical_time</span><span class="p">(</span><span class="n">environment</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">logical_time</span><span class="p">());</span><span class="w"></span>
@@ -361,9 +368,19 @@
 <span class="w">  </span><span class="p">}</span><span class="w"></span>
 <span class="p">}</span><span class="w"></span>
 
-<span class="kt">void</span><span class="w"> </span><span class="nf">ShutdownAction::shutdown</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">  </span><span class="n">Tag</span><span class="w"> </span><span class="n">tag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Tag</span><span class="o">::</span><span class="n">from_logical_time</span><span class="p">(</span><span class="n">environment</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">logical_time</span><span class="p">()).</span><span class="n">delay</span><span class="p">();</span><span class="w"></span>
-<span class="w">  </span><span class="n">environment</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">scheduler</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">schedule_sync</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">tag</span><span class="p">);</span><span class="w"></span>
+<span class="n">ShutdownTrigger</span><span class="o">::</span><span class="n">ShutdownTrigger</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">Reactor</span><span class="o">*</span><span class="w"> </span><span class="n">container</span><span class="p">)</span><span class="w"></span>
+<span class="w">    </span><span class="o">:</span><span class="w"> </span><span class="n">Timer</span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">container</span><span class="p">,</span><span class="w"> </span><span class="n">Duration</span><span class="o">::</span><span class="n">zero</span><span class="p">(),</span><span class="w"> </span><span class="n">container</span><span class="o">-&gt;</span><span class="n">environment</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">timeout</span><span class="p">())</span><span class="w"> </span><span class="p">{}</span><span class="w"></span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">ShutdownTrigger</span><span class="o">::</span><span class="n">setup</span><span class="p">()</span><span class="w"> </span><span class="k">noexcept</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="n">BaseAction</span><span class="o">::</span><span class="n">setup</span><span class="p">();</span><span class="w"></span>
+<span class="w">  </span><span class="n">environment</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">sync_shutdown</span><span class="p">();</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">ShutdownTrigger</span><span class="o">::</span><span class="n">shutdown</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">is_present</span><span class="p">())</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">Tag</span><span class="w"> </span><span class="n">tag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Tag</span><span class="o">::</span><span class="n">from_logical_time</span><span class="p">(</span><span class="n">environment</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">logical_time</span><span class="p">()).</span><span class="n">delay</span><span class="p">();</span><span class="w"></span>
+<span class="w">    </span><span class="n">environment</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">scheduler</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">schedule_sync</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">tag</span><span class="p">);</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
 <span class="p">}</span><span class="w"></span>
 
 <span class="p">}</span><span class="w"> </span><span class="c1">// namespace reactor</span>

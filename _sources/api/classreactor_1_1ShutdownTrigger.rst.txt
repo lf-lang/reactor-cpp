@@ -1,7 +1,7 @@
-.. _exhale_class_classreactor_1_1StartupAction:
+.. _exhale_class_classreactor_1_1ShutdownTrigger:
 
-Class StartupAction
-===================
+Class ShutdownTrigger
+=====================
 
 - Defined in :ref:`file_include_reactor-cpp_action.hh`
 
@@ -19,7 +19,7 @@ Class Documentation
 -------------------
 
 
-.. doxygenclass:: reactor::StartupAction
+.. doxygenclass:: reactor::ShutdownTrigger
    :project: reactor-cpp
    :members:
    :protected-members:

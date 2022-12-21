@@ -20,7 +20,6 @@ Derived Types
 
 - ``public reactor::Action< T >`` (:ref:`exhale_class_classreactor_1_1Action`)
 - ``public reactor::Action< void >`` (:ref:`exhale_class_classreactor_1_1Action_3_01void_01_4`)
-- ``public reactor::ShutdownAction`` (:ref:`exhale_class_classreactor_1_1ShutdownAction`)
 - ``public reactor::Timer`` (:ref:`exhale_class_classreactor_1_1Timer`)
 
 

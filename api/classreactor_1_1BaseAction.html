@@ -90,8 +90,8 @@
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1SafeVector.html">Template Class SafeVector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Scheduler.html">Class Scheduler</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Semaphore.html">Class Semaphore</a></li>
-<li class="toctree-l4"><a class="reference internal" href="classreactor_1_1ShutdownAction.html">Class ShutdownAction</a></li>
-<li class="toctree-l4"><a class="reference internal" href="classreactor_1_1StartupAction.html">Class StartupAction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classreactor_1_1ShutdownTrigger.html">Class ShutdownTrigger</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classreactor_1_1StartupTrigger.html">Class StartupTrigger</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Tag.html">Class Tag</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1Timer.html">Class Timer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classreactor_1_1ValidationError.html">Class ValidationError</a></li>
@@ -325,7 +325,6 @@
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">public</span> <span class="pre">reactor::Action&lt;</span> <span class="pre">T</span> <span class="pre">&gt;</span></code> (<a class="reference internal" href="classreactor_1_1Action.html#exhale-class-classreactor-1-1action"><span class="std std-ref">Template Class Action</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">public</span> <span class="pre">reactor::Action&lt;</span> <span class="pre">void</span> <span class="pre">&gt;</span></code> (<a class="reference internal" href="classreactor_1_1Action_3_01void_01_4.html#exhale-class-classreactor-1-1action-3-01void-01-4"><span class="std std-ref">Template Class Action&lt; void &gt;</span></a>)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">public</span> <span class="pre">reactor::ShutdownAction</span></code> (<a class="reference internal" href="classreactor_1_1ShutdownAction.html#exhale-class-classreactor-1-1shutdownaction"><span class="std std-ref">Class ShutdownAction</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">public</span> <span class="pre">reactor::Timer</span></code> (<a class="reference internal" href="classreactor_1_1Timer.html#exhale-class-classreactor-1-1timer"><span class="std std-ref">Class Timer</span></a>)</p></li>
 </ul>
 </section>
@@ -335,7 +334,7 @@
 <dl class="cpp class">
 <dt class="sig sig-object cpp" id="_CPPv4N7reactor10BaseActionE">
 <span id="_CPPv3N7reactor10BaseActionE"></span><span id="_CPPv2N7reactor10BaseActionE"></span><span id="reactor::BaseAction"></span><span class="target" id="classreactor_1_1BaseAction"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BaseAction</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">reactor</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="classreactor_1_1ReactorElement.html#_CPPv4N7reactor14ReactorElementE" title="reactor::ReactorElement"><span class="n"><span class="pre">ReactorElement</span></span></a><a class="headerlink" href="#_CPPv4N7reactor10BaseActionE" title="Permalink to this definition"></a><br /></dt>
-<dd><p>Subclassed by <a class="reference internal" href="classreactor_1_1Action.html#classreactor_1_1Action"><span class="std std-ref">reactor::Action&lt; T &gt;</span></a>, <a class="reference internal" href="classreactor_1_1Action_3_01void_01_4.html#classreactor_1_1Action_3_01void_01_4"><span class="std std-ref">reactor::Action&lt; void &gt;</span></a>, <a class="reference internal" href="classreactor_1_1ShutdownAction.html#classreactor_1_1ShutdownAction"><span class="std std-ref">reactor::ShutdownAction</span></a>, <a class="reference internal" href="classreactor_1_1Timer.html#classreactor_1_1Timer"><span class="std std-ref">reactor::Timer</span></a></p>
+<dd><p>Subclassed by <a class="reference internal" href="classreactor_1_1Action.html#classreactor_1_1Action"><span class="std std-ref">reactor::Action&lt; T &gt;</span></a>, <a class="reference internal" href="classreactor_1_1Action_3_01void_01_4.html#classreactor_1_1Action_3_01void_01_4"><span class="std std-ref">reactor::Action&lt; void &gt;</span></a>, <a class="reference internal" href="classreactor_1_1Timer.html#classreactor_1_1Timer"><span class="std std-ref">reactor::Timer</span></a></p>
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
 <dl class="cpp function">
@@ -363,6 +362,11 @@
 <span id="_CPPv3NK7reactor10BaseAction9min_delayEv"></span><span id="_CPPv2NK7reactor10BaseAction9min_delayEv"></span><span id="reactor::BaseAction::min_delayC"></span><span class="target" id="classreactor_1_1BaseAction_1a807f154f8f7a74a696f31b468b5270ef"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">min_delay</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><a class="reference internal" href="typedef_namespacereactor_1aa8375b807a80703545664096c5b5b779.html#_CPPv4N7reactor8DurationE" title="reactor::Duration"><span class="n"><span class="pre">Duration</span></span></a><a class="headerlink" href="#_CPPv4NK7reactor10BaseAction9min_delayEv" title="Permalink to this definition"></a><br /></dt>
 <dd></dd></dl>
 
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK7reactor10BaseAction10is_presentEv">
+<span id="_CPPv3NK7reactor10BaseAction10is_presentEv"></span><span id="_CPPv2NK7reactor10BaseAction10is_presentEv"></span><span id="reactor::BaseAction::is_presentC"></span><span class="target" id="classreactor_1_1BaseAction_1a37800ab0c16f8490e521f39524b093dd"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">is_present</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><a class="headerlink" href="#_CPPv4NK7reactor10BaseAction10is_presentEv" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
 </div>
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-protected-functions">Protected Functions</p>
@@ -378,12 +382,12 @@
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N7reactor10BaseAction5setupEv">
-<span id="_CPPv3N7reactor10BaseAction5setupEv"></span><span id="_CPPv2N7reactor10BaseAction5setupEv"></span><span id="reactor::BaseAction::setup"></span><span class="target" id="classreactor_1_1BaseAction_1a74c667804895cc1c0d8656b523ba0162"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">setup</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><a class="headerlink" href="#_CPPv4N7reactor10BaseAction5setupEv" title="Permalink to this definition"></a><br /></dt>
+<span id="_CPPv3N7reactor10BaseAction5setupEv"></span><span id="_CPPv2N7reactor10BaseAction5setupEv"></span><span id="reactor::BaseAction::setup"></span><span class="target" id="classreactor_1_1BaseAction_1ad2879a428a6218a5b47d342d86a138d0"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">setup</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><a class="headerlink" href="#_CPPv4N7reactor10BaseAction5setupEv" title="Permalink to this definition"></a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N7reactor10BaseAction7cleanupEv">
-<span id="_CPPv3N7reactor10BaseAction7cleanupEv"></span><span id="_CPPv2N7reactor10BaseAction7cleanupEv"></span><span id="reactor::BaseAction::cleanup"></span><span class="target" id="classreactor_1_1BaseAction_1a0427f4161ef5a86e77ff9808db66ec9d"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cleanup</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><a class="headerlink" href="#_CPPv4N7reactor10BaseAction7cleanupEv" title="Permalink to this definition"></a><br /></dt>
+<span id="_CPPv3N7reactor10BaseAction7cleanupEv"></span><span id="_CPPv2N7reactor10BaseAction7cleanupEv"></span><span id="reactor::BaseAction::cleanup"></span><span class="target" id="classreactor_1_1BaseAction_1ad576759c3ec387bf0e68bd49f1c09a51"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cleanup</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><a class="headerlink" href="#_CPPv4N7reactor10BaseAction7cleanupEv" title="Permalink to this definition"></a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp function">
@@ -412,6 +416,11 @@
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N7reactor10BaseAction8logical_E">
 <span id="_CPPv3N7reactor10BaseAction8logical_E"></span><span id="_CPPv2N7reactor10BaseAction8logical_E"></span><span id="reactor::BaseAction::logical___bC"></span><span class="target" id="classreactor_1_1BaseAction_1a1667aa0d075d789c9c97390ca4113816"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">logical_</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><span class="k"><span class="pre">true</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N7reactor10BaseAction8logical_E" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N7reactor10BaseAction8present_E">
+<span id="_CPPv3N7reactor10BaseAction8present_E"></span><span id="_CPPv2N7reactor10BaseAction8present_E"></span><span id="reactor::BaseAction::present___b"></span><span class="target" id="classreactor_1_1BaseAction_1a28d8c74a6ac697027f1030bb8586a7c2"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">present_</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><span class="k"><span class="pre">false</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N7reactor10BaseAction8present_E" title="Permalink to this definition"></a><br /></dt>
 <dd></dd></dl>
 
 </div>

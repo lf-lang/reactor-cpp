@@ -15,10 +15,11 @@ Base Type
 - ``public reactor::BaseAction`` (:ref:`exhale_class_classreactor_1_1BaseAction`)
 
 
-Derived Type
-************
+Derived Types
+*************
 
-- ``public reactor::StartupAction`` (:ref:`exhale_class_classreactor_1_1StartupAction`)
+- ``public reactor::ShutdownTrigger`` (:ref:`exhale_class_classreactor_1_1ShutdownTrigger`)
+- ``public reactor::StartupTrigger`` (:ref:`exhale_class_classreactor_1_1StartupTrigger`)
 
 
 Class Documentation

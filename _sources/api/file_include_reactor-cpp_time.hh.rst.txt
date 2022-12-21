@@ -40,9 +40,15 @@ Included By
 -----------
 
 
+- :ref:`file_lib_action.cc`
+
+- :ref:`file_lib_environment.cc`
+
 - :ref:`file_lib_time.cc`
 
 - :ref:`file_include_reactor-cpp_logical_time.hh`
+
+- :ref:`file_include_reactor-cpp_environment.hh`
 
 - :ref:`file_include_reactor-cpp_scheduler.hh`
 
