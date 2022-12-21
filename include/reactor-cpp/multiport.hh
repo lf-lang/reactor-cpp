@@ -37,9 +37,7 @@ public:
   }
 
   // resets parent multiport
-  inline void clear() noexcept {
-    size_.store(0, std::memory_order_relaxed);
-  }
+  inline void clear() noexcept { size_.store(0, std::memory_order_relaxed); }
 };
 
 template <class T, class A = std::allocator<T>>

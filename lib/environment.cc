@@ -17,6 +17,7 @@
 #include "reactor-cpp/logging.hh"
 #include "reactor-cpp/port.hh"
 #include "reactor-cpp/reaction.hh"
+#include "reactor-cpp/time.hh"
 
 namespace reactor {
 
@@ -87,10 +88,20 @@ void Environment::build_dependency_graph(Reactor* reactor) { // NOLINT
 }
 
 void Environment::sync_shutdown() {
-  validate(this->phase() == Phase::Execution, "sync_shutdown() may only be called during execution phase!");
-  phase_ = Phase::Shutdown;
+  {
+    std::lock_guard<std::mutex> lock(shutdown_mutex_);
 
-  log::Info() << "Terminating the execution";
+    if (phase_ >= Phase::Shutdown) {
+      // sync_shutdown() was already called -> abort
+      return;
+    }
+
+    validate(phase_ == Phase::Execution, "sync_shutdown() may only be called during execution phase!");
+    phase_ = Phase::Shutdown;
+  }
+
+  // the following will only be executed once
+  log::Debug() << "Terminating the execution";
 
   for (auto* reactor : top_level_reactors_) {
     reactor->shutdown();
@@ -231,9 +242,9 @@ auto Environment::startup() -> std::thread {
 
 void Environment::dump_trigger_to_yaml(std::ofstream& yaml, const BaseAction& trigger) {
   yaml << "      - name: " << trigger.name() << std::endl;
-  if (dynamic_cast<const StartupAction*>(&trigger) != nullptr) {
+  if (dynamic_cast<const StartupTrigger*>(&trigger) != nullptr) {
     yaml << "        type: startup" << std::endl;
-  } else if (dynamic_cast<const ShutdownAction*>(&trigger) != nullptr) {
+  } else if (dynamic_cast<const ShutdownTrigger*>(&trigger) != nullptr) {
     yaml << "        type: shutdown" << std::endl;
   } else if (dynamic_cast<const Timer*>(&trigger) != nullptr) {
     yaml << "        type: timer" << std::endl;
