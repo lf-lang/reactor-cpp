@@ -351,9 +351,9 @@ void Scheduler::fill_action_list_pool() {
 }
 
 void Scheduler::schedule_sync(BaseAction* action, const Tag& tag) {
-  reactor_assert(logical_time_ < tag);
   log_.debug() << "Schedule action " << action->fqn() << (action->is_logical() ? " synchronously " : " asynchronously ")
                << " with tag [" << tag.time_point() << ", " << tag.micro_step() << "]";
+  reactor_assert(logical_time_ < tag);
   tracepoint(reactor_cpp, schedule_action, action->container()->fqn(), action->name(), tag);
 
   if (using_workers_) {
