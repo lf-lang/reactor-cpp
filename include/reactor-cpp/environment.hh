@@ -13,6 +13,7 @@
 #include <string>
 #include <vector>
 
+#include "reactor-cpp/logging.hh"
 #include "reactor-cpp/time.hh"
 #include "reactor.hh"
 #include "scheduler.hh"
@@ -30,6 +31,9 @@ public:
 
 private:
   using Dependency = std::pair<Reaction*, Reaction*>;
+
+  const std::string name_{};
+  const log::NamedLogger log_;
   const unsigned int num_workers_{default_number_worker};
   unsigned int max_reaction_index_{default_max_reaction_index};
   const bool run_forever_{default_run_forever};
@@ -38,6 +42,13 @@ private:
   std::set<Reactor*> top_level_reactors_{};
   std::set<Reaction*> reactions_{};
   std::vector<Dependency> dependencies_{};
+
+  /// The environment containing this environment. nullptr if this is the top environment
+  Environment* containing_environment_{nullptr};
+  /// Set of all environments contained by this environment
+  std::set<Environment*> contained_environments_{};
+  /// Pointer to the top level environment
+  Environment* top_environment_{nullptr};
 
   Scheduler scheduler_;
   Phase phase_{Phase::Construction};
@@ -50,14 +61,14 @@ private:
 
   std::mutex shutdown_mutex_{};
 
+  auto startup(const TimePoint& start_time) -> std::thread;
+
 public:
   explicit Environment(unsigned int num_workers, bool run_forever = default_run_forever,
-                       bool fast_fwd_execution = default_fast_fwd_execution, const Duration& timeout = Duration::max())
-      : num_workers_(num_workers)
-      , run_forever_(run_forever)
-      , fast_fwd_execution_(fast_fwd_execution)
-      , scheduler_(this)
-      , timeout_(timeout) {}
+                       bool fast_fwd_execution = default_fast_fwd_execution, const Duration& timeout = Duration::max());
+  explicit Environment(const std::string& name, Environment* containing_environment);
+
+  auto name() -> const std::string& { return name_; }
 
   void register_reactor(Reactor* reactor);
   void assemble();
