@@ -96,6 +96,7 @@ auto Port<void>::typed_inward_binding() const noexcept -> Port<void>* {
 void Port<void>::set() {
   validate(!has_inward_binding(), "set() may only be called on a ports that do not have an inward "
                                   "binding!");
+
   auto* scheduler = environment()->scheduler();
   scheduler->set_port(this);
   this->present_ = true;

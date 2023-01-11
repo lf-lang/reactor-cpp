@@ -41,7 +41,8 @@ template <class T> template <class Dur> void Action<T>::schedule(const Immutable
   }
 }
 
-template <class Dur> void Action<void>::schedule(Dur delay) {
+template <class Dur>
+void Action<void>::schedule(Dur delay) {
   auto time_delay = std::chrono::duration_cast<Duration>(delay);
   reactor::validate(time_delay >= Duration::zero(), "Schedule cannot be called with a negative delay!");
   auto* scheduler = environment()->scheduler();

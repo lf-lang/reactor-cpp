@@ -416,7 +416,9 @@ void Scheduler::set_port(BasePort* port) {
 
 void Scheduler::set_port_helper(BasePort* port) {
   if (!(port->triggers().empty() && port->dependencies().empty())) {
-    if (port->message_multiport()) {
+    // currently there are two different handlers one is for multiports
+    // the other for delayed connections
+    if (port->call_set_handler()) {
       set_ports_[Worker::current_worker_id()].push_back(port);
     }
   }
@@ -424,6 +426,7 @@ void Scheduler::set_port_helper(BasePort* port) {
   for (auto* reaction : port->triggers()) {
     triggered_reactions_[Worker::current_worker_id()].push_back(reaction);
   }
+
   for (auto* binding : port->outward_bindings()) {
     set_port_helper(binding);
   }

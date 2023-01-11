@@ -111,7 +111,6 @@ private:
 
   std::vector<std::vector<BasePort*>> set_ports_;
   std::vector<std::vector<Reaction*>> triggered_reactions_;
-
   std::vector<std::vector<Reaction*>> reaction_queue_;
   unsigned int reaction_queue_pos_{std::numeric_limits<unsigned>::max()};
 

@@ -15,6 +15,8 @@
 #include <type_traits>
 #include <vector>
 
+#include "port.hh"
+
 namespace reactor {
 
 class BaseMultiport { // NOLINT cppcoreguidelines-special-member-functions,-warnings-as-errors
@@ -27,17 +29,14 @@ public:
   ~BaseMultiport() = default;
 
   // tells the parent multiport that this port has been set.
-  [[nodiscard]] inline auto set_present(std::size_t index) -> bool {
-    auto calculated_index = size_.fetch_add(1, std::memory_order_relaxed);
-
-    reactor_assert(calculated_index < present_ports_.size());
-
-    present_ports_[calculated_index] = index;
-    return true;
-  }
+  [[nodiscard]] inline auto set_present(std::size_t index) -> bool;
 
   // resets parent multiport
   inline void clear() noexcept { size_.store(0, std::memory_order_relaxed); }
+
+  // this returns lambdas which are given to the port for callback
+  [[nodiscard]] inline auto get_set_callback(std::size_t index) noexcept -> std::function<bool(BasePort*)>;
+  [[nodiscard]] inline auto get_clean_callback() noexcept -> std::function<bool(BasePort*)>;
 };
 
 template <class T, class A = std::allocator<T>>

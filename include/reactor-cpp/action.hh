@@ -40,15 +40,10 @@ protected:
 
 public:
   [[nodiscard]] auto inline triggers() const noexcept -> const auto& { return triggers_; }
-
   [[nodiscard]] auto inline schedulers() const noexcept -> const auto& { return schedulers_; }
-
   [[nodiscard]] auto inline is_logical() const noexcept -> bool { return logical_; }
-
   [[nodiscard]] auto inline is_physical() const noexcept -> bool { return !logical_; }
-
   [[nodiscard]] auto inline min_delay() const noexcept -> Duration { return min_delay_; }
-
   [[nodiscard]] auto inline is_present() const noexcept -> bool { return present_; }
 
   friend class Reaction;

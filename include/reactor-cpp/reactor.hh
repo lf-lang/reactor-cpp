@@ -29,7 +29,7 @@ private:
   auto fqn_detail(std::stringstream& string_stream) const noexcept -> std::stringstream&;
 
 public:
-  enum class Type { Action, Port, Reaction, Reactor, Input, Output };
+  enum class Type { Action, Port, Reaction, Reactor, Input, Output, Delay, Connection};
 
   ReactorElement(const std::string& name, Type type, Reactor* container);
   ReactorElement(const std::string& name, Type type, Environment* environment);
