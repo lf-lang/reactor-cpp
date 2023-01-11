@@ -1,6 +1,5 @@
 #include <iostream>
 
-#include "reactor-cpp/delay.hh"
 #include "reactor-cpp/action.hh"
 #include "reactor-cpp/reactor-cpp.hh"
 
@@ -12,9 +11,6 @@ private:
   // actions
   Timer timer{"timer", this, 1s, 2s};
   ShutdownTrigger sa{"terminate", this};
-
-  // ports
-  Delay<void> delay_port{"delayer", this, std::chrono::seconds(5)};
 
   // reactions
   Reaction r_hello{"r_hello", 1, this, [this]() { hello(); }};
