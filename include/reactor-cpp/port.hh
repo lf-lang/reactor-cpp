@@ -45,8 +45,8 @@ protected:
            PortFunctionType clean_callback)
       : ReactorElement(name, match_port_enum(type), container)
       , type_(type)
-      , set_callback_(set_callback)
-      , clean_callback_(clean_callback) {}
+      , set_callback_(std::move(set_callback))
+      , clean_callback_(std::move(clean_callback)) {}
 
   void base_bind_to(BasePort* port);
   void register_dependency(Reaction* reaction, bool is_trigger) noexcept;
@@ -123,7 +123,7 @@ public:
 
   Port(const std::string& name, PortType type, Reactor* container, PortFunctionType set_callback,
        PortFunctionType clean_callback)
-      : BasePort(name, type, container, set_callback, clean_callback) {}
+      : BasePort(name, type, container, std::move(set_callback), std::move(clean_callback)) {}
 
   void bind_to(Port<T>* port) { base_bind_to(port); }
   [[nodiscard]] auto typed_inward_binding() const noexcept -> Port<T>*;
@@ -170,7 +170,7 @@ public:
       : Port<T>(name, PortType::Input, container) {}
 
   Input(const std::string& name, Reactor* container, PortFunctionType set_callback, PortFunctionType clean_callback)
-      : Port<T>(name, PortType::Input, container, set_callback, clean_callback) {}
+      : Port<T>(name, PortType::Input, container, std::move(set_callback), std::move(clean_callback)) {}
 
   Input(Input&&) = default; // NOLINT(performance-noexcept-move-constructor)
 };
@@ -181,7 +181,7 @@ public:
       : Port<T>(name, PortType::Output, container) {}
 
   Output(const std::string& name, Reactor* container, PortFunctionType set_callback, PortFunctionType clean_callback)
-      : Port<T>(name, PortType::Output, container, set_callback, clean_callback) {}
+      : Port<T>(name, PortType::Output, container, std::move(set_callback), std::move(clean_callback)) {}
 
   Output(Output&&) = default; // NOLINT(performance-noexcept-move-constructor)
 };
