@@ -9,6 +9,7 @@
 #include "reactor.hh"
 #include "action.hh"
 #include "reaction.hh"
+#include "port.hh"
 
 namespace reactor {
   class [[maybe_unused]] BaseConnection : public ReactorElement {
@@ -62,13 +63,13 @@ namespace reactor {
 
     }
 
-    inline auto get_set_callback() noexcept -> std::function<bool(BasePort*)> {
+    inline auto get_set_callback() noexcept -> PortFunctionType {
         return [this](BasePort* port) {
           this->trigger();
           return true;
         };
     }
-    inline auto get_clean_callback() noexcept -> std::function<bool(BasePort*)> {
+    inline auto get_clean_callback() noexcept -> PortFunctionType {
         return [](BasePort* port) {return true;};
     }
   };

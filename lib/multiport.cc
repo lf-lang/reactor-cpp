@@ -4,7 +4,7 @@
 
 #include "reactor-cpp/multiport.hh"
 
-auto reactor::BaseMultiport::get_set_callback(std::size_t index) noexcept -> std::function<bool(BasePort*)> {
+auto reactor::BaseMultiport::get_set_callback(std::size_t index) noexcept -> PortFunctionType {
     // tells the parent multiport that this port has been set.
     return [this, index](BasePort* port) {
       if (port->is_present()) {
@@ -14,7 +14,7 @@ auto reactor::BaseMultiport::get_set_callback(std::size_t index) noexcept -> std
       return this->set_present(index);
   };
 }
-auto reactor::BaseMultiport::get_clean_callback() noexcept -> std::function<bool(BasePort*)>{
+auto reactor::BaseMultiport::get_clean_callback() noexcept -> PortFunctionType {
     // resets parent multiport
     return [this]([[maybe_unused]]BasePort* port) {
         this->clear();

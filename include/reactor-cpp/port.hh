@@ -19,6 +19,7 @@
 namespace reactor {
 
 enum class PortType { Input, Output, Delay };
+using PortFunctionType = std::function<bool(BasePort*)>;
 
 class BasePort : public ReactorElement {
 private:
@@ -30,15 +31,20 @@ private:
   std::set<Reaction*> triggers_{};
   std::set<Reaction*> anti_dependencies_{};
 
-  std::function<bool(BasePort* port)> set_callback_{nullptr};
-  std::function<bool(BasePort* port)> clean_callback_{nullptr};
+  PortFunctionType set_callback_{nullptr};
+  PortFunctionType clean_callback_{nullptr};
 protected:
   bool present_{false}; // NOLINT cppcoreguidelines-non-private-member-variables-in-classes
-
 
   BasePort(const std::string& name, PortType type, Reactor* container)
       : ReactorElement(name, match_port_enum(type),container)
       , type_(type) {}
+
+  BasePort(const std::string& name, PortType type, Reactor* container, PortFunctionType set_callback, PortFunctionType clean_callback)
+      : ReactorElement(name, match_port_enum(type),container)
+      , type_(type)
+      , set_callback_(set_callback)
+      , clean_callback_(clean_callback) {}
 
   void base_bind_to(BasePort* port);
   void register_dependency(Reaction* reaction, bool is_trigger) noexcept;
@@ -110,6 +116,9 @@ public:
   Port(const std::string& name, PortType type, Reactor* container)
       : BasePort(name, type, container) {}
 
+  Port(const std::string& name, PortType type, Reactor* container, PortFunctionType set_callback, PortFunctionType clean_callback)
+      : BasePort(name, type,container, set_callback, clean_callback) {}
+
   void bind_to(Port<T>* port) { base_bind_to(port); }
   [[nodiscard]] auto typed_inward_binding() const noexcept -> Port<T>*;
   [[nodiscard]] auto typed_outward_bindings() const noexcept -> const std::set<Port<T>*>&;
@@ -154,6 +163,9 @@ public:
   Input(const std::string& name, Reactor* container)
       : Port<T>(name, PortType::Input, container) {}
 
+  Input(const std::string& name, Reactor* container, PortFunctionType set_callback, PortFunctionType clean_callback)
+      : Port<T>(name, PortType::Input ,container, set_callback, clean_callback) {}
+
   Input(Input&&) = default; // NOLINT(performance-noexcept-move-constructor)
 };
 
@@ -161,6 +173,9 @@ template <class T> class Output : public Port<T> { // NOLINT
 public:
   Output(const std::string& name, Reactor* container)
       : Port<T>(name, PortType::Output, container) {}
+
+  Output(const std::string& name, Reactor* container, PortFunctionType set_callback, PortFunctionType clean_callback)
+      : Port<T>(name, PortType::Output,container, set_callback, clean_callback) {}
 
   Output(Output&&) = default; // NOLINT(performance-noexcept-move-constructor)
 };
