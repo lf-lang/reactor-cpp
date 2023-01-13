@@ -2,6 +2,7 @@
 
 #include "reactor-cpp/action.hh"
 #include "reactor-cpp/reactor-cpp.hh"
+#include "reactor-cpp/connection.hh"
 
 using namespace reactor;
 using namespace std::chrono_literals;
@@ -11,7 +12,11 @@ private:
   // actions
   Timer timer{"timer", this, 1s, 2s};
   ShutdownTrigger sa{"terminate", this};
+  // connection
 
+  Port<void> output_port{"r_input_port", PortType::Output, this};
+  Port<void> input_port{"r_input_port", PortType::Input, this};
+  Connection<void> connection{"r_connection", this, std::chrono::nanoseconds(0), &input_port, &output_port};
   // reactions
   Reaction r_hello{"r_hello", 1, this, [this]() { hello(); }};
   Reaction r_react{"r_react", 1, this, [this]() { react(); }};

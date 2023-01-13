@@ -30,12 +30,12 @@ namespace reactor {
     std::chrono::nanoseconds delay_{0};
   public:
     Connection(const std::string& name, Reactor* container)
-        : BaseAction(name, container, true, 0),
+        : Action<T>(name, container, true, 0),
         incoming_port_interface_(new Port<T>{name, container}),
         outgoing_port_interface_(new Port<T>{name, container}) {}
 
     Connection(const std::string& name, Reactor* container, Duration delay, Port<T>* incoming, Port<T>* outgoing)
-      : BaseAction(name, container, true, delay),
+      : Action<T>(name, container, true, delay),
         incoming_port_interface_(incoming),
         outgoing_port_interface_(outgoing) {}
 
@@ -48,10 +48,18 @@ namespace reactor {
       this->schedule(incoming_port_interface_->get(), delay_);
     }
 
-    void setup() override {
-      if(outgoing_port_interface_ != nullptr && outgoing_port_interface_ != nullptr) {
-        outgoing_port_interface_->set(incoming_port_interface_->get());
+    void setup() noexcept override {
+      //TODO: Action<T>::setup(); needed ?
+      if constexpr (std::is_same<T, void>::value) {
+        if(outgoing_port_interface_ != nullptr && outgoing_port_interface_ != nullptr && incoming_port_interface_->is_present()) {
+          outgoing_port_interface_->set();
+        }
+      } else {
+        if(outgoing_port_interface_ != nullptr && outgoing_port_interface_ != nullptr) {
+          outgoing_port_interface_->set(incoming_port_interface_->get());
+        }
       }
+
     }
 
     inline auto get_set_callback() noexcept -> std::function<bool(BasePort*)> {

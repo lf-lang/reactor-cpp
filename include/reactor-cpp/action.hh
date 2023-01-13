@@ -57,7 +57,7 @@ private:
   std::map<Tag, ImmutableValuePtr<T>> events_;
   std::mutex mutex_events_;
 
-  void setup() noexcept final;
+  void setup() noexcept override;
   void cleanup() noexcept final;
 
 protected:
