@@ -33,15 +33,17 @@ private:
 
   PortFunctionType set_callback_{nullptr};
   PortFunctionType clean_callback_{nullptr};
+
 protected:
   bool present_{false}; // NOLINT cppcoreguidelines-non-private-member-variables-in-classes
 
   BasePort(const std::string& name, PortType type, Reactor* container)
-      : ReactorElement(name, match_port_enum(type),container)
+      : ReactorElement(name, match_port_enum(type), container)
       , type_(type) {}
 
-  BasePort(const std::string& name, PortType type, Reactor* container, PortFunctionType set_callback, PortFunctionType clean_callback)
-      : ReactorElement(name, match_port_enum(type),container)
+  BasePort(const std::string& name, PortType type, Reactor* container, PortFunctionType set_callback,
+           PortFunctionType clean_callback)
+      : ReactorElement(name, match_port_enum(type), container)
       , type_(type)
       , set_callback_(set_callback)
       , clean_callback_(clean_callback) {}
@@ -53,9 +55,12 @@ protected:
 
   static auto match_port_enum(PortType type) noexcept -> ReactorElement::Type {
     switch (type) {
-      case PortType::Output: return ReactorElement::Type::Output;
-      case PortType::Input: return ReactorElement::Type::Input;
-      default: return ReactorElement::Type::Port;
+    case PortType::Output:
+      return ReactorElement::Type::Output;
+    case PortType::Input:
+      return ReactorElement::Type::Input;
+    default:
+      return ReactorElement::Type::Port;
     };
   }
 
@@ -83,14 +88,14 @@ public:
   [[nodiscard]] inline auto port_type() const noexcept -> PortType { return type_; }
 
   inline auto call_set_handler() noexcept -> bool {
-    if(set_callback_ != nullptr) {
+    if (set_callback_ != nullptr) {
       return set_callback_(this);
     }
     return false;
   }
 
   inline auto call_clean_handler() noexcept -> bool {
-    if(clean_callback_!= nullptr) {
+    if (clean_callback_ != nullptr) {
       return clean_callback_(this);
     }
     return false;
@@ -116,8 +121,9 @@ public:
   Port(const std::string& name, PortType type, Reactor* container)
       : BasePort(name, type, container) {}
 
-  Port(const std::string& name, PortType type, Reactor* container, PortFunctionType set_callback, PortFunctionType clean_callback)
-      : BasePort(name, type,container, set_callback, clean_callback) {}
+  Port(const std::string& name, PortType type, Reactor* container, PortFunctionType set_callback,
+       PortFunctionType clean_callback)
+      : BasePort(name, type, container, set_callback, clean_callback) {}
 
   void bind_to(Port<T>* port) { base_bind_to(port); }
   [[nodiscard]] auto typed_inward_binding() const noexcept -> Port<T>*;
@@ -164,7 +170,7 @@ public:
       : Port<T>(name, PortType::Input, container) {}
 
   Input(const std::string& name, Reactor* container, PortFunctionType set_callback, PortFunctionType clean_callback)
-      : Port<T>(name, PortType::Input ,container, set_callback, clean_callback) {}
+      : Port<T>(name, PortType::Input, container, set_callback, clean_callback) {}
 
   Input(Input&&) = default; // NOLINT(performance-noexcept-move-constructor)
 };
@@ -175,7 +181,7 @@ public:
       : Port<T>(name, PortType::Output, container) {}
 
   Output(const std::string& name, Reactor* container, PortFunctionType set_callback, PortFunctionType clean_callback)
-      : Port<T>(name, PortType::Output,container, set_callback, clean_callback) {}
+      : Port<T>(name, PortType::Output, container, set_callback, clean_callback) {}
 
   Output(Output&&) = default; // NOLINT(performance-noexcept-move-constructor)
 };

@@ -1,8 +1,8 @@
 #include <iostream>
 
 #include "reactor-cpp/action.hh"
-#include "reactor-cpp/reactor-cpp.hh"
 #include "reactor-cpp/connection.hh"
+#include "reactor-cpp/reactor-cpp.hh"
 
 using namespace reactor;
 using namespace std::chrono_literals;
@@ -28,7 +28,7 @@ public:
 
   void assemble() override {
     r_hello.declare_trigger(&timer);
-    //r_terminate.declare_trigger(&sa);
+    // r_terminate.declare_trigger(&sa);
   }
 
   static void hello() { std::cout << "Hello World!" << std::endl; }

@@ -1,7 +1,7 @@
 #include <iostream>
 
-#include "reactor-cpp/reactor-cpp.hh"
 #include "reactor-cpp/connection.hh"
+#include "reactor-cpp/reactor-cpp.hh"
 
 using namespace reactor;
 using namespace std::chrono_literals;
@@ -56,7 +56,7 @@ private:
 public:
   Input<int> input_value{"input_value", this}; // NOLINT
   Output<int> output_value{"output_value", this};
-  Connection<int> connection {"connection", this, std::chrono::seconds(3), &input_value, &output_value};
+  Connection<int> connection{"connection", this, std::chrono::seconds(3), &input_value, &output_value};
 
   Printer(const std::string& name, Environment* env)
       : Reactor(name, env) {}
@@ -71,8 +71,8 @@ private:
   Reaction r_add{"r_add", 1, this, [this]() { add(); }};
 
 public:
-  Input<int> i1{"i1", this};    // NOLINT
-  Input<int> i2{"i1", this};    // NOLINT
+  Input<int> i1{"i1", this}; // NOLINT
+  Input<int> i2{"i1", this}; // NOLINT
 
   Output<int> sum{"sum", this}; // NOLINT
 
