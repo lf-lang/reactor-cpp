@@ -3,6 +3,7 @@
 //
 
 #include "reactor-cpp/multiport.hh"
+#include "reactor-cpp/port.hh"
 
 auto reactor::BaseMultiport::get_set_callback(std::size_t index) noexcept -> reactor::PortCallback {
   // tells the parent multiport that this port has been set.

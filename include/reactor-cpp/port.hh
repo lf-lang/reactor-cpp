@@ -20,8 +20,6 @@ namespace reactor {
 
 enum class PortType { Input, Output, Delay };
 
-using PortCallback = std::function<bool(const BasePort&)>;
-
 class BasePort : public ReactorElement {
 private:
   BasePort* inward_binding_{nullptr};

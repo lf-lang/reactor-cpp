@@ -9,6 +9,8 @@
 #ifndef REACTOR_CPP_FWD_HH
 #define REACTOR_CPP_FWD_HH
 
+#include <functional>
+
 namespace reactor {
 
 class BaseAction;
@@ -21,6 +23,8 @@ class Tag;
 
 template <class T> class Action;
 template <class T> class Port;
+
+using PortCallback = std::function<bool(const BasePort&)>;
 
 } // namespace reactor
 
