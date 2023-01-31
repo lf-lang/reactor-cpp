@@ -36,8 +36,8 @@ public:
   inline void clear() noexcept { size_.store(0, std::memory_order_relaxed); }
 
   // this returns lambdas which are given to the port for callback
-  [[nodiscard]] inline auto get_set_callback(std::size_t index) noexcept -> std::function<bool(BasePort*)>;
-  [[nodiscard]] inline auto get_clean_callback() noexcept -> std::function<bool(BasePort*)>;
+  [[nodiscard]] inline auto get_set_callback(std::size_t index) noexcept -> std::function<bool(const BasePort&)>;
+  [[nodiscard]] inline auto get_clean_callback() noexcept -> std::function<bool(const BasePort&)>;
 };
 
 template <class T, class A = std::allocator<T>>

@@ -20,7 +20,7 @@ namespace reactor {
 
 enum class PortType { Input, Output, Delay };
 
-using PortCallback = std::function<bool(BasePort*)>;
+using PortCallback = std::function<bool(const BasePort&)>;
 
 class BasePort : public ReactorElement {
 private:
@@ -60,14 +60,14 @@ protected:
 
   inline auto call_set_handler() noexcept -> bool {
     if (set_callback_ != nullptr) {
-      return set_callback_(this);
+      return set_callback_(*this);
     }
     return false;
   }
 
   inline auto call_clean_handler() noexcept -> bool {
     if (clean_callback_ != nullptr) {
-      return clean_callback_(this);
+      return clean_callback_(*this);
     }
     return false;
   }
