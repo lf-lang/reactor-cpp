@@ -58,14 +58,14 @@ protected:
     };
   }
 
-  inline auto call_set_handler() noexcept -> bool {
+  inline auto invoke_set_callback() noexcept -> bool {
     if (set_callback_ != nullptr) {
       return set_callback_(*this);
     }
     return false;
   }
 
-  inline auto call_clean_handler() noexcept -> bool {
+  inline auto invoke_clean_callback() noexcept -> bool {
     if (clean_callback_ != nullptr) {
       return clean_callback_(*this);
     }
@@ -115,7 +115,7 @@ private:
   void cleanup() noexcept final {
     value_ptr_ = nullptr;
     present_ = false;
-    call_clean_handler();
+    invoke_clean_callback();
   }
 
 public:
@@ -144,7 +144,7 @@ template <> class Port<void> : public BasePort {
 private:
   void cleanup() noexcept final {
     present_ = false;
-    call_clean_handler();
+    invoke_clean_callback();
   }
 
 public:

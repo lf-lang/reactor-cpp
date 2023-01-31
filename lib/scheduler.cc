@@ -415,18 +415,18 @@ void Scheduler::set_port(BasePort* port) {
 }
 
 void Scheduler::set_port_helper(BasePort* port) {
-  if (!(port->triggers().empty() && port->dependencies().empty())) {
-    // currently there are two different handlers one is for multiports
-    // the other for delayed connections
-    if (port->call_set_handler()) {
-      set_ports_[Worker::current_worker_id()].push_back(port);
-    }
+  // Call the 'set' callback on the port. If it returns true, we will
+  // need to also clean it later
+  if (port->invoke_set_callback()) {
+    set_ports_[Worker::current_worker_id()].push_back(port);
   }
 
+  // Record all triggered reactions
   for (auto* reaction : port->triggers()) {
     triggered_reactions_[Worker::current_worker_id()].push_back(reaction);
   }
 
+  // Continue recursively
   for (auto* binding : port->outward_bindings()) {
     set_port_helper(binding);
   }

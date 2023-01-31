@@ -113,8 +113,8 @@ public:
 
       // and we need to register callbacks on the port
       auto idx = this->data_.size() - 1;
-      this->data_.back().register_set_handler(this->get_set_callback(idx));
-      this->data_.back().register_clean_handler(this->get_clean_callback());
+      this->data_.back().register_set_callback(this->get_set_callback(idx));
+      this->data_.back().register_clean_callback(this->get_clean_callback());
     }
 };
 } // namespace reactor
