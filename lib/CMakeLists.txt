@@ -8,7 +8,6 @@ set(SOURCE_FILES
     reactor.cc
     scheduler.cc
     time.cc
-    connection.cc
     multiport.cc
     )
 
