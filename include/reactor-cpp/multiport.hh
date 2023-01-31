@@ -15,6 +15,7 @@
 #include <type_traits>
 #include <vector>
 
+#include "assert.hh"
 #include "port.hh"
 
 namespace reactor {
@@ -94,13 +95,27 @@ public:
 
   inline void push_back(const T& elem) noexcept {
     this->data_.push_back(elem);
-    this->present_ports_.emplace_back(0);
+    register_latest_port();
   }
 
   template <class... Args> inline void emplace_back(Args&&... args) noexcept {
     this->data_.emplace_back(args...);
-    this->present_ports_.emplace_back(0);
+    register_latest_port();
   }
+
+  private:
+    void register_latest_port() {
+      reactor_assert(this->data_.size() > 0);
+
+      // need to add one mow slot t the present list
+      this->present_ports_.emplace_back(0);
+      reactor_assert(this->data_.size() == this->present_ports_.size());
+
+      // and we need to register callbacks on the port
+      auto idx = this->data_.size() - 1;
+      this->data_.back().register_set_handler(this->get_set_callback(idx));
+      this->data_.back().register_clean_handler(this->get_clean_callback());
+    }
 };
 } // namespace reactor
 

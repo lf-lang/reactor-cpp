@@ -58,13 +58,13 @@ public:
     }
   }
 
-  inline auto get_set_callback() noexcept -> PortFunctionType {
+  inline auto get_set_callback() noexcept -> PortCallback {
     return [this](BasePort* port) {
       this->trigger();
       return true;
     };
   }
-  inline auto get_clean_callback() noexcept -> PortFunctionType {
+  inline auto get_clean_callback() noexcept -> PortCallback {
     return [](BasePort* port) { return true; };
   }
 };
