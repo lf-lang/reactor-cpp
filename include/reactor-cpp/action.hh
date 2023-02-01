@@ -65,6 +65,21 @@ protected:
       : BaseAction(name, container, logical, min_delay) {}
 
 public:
+  // Normally, we should lock the mutex while moving to make this
+  // fully thread safe. However, we rely assembly happening before
+  // execution and hence can ignore the mutex.
+  Action(Action&& action) noexcept
+    : BaseAction(std::forward(action)) {}
+  auto operator=(Action&& action) noexcept -> Action& {
+    BaseAction::operator=(std::forward(action));
+    return *this;
+  }
+
+  Action(const Action& action) = delete;
+  auto operator=(const Action& action) -> Action& = delete;
+
+  ~Action() override = default;
+
   void startup() final {}
   void shutdown() final {}
 
