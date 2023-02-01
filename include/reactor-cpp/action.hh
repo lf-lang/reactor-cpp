@@ -57,10 +57,10 @@ private:
   std::map<Tag, ImmutableValuePtr<T>> events_;
   std::mutex mutex_events_;
 
+protected:
   void setup() noexcept override;
   void cleanup() noexcept final;
 
-protected:
   Action(const std::string& name, Reactor* container, bool logical, Duration min_delay)
       : BaseAction(name, container, logical, min_delay) {}
 
