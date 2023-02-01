@@ -10,6 +10,7 @@
 #define REACTOR_CPP_PORT_HH
 
 #include <set>
+#include <vector>
 
 #include "assert.hh"
 #include "multiport.hh"
@@ -30,7 +31,7 @@ private:
   std::set<Reaction*> triggers_{};
   std::set<Reaction*> anti_dependencies_{};
 
-  PortCallback set_callback_{nullptr};
+  std::vector<PortCallback> set_callbacks_{};
   PortCallback clean_callback_{nullptr};
 
 protected:
@@ -57,10 +58,15 @@ protected:
   }
 
   inline auto invoke_set_callback() noexcept -> bool {
-    if (set_callback_ != nullptr) {
-      return set_callback_(*this);
+    if (set_callbacks_.empty()) {
+      return false;
     }
-    return false;
+
+    bool result{true};
+    for (auto& callback : set_callbacks_) {
+      result = result && callback(*this);
+    }
+    return result;
   }
 
   inline auto invoke_clean_callback() noexcept -> bool {
@@ -93,10 +99,8 @@ public:
   [[nodiscard]] inline auto anti_dependencies() const noexcept -> const auto& { return anti_dependencies_; }
   [[nodiscard]] inline auto port_type() const noexcept -> PortType { return type_; }
 
-  void register_set_callback(const PortCallback& callback) {
-    reactor_assert(set_callback_ == nullptr);
-    set_callback_ = callback;
-  }
+  void register_set_callback(const PortCallback& callback) { set_callbacks_.emplace_back(callback); }
+
   void register_clean_callback(const PortCallback& callback) {
     reactor_assert(clean_callback_ == nullptr);
     clean_callback_ = callback;
