@@ -319,15 +319,11 @@ void Scheduler::next() { // NOLINT
     }
   } // mutex schedule_
 
-  // execute all setup functions; this sets the values of the corresponding
-  // actions
-  for (auto* action : *actions) {
-    action->setup();
-  }
-
+  // iterate over all events/actions, call setup and insert scheduled reactions
   log::Debug() << "events: " << actions->size();
-  for (const auto* action : *actions) {
+  for (auto* action : *actions) {
     log::Debug() << "Action " << action->fqn();
+    action->setup();
     for (auto* reaction : action->triggers()) {
       // There is no need to acquire the mutex. At this point the scheduler
       // should be the only thread accessing the reaction queue as none of the
