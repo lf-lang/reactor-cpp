@@ -71,6 +71,9 @@ public:
       }
     }
   }
+
+  using Connection<T>::bind_upstream_port;
+  using Connection<T>::bind_downstream_port;
 };
 
 } // namespace reactor
