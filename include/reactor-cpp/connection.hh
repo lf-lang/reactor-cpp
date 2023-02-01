@@ -33,6 +33,9 @@ protected:
   [[nodiscard]] auto downstream_ports() -> auto& { return downstream_ports_; }
   [[nodiscard]] auto downstream_ports() const -> const auto& { return downstream_ports_; }
 
+  virtual auto upstream_set_callback() noexcept -> PortCallback = 0;
+
+public:
   void bind_upstream_port(Port<T>* port) {
     reactor_assert(upstream_port_ == nullptr);
     upstream_port_ = port;
@@ -40,11 +43,9 @@ protected:
   }
 
   void bind_downstream_port(Port<T>* port) { reactor_assert(this->downstream_ports_.insert(port).second); };
-
-  virtual auto upstream_set_callback() noexcept -> PortCallback = 0;
 };
 
-template <class T> class DelayedConnection : Connection<T> {
+template <class T> class DelayedConnection : public Connection<T> {
 public:
   DelayedConnection(const std::string& name, Reactor* container, Duration delay)
       : Connection<T>(name, container, true, delay) {}
@@ -71,9 +72,6 @@ public:
       }
     }
   }
-
-  using Connection<T>::bind_upstream_port;
-  using Connection<T>::bind_downstream_port;
 };
 
 } // namespace reactor
