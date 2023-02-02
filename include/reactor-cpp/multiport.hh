@@ -85,8 +85,9 @@ public:
   }
 
   [[nodiscard]] inline auto present_indices_sorted() const noexcept -> std::vector<std::size_t> {
-    std::sort(std::begin(present_ports()), std::begin(present_ports()) + present_ports_size());
-    return std::vector<std::size_t>(std::begin(present_ports()), std::begin(present_ports()) + present_ports_size());
+    std::vector<std::size_t> indices(std::begin(present_ports()), std::begin(present_ports()) + present_ports_size());
+    std::sort(std::begin(indices), std::end(indices));
+    return indices;
   }
 };
 
