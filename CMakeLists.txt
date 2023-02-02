@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.6)
+cmake_minimum_required(VERSION 3.9)
 
 if (DEFINED LF_REACTOR_CPP_SUFFIX)
   # the build is triggered from Lingua Franca
@@ -15,6 +15,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+
+# Use thw new CMP0068 policy. This needs to be set explicitly to avoid a warning message
+cmake_policy(SET CMP0068 NEW)
+set(CMAKE_BUILD_WITH_INSTALL_RPATH ON)
+set(BUILD_WITH_INSTALL_NAME_DIR ON)
 
 if (NOT DEFINED LF_REACTOR_CPP_SUFFIX)
   find_program(CLANG_TIDY clang-tidy)

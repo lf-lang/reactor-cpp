@@ -11,6 +11,8 @@
 #include <algorithm>
 #include <fstream>
 #include <map>
+#include <thread>
+#include <vector>
 
 #include "reactor-cpp/action.hh"
 #include "reactor-cpp/assert.hh"
@@ -20,6 +22,28 @@
 #include "reactor-cpp/time.hh"
 
 namespace reactor {
+
+Environment::Environment(unsigned int num_workers, bool run_forever, bool fast_fwd_execution, const Duration& timeout)
+    : log_("Environment")
+    , num_workers_(num_workers)
+    , run_forever_(run_forever)
+    , fast_fwd_execution_(fast_fwd_execution)
+    , top_environment_(this)
+    , scheduler_(this)
+    , timeout_(timeout) {}
+
+Environment::Environment(const std::string& name, Environment* containing_environment)
+    : name_(name)
+    , log_("Environment " + name)
+    , num_workers_(containing_environment->num_workers_)
+    , run_forever_(containing_environment->run_forever_)
+    , fast_fwd_execution_(containing_environment->fast_fwd_execution_)
+    , containing_environment_(containing_environment)
+    , top_environment_(containing_environment_->top_environment_)
+    , scheduler_(this)
+    , timeout_(containing_environment->timeout()) {
+  reactor_assert(containing_environment->contained_environments_.insert(this).second);
+}
 
 void Environment::register_reactor(Reactor* reactor) {
   reactor_assert(reactor != nullptr);
@@ -36,6 +60,7 @@ void recursive_assemble(Reactor* container) { // NOLINT
 }
 
 void Environment::assemble() {
+  log_.debug() << "Assemble";
   validate(this->phase() == Phase::Construction, "assemble() may only be called during construction phase!");
   phase_ = Phase::Assembly;
   for (auto* reactor : top_level_reactors_) {
@@ -47,6 +72,11 @@ void Environment::assemble() {
     build_dependency_graph(reactor);
   }
   calculate_indexes();
+
+  // assemble all contained environments
+  for (auto* env : contained_environments_) {
+    env->assemble();
+  }
 }
 
 void Environment::build_dependency_graph(Reactor* reactor) { // NOLINT
@@ -89,7 +119,7 @@ void Environment::build_dependency_graph(Reactor* reactor) { // NOLINT
 
 void Environment::sync_shutdown() {
   {
-    std::lock_guard<std::mutex> lock(shutdown_mutex_);
+    std::lock_guard<std::mutex> lock{shutdown_mutex_};
 
     if (phase_ >= Phase::Shutdown) {
       // sync_shutdown() was already called -> abort
@@ -101,7 +131,7 @@ void Environment::sync_shutdown() {
   }
 
   // the following will only be executed once
-  log::Debug() << "Terminating the execution";
+  log_.debug() << "Terminating the execution";
 
   for (auto* reactor : top_level_reactors_) {
     reactor->shutdown();
@@ -164,7 +194,7 @@ void Environment::export_dependency_graph(const std::string& path) {
 
   dot.close();
 
-  log::Info() << "Reaction graph was written to " << path;
+  log_.info() << "Reaction graph was written to " << path;
 }
 
 void Environment::calculate_indexes() {
@@ -177,7 +207,7 @@ void Environment::calculate_indexes() {
     graph[dependencies.first].insert(dependencies.second);
   }
 
-  log::Debug() << "Reactions sorted by index:";
+  log_.debug() << "Reactions sorted by index:";
   unsigned int index = 0;
   while (!graph.empty()) {
     // find nodes with degree zero and assign index
@@ -195,7 +225,7 @@ void Environment::calculate_indexes() {
                             "/tmp/reactor_dependency_graph.dot");
     }
 
-    log::Debug dbg;
+    auto dbg = log_.debug();
     dbg << index << ": ";
     for (auto* reaction : degree_zero) {
       dbg << reaction->fqn() << ", ";
@@ -218,18 +248,18 @@ void Environment::calculate_indexes() {
 }
 
 auto Environment::startup() -> std::thread {
+  validate(this == top_environment_, "startup() may only be called on the top environment");
+  auto start_time = get_physical_time();
+  return startup(start_time);
+}
+
+auto Environment::startup(const TimePoint& start_time) -> std::thread {
   validate(this->phase() == Phase::Assembly, "startup() may only be called during assembly phase!");
 
-  // build the dependency graph
-  for (auto* reactor : top_level_reactors_) {
-    build_dependency_graph(reactor);
-  }
-  calculate_indexes();
-
-  log::Info() << "Starting the execution";
+  log_.debug() << "Starting the execution";
   phase_ = Phase::Startup;
 
-  start_time_ = get_physical_time();
+  start_time_ = start_time;
   // start up initialize all reactors
   for (auto* reactor : top_level_reactors_) {
     reactor->startup();
@@ -237,7 +267,20 @@ auto Environment::startup() -> std::thread {
 
   // start processing events
   phase_ = Phase::Execution;
-  return std::thread([this]() { this->scheduler_.start(); });
+
+  return std::thread([this]() {
+    std::vector<std::thread> threads;
+    // startup all contained environments recursively
+    for (auto* env : contained_environments_) {
+      threads.emplace_back(env->startup(start_time_));
+    }
+    // start the local scheduler and wait until it returns
+    this->scheduler_.start();
+    // then join all the created threads
+    for (auto& thread : threads) {
+      thread.join();
+    }
+  });
 }
 
 void Environment::dump_trigger_to_yaml(std::ofstream& yaml, const BaseAction& trigger) {
@@ -367,7 +410,7 @@ void Environment::dump_to_yaml(const std::string& path) {
     yaml << "  - to: " << iterator.second->fqn() << std::endl;
   }
 
-  log::Info() << "Program structure was dumped to " << path;
+  log_.info() << "Program structure was dumped to " << path;
 }
 
 } // namespace reactor

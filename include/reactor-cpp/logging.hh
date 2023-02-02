@@ -15,12 +15,14 @@
 #include <iostream>
 #include <memory>
 #include <mutex>
+#include <string>
+#include <utility>
 
 namespace reactor::log {
 
 template <bool enabled> class BaseLogger {};
 
-template <> class BaseLogger<true> { // NOLINT
+template <> class BaseLogger<true> {
 private:
   using Lock = std::unique_lock<std::mutex>;
 
@@ -34,6 +36,10 @@ public:
       , lock_(mutex_) {
     std::cerr << log_prefix;
   }
+  BaseLogger(const BaseLogger&) = delete;
+  auto operator=(const BaseLogger&) -> BaseLogger& = delete;
+  BaseLogger(BaseLogger&&) = delete;
+  auto operator=(BaseLogger&&) -> BaseLogger& = delete;
 
   template <class T> auto operator<<(const T& msg) -> BaseLogger& {
     std::cerr << msg; // NOLINT
@@ -43,36 +49,61 @@ public:
   ~BaseLogger() { std::cerr << std::endl; }
 };
 
-template <> class BaseLogger<false> { // NOLINT
+template <> class BaseLogger<false> {
 public:
   explicit BaseLogger([[maybe_unused]] const std::string& /*unused*/) {}
+  BaseLogger(const BaseLogger&) = delete;
+  auto operator=(const BaseLogger&) -> BaseLogger& = delete;
+  BaseLogger(BaseLogger&&) = delete;
+  auto operator=(BaseLogger&&) -> BaseLogger& = delete;
 
-  template <class T> auto operator<<(const T& /*unused*/) const -> const BaseLogger& { return *this; }
+  template <class T> auto operator<<([[maybe_unused]] const T& /*unused*/) const -> const BaseLogger& { return *this; }
 
   ~BaseLogger() = default;
 };
 
 constexpr bool debug_enabled = 4 <= REACTOR_CPP_LOG_LEVEL;
 constexpr bool info_enabled = 3 <= REACTOR_CPP_LOG_LEVEL;
-constexpr bool warning_enabled = 2 <= REACTOR_CPP_LOG_LEVEL;
+constexpr bool warn_enabled = 2 <= REACTOR_CPP_LOG_LEVEL;
 constexpr bool error_enabled = 1 <= REACTOR_CPP_LOG_LEVEL;
 
 struct Debug : BaseLogger<debug_enabled> {
   Debug()
-      : BaseLogger<debug_enabled>("[DEBUG] "){}; // NOLINT Update C++20
+      : BaseLogger<debug_enabled>("[DEBUG] "){};
 };
 struct Info : BaseLogger<info_enabled> {
   Info()
-      : BaseLogger<info_enabled>("[INFO]  "){}; // NOLINT Update C++20
+      : BaseLogger<info_enabled>("[INFO]  "){};
 };
-struct Warn : BaseLogger<warning_enabled> {
+struct Warn : BaseLogger<warn_enabled> {
   Warn()
-      : BaseLogger<warning_enabled>("[WARN]  "){}; // NOLINT Update C++20
+      : BaseLogger<warn_enabled>("[WARN]  "){};
 };
 struct Error : BaseLogger<error_enabled> {
   Error()
-      : BaseLogger<error_enabled>("[ERROR] "){}; // NOLINT Update C++20
+      : BaseLogger<error_enabled>("[ERROR] "){};
 };
+
+class NamedLogger {
+private:
+  const std::string debug_prefix_{};
+  const std::string info_prefix_{};
+  const std::string warn_prefix_{};
+  const std::string error_prefix_{};
+
+public:
+  NamedLogger(const std::string& name)
+      : debug_prefix_("[DEBUG] (" + name + ") ")
+      , info_prefix_("[INFO]  (" + name + ") ")
+      , warn_prefix_("[WARN]  (" + name + ") ")
+      , error_prefix_("[ERROR] (" + name + ") ") {}
+
+  [[nodiscard]] auto debug() const -> BaseLogger<debug_enabled> { return BaseLogger<debug_enabled>(debug_prefix_); }
+  [[nodiscard]] auto info() const -> BaseLogger<info_enabled> { return BaseLogger<info_enabled>(info_prefix_); }
+  [[nodiscard]] auto warn() const -> BaseLogger<warn_enabled> { return BaseLogger<warn_enabled>(warn_prefix_); }
+  [[nodiscard]] auto error() const -> BaseLogger<error_enabled> { return BaseLogger<error_enabled>(error_prefix_); }
+};
+
 } // namespace reactor::log
 
 #endif // REACTOR_CPP_LOGGING_HH

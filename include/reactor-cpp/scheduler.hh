@@ -21,6 +21,7 @@
 
 #include "fwd.hh"
 #include "logical_time.hh"
+#include "reactor-cpp/logging.hh"
 #include "reactor-cpp/time.hh"
 #include "safe_vector.hh"
 #include "semaphore.hh"
@@ -32,10 +33,11 @@ class Scheduler;
 class Worker;
 
 class Worker { // NOLINT
-public:
+private:
   Scheduler& scheduler_;
   const unsigned int identity_{0};
   std::thread thread_{};
+  log::NamedLogger log_;
 
   // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
   static thread_local const Worker* current_worker;
@@ -43,9 +45,11 @@ public:
   void work() const;
   void execute_reaction(Reaction* reaction) const;
 
-  Worker(Scheduler& scheduler, unsigned int identity)
+public:
+  Worker(Scheduler& scheduler, unsigned int identity, const std::string& name)
       : scheduler_{scheduler}
-      , identity_{identity} {}
+      , identity_{identity}
+      , log_(name) {}
   Worker(Worker&& worker); // NOLINT(performance-noexcept-move-constructor)
   Worker(const Worker& worker) = delete;
 
@@ -62,10 +66,12 @@ private:
   Semaphore sem_{0};
   std::ptrdiff_t waiting_workers_{0};
   const unsigned int num_workers_;
+  log::NamedLogger& log_;
 
 public:
-  explicit ReadyQueue(unsigned num_workers)
-      : num_workers_(num_workers) {}
+  explicit ReadyQueue(log::NamedLogger& log, unsigned num_workers)
+      : num_workers_(num_workers)
+      , log_(log) {}
 
   /**
    * Retrieve a ready reaction from the queue.
@@ -95,15 +101,19 @@ class Scheduler { // NOLINT
 private:
   const bool using_workers_;
   LogicalTime logical_time_{};
+  TimePoint last_observed_physical_time_{TimePoint::min()};
 
   Environment* environment_;
   std::vector<Worker> workers_{};
+  log::NamedLogger log_;
 
   std::mutex scheduling_mutex_;
   std::condition_variable cv_schedule_;
 
   std::shared_mutex mutex_event_queue_;
   std::map<Tag, ActionListPtr> event_queue_;
+  /// stores the actions triggered at the current tag
+  ActionListPtr triggered_actions_{nullptr};
 
   std::vector<ActionListPtr> action_list_pool_;
   static constexpr std::size_t action_list_pool_increment_{10};
