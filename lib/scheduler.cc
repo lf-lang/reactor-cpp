@@ -317,7 +317,7 @@ void Scheduler::next() { // NOLINT
 
   // iterate over all events/actions, call setup and insert scheduled reactions
   log_.debug() << "events: " << triggered_actions_->size();
-  for (auto* action : *actions) {
+  for (auto* action : *triggered_actions_) {
     log_.debug() << "Action " << action->fqn();
     action->setup();
     for (auto* reaction : action->triggers()) {
