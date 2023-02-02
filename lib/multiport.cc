@@ -9,12 +9,9 @@ auto reactor::BaseMultiport::get_set_callback(std::size_t index) noexcept -> rea
   // tells the parent multiport that this port has been set.
   return [this, index](const BasePort& port) {
     // if the port is present, the callback was already invoked before
-    if (port.is_present()) {
-      return false;
+    if (!port.is_present()) {
+      this->set_present(index);
     }
-
-    this->set_present(index);
-    return true;
   };
 }
 
@@ -22,7 +19,6 @@ auto reactor::BaseMultiport::get_clean_callback() noexcept -> reactor::PortCallb
   // resets parent multiport
   return [this]([[maybe_unused]] const BasePort& port) {
     this->reset();
-    return true;
   };
 }
 

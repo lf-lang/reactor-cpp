@@ -54,7 +54,6 @@ public:
       // We know that port must be of type Port<T>*
       auto& typed_port = reinterpret_cast<const Port<T>&>(port); // NOLINT
       this->schedule(std::move(typed_port.get()));
-      return true;
     };
   }
 

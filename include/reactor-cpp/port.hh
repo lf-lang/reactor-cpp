@@ -57,23 +57,16 @@ protected:
     };
   }
 
-  inline auto invoke_set_callback() noexcept -> bool {
-    if (set_callbacks_.empty()) {
-      return false;
-    }
-
-    bool result{true};
+  inline void invoke_set_callback() noexcept {
     for (auto& callback : set_callbacks_) {
-      result = result && callback(*this);
+      callback(*this);
     }
-    return result;
   }
 
-  inline auto invoke_clean_callback() noexcept -> bool {
+  inline void invoke_clean_callback() noexcept {
     if (clean_callback_ != nullptr) {
-      return clean_callback_(*this);
+      clean_callback_(*this);
     }
-    return false;
   }
 
 public:

@@ -408,11 +408,11 @@ void Scheduler::set_port(BasePort* port) {
 }
 
 void Scheduler::set_port_helper(BasePort* port) {
-  // Call the 'set' callback on the port. If it returns true, we will
-  // need to also clean it later
-  if (port->invoke_set_callback()) {
-    set_ports_[Worker::current_worker_id()].push_back(port);
-  }
+  // record the port for cleaning it up later
+  set_ports_[Worker::current_worker_id()].push_back(port);
+
+  // Call the 'set' callback on the port
+  port->invoke_set_callback();
 
   // Record all triggered reactions
   for (auto* reaction : port->triggers()) {
