@@ -44,10 +44,10 @@ public:
   void bind_downstream_port(Port<T>* port) { reactor_assert(this->downstream_ports_.insert(port).second); };
 };
 
-template <class T> class DelayedConnection : public Connection<T> {
+template <class T> class BaseDelayedConnection : public Connection<T> {
 public:
-  DelayedConnection(const std::string& name, Reactor* container, Duration delay)
-      : Connection<T>(name, container, true, delay) {}
+  BaseDelayedConnection(const std::string& name, Reactor* container, bool is_physical, Duration delay)
+      : Connection<T>(name, container, is_physical, delay) {}
 
   inline auto upstream_set_callback() noexcept -> PortCallback override {
     return [this](const BasePort& port) {
@@ -70,6 +70,18 @@ public:
       }
     }
   }
+};
+
+template <class T> class DelayedConnection : public BaseDelayedConnection<T> {
+public:
+  DelayedConnection(const std::string& name, Reactor* container, Duration delay)
+      : BaseDelayedConnection<T>(name, container, true, delay) {}
+};
+
+template <class T> class PhysicalConnection : public BaseDelayedConnection<T> {
+public:
+  PhysicalConnection(const std::string& name, Reactor* container, Duration delay)
+      : BaseDelayedConnection<T>(name, container, false, delay) {}
 };
 
 } // namespace reactor
