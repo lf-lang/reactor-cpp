@@ -13,7 +13,6 @@
 #include "action.hh"
 #include "assert.hh"
 #include "environment.hh"
-#include "fwd.hh"
 #include "port.hh"
 #include "reaction.hh"
 #include "reactor.hh"
