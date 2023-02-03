@@ -27,7 +27,7 @@ private:
 
 protected:
   Connection(const std::string& name, Reactor* container, bool is_logical, Duration min_delay)
-    : Action<T>(name, container, is_logical, min_delay) {}
+      : Action<T>(name, container, is_logical, min_delay) {}
 
   [[nodiscard]] auto downstream_ports() -> auto& { return downstream_ports_; }
   [[nodiscard]] auto downstream_ports() const -> const auto& { return downstream_ports_; }

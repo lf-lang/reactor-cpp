@@ -69,7 +69,7 @@ public:
   // fully thread safe. However, we rely assembly happening before
   // execution and hence can ignore the mutex.
   Action(Action&& action) noexcept
-    : BaseAction(std::move(action)) {}
+      : BaseAction(std::move(action)) {}
   auto operator=(Action&& action) noexcept -> Action& {
     BaseAction::operator=(std::move(action));
     return *this;

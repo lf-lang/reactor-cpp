@@ -37,7 +37,7 @@ private:
 
 protected:
   [[nodiscard]] inline auto present_ports() const -> const auto& { return present_ports_; }
-  [[nodiscard]] inline auto present_ports_size() const -> auto{ return size_.load(); }
+  [[nodiscard]] inline auto present_ports_size() const -> auto { return size_.load(); }
 
   inline void present_ports_reserve(size_t n) { present_ports_.reserve(n); }
 
