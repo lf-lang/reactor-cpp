@@ -14,7 +14,6 @@
 #include "reactor-cpp/logging.hh"
 #include "reactor-cpp/port.hh"
 #include "reactor-cpp/reaction.hh"
-#include <unistd.h>
 
 namespace reactor {
 
