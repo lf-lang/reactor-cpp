@@ -19,9 +19,9 @@
 
 namespace reactor {
 
-constexpr size_t TIME_TO_STR_BUFFER_SIZE{20};
-constexpr size_t NANOSECONDS_IN_ONE_SECOND{1'000'000'000UL};
-constexpr size_t NANOSECOND_DIGITS{9};
+constexpr std::size_t TIME_TO_STR_BUFFER_SIZE{20};
+constexpr std::size_t NANOSECONDS_IN_ONE_SECOND{1'000'000'000UL};
+constexpr std::size_t NANOSECOND_DIGITS{9};
 
 inline namespace operators {
 
