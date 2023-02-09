@@ -65,11 +65,11 @@ private:
   std::atomic<std::ptrdiff_t> size_{0};
   Semaphore sem_{0};
   std::ptrdiff_t waiting_workers_{0};
-  const unsigned int num_workers_;
+  const std::ptrdiff_t num_workers_;
   log::NamedLogger& log_;
 
 public:
-  explicit ReadyQueue(log::NamedLogger& log, unsigned num_workers)
+  explicit ReadyQueue(log::NamedLogger& log, std::ptrdiff_t num_workers)
       : num_workers_(num_workers)
       , log_(log) {}
 
