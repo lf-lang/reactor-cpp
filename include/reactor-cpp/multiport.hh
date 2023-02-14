@@ -33,7 +33,9 @@ private:
   inline void reset() noexcept { size_.store(0, std::memory_order_relaxed); }
 
   [[nodiscard]] auto get_set_callback(std::size_t index) noexcept -> PortCallback;
-  [[nodiscard]] auto get_clean_callback() noexcept -> PortCallback;
+  const PortCallback clean_callback_{[this]([[maybe_unused]] const BasePort& port) { this->reset(); }};
+
+  [[nodiscard]] auto get_clean_callback() const noexcept -> PortCallback { return clean_callback_; }
 
 protected:
   [[nodiscard]] inline auto present_ports() const -> const auto& { return present_ports_; }
