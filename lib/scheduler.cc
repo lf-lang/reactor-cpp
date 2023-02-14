@@ -137,7 +137,7 @@ void ReadyQueue::fill_up(std::vector<Reaction*>& ready_reactions) {
   // one worker running running, new_size - running_workers indicates the
   // number of additional workers needed to process all reactions.
   waiting_workers_ += -old_size;
-  auto running_workers = num_workers_ - waiting_workers_;
+  std::ptrdiff_t running_workers{num_workers_ - waiting_workers_};
   auto workers_to_wakeup = std::min(waiting_workers_, new_size - running_workers);
 
   // wakeup other workers_
