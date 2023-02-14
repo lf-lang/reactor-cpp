@@ -5,16 +5,12 @@
 #include "reactor-cpp/multiport.hh"
 #include "reactor-cpp/port.hh"
 
-auto reactor::BaseMultiport::get_set_callback(std::size_t index) noexcept -> reactor::PortCallback {
-  // tells the parent multiport that this port has been set.
-  return [this, index](const BasePort& port) {
-    // if the port is present, the callback was already invoked before
-    if (!port.is_present()) {
-      this->set_present(index);
-    }
-  };
-}
-
+void reactor::BaseMultiport::SetCallback::operator()(const reactor::BasePort& port) const {
+  // if the port is present, the callback was already invoked before
+  if (!port.is_present()) {
+    multiport->set_present(index);
+  }
+};
 
 void reactor::BaseMultiport::set_present(std::size_t index) {
   auto calculated_index = size_.fetch_add(1, std::memory_order_relaxed);

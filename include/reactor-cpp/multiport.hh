@@ -32,9 +32,16 @@ private:
   // reset the list of set port indexes
   inline void reset() noexcept { size_.store(0, std::memory_order_relaxed); }
 
-  [[nodiscard]] auto get_set_callback(std::size_t index) noexcept -> PortCallback;
   const PortCallback clean_callback_{[this]([[maybe_unused]] const BasePort& port) { this->reset(); }};
 
+  struct SetCallback {
+    BaseMultiport* multiport;
+    std::size_t index;
+
+    void operator()(const BasePort& port) const;
+  };
+
+  [[nodiscard]] auto get_set_callback(std::size_t index) noexcept -> PortCallback { return SetCallback{this, index}; }
   [[nodiscard]] auto get_clean_callback() const noexcept -> PortCallback { return clean_callback_; }
 
 protected:
