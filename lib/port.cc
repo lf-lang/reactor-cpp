@@ -94,12 +94,41 @@ auto Port<void>::typed_inward_binding() const noexcept -> Port<void>* {
 }
 
 void Port<void>::set() {
-  validate(!has_inward_binding(), "set() may only be called on a ports that do not have an inward "
+  validate(!has_inward_binding(), "set() may only be called on ports that do not have an inward "
                                   "binding!");
 
   auto* scheduler = environment()->scheduler();
   scheduler->set_port(this);
   this->present_ = true;
+}
+
+// This function can be used to chain two callbacks. This mechanism is not
+// very efficient if many callbacks are registered on the same port. However,
+// it is more efficient than, e.g., a vector of callbacks if usually only one
+// callback is registered. At the moment, we use at most two callbacks on the
+// same port (one if the port is in a multiport, and one if it is upstream of
+// a delayed connection).
+auto compose_callbacks(const PortCallback& callback1, const PortCallback& callback2) -> PortCallback {
+  return [=](const BasePort& port) {
+    callback1(port);
+    callback2(port);
+  };
+}
+
+void BasePort::register_set_callback(const PortCallback& callback) {
+  if (set_callback_ == nullptr) {
+    set_callback_ = callback;
+  } else {
+    set_callback_ = compose_callbacks(set_callback_, callback);
+  }
+}
+
+void BasePort::register_clean_callback(const PortCallback& callback) {
+  if (clean_callback_ == nullptr) {
+    clean_callback_ = callback;
+  } else {
+    clean_callback_ = compose_callbacks(clean_callback_, callback);
+  }
 }
 
 } // namespace reactor

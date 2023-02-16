@@ -13,6 +13,7 @@
 #include <vector>
 
 #include "assert.hh"
+#include "fwd.hh"
 #include "multiport.hh"
 #include "reactor.hh"
 #include "value_ptr.hh"
@@ -31,7 +32,7 @@ private:
   std::set<Reaction*> triggers_{};
   std::set<Reaction*> anti_dependencies_{};
 
-  std::vector<PortCallback> set_callbacks_{};
+  PortCallback set_callback_{nullptr};
   PortCallback clean_callback_{nullptr};
 
 protected:
@@ -58,8 +59,8 @@ protected:
   }
 
   inline void invoke_set_callback() noexcept {
-    for (auto& callback : set_callbacks_) {
-      callback(*this);
+    if (set_callback_ != nullptr) {
+      set_callback_(*this);
     }
   }
 
@@ -92,12 +93,8 @@ public:
   [[nodiscard]] inline auto anti_dependencies() const noexcept -> const auto& { return anti_dependencies_; }
   [[nodiscard]] inline auto port_type() const noexcept -> PortType { return type_; }
 
-  void register_set_callback(const PortCallback& callback) { set_callbacks_.emplace_back(callback); }
-
-  void register_clean_callback(const PortCallback& callback) {
-    reactor_assert(clean_callback_ == nullptr);
-    clean_callback_ = callback;
-  }
+  void register_set_callback(const PortCallback& callback);
+  void register_clean_callback(const PortCallback& callback);
 
   friend class Reaction;
   friend class Scheduler;
