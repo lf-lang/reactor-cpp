@@ -1,6 +1,11 @@
-//
-// Created by revol-xut on 1/9/23.
-//
+/*
+ * Copyright (C) 2023 TU Dresden
+ * All rights reserved.
+ *
+ * Authors:
+ *   Tassilo Tanneberger
+ *   Christian Menard
+ */
 
 #include "reactor-cpp/multiport.hh"
 #include "reactor-cpp/port.hh"
@@ -14,7 +19,6 @@ auto reactor::BaseMultiport::get_set_callback(std::size_t index) noexcept -> rea
     }
   };
 }
-
 
 void reactor::BaseMultiport::set_present(std::size_t index) {
   auto calculated_index = size_.fetch_add(1, std::memory_order_relaxed);
