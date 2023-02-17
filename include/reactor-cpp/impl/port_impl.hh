@@ -32,6 +32,7 @@ template <class T> void Port<T>::set(const ImmutableValuePtr<T>& value_ptr) {
   reactor::validate(!has_inward_binding(), "set() may only be called on ports that do not have an inward "
                                            "binding!");
   reactor::validate(value_ptr != nullptr, "Ports may not be set to nullptr!");
+
   auto scheduler = environment()->scheduler();
   this->value_ptr_ = std::move(value_ptr);
   scheduler->set_port(this);

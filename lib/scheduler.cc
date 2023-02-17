@@ -315,15 +315,11 @@ void Scheduler::next() { // NOLINT
     }
   } // mutex schedule_
 
-  // execute all setup functions; this sets the values of the corresponding
-  // actions
-  for (auto* action : *triggered_actions_) {
-    action->setup();
-  }
-
+  // iterate over all events/actions, call setup and insert scheduled reactions
   log_.debug() << "events: " << triggered_actions_->size();
-  for (const auto* action : *triggered_actions_) {
+  for (auto* action : *triggered_actions_) {
     log_.debug() << "Action " << action->fqn();
+    action->setup();
     for (auto* reaction : action->triggers()) {
       // There is no need to acquire the mutex. At this point the scheduler
       // should be the only thread accessing the reaction queue as none of the
@@ -412,15 +408,18 @@ void Scheduler::set_port(BasePort* port) {
 }
 
 void Scheduler::set_port_helper(BasePort* port) {
-  if (!(port->triggers().empty() && port->dependencies().empty())) {
-    if (port->message_multiport()) {
-      set_ports_[Worker::current_worker_id()].push_back(port);
-    }
-  }
+  // record the port for cleaning it up later
+  set_ports_[Worker::current_worker_id()].push_back(port);
 
+  // Call the 'set' callback on the port
+  port->invoke_set_callback();
+
+  // Record all triggered reactions
   for (auto* reaction : port->triggers()) {
     triggered_reactions_[Worker::current_worker_id()].push_back(reaction);
   }
+
+  // Continue recursively
   for (auto* binding : port->outward_bindings()) {
     set_port_helper(binding);
   }

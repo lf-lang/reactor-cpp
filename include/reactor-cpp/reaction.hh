@@ -59,9 +59,7 @@ public:
 
   void startup() final {}
   void shutdown() final {}
-
   void trigger();
-
   void set_index(unsigned index);
 
   template <class Dur> void set_deadline(Dur deadline, const std::function<void(void)>& handler) {

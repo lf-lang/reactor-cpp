@@ -8,7 +8,8 @@ set(SOURCE_FILES
     reactor.cc
     scheduler.cc
     time.cc
-)
+    multiport.cc
+    )
 
 if(REACTOR_CPP_TRACE)
   set(SOURCE_FILES ${SOURCE_FILES} trace.cc )

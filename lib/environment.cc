@@ -270,6 +270,7 @@ auto Environment::startup(const TimePoint& start_time) -> std::thread {
 
   return std::thread([this]() {
     std::vector<std::thread> threads;
+    threads.reserve(contained_environments_.size());
     // startup all contained environments recursively
     for (auto* env : contained_environments_) {
       threads.emplace_back(env->startup(start_time_));

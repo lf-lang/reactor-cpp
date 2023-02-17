@@ -40,15 +40,10 @@ protected:
 
 public:
   [[nodiscard]] auto inline triggers() const noexcept -> const auto& { return triggers_; }
-
   [[nodiscard]] auto inline schedulers() const noexcept -> const auto& { return schedulers_; }
-
   [[nodiscard]] auto inline is_logical() const noexcept -> bool { return logical_; }
-
   [[nodiscard]] auto inline is_physical() const noexcept -> bool { return !logical_; }
-
   [[nodiscard]] auto inline min_delay() const noexcept -> Duration { return min_delay_; }
-
   [[nodiscard]] auto inline is_present() const noexcept -> bool { return present_; }
 
   friend class Reaction;
@@ -62,14 +57,29 @@ private:
   std::map<Tag, ImmutableValuePtr<T>> events_;
   std::mutex mutex_events_;
 
-  void setup() noexcept final;
+protected:
+  void setup() noexcept override;
   void cleanup() noexcept final;
 
-protected:
   Action(const std::string& name, Reactor* container, bool logical, Duration min_delay)
       : BaseAction(name, container, logical, min_delay) {}
 
 public:
+  // Normally, we should lock the mutex while moving to make this
+  // fully thread safe. However, we rely assembly happening before
+  // execution and hence can ignore the mutex.
+  Action(Action&& action) noexcept
+      : BaseAction(std::move(action)) {}
+  auto operator=(Action&& action) noexcept -> Action& {
+    BaseAction::operator=(std::move(action));
+    return *this;
+  }
+
+  Action(const Action& action) = delete;
+  auto operator=(const Action& action) -> Action& = delete;
+
+  ~Action() override = default;
+
   void startup() final {}
   void shutdown() final {}
 

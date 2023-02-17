@@ -23,7 +23,8 @@ ReactorElement::ReactorElement(const std::string& name, ReactorElement::Type typ
   reactor_assert(container != nullptr);
   this->environment_ = container->environment(); // NOLINT container can be NULL
   reactor_assert(this->environment_ != nullptr);
-  validate(this->environment_->phase() == Environment::Phase::Construction,
+  validate(this->environment_->phase() == Environment::Phase::Construction ||
+               (type == Type::Action && this->environment_->phase() == Environment::Phase::Assembly),
            "Reactor elements can only be created during construction phase!");
   // We need a reinterpret_cast here as the derived class is not yet created
   // when this constructor is executed. dynamic_cast only works for
@@ -63,7 +64,8 @@ ReactorElement::ReactorElement(const std::string& name, ReactorElement::Type typ
     , environment_(environment) {
   reactor_assert(environment != nullptr);
   validate(type == Type::Reactor, "Only reactors can be owned by the environment!");
-  validate(environment_->phase() == Environment::Phase::Construction, "Wrong Phase");
+  validate(this->environment_->phase() == Environment::Phase::Construction,
+           "Reactor elements can only be created during construction phase!");
 }
 
 Reactor::Reactor(const std::string& name, Reactor* container)
@@ -75,7 +77,8 @@ Reactor::Reactor(const std::string& name, Environment* environment)
 
 void Reactor::register_action([[maybe_unused]] BaseAction* action) {
   reactor_assert(action != nullptr);
-  reactor::validate(this->environment()->phase() == Environment::Phase::Construction,
+  reactor::validate(this->environment()->phase() == Environment::Phase::Construction ||
+                        this->environment()->phase() == Environment::Phase::Assembly,
                     "Actions can only be registered during construction phase!");
   reactor_assert(actions_.insert(action).second);
 }
