@@ -142,6 +142,7 @@ public:
 
   void schedule_sync(BaseAction* action, const Tag& tag);
   auto schedule_async(BaseAction* action, const Duration& delay) -> Tag;
+  auto schedule_async_at(BaseAction* action, const Tag& tag) -> bool;
 
   auto inline lock() noexcept -> auto { return std::unique_lock<std::mutex>(scheduling_mutex_); }
 

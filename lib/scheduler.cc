@@ -395,6 +395,18 @@ auto Scheduler::schedule_async(BaseAction* action, const Duration& delay) -> Tag
   return tag;
 }
 
+auto Scheduler::schedule_async_at(BaseAction* action, const Tag& tag) -> bool {
+  {
+    std::lock_guard<std::mutex> lock_guard(scheduling_mutex_);
+    if (tag <= logical_time_) {
+      return false;
+    }
+    schedule_sync(action, tag);
+  }
+  cv_schedule_.notify_one();
+  return true;
+}
+
 void Scheduler::set_port(BasePort* port) {
   log_.debug() << "Set port " << port->fqn();
 
