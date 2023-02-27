@@ -13,6 +13,7 @@
 #include "action.hh"
 #include "assert.hh"
 #include "environment.hh"
+#include "fwd.hh"
 #include "port.hh"
 #include "reaction.hh"
 #include "reactor.hh"
@@ -86,6 +87,26 @@ template <class T> class PhysicalConnection : public BaseDelayedConnection<T> {
 public:
   PhysicalConnection(const std::string& name, Reactor* container, Duration delay)
       : BaseDelayedConnection<T>(name, container, false, delay) {}
+};
+
+template <class T> class EnclaveConnection : public BaseDelayedConnection<T> {
+public:
+  EnclaveConnection(const std::string& name, Environment* enclave, Duration delay)
+      : Connection<T>(name, enclave, false, delay) {}
+
+  inline auto upstream_set_callback() noexcept -> PortCallback override {
+    return [this](const BasePort& port) {
+      // We know that port must be of type Port<T>
+      auto& typed_port = reinterpret_cast<const Port<T>&>(port); // NOLINT
+      const auto* scheduler = port.environment()->scheduler();
+      auto tag = Tag::from_logical_time(scheduler->logical_time()).delay(this->min_delay());
+      if constexpr (std::is_same<T, void>::value) {
+        this->schedule_at(tag);
+      } else {
+        this->schedule(std::move(typed_port.get()), tag);
+      }
+    };
+  }
 };
 
 } // namespace reactor
