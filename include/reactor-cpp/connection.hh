@@ -46,12 +46,12 @@ public:
 
 template <class T> class BaseDelayedConnection : public Connection<T> {
 public:
-  BaseDelayedConnection(const std::string& name, Reactor* container, bool is_physical, Duration delay)
-      : Connection<T>(name, container, is_physical, delay) {}
+  BaseDelayedConnection(const std::string& name, Reactor* container, bool is_logical, Duration delay)
+      : Connection<T>(name, container, is_logical, delay) {}
 
   inline auto upstream_set_callback() noexcept -> PortCallback override {
     return [this](const BasePort& port) {
-      // We know that port must be of type Port<T>*
+      // We know that port must be of type Port<T>
       auto& typed_port = reinterpret_cast<const Port<T>&>(port); // NOLINT
       if constexpr (std::is_same<T, void>::value) {
         this->schedule();
