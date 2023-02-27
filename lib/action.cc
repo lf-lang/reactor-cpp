@@ -74,4 +74,36 @@ void ShutdownTrigger::shutdown() {
   }
 }
 
+template <class Dur> void Action<void>::schedule(Dur delay) {
+  Duration time_delay = std::chrono::duration_cast<Duration>(delay);
+  reactor::validate(time_delay >= Duration::zero(), "Schedule cannot be called with a negative delay!");
+  auto* scheduler = environment()->scheduler();
+  if (is_logical()) {
+    time_delay += this->min_delay();
+    auto tag = Tag::from_logical_time(scheduler->logical_time()).delay(time_delay);
+    scheduler->schedule_sync(this, tag);
+  } else {
+    scheduler->schedule_async(this, time_delay);
+  }
+}
+
+auto Action<void>::schedule_at(const Tag& tag) -> bool {
+  auto* scheduler = environment()->scheduler();
+  if (is_logical()) {
+    if (tag <= scheduler->logical_time()) {
+      return false;
+    }
+    scheduler->schedule_sync(this, tag);
+  } else {
+    // We must call schedule_async while holding the mutex, because otherwise
+    // the scheduler could already start processing the event that we schedule
+    // and call setup() on this action before we insert the value in events_.
+    // Holding both the local mutex mutex_events_ and the scheduler mutex (in
+    // schedule async) should not lead to a deadlock as the scheduler will
+    // only hold one of the two mutexes at once.
+    return scheduler->schedule_async_at(this, tag);
+  }
+  return true;
+}
+
 } // namespace reactor

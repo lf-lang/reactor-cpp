@@ -84,6 +84,7 @@ public:
   void shutdown() final {}
 
   template <class Dur = Duration> void schedule(const ImmutableValuePtr<T>& value_ptr, Dur delay = Dur::zero());
+  auto schedule_at(const ImmutableValuePtr<T>& value_ptr, const Tag& tag) -> bool;
 
   template <class Dur = Duration> void schedule(MutableValuePtr<T>&& value_ptr, Dur delay = Dur::zero()) {
     schedule(ImmutableValuePtr<T>(std::forward<MutableValuePtr<T>>(value_ptr)), delay);
@@ -110,6 +111,7 @@ protected:
 
 public:
   template <class Dur = Duration> void schedule(Dur delay = Dur::zero());
+  auto schedule_at(const Tag& tag) -> bool;
 
   void startup() final {}
   void shutdown() final {}

@@ -17,37 +17,55 @@
 namespace reactor {
 
 template <class T> template <class Dur> void Action<T>::schedule(const ImmutableValuePtr<T>& value_ptr, Dur delay) {
-  constexpr bool has_value = !std::is_same<T, void>::value;
-
   Duration time_delay = std::chrono::duration_cast<Duration>(delay);
   reactor::validate(time_delay >= Duration::zero(), "Schedule cannot be called with a negative delay!");
-  if constexpr (has_value) {
-    reactor::validate(value_ptr != nullptr, "Actions may not be scheduled with a nullptr value!");
-  }
+  reactor::validate(value_ptr != nullptr, "Actions may not be scheduled with a nullptr value!");
+
   auto* scheduler = environment()->scheduler();
   if (is_logical()) {
     time_delay += this->min_delay();
     auto tag = Tag::from_logical_time(scheduler->logical_time()).delay(time_delay);
 
-    if constexpr (has_value) {
+    scheduler->schedule_sync(this, tag);
+    events_[tag] = value_ptr;
+  } else {
+    std::lock_guard<std::mutex> lock{mutex_events_};
+    // We must call schedule_async while holding the mutex, because otherwise
+    // the scheduler could already start processing the event that we schedule
+    // and call setup() on this action before we insert the value in events_.
+    // Holding both the local mutex mutex_events_ and the scheduler mutex (in
+    // schedule async) should not lead to a deadlock as the scheduler will
+    // only hold one of the two mutexes at once.
+    auto tag = scheduler->schedule_async(this, time_delay);
+    events_[tag] = value_ptr;
+  }
+}
+
+template <class T> auto Action<T>::schedule_at(const ImmutableValuePtr<T>& value_ptr, const Tag& tag) -> bool {
+  reactor::validate(value_ptr != nullptr, "Actions may not be scheduled with a nullptr value!");
+
+  auto* scheduler = environment()->scheduler();
+  if (is_logical()) {
+    if (tag <= scheduler->logical_time()) {
+      return false;
+    }
+
+    scheduler->schedule_sync(this, tag);
+    events_[tag] = value_ptr;
+  } else {
+    std::lock_guard<std::mutex> lock{mutex_events_};
+    // We must call schedule_async while holding the mutex, because otherwise
+    // the scheduler could already start processing the event that we schedule
+    // and call setup() on this action before we insert the value in events_.
+    // Holding both the local mutex mutex_events_ and the scheduler mutex (in
+    // schedule async) should not lead to a deadlock as the scheduler will
+    // only hold one of the two mutexes at once.
+    bool result = scheduler->schedule_async_at(this, tag);
+    if (result) {
       events_[tag] = value_ptr;
     }
-    scheduler->schedule_sync(this, tag);
-  } else {
-    {
-      std::lock_guard<std::mutex> lock(mutex_events_);
-      // We must call schedule_async while holding the mutex, because otherwise
-      // the scheduler could already start processing the event that we schedule
-      // and call setup() on this action before we insert the value in events_.
-      // Holding both the local mutex mutex_events_ and the scheduler mutex (in
-      // schedule async) should not lead to a deadlock as the scheduler will
-      // only hold one of the two mutexes at once.
-      auto tag = scheduler->schedule_async(this, time_delay);
-      if constexpr (has_value) {
-        events_[tag] = value_ptr;
-      }
-    }
   }
+  return true;
 }
 
 template <class T> void Action<T>::setup() noexcept {
