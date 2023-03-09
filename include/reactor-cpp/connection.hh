@@ -91,10 +91,10 @@ public:
       : BaseDelayedConnection<T>(name, container, false, delay) {}
 };
 
-template <class T> class EnclaveConnection : public BaseDelayedConnection<T> {
+template <class T> class EnclaveConnection : public Connection<T> {
 public:
-  EnclaveConnection(const std::string& name, Environment* enclave, Duration delay)
-      : Connection<T>(name, enclave, false, delay) {}
+  EnclaveConnection(const std::string& name, Environment* enclave)
+    : Connection<T>(name, enclave, false, Duration::zero()) {}
 
   inline auto upstream_set_callback() noexcept -> PortCallback override {
     return [this](const BasePort& port) {
@@ -104,11 +104,11 @@ public:
       // This callback will be called from a reaction executing in the context
       // of the downstream port. Hence, we can retrieve the current tag directly
       // without locking.
-      auto tag = Tag::from_logical_time(scheduler->logical_time()).delay(this->min_delay());
+      auto tag = Tag::from_logical_time(scheduler->logical_time());
       if constexpr (std::is_same<T, void>::value) {
         this->schedule_at(tag);
       } else {
-        this->schedule(std::move(typed_port.get()), tag);
+        this->schedule_at(std::move(typed_port.get()), tag);
       }
     };
   }
