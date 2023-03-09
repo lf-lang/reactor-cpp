@@ -52,6 +52,12 @@ void Environment::register_reactor(Reactor* reactor) {
   reactor_assert(top_level_reactors_.insert(reactor).second);
 }
 
+void Environment::register_input_action(BaseAction* action) {
+  reactor_assert(action != nullptr);
+  validate(this->phase() == Phase::Construction, "Input actions may only be registered during construction phase!");
+  reactor_assert(input_actions_.insert(action).second);
+}
+
 void recursive_assemble(Reactor* container) { // NOLINT
   container->assemble();
   for (auto* reactor : container->reactors()) {

@@ -13,6 +13,7 @@
 #include <string>
 #include <vector>
 
+#include "fwd.hh"
 #include "reactor-cpp/logging.hh"
 #include "reactor-cpp/time.hh"
 #include "reactor.hh"
@@ -40,6 +41,8 @@ private:
   const bool fast_fwd_execution_{default_fast_fwd_execution};
 
   std::set<Reactor*> top_level_reactors_{};
+  /// Set of actions that act as an input to the reactor program in this environment
+  std::set<BaseAction*> input_actions_{};
   std::set<Reaction*> reactions_{};
   std::vector<Dependency> dependencies_{};
 
@@ -71,6 +74,7 @@ public:
   auto name() -> const std::string& { return name_; }
 
   void register_reactor(Reactor* reactor);
+  void register_input_action(BaseAction* action);
   void assemble();
   auto startup() -> std::thread;
   void sync_shutdown();
