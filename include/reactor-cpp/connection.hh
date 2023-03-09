@@ -48,9 +48,11 @@ public:
 };
 
 template <class T> class BaseDelayedConnection : public Connection<T> {
-public:
+protected:
   BaseDelayedConnection(const std::string& name, Reactor* container, bool is_logical, Duration delay)
       : Connection<T>(name, container, is_logical, delay) {}
+  BaseDelayedConnection(const std::string& name, Environment* environment, bool is_logical, Duration delay)
+      : Connection<T>(name, environment, is_logical, delay) {}
 
   inline auto upstream_set_callback() noexcept -> PortCallback override {
     return [this](const BasePort& port) {
@@ -64,6 +66,7 @@ public:
     };
   }
 
+public:
   void setup() noexcept override {
     Action<T>::setup();
 
@@ -91,10 +94,10 @@ public:
       : BaseDelayedConnection<T>(name, container, false, delay) {}
 };
 
-template <class T> class EnclaveConnection : public Connection<T> {
+template <class T> class EnclaveConnection : public BaseDelayedConnection<T> {
 public:
   EnclaveConnection(const std::string& name, Environment* enclave)
-    : Connection<T>(name, enclave, false, Duration::zero()) {}
+      : BaseDelayedConnection<T>(name, enclave, false, Duration::zero()) {}
 
   inline auto upstream_set_callback() noexcept -> PortCallback override {
     return [this](const BasePort& port) {
