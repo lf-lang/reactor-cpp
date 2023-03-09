@@ -37,7 +37,7 @@ public:
 };
 
 auto main() -> int {
-  Environment env{4, true};
+  Environment env{4};
 
   Count count{&env};
   env.assemble();

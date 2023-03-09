@@ -37,7 +37,7 @@ private:
   const log::NamedLogger log_;
   const unsigned int num_workers_{default_number_worker};
   unsigned int max_reaction_index_{default_max_reaction_index};
-  const bool run_forever_{default_run_forever};
+  bool run_forever_{default_run_forever};
   const bool fast_fwd_execution_{default_fast_fwd_execution};
 
   std::set<Reactor*> top_level_reactors_{};
@@ -67,8 +67,8 @@ private:
   auto startup(const TimePoint& start_time) -> std::thread;
 
 public:
-  explicit Environment(unsigned int num_workers, bool run_forever = default_run_forever,
-                       bool fast_fwd_execution = default_fast_fwd_execution, const Duration& timeout = Duration::max());
+  explicit Environment(unsigned int num_workers, bool fast_fwd_execution = default_fast_fwd_execution,
+                       const Duration& timeout = Duration::max());
   explicit Environment(const std::string& name, Environment* containing_environment);
 
   auto name() -> const std::string& { return name_; }

@@ -23,10 +23,9 @@
 
 namespace reactor {
 
-Environment::Environment(unsigned int num_workers, bool run_forever, bool fast_fwd_execution, const Duration& timeout)
+Environment::Environment(unsigned int num_workers, bool fast_fwd_execution, const Duration& timeout)
     : log_("Environment")
     , num_workers_(num_workers)
-    , run_forever_(run_forever)
     , fast_fwd_execution_(fast_fwd_execution)
     , top_environment_(this)
     , scheduler_(this)
@@ -36,7 +35,6 @@ Environment::Environment(const std::string& name, Environment* containing_enviro
     : name_(name)
     , log_("Environment " + name)
     , num_workers_(containing_environment->num_workers_)
-    , run_forever_(containing_environment->run_forever_)
     , fast_fwd_execution_(containing_environment->fast_fwd_execution_)
     , containing_environment_(containing_environment)
     , top_environment_(containing_environment_->top_environment_)
@@ -56,6 +54,7 @@ void Environment::register_input_action(BaseAction* action) {
   reactor_assert(action != nullptr);
   validate(this->phase() == Phase::Construction, "Input actions may only be registered during construction phase!");
   reactor_assert(input_actions_.insert(action).second);
+  run_forever_ = true;
 }
 
 void recursive_assemble(Reactor* container) { // NOLINT
