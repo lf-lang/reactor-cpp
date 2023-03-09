@@ -29,6 +29,8 @@ private:
 protected:
   Connection(const std::string& name, Reactor* container, bool is_logical, Duration min_delay)
       : Action<T>(name, container, is_logical, min_delay) {}
+  Connection(const std::string& name, Environment* environment, bool is_logical, Duration min_delay)
+      : Action<T>(name, environment, is_logical, min_delay) {}
 
   [[nodiscard]] auto downstream_ports() -> auto& { return downstream_ports_; }
   [[nodiscard]] auto downstream_ports() const -> const auto& { return downstream_ports_; }
@@ -99,6 +101,9 @@ public:
       // We know that port must be of type Port<T>
       auto& typed_port = reinterpret_cast<const Port<T>&>(port); // NOLINT
       const auto* scheduler = port.environment()->scheduler();
+      // This callback will be called from a reaction executing in the context
+      // of the downstream port. Hence, we can retrieve the current tag directly
+      // without locking.
       auto tag = Tag::from_logical_time(scheduler->logical_time()).delay(this->min_delay());
       if constexpr (std::is_same<T, void>::value) {
         this->schedule_at(tag);
