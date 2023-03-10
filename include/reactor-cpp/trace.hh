@@ -62,13 +62,13 @@ TRACEPOINT_EVENT(
                   ctf_integer(unsigned long long, timestamp_ns, tag_arg.time_point().time_since_epoch().count())
                       ctf_integer(unsigned long, timestamp_microstep, tag_arg.micro_step())))
 
-TRACEPOINT_EVENT(reactor_cpp, trigger_reaction,
-                 TP_ARGS(const std::string&, reactor_name_arg, const std::string&, reaction_name_arg,
-                         const reactor::LogicalTime&, tag_arg),
-                 TP_FIELDS(ctf_string(reactor_name, reactor_name_arg.c_str()) ctf_string(reaction_name,
-                                                                                         reaction_name_arg.c_str())
-                               ctf_integer(unsigned long long, timestamp_ns, tag_arg.time_point().time_since_epoch().count())
-                                   ctf_integer(unsigned long, timestamp_microstep, tag_arg.micro_step())))
+TRACEPOINT_EVENT(
+    reactor_cpp, trigger_reaction,
+    TP_ARGS(const std::string&, reactor_name_arg, const std::string&, reaction_name_arg, const reactor::LogicalTime&,
+            tag_arg),
+    TP_FIELDS(ctf_string(reactor_name, reactor_name_arg.c_str()) ctf_string(reaction_name, reaction_name_arg.c_str())
+                  ctf_integer(unsigned long long, timestamp_ns, tag_arg.time_point().time_since_epoch().count())
+                      ctf_integer(unsigned long, timestamp_microstep, tag_arg.micro_step())))
 
 #endif /* REACTOR_CPP_TRACE_HH */
 

@@ -9,6 +9,8 @@
 #ifndef REACTOR_CPP_ACTION_HH
 #define REACTOR_CPP_ACTION_HH
 
+#include "environment.hh"
+#include "fwd.hh"
 #include "logical_time.hh"
 #include "reactor.hh"
 #include "value_ptr.hh"
@@ -37,6 +39,12 @@ protected:
       : ReactorElement(name, ReactorElement::Type::Action, container)
       , min_delay_(min_delay)
       , logical_(logical) {}
+  BaseAction(const std::string& name, Environment* environment, bool logical, Duration min_delay)
+      : ReactorElement(name, ReactorElement::Type::Action, environment)
+      , min_delay_(min_delay)
+      , logical_(logical) {
+    environment->register_input_action(this);
+  }
 
 public:
   [[nodiscard]] auto inline triggers() const noexcept -> const auto& { return triggers_; }
@@ -63,6 +71,8 @@ protected:
 
   Action(const std::string& name, Reactor* container, bool logical, Duration min_delay)
       : BaseAction(name, container, logical, min_delay) {}
+  Action(const std::string& name, Environment* environment, bool logical, Duration min_delay)
+      : BaseAction(name, environment, logical, min_delay) {}
 
 public:
   // Normally, we should lock the mutex while moving to make this
@@ -107,6 +117,8 @@ template <> class Action<void> : public BaseAction {
 protected:
   Action(const std::string& name, Reactor* container, bool logical, Duration min_delay)
       : BaseAction(name, container, logical, min_delay) {}
+  Action(const std::string& name, Environment* environment, bool logical, Duration min_delay)
+      : BaseAction(name, environment, logical, min_delay) {}
 
 public:
   template <class Dur = Duration> void schedule(Dur delay = Dur::zero());
@@ -118,7 +130,11 @@ public:
 template <class T> class PhysicalAction : public Action<T> {
 public:
   PhysicalAction(const std::string& name, Reactor* container)
-      : Action<T>(name, container, false, Duration::zero()) {}
+      : Action<T>(name, container, false, Duration::zero()) {
+    // all physical actions act as input actions to the program as they can be
+    // scheduled from external threads
+    container->environment()->register_input_action(this);
+  }
 };
 
 template <class T> class LogicalAction : public Action<T> {

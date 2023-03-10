@@ -13,6 +13,7 @@
 #include <string>
 #include <vector>
 
+#include "fwd.hh"
 #include "reactor-cpp/logging.hh"
 #include "reactor-cpp/time.hh"
 #include "reactor.hh"
@@ -36,10 +37,12 @@ private:
   const log::NamedLogger log_;
   const unsigned int num_workers_{default_number_worker};
   unsigned int max_reaction_index_{default_max_reaction_index};
-  const bool run_forever_{default_run_forever};
+  bool run_forever_{default_run_forever};
   const bool fast_fwd_execution_{default_fast_fwd_execution};
 
   std::set<Reactor*> top_level_reactors_{};
+  /// Set of actions that act as an input to the reactor program in this environment
+  std::set<BaseAction*> input_actions_{};
   std::set<Reaction*> reactions_{};
   std::vector<Dependency> dependencies_{};
 
@@ -64,13 +67,14 @@ private:
   auto startup(const TimePoint& start_time) -> std::thread;
 
 public:
-  explicit Environment(unsigned int num_workers, bool run_forever = default_run_forever,
-                       bool fast_fwd_execution = default_fast_fwd_execution, const Duration& timeout = Duration::max());
+  explicit Environment(unsigned int num_workers, bool fast_fwd_execution = default_fast_fwd_execution,
+                       const Duration& timeout = Duration::max());
   explicit Environment(const std::string& name, Environment* containing_environment);
 
   auto name() -> const std::string& { return name_; }
 
   void register_reactor(Reactor* reactor);
+  void register_input_action(BaseAction* action);
   void assemble();
   auto startup() -> std::thread;
   void sync_shutdown();
