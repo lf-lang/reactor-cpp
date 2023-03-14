@@ -108,11 +108,13 @@ public:
       // of the downstream port. Hence, we can retrieve the current tag directly
       // without locking.
       auto tag = Tag::from_logical_time(scheduler->logical_time());
+      bool result{false};
       if constexpr (std::is_same<T, void>::value) {
-        this->schedule_at(tag);
+        result = this->schedule_at(tag);
       } else {
-        this->schedule_at(std::move(typed_port.get()), tag);
+        result = this->schedule_at(std::move(typed_port.get()), tag);
       }
+      reactor_assert(result);
     };
   }
 };
