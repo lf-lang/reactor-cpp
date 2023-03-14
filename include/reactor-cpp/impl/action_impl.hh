@@ -64,6 +64,7 @@ template <class T> auto Action<T>::schedule_at(const ImmutableValuePtr<T>& value
     if (result) {
       events_[tag] = value_ptr;
     }
+    return result;
   }
   return true;
 }
