@@ -391,7 +391,7 @@ auto Scheduler::schedule_async(BaseAction* action, const Duration& delay) -> Tag
     tag = Tag::from_physical_time(get_physical_time() + delay);
     schedule_sync(action, tag);
   }
-  cv_schedule_.notify_one();
+  notify();
   return tag;
 }
 
@@ -403,7 +403,7 @@ auto Scheduler::schedule_async_at(BaseAction* action, const Tag& tag) -> bool {
     }
     schedule_sync(action, tag);
   }
-  cv_schedule_.notify_one();
+  notify();
   return true;
 }
 
@@ -439,7 +439,7 @@ void Scheduler::set_port_helper(BasePort* port) {
 
 void Scheduler::stop() {
   stop_ = true;
-  cv_schedule_.notify_one();
+  notify();
 }
 
 } // namespace reactor

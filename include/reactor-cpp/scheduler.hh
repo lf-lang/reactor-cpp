@@ -144,6 +144,8 @@ public:
   auto schedule_async(BaseAction* action, const Duration& delay) -> Tag;
   auto schedule_async_at(BaseAction* action, const Tag& tag) -> bool;
 
+  void inline notify() noexcept { cv_schedule_.notify_one(); }
+
   auto inline lock() noexcept -> auto { return std::unique_lock<std::mutex>(scheduling_mutex_); }
 
   void set_port(BasePort* port);
