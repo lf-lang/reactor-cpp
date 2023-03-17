@@ -41,7 +41,7 @@ void LogicalTime::advance_to(const Tag& tag) {
 }
 
 void LogicalTime::advance_to(const LogicalTime& time) {
-  reactor_assert(*this < Tag::from_logical_time(time));
+  reactor_assert(*this <= Tag::from_logical_time(time));
   time_point_ = time.time_point();
   micro_step_ = time.micro_step();
 }

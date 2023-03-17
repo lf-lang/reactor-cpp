@@ -226,6 +226,21 @@ void Scheduler::start() {
   }
 }
 
+auto Scheduler::acquire_tag(const Tag& tag) -> bool { // NOLINT readability-use-anyofallof
+  for (auto* action : environment_->input_actions_) {
+    bool result = action->acquire_tag(cv_schedule_, tag);
+    if (!result) {
+      return false;
+    } else { // NOLINT llvm-else-after-return,readability-else-after-return
+      std::lock_guard<std::mutex> lock{scheduling_mutex_};
+      if (tag != event_queue_.begin()->first) {
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
 void Scheduler::next() { // NOLINT
   // Notify other environments and let them know that we finished processing the
   // current tag
@@ -306,6 +321,17 @@ void Scheduler::next() { // NOLINT
             last_observed_physical_time_ = t_next.time_point();
             reactor_assert(t_next == event_queue_.begin()->first);
           }
+        }
+
+        // Wait until all input actions mark the tag as safe to process.
+        if (!environment_->input_actions_.empty()) {
+          lock.unlock();
+          bool result = acquire_tag(t_next);
+          if (!result) {
+            // Start over if potentially a new event was inserted into the event queue
+            continue;
+          }
+          lock.lock();
         }
 
         // retrieve all events with tag equal to current logical time from the
@@ -450,8 +476,8 @@ void Scheduler::register_release_tag_callback(const ReleaseTagCallback& callback
   // Callbacks should only be registered during assembly, which happens strictly
   // sequentially. Therefore, we should be fine accessing the vector directly
   // and do not need to lock.
-  validate(environment_->phase() == Environment::Phase::Assembly,
-           "registering callbacks is only allowed during assembly");
+  validate(environment_->phase() <= Environment::Phase::Assembly,
+           "registering callbacks is only allowed during construction and assembly");
   release_tag_callbacks_.push_back(callback);
 }
 
