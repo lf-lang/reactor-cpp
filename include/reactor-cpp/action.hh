@@ -15,6 +15,7 @@
 #include "reactor.hh"
 #include "value_ptr.hh"
 
+#include <condition_variable>
 #include <map>
 #include <mutex>
 
@@ -34,6 +35,16 @@ protected:
 
   virtual void setup() noexcept { present_ = true; }
   virtual void cleanup() noexcept { present_ = false; }
+
+  /**
+   * Use the given condition variable to wait until the given tag it safe to
+   * process or until the condition variable is notified.
+   *
+   * Returns true if the tag it safe to process.
+   */
+  virtual auto acquire_tag([[maybe_unused]] std::condition_variable& cv, [[maybe_unused]] const Tag& tag) -> bool {
+    return true;
+  }
 
   BaseAction(const std::string& name, Reactor* container, bool logical, Duration min_delay)
       : ReactorElement(name, ReactorElement::Type::Action, container)

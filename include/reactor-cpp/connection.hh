@@ -14,6 +14,7 @@
 #include "assert.hh"
 #include "environment.hh"
 #include "fwd.hh"
+#include "logical_time.hh"
 #include "port.hh"
 #include "reaction.hh"
 #include "reactor.hh"
@@ -44,7 +45,7 @@ public:
     port->register_set_callback(upstream_set_callback());
   }
 
-  void bind_downstream_port(Port<T>* port) { reactor_assert(this->downstream_ports_.insert(port).second); };
+  virtual void bind_downstream_port(Port<T>* port) { reactor_assert(this->downstream_ports_.insert(port).second); };
 };
 
 template <class T> class BaseDelayedConnection : public Connection<T> {
@@ -95,6 +96,18 @@ public:
 };
 
 template <class T> class EnclaveConnection : public BaseDelayedConnection<T> {
+private:
+  std::mutex mutex_{};
+  LogicalTime released_time_;
+
+  void release_tag(const LogicalTime& tag) {
+    {
+      std::lock_guard<std::mutex> lock_guard(mutex_);
+      released_time_.advance_to(tag);
+    }
+    this->environment()->scheduler()->notify();
+  }
+
 public:
   EnclaveConnection(const std::string& name, Environment* enclave)
       : BaseDelayedConnection<T>(name, enclave, false, Duration::zero()) {}
@@ -117,6 +130,20 @@ public:
       reactor_assert(result);
     };
   }
+
+  auto acquire_tag([[maybe_unused]] std::condition_variable& cv, [[maybe_unused]] const Tag& tag) -> bool override {
+    std::unique_lock<std::mutex> lock_guard(mutex_);
+    if (released_time_ >= tag) {
+      return true;
+    }
+    cv.wait(lock_guard);
+    return released_time_ >= tag;
+  }
+
+  void bind_downstream_port(Port<T>* port) override {
+    Connection<T>::bind_downstream_port(port);
+    // TODO register callback
+  };
 };
 
 } // namespace reactor

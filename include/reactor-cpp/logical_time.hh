@@ -56,6 +56,7 @@ private:
 
 public:
   void advance_to(const Tag& tag);
+  void advance_to(const LogicalTime& time);
 
   [[nodiscard]] auto time_point() const noexcept -> TimePoint { return time_point_; }
   [[nodiscard]] auto micro_step() const noexcept -> mstep_t { return micro_step_; }

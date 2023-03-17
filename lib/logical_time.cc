@@ -40,6 +40,12 @@ void LogicalTime::advance_to(const Tag& tag) {
   micro_step_ = tag.micro_step();
 }
 
+void LogicalTime::advance_to(const LogicalTime& time) {
+  reactor_assert(*this < Tag::from_logical_time(time));
+  time_point_ = time.time_point();
+  micro_step_ = time.micro_step();
+}
+
 auto operator==(const LogicalTime& logical_time, const Tag& tag) noexcept -> bool {
   return logical_time.time_point() == tag.time_point() && logical_time.micro_step() == tag.micro_step();
 }
