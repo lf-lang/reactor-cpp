@@ -118,7 +118,7 @@ public:
       auto& typed_port = reinterpret_cast<const Port<T>&>(port); // NOLINT
       const auto* scheduler = port.environment()->scheduler();
       // This callback will be called from a reaction executing in the context
-      // of the downstream port. Hence, we can retrieve the current tag directly
+      // of the upstream port. Hence, we can retrieve the current tag directly
       // without locking.
       auto tag = Tag::from_logical_time(scheduler->logical_time());
       bool result{false};
