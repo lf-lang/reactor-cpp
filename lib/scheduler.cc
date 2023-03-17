@@ -227,6 +227,10 @@ void Scheduler::start() {
 }
 
 void Scheduler::next() { // NOLINT
+  // Notify other environments and let them know that we finished processing the
+  // current tag
+  release_current_tag();
+
   // clean up all actions triggered at the current tag (if there are any remaining)
   if (triggered_actions_ != nullptr) {
     // cleanup all triggered actions
@@ -440,6 +444,21 @@ void Scheduler::set_port_helper(BasePort* port) {
 void Scheduler::stop() {
   stop_ = true;
   notify();
+}
+
+void Scheduler::register_release_tag_callback(const ReleaseTagCallback& callback) {
+  // Callbacks should only be registered during assembly, which happens strictly
+  // sequentially. Therefore, we should be fine accessing the vector directly
+  // and do not need to lock.
+  validate(environment_->phase() == Environment::Phase::Assembly,
+           "registering callbacks is only allowed during assembly");
+  release_tag_callbacks_.push_back(callback);
+}
+
+void Scheduler::release_current_tag() {
+  for (const auto& callback : release_tag_callbacks_) {
+    callback(logical_time_);
+  }
 }
 
 } // namespace reactor

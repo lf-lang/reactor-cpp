@@ -28,6 +28,8 @@
 
 namespace reactor {
 
+using ReleaseTagCallback = std::function<void(const LogicalTime&)>;
+
 // forward declarations
 class Scheduler;
 class Worker;
@@ -130,6 +132,9 @@ private:
   std::atomic<bool> stop_{false};
   bool continue_execution_{true};
 
+  std::vector<ReleaseTagCallback> release_tag_callbacks_{};
+  void release_current_tag();
+
   void schedule() noexcept;
   auto schedule_ready_reactions() -> bool;
   void next();
@@ -146,7 +151,7 @@ public:
 
   void inline notify() noexcept { cv_schedule_.notify_one(); }
 
-  auto inline lock() noexcept -> auto { return std::unique_lock<std::mutex>(scheduling_mutex_); }
+  auto inline lock() noexcept -> auto{ return std::unique_lock<std::mutex>(scheduling_mutex_); }
 
   void set_port(BasePort* port);
 
@@ -154,6 +159,8 @@ public:
 
   void start();
   void stop();
+
+  void register_release_tag_callback(const ReleaseTagCallback& callback);
 
   friend Worker;
 };

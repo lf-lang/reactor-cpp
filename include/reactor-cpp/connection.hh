@@ -39,7 +39,7 @@ protected:
   virtual auto upstream_set_callback() noexcept -> PortCallback = 0;
 
 public:
-  void bind_upstream_port(Port<T>* port) {
+  virtual void bind_upstream_port(Port<T>* port) {
     reactor_assert(upstream_port_ == nullptr);
     upstream_port_ = port;
     port->register_set_callback(upstream_set_callback());
@@ -140,9 +140,10 @@ public:
     return released_time_ >= tag;
   }
 
-  void bind_downstream_port(Port<T>* port) override {
-    Connection<T>::bind_downstream_port(port);
-    // TODO register callback
+  void bind_upstream_port(Port<T>* port) override {
+    Connection<T>::bind_upstream_port(port);
+    port->environment()->scheduler()->register_release_tag_callback(
+        [this](const LogicalTime& tag) { release_tag(tag); });
   };
 };
 
