@@ -327,11 +327,11 @@ void Scheduler::next() { // NOLINT
         if (!environment_->input_actions_.empty()) {
           lock.unlock();
           bool result = acquire_tag(t_next);
+          lock.lock();
           if (!result) {
             // Start over if potentially a new event was inserted into the event queue
             continue;
           }
-          lock.lock();
         }
 
         // retrieve all events with tag equal to current logical time from the
