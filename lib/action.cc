@@ -74,19 +74,6 @@ void ShutdownTrigger::shutdown() {
   }
 }
 
-template <class Dur> void Action<void>::schedule(Dur delay) {
-  Duration time_delay = std::chrono::duration_cast<Duration>(delay);
-  reactor::validate(time_delay >= Duration::zero(), "Schedule cannot be called with a negative delay!");
-  auto* scheduler = environment()->scheduler();
-  if (is_logical()) {
-    time_delay += this->min_delay();
-    auto tag = Tag::from_logical_time(scheduler->logical_time()).delay(time_delay);
-    scheduler->schedule_sync(this, tag);
-  } else {
-    scheduler->schedule_async(this, time_delay);
-  }
-}
-
 auto Action<void>::schedule_at(const Tag& tag) -> bool {
   auto* scheduler = environment()->scheduler();
   if (is_logical()) {

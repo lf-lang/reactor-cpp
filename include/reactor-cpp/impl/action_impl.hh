@@ -41,6 +41,19 @@ template <class T> template <class Dur> void Action<T>::schedule(const Immutable
   }
 }
 
+template <class Dur> void Action<void>::schedule(Dur delay) {
+  Duration time_delay = std::chrono::duration_cast<Duration>(delay);
+  reactor::validate(time_delay >= Duration::zero(), "Schedule cannot be called with a negative delay!");
+  auto* scheduler = environment()->scheduler();
+  if (is_logical()) {
+    time_delay += this->min_delay();
+    auto tag = Tag::from_logical_time(scheduler->logical_time()).delay(time_delay);
+    scheduler->schedule_sync(this, tag);
+  } else {
+    scheduler->schedule_async(this, time_delay);
+  }
+}
+
 template <class T> auto Action<T>::schedule_at(const ImmutableValuePtr<T>& value_ptr, const Tag& tag) -> bool {
   reactor::validate(value_ptr != nullptr, "Actions may not be scheduled with a nullptr value!");
 
