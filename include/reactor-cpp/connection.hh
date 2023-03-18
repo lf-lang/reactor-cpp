@@ -108,6 +108,10 @@ private:
     this->environment()->scheduler()->notify();
   }
 
+protected:
+  EnclaveConnection(const std::string& name, Environment* enclave, const Duration& delay)
+      : BaseDelayedConnection<T>(name, enclave, false, delay) {}
+
 public:
   EnclaveConnection(const std::string& name, Environment* enclave)
       : BaseDelayedConnection<T>(name, enclave, false, Duration::zero()) {}
@@ -145,6 +149,49 @@ public:
     port->environment()->scheduler()->register_release_tag_callback(
         [this](const LogicalTime& tag) { release_tag(tag); });
   };
+};
+
+template <class T> class DelayedEnclaveConnection : public EnclaveConnection<T> {
+public:
+  DelayedEnclaveConnection(const std::string& name, Environment* enclave, Duration delay)
+      : EnclaveConnection<T>(name, enclave, delay) {}
+
+  inline auto upstream_set_callback() noexcept -> PortCallback override {
+    return [this](const BasePort& port) {
+      // We know that port must be of type Port<T>
+      auto& typed_port = reinterpret_cast<const Port<T>&>(port); // NOLINT
+      const auto* scheduler = port.environment()->scheduler();
+      // This callback will be called from a reaction executing in the context
+      // of the upstream port. Hence, we can retrieve the current tag directly
+      // without locking.
+      auto tag = Tag::from_logical_time(scheduler->logical_time()).delay(this->min_delay());
+      bool result{false};
+      if constexpr (std::is_same<T, void>::value) {
+        result = this->schedule_at(tag);
+      } else {
+        result = this->schedule_at(std::move(typed_port.get()), tag);
+      }
+      reactor_assert(result);
+    };
+  }
+};
+
+template <class T> class PhysicalEnclaveConnection : public EnclaveConnection<T> {
+public:
+  PhysicalEnclaveConnection(const std::string& name, Environment* enclave)
+      : EnclaveConnection<T>(name, enclave) {}
+
+  inline auto upstream_set_callback() noexcept -> PortCallback override {
+    return [this](const BasePort& port) {
+      // We know that port must be of type Port<T>
+      auto& typed_port = reinterpret_cast<const Port<T>&>(port); // NOLINT
+      if constexpr (std::is_same<T, void>::value) {
+        this->schedule();
+      } else {
+        this->schedule(std::move(typed_port.get()));
+      }
+    };
+  }
 };
 
 } // namespace reactor
