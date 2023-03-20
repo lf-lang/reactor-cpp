@@ -19,6 +19,7 @@
 #include "reactor-cpp/logging.hh"
 #include "reactor-cpp/port.hh"
 #include "reactor-cpp/reaction.hh"
+#include "reactor-cpp/time_barrier.hh"
 #include "reactor-cpp/trace.hh"
 
 namespace reactor {
@@ -300,26 +301,12 @@ void Scheduler::next() { // NOLINT
 
         // synchronize with physical time if not in fast forward mode
         if (!environment_->fast_fwd_execution()) {
-          // If physical time is smaller than the next logical time point,
-          // then update the physical time. This step is small optimization to
-          // avoid calling get_physical_time() in every iteration as this
-          // would add a significant overhead.
-          if (last_observed_physical_time_ < t_next.time_point()) {
-            last_observed_physical_time_ = get_physical_time();
-          }
+          bool result = PhysicalTimeBarrier::acquire_tag(
+              t_next, lock, cv_schedule_, [&t_next, this]() { return t_next != event_queue_.begin()->first; });
 
-          // If physical time is still smaller than the next logical time
-          // point, then wait until the next tag or until a new event is
-          // inserted asynchronously into the queue
-          if (last_observed_physical_time_ < t_next.time_point()) {
-            auto status = cv_schedule_.wait_until(lock, t_next.time_point());
-            // Start over if an event was inserted into the event queue by a physical action
-            if (status == std::cv_status::no_timeout || t_next != event_queue_.begin()->first) {
-              continue;
-            }
-            // update physical time and continue otherwise
-            last_observed_physical_time_ = t_next.time_point();
-            reactor_assert(t_next == event_queue_.begin()->first);
+          // If require tag returns false, then a new event was inserted into the queue and we need to start over
+          if (!result) {
+            continue;
           }
         }
 
