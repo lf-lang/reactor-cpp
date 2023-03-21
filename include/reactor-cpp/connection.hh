@@ -19,6 +19,7 @@
 #include "reaction.hh"
 #include "reactor.hh"
 #include "time.hh"
+#include "time_barrier.hh"
 
 namespace reactor {
 
@@ -97,16 +98,7 @@ public:
 
 template <class T> class EnclaveConnection : public BaseDelayedConnection<T> {
 private:
-  std::mutex mutex_{};
-  LogicalTime released_time_;
-
-  void release_tag(const LogicalTime& tag) {
-    {
-      std::lock_guard<std::mutex> lock_guard(mutex_);
-      released_time_.advance_to(tag);
-    }
-    this->environment()->scheduler()->notify();
-  }
+  LogicalTimeBarrier logical_time_barrier_;
 
 protected:
   EnclaveConnection(const std::string& name, Environment* enclave, const Duration& delay)
@@ -135,20 +127,18 @@ public:
     };
   }
 
-  auto acquire_tag([[maybe_unused]] std::condition_variable& cv, [[maybe_unused]] const Tag& tag) -> bool override {
-    std::unique_lock<std::mutex> lock_guard(mutex_);
-    if (released_time_ >= tag) {
-      return true;
-    }
-    cv.wait(lock_guard);
-    return released_time_ >= tag;
+  inline auto acquire_tag(const Tag& tag, std::unique_lock<std::mutex>& lock, std::condition_variable& cv,
+                          const std::function<bool(void)>& abort_waiting) -> bool override {
+    return logical_time_barrier_.acquire_tag(tag, lock, cv, abort_waiting);
   }
 
   void bind_upstream_port(Port<T>* port) override {
     Connection<T>::bind_upstream_port(port);
-    port->environment()->scheduler()->register_release_tag_callback(
-        [this](const LogicalTime& tag) { release_tag(tag); });
-  };
+    port->environment()->scheduler()->register_release_tag_callback([this](const LogicalTime& tag) {
+      logical_time_barrier_.release_tag(tag);
+      this->environment()->scheduler()->notify();
+    });
+  }
 };
 
 template <class T> class DelayedEnclaveConnection : public EnclaveConnection<T> {

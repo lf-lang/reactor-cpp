@@ -37,12 +37,17 @@ protected:
   virtual void cleanup() noexcept { present_ = false; }
 
   /**
-   * Use the given condition variable to wait until the given tag it safe to
-   * process or until the condition variable is notified.
+   * Use the given condition variable and lock to wait until the given tag it
+   * safe to process. The waiting is interrupted when the condition variable is
+   * notified (or has a spurious wakeup) and a call to the given `abort_waiting`
+   * function returns true. or until the condition variable is notified.
    *
-   * Returns true if the tag it safe to process.
+   * Returns false if the wait was interrupted and true otherwise. True
+   * indicates that the tag is safe to process.
    */
-  virtual auto acquire_tag([[maybe_unused]] std::condition_variable& cv, [[maybe_unused]] const Tag& tag) -> bool {
+  virtual auto acquire_tag([[maybe_unused]] const Tag& tag, [[maybe_unused]] std::unique_lock<std::mutex>& lock,
+                           [[maybe_unused]] std::condition_variable& cv,
+                           [[maybe_unused]] const std::function<bool(void)>& abort_waiting) -> bool {
     return true;
   }
 

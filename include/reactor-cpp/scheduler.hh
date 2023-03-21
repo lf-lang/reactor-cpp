@@ -134,8 +134,6 @@ private:
   std::vector<ReleaseTagCallback> release_tag_callbacks_{};
   void release_current_tag();
 
-  auto acquire_tag(const Tag& tag) -> bool;
-
   void schedule() noexcept;
   auto schedule_ready_reactions() -> bool;
   void next();

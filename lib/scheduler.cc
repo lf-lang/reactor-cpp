@@ -227,21 +227,6 @@ void Scheduler::start() {
   }
 }
 
-auto Scheduler::acquire_tag(const Tag& tag) -> bool { // NOLINT readability-use-anyofallof
-  for (auto* action : environment_->input_actions_) {
-    bool result = action->acquire_tag(cv_schedule_, tag);
-    if (!result) {
-      return false;
-    } else { // NOLINT llvm-else-after-return,readability-else-after-return
-      std::lock_guard<std::mutex> lock{scheduling_mutex_};
-      if (tag != event_queue_.begin()->first) {
-        return false;
-      }
-    }
-  }
-  return true;
-}
-
 void Scheduler::next() { // NOLINT
   // Notify other environments and let them know that we finished processing the
   // current tag
@@ -296,29 +281,31 @@ void Scheduler::next() { // NOLINT
           return;
         }
       } else {
-        // collect events of the next tag
+        // find the next tag
         auto t_next = event_queue_.begin()->first;
 
         // synchronize with physical time if not in fast forward mode
         if (!environment_->fast_fwd_execution()) {
           bool result = PhysicalTimeBarrier::acquire_tag(
               t_next, lock, cv_schedule_, [&t_next, this]() { return t_next != event_queue_.begin()->first; });
-
-          // If require tag returns false, then a new event was inserted into the queue and we need to start over
+          // If acquire tag returns false, then a new event was inserted into the queue and we need to start over
           if (!result) {
             continue;
           }
         }
 
         // Wait until all input actions mark the tag as safe to process.
-        if (!environment_->input_actions_.empty()) {
-          lock.unlock();
-          bool result = acquire_tag(t_next);
-          lock.lock();
+        bool result{true};
+        for (auto* action : environment_->input_actions_) {
+          result = action->acquire_tag(t_next, lock, cv_schedule_,
+                                       [&t_next, this]() { return t_next != event_queue_.begin()->first; });
           if (!result) {
-            // Start over if potentially a new event was inserted into the event queue
-            continue;
+            break;
           }
+        }
+        // If acquire tag returns false, then a new event was inserted into the queue and we need to start over
+        if (!result) {
+          continue;
         }
 
         // retrieve all events with tag equal to current logical time from the
