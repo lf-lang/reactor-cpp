@@ -315,6 +315,12 @@ void Scheduler::next() { // NOLINT
         // advance logical time
         log_.debug() << "advance logical time to tag " << t_next;
         logical_time_.advance_to(t_next);
+
+        // If there are no triggered actions at the event, then release the
+        // current tag and go back to the start of the loop
+        if (triggered_actions_->empty()) {
+          release_current_tag();
+        }
       }
     }
   } // mutex schedule_
@@ -350,12 +356,7 @@ void Scheduler::fill_action_list_pool() {
   }
 }
 
-void Scheduler::schedule_sync(BaseAction* action, const Tag& tag) {
-  log_.debug() << "Schedule action " << action->fqn() << (action->is_logical() ? " synchronously " : " asynchronously ")
-               << " with tag [" << tag;
-  reactor_assert(logical_time_ < tag);
-  tracepoint(reactor_cpp, schedule_action, action->container()->fqn(), action->name(), tag);
-
+auto Scheduler::insert_event_at(const Tag& tag) -> const ActionListPtr& {
   if (using_workers_) {
     auto shared_lock = std::shared_lock<std::shared_mutex>(mutex_event_queue_);
 
@@ -371,10 +372,10 @@ void Scheduler::schedule_sync(BaseAction* action, const Tag& tag) {
         if (result.second) {
           action_list_pool_.pop_back();
         }
-        result.first->second->push_back(action);
+        return result.first->second;
       }
     } else {
-      event_it->second->push_back(action);
+      return event_it->second;
     }
   } else {
     if (action_list_pool_.empty()) {
@@ -384,8 +385,19 @@ void Scheduler::schedule_sync(BaseAction* action, const Tag& tag) {
     if (result.second) {
       action_list_pool_.pop_back();
     }
-    result.first->second->push_back(action);
+    return result.first->second;
   }
+}
+
+void Scheduler::schedule_sync(BaseAction* action, const Tag& tag) {
+  log_.debug() << "Schedule action " << action->fqn() << (action->is_logical() ? " synchronously " : " asynchronously ")
+               << " with tag " << tag;
+  reactor_assert(logical_time_ < tag);
+  tracepoint(reactor_cpp, schedule_action, action->container()->fqn(), action->name(), tag);
+
+  const auto& action_list = insert_event_at(tag);
+  action_list->push_back(action);
+  log_.debug() << "size: " << action_list->size();
 }
 
 auto Scheduler::schedule_async(BaseAction* action, const Duration& delay) -> Tag {
@@ -406,6 +418,19 @@ auto Scheduler::schedule_async_at(BaseAction* action, const Tag& tag) -> bool {
       return false;
     }
     schedule_sync(action, tag);
+  }
+  notify();
+  return true;
+}
+
+auto Scheduler::schedule_empty_async_at(const Tag& tag) -> bool {
+  log_.debug() << "Schedule empty event at tag "<<tag;
+  {
+    std::lock_guard<std::mutex> lock_guard(scheduling_mutex_);
+    if (tag <= logical_time_) {
+      return false;
+    }
+    insert_event_at(tag);
   }
   notify();
   return true;

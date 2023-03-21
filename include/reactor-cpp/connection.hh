@@ -36,6 +36,8 @@ protected:
 
   [[nodiscard]] auto downstream_ports() -> auto& { return downstream_ports_; }
   [[nodiscard]] auto downstream_ports() const -> const auto& { return downstream_ports_; }
+  [[nodiscard]] auto upstream_port() -> auto* { return upstream_port_; }
+  [[nodiscard]] auto upstream_port() const -> const auto* { return upstream_port_; }
 
   virtual auto upstream_set_callback() noexcept -> PortCallback = 0;
 
@@ -134,6 +136,18 @@ public:
   inline auto acquire_tag(const Tag& tag, std::unique_lock<std::mutex>& lock, std::condition_variable& cv,
                           const std::function<bool(void)>& abort_waiting) -> bool override {
     log_.debug() << "downstream tries to acquire tag " << tag;
+
+    if (this->upstream_port() == nullptr) {
+      return true;
+    }
+
+    if (logical_time_barrier_.try_acquire_tag(tag)) {
+       return true;
+    }
+
+    // Insert an empty event into the upstream event queue. This ensures that we
+    // will get notified and woken up as soon as the tag becomes safe to process.
+    this->upstream_port()->environment()->scheduler()->schedule_empty_async_at(tag);
     return logical_time_barrier_.acquire_tag(tag, lock, cv, abort_waiting);
   }
 

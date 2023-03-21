@@ -119,6 +119,7 @@ private:
   std::vector<ActionListPtr> action_list_pool_;
   static constexpr std::size_t action_list_pool_increment_{10};
   void fill_action_list_pool();
+  auto insert_event_at(const Tag& tag) -> const ActionListPtr&;
 
   std::vector<std::vector<BasePort*>> set_ports_;
   std::vector<std::vector<Reaction*>> triggered_reactions_;
@@ -147,6 +148,7 @@ public:
   void schedule_sync(BaseAction* action, const Tag& tag);
   auto schedule_async(BaseAction* action, const Duration& delay) -> Tag;
   auto schedule_async_at(BaseAction* action, const Tag& tag) -> bool;
+  auto schedule_empty_async_at(const Tag& tag) -> bool;
 
   void inline notify() noexcept { cv_schedule_.notify_one(); }
 
