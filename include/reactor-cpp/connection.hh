@@ -200,6 +200,12 @@ public:
       }
     };
   }
+
+  inline auto acquire_tag(const Tag& tag, std::unique_lock<std::mutex>& lock, std::condition_variable& cv,
+                          const std::function<bool(void)>& abort_waiting) -> bool override {
+    this->log_.debug() << "downstream tries to acquire tag " << tag;
+    return PhysicalTimeBarrier::acquire_tag(tag, lock, cv, abort_waiting);
+  }
 };
 
 } // namespace reactor
