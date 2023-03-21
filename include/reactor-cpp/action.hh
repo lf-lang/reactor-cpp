@@ -9,10 +9,12 @@
 #ifndef REACTOR_CPP_ACTION_HH
 #define REACTOR_CPP_ACTION_HH
 
+#include "assert.hh"
 #include "environment.hh"
 #include "fwd.hh"
 #include "logical_time.hh"
 #include "reactor.hh"
+#include "time_barrier.hh"
 #include "value_ptr.hh"
 
 #include <condition_variable>
@@ -45,10 +47,10 @@ protected:
    * Returns false if the wait was interrupted and true otherwise. True
    * indicates that the tag is safe to process.
    */
-  virtual auto acquire_tag([[maybe_unused]] const Tag& tag, [[maybe_unused]] std::unique_lock<std::mutex>& lock,
-                           [[maybe_unused]] std::condition_variable& cv,
-                           [[maybe_unused]] const std::function<bool(void)>& abort_waiting) -> bool {
-    return true;
+  virtual auto acquire_tag(const Tag& tag, std::unique_lock<std::mutex>& lock, std::condition_variable& cv,
+                           const std::function<bool(void)>& abort_waiting) -> bool {
+    reactor_assert(!logical_);
+    return PhysicalTimeBarrier::acquire_tag(tag, lock, cv, abort_waiting);
   }
 
   BaseAction(const std::string& name, Reactor* container, bool logical, Duration min_delay)
