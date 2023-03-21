@@ -206,6 +206,8 @@ public:
     this->log_.debug() << "downstream tries to acquire tag " << tag;
     return PhysicalTimeBarrier::acquire_tag(tag, lock, cv, abort_waiting);
   }
+
+  void bind_upstream_port(Port<T>* port) override { Connection<T>::bind_upstream_port(port); }
 };
 
 } // namespace reactor
