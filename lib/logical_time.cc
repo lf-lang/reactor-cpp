@@ -9,6 +9,7 @@
 #include "reactor-cpp/logical_time.hh"
 
 #include "reactor-cpp/assert.hh"
+#include <limits>
 
 namespace reactor {
 
@@ -58,6 +59,13 @@ auto operator<(const LogicalTime& logical_time, const Tag& tag) noexcept -> bool
 auto operator>(const LogicalTime& logical_time, const Tag& tag) noexcept -> bool {
   return logical_time.time_point() > tag.time_point() ||
          (logical_time.time_point() == tag.time_point() && logical_time.micro_step() > tag.micro_step());
+}
+
+auto operator<<(std::ostream& os, const Tag& tag) -> std::ostream& {
+  return os << '[' << tag.time_point() << ", " << tag.micro_step() << ']';
+}
+auto operator<<(std::ostream& os, const LogicalTime& tag) -> std::ostream& {
+  return os << '[' << tag.time_point() << ", " << tag.micro_step() << ']';
 }
 
 } // namespace reactor

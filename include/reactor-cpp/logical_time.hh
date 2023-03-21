@@ -35,8 +35,10 @@ public:
   [[nodiscard]] auto time_point() const noexcept -> const TimePoint& { return time_point_; }
   [[nodiscard]] auto micro_step() const noexcept -> const mstep_t& { return micro_step_; }
 
-  static auto from_physical_time(TimePoint time_point) noexcept -> Tag;
-  static auto from_logical_time(const LogicalTime& logical_time) noexcept -> Tag;
+  [[nodiscard]]static auto from_physical_time(TimePoint time_point) noexcept -> Tag;
+  [[nodiscard]]static auto from_logical_time(const LogicalTime& logical_time) noexcept -> Tag;
+
+  [[nodiscard]]static auto max_for_timepoint(TimePoint time_point) noexcept -> Tag;
 
   [[nodiscard]] auto delay(Duration offset = Duration::zero()) const noexcept -> Tag;
 };
