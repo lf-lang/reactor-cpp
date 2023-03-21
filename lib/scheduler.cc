@@ -275,7 +275,7 @@ void Scheduler::next() { // NOLINT
                           "termination reactions";
           triggered_actions_ = std::move(event_queue_.begin()->second);
           event_queue_.erase(event_queue_.begin());
-          log_.debug() << "advance logical time to tag [" << t_next.time_point() << ", " << t_next.micro_step() << "]";
+          log_.debug() << "advance logical time to tag " << t_next;
           logical_time_.advance_to(t_next);
         } else {
           return;
@@ -313,7 +313,7 @@ void Scheduler::next() { // NOLINT
         triggered_actions_ = std::move(event_queue_.extract(event_queue_.begin()).mapped());
 
         // advance logical time
-        log_.debug() << "advance logical time to tag [" << t_next.time_point() << ", " << t_next.micro_step() << "]";
+        log_.debug() << "advance logical time to tag " << t_next;
         logical_time_.advance_to(t_next);
       }
     }
@@ -352,7 +352,7 @@ void Scheduler::fill_action_list_pool() {
 
 void Scheduler::schedule_sync(BaseAction* action, const Tag& tag) {
   log_.debug() << "Schedule action " << action->fqn() << (action->is_logical() ? " synchronously " : " asynchronously ")
-               << " with tag [" << tag.time_point() << ", " << tag.micro_step() << "]";
+               << " with tag [" << tag;
   reactor_assert(logical_time_ < tag);
   tracepoint(reactor_cpp, schedule_action, action->container()->fqn(), action->name(), tag);
 

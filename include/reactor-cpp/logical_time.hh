@@ -90,6 +90,9 @@ auto inline operator>=(const Tag& tag, const LogicalTime& logical_time) noexcept
   return !(tag < logical_time);
 }
 
+auto operator<<(std::ostream& os, const Tag& tag) -> std::ostream&;
+auto operator<<(std::ostream& os, const LogicalTime& tag) -> std::ostream&;
+
 } // namespace reactor
 
 #endif // REACTOR_CPP_LOGICAL_TIME_HH

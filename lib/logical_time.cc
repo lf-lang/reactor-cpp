@@ -22,10 +22,14 @@ auto operator<(const Tag& lhs, const Tag& rhs) noexcept -> bool {
          (lhs.time_point() == rhs.time_point() && lhs.micro_step() < rhs.micro_step());
 }
 
-auto Tag::from_physical_time(TimePoint time_point) noexcept -> Tag { return Tag{time_point, 0}; }
+auto Tag::from_physical_time(TimePoint time_point) noexcept -> Tag { return {time_point, 0}; }
 
 auto Tag::from_logical_time(const LogicalTime& logical_time) noexcept -> Tag {
-  return Tag{logical_time.time_point(), logical_time.micro_step()};
+  return {logical_time.time_point(), logical_time.micro_step()};
+}
+
+auto Tag::max_for_timepoint(TimePoint time_point) noexcept -> Tag {
+  return {time_point, std::numeric_limits<mstep_t>::max()};
 }
 
 auto Tag::delay(Duration offset) const noexcept -> Tag {

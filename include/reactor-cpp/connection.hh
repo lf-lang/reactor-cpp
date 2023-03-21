@@ -101,12 +101,16 @@ private:
   LogicalTimeBarrier logical_time_barrier_;
 
 protected:
+  log::NamedLogger log_; // NOLINT
+
   EnclaveConnection(const std::string& name, Environment* enclave, const Duration& delay)
-      : BaseDelayedConnection<T>(name, enclave, false, delay) {}
+      : BaseDelayedConnection<T>(name, enclave, false, delay)
+      , log_{this->fqn()} {}
 
 public:
   EnclaveConnection(const std::string& name, Environment* enclave)
-      : BaseDelayedConnection<T>(name, enclave, false, Duration::zero()) {}
+      : BaseDelayedConnection<T>(name, enclave, false, Duration::zero())
+      , log_{this->fqn()} {}
 
   inline auto upstream_set_callback() noexcept -> PortCallback override {
     return [this](const BasePort& port) {
@@ -129,6 +133,7 @@ public:
 
   inline auto acquire_tag(const Tag& tag, std::unique_lock<std::mutex>& lock, std::condition_variable& cv,
                           const std::function<bool(void)>& abort_waiting) -> bool override {
+    log_.debug() << "downstream tries to acquire tag " << tag;
     return logical_time_barrier_.acquire_tag(tag, lock, cv, abort_waiting);
   }
 
@@ -136,6 +141,7 @@ public:
     Connection<T>::bind_upstream_port(port);
     port->environment()->scheduler()->register_release_tag_callback([this](const LogicalTime& tag) {
       logical_time_barrier_.release_tag(tag);
+      log_.debug() << "upstream released tag " << tag;
       this->environment()->scheduler()->notify();
     });
   }
