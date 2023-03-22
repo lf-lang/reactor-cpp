@@ -147,7 +147,16 @@ public:
 
     // Insert an empty event into the upstream event queue. This ensures that we
     // will get notified and woken up as soon as the tag becomes safe to process.
-    this->upstream_port()->environment()->scheduler()->schedule_empty_async_at(tag);
+    bool result = this->upstream_port()->environment()->scheduler()->schedule_empty_async_at(tag);
+
+    // If inserting the empty event was not successful, then this is because the upstream
+    // scheduler already processes a later event. In this case, it is safe to assume that
+    // the tag is acquired.
+    if (!result) {
+      return true;
+    }
+
+    // Wait until we receive a release_tag message from upstream
     return logical_time_barrier_.acquire_tag(tag, lock, cv, abort_waiting);
   }
 

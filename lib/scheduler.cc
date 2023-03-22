@@ -434,7 +434,10 @@ auto Scheduler::schedule_empty_async_at(const Tag& tag) -> bool {
   {
     std::lock_guard<std::mutex> lock_guard(scheduling_mutex_);
     if (tag <= logical_time_) {
-      return false;
+      // If we try to insert an empty event at the current logical time, then we
+      // succeeded because there must be an event at this tag that is currently
+      // processed.
+      return tag == logical_time_;
     }
     insert_event_at(tag);
   }
