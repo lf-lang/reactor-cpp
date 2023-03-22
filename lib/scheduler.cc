@@ -266,6 +266,10 @@ void Scheduler::next() { // NOLINT
     }
 
     while (triggered_actions_ == nullptr || triggered_actions_->empty()) {
+      if (triggered_actions_ != nullptr) {
+        action_list_pool_.emplace_back(std::move(triggered_actions_));
+      }
+
       if (stop_) {
         continue_execution_ = false;
         log_.debug() << "Shutting down the scheduler";
@@ -308,8 +312,11 @@ void Scheduler::next() { // NOLINT
           continue;
         }
 
-        // retrieve all events with tag equal to current logical time from the
-        // queue
+        // Retrieve all events with tag equal to current logical time from the
+        // queue.
+        // We do not need to lock mutex_event_queue_ here, as the lock on
+        // scheduling_mutex_ already ensures that no one can write to the event
+        // queue.
         triggered_actions_ = std::move(event_queue_.extract(event_queue_.begin()).mapped());
 
         // advance logical time
@@ -397,7 +404,6 @@ void Scheduler::schedule_sync(BaseAction* action, const Tag& tag) {
 
   const auto& action_list = insert_event_at(tag);
   action_list->push_back(action);
-  log_.debug() << "size: " << action_list->size();
 }
 
 auto Scheduler::schedule_async(BaseAction* action, const Duration& delay) -> Tag {
@@ -424,7 +430,7 @@ auto Scheduler::schedule_async_at(BaseAction* action, const Tag& tag) -> bool {
 }
 
 auto Scheduler::schedule_empty_async_at(const Tag& tag) -> bool {
-  log_.debug() << "Schedule empty event at tag "<<tag;
+  log_.debug() << "Schedule empty event at tag " << tag;
   {
     std::lock_guard<std::mutex> lock_guard(scheduling_mutex_);
     if (tag <= logical_time_) {
