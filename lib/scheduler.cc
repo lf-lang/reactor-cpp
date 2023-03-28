@@ -240,7 +240,6 @@ void Scheduler::next() { // NOLINT
     }
 
     triggered_actions_->clear();
-    action_list_pool_.emplace_back(std::move(triggered_actions_));
   }
 
   // cleanup all set ports
@@ -255,6 +254,9 @@ void Scheduler::next() { // NOLINT
     std::unique_lock<std::mutex> lock{scheduling_mutex_};
 
     while (triggered_actions_ == nullptr || triggered_actions_->empty()) {
+      if (triggered_actions_ != nullptr) {
+        action_list_pool_.emplace_back(std::move(triggered_actions_));
+      }
 
       // shutdown if there are no more events in the queue
       if (event_queue_.empty() && !stop_) {
@@ -265,10 +267,6 @@ void Scheduler::next() { // NOLINT
           log_.debug() << "No more events in queue_. -> Terminate!";
           environment_->sync_shutdown();
         }
-      }
-
-      if (triggered_actions_ != nullptr) {
-        action_list_pool_.emplace_back(std::move(triggered_actions_));
       }
 
       if (stop_) {
