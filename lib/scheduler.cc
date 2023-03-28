@@ -254,18 +254,19 @@ void Scheduler::next() { // NOLINT
   {
     std::unique_lock<std::mutex> lock{scheduling_mutex_};
 
-    // shutdown if there are no more events in the queue
-    if (event_queue_.empty() && !stop_) {
-      if (environment_->run_forever()) {
-        // wait for a new asynchronous event
-        cv_schedule_.wait(lock, [this]() { return !event_queue_.empty() || stop_; });
-      } else {
-        log_.debug() << "No more events in queue_. -> Terminate!";
-        environment_->sync_shutdown();
-      }
-    }
-
     while (triggered_actions_ == nullptr || triggered_actions_->empty()) {
+
+      // shutdown if there are no more events in the queue
+      if (event_queue_.empty() && !stop_) {
+        if (environment_->run_forever()) {
+          // wait for a new asynchronous event
+          cv_schedule_.wait(lock, [this]() { return !event_queue_.empty() || stop_; });
+        } else {
+          log_.debug() << "No more events in queue_. -> Terminate!";
+          environment_->sync_shutdown();
+        }
+      }
+
       if (triggered_actions_ != nullptr) {
         action_list_pool_.emplace_back(std::move(triggered_actions_));
       }
