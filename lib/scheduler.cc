@@ -363,35 +363,24 @@ void Scheduler::fill_action_list_pool() {
 }
 
 auto Scheduler::insert_event_at(const Tag& tag) -> const ActionListPtr& {
-  if (using_workers_) {
-    auto shared_lock = std::shared_lock<std::shared_mutex>(mutex_event_queue_);
+  auto shared_lock = std::shared_lock<std::shared_mutex>(mutex_event_queue_);
 
-    auto event_it = event_queue_.find(tag);
-    if (event_it == event_queue_.end()) {
-      shared_lock.unlock();
-      {
-        auto unique_lock = std::unique_lock<std::shared_mutex>(mutex_event_queue_);
-        if (action_list_pool_.empty()) {
-          fill_action_list_pool();
-        }
-        const auto& result = event_queue_.try_emplace(tag, std::move(action_list_pool_.back()));
-        if (result.second) {
-          action_list_pool_.pop_back();
-        }
-        return result.first->second;
+  auto event_it = event_queue_.find(tag);
+  if (event_it == event_queue_.end()) {
+    shared_lock.unlock();
+    {
+      auto unique_lock = std::unique_lock<std::shared_mutex>(mutex_event_queue_);
+      if (action_list_pool_.empty()) {
+        fill_action_list_pool();
       }
-    } else {
-      return event_it->second;
+      const auto& result = event_queue_.try_emplace(tag, std::move(action_list_pool_.back()));
+      if (result.second) {
+        action_list_pool_.pop_back();
+      }
+      return result.first->second;
     }
   } else {
-    if (action_list_pool_.empty()) {
-      fill_action_list_pool();
-    }
-    const auto& result = event_queue_.try_emplace(tag, std::move(action_list_pool_.back()));
-    if (result.second) {
-      action_list_pool_.pop_back();
-    }
-    return result.first->second;
+    return event_it->second;
   }
 }
 
