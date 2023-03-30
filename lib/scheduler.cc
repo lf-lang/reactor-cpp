@@ -202,6 +202,11 @@ auto Scheduler::schedule_ready_reactions() -> bool {
 void Scheduler::start() {
   log_.debug() << "Starting the scheduler...";
 
+  // Initialize our logical time to the value right before the start tag. This
+  // is important for usage with enclaves/federates, to indicate, that no events
+  // before the start tag ca be generated.
+  logical_time_.advance_to(environment_->start_tag().decrement());
+
   auto num_workers = environment_->num_workers();
   // initialize the reaction queue, set ports vector, and triggered reactions
   // vector

@@ -197,12 +197,11 @@ public:
   inline auto acquire_tag(const Tag& tag, std::unique_lock<std::mutex>& lock, std::condition_variable& cv,
                           const std::function<bool(void)>& abort_waiting) -> bool override {
     // Since this is a delayed connection, we can go back in time and need to
-    // acquire the latest tag upstream tag that can create an event at the given
+    // acquire the latest upstream tag that can create an event at the given
     // tag. We also need to consider that given a delay d and a tag g=(t, n),
     // for any value of n, g + d = (t, 0). Hence, we need to quire a tag with
     // the highest possible microstep value.
-    auto time_point = tag.time_point() - this->min_delay();
-    auto upstream_tag = Tag::max_for_timepoint(time_point);
+    auto upstream_tag = tag.subtract(this->min_delay());
     return EnclaveConnection<T>::acquire_tag(upstream_tag, lock, cv, abort_waiting);
   }
 };

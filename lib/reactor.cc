@@ -169,11 +169,11 @@ auto Reactor::get_tag() const noexcept -> Tag {
 }
 
 auto Reactor::get_elapsed_logical_time() const noexcept -> Duration {
-  return get_logical_time() - environment()->start_time();
+  return get_logical_time() - environment()->start_tag().time_point();
 }
 
 auto Reactor::get_elapsed_physical_time() const noexcept -> Duration {
-  return get_physical_time() - environment()->start_time();
+  return get_physical_time() - environment()->start_tag().time_point();
 }
 
 } // namespace reactor

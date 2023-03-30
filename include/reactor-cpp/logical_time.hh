@@ -41,6 +41,8 @@ public:
   [[nodiscard]]static auto max_for_timepoint(TimePoint time_point) noexcept -> Tag;
 
   [[nodiscard]] auto delay(Duration offset = Duration::zero()) const noexcept -> Tag;
+  [[nodiscard]] auto subtract(Duration offset = Duration::zero()) const noexcept -> Tag;
+  [[nodiscard]] auto decrement() const noexcept -> Tag;
 };
 
 // define all the comparison operators

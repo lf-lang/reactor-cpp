@@ -28,15 +28,26 @@ auto Tag::from_logical_time(const LogicalTime& logical_time) noexcept -> Tag {
   return {logical_time.time_point(), logical_time.micro_step()};
 }
 
-auto Tag::max_for_timepoint(TimePoint time_point) noexcept -> Tag {
-  return {time_point, std::numeric_limits<mstep_t>::max()};
-}
-
 auto Tag::delay(Duration offset) const noexcept -> Tag {
   if (offset == Duration::zero()) {
-    return Tag{this->time_point_, this->micro_step_ + 1};
+    validate(this->micro_step_ != std::numeric_limits<mstep_t>::max(), "Microstep overflow detected!");
+    return {this->time_point_, this->micro_step_ + 1};
   }
-  return Tag{this->time_point_ + offset, 0};
+  return {this->time_point_ + offset, 0};
+}
+
+auto Tag::subtract(Duration offset) const noexcept -> Tag {
+  if (offset == Duration::zero()) {
+    return decrement();
+  }
+  return {time_point_ - offset, std::numeric_limits<mstep_t>::max()};
+}
+
+auto Tag::decrement() const noexcept -> Tag {
+  if (micro_step_ == 0) {
+    return {time_point_ - Duration{1}, std::numeric_limits<mstep_t>::max()};
+  }
+  return {time_point_, micro_step_ - 1};
 }
 
 void LogicalTime::advance_to(const Tag& tag) {
@@ -46,7 +57,7 @@ void LogicalTime::advance_to(const Tag& tag) {
 }
 
 void LogicalTime::advance_to(const LogicalTime& time) {
-  reactor_assert(*this <= Tag::from_logical_time(time));
+  reactor_assert(*this < Tag::from_logical_time(time));
   time_point_ = time.time_point();
   micro_step_ = time.micro_step();
 }

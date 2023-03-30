@@ -41,11 +41,11 @@ void Timer::startup() {
     return;
   }
 
-  Tag tag_zero = Tag::from_physical_time(environment()->start_time());
+  const Tag& start_tag = environment()->start_tag();
   if (offset_ != Duration::zero()) {
-    environment()->scheduler()->schedule_sync(this, tag_zero.delay(offset_));
+    environment()->scheduler()->schedule_sync(this, start_tag.delay(offset_));
   } else {
-    environment()->scheduler()->schedule_sync(this, tag_zero);
+    environment()->scheduler()->schedule_sync(this, start_tag);
   }
 }
 
