@@ -147,7 +147,11 @@ public:
 
     // Insert an empty event into the upstream event queue. This ensures that we
     // will get notified and woken up as soon as the tag becomes safe to process.
+    // It is important to unlock the mutex here. Otherwise we could enter a deadlock as
+    // scheduling the upstream event also requires holding the upstream mutex.
+    lock.unlock();
     bool result = this->upstream_port()->environment()->scheduler()->schedule_empty_async_at(tag);
+    lock.lock();
 
     // If inserting the empty event was not successful, then this is because the upstream
     // scheduler already processes a later event. In this case, it is safe to assume that
