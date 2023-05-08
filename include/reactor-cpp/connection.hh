@@ -142,7 +142,7 @@ public:
     }
 
     if (logical_time_barrier_.try_acquire_tag(tag)) {
-       return true;
+      return true;
     }
 
     // Insert an empty event into the upstream event queue. This ensures that we

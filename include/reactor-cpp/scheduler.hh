@@ -152,7 +152,7 @@ public:
 
   void inline notify() noexcept { cv_schedule_.notify_one(); }
 
-  auto inline lock() noexcept -> auto{ return std::unique_lock<std::mutex>(scheduling_mutex_); }
+  auto inline lock() noexcept -> auto { return std::unique_lock<std::mutex>(scheduling_mutex_); }
 
   void set_port(BasePort* port);
 
