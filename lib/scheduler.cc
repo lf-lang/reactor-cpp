@@ -307,7 +307,7 @@ void Scheduler::next() { // NOLINT
         bool result{true};
         for (auto* action : environment_->input_actions_) {
           bool inner_result = action->acquire_tag(t_next, lock, cv_schedule_,
-                                       [&t_next, this]() { return t_next != event_queue_.begin()->first; });
+                                                  [&t_next, this]() { return t_next != event_queue_.begin()->first; });
           // If the wait was aborted or if the next tag changed in the meantime,
           // we need to break from the loop and continue with the main loop.
           if (!inner_result || t_next != event_queue_.begin()->first) {
