@@ -69,11 +69,13 @@ constexpr inline void validate([[maybe_unused]] bool condition, [[maybe_unused]]
 
 // assert macro that avoids unused variable warnings
 #ifdef NDEBUG
+// NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
 #define reactor_assert(x)                                                                                              \
   do {                                                                                                                 \
     (void)sizeof(x);                                                                                                   \
   } while (0)
 #else
+// NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
 #define reactor_assert(x) assert(x)
 #endif
 
