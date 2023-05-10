@@ -214,6 +214,11 @@ void Scheduler::start() {
   set_ports_.resize(num_workers);
   triggered_reactions_.resize(num_workers);
 
+  // release the scheduling mutex, allowing other asynchronous processes (i.e.
+  // enclaves or federates) to access the event queue and the current logical
+  // time.
+  startup_lock_.unlock();
+
   // Initialize and start the workers. By resizing the workers vector first,
   // we make sure that there is sufficient space for all the workers and non of
   // them needs to be moved. This is important because a running worker may not
