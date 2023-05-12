@@ -35,10 +35,14 @@ public:
   [[nodiscard]] auto time_point() const noexcept -> const TimePoint& { return time_point_; }
   [[nodiscard]] auto micro_step() const noexcept -> const mstep_t& { return micro_step_; }
 
-  static auto from_physical_time(TimePoint time_point) noexcept -> Tag;
-  static auto from_logical_time(const LogicalTime& logical_time) noexcept -> Tag;
+  [[nodiscard]] static auto from_physical_time(TimePoint time_point) noexcept -> Tag;
+  [[nodiscard]] static auto from_logical_time(const LogicalTime& logical_time) noexcept -> Tag;
+
+  [[nodiscard]] static auto max_for_timepoint(TimePoint time_point) noexcept -> Tag;
 
   [[nodiscard]] auto delay(Duration offset = Duration::zero()) const noexcept -> Tag;
+  [[nodiscard]] auto subtract(Duration offset = Duration::zero()) const noexcept -> Tag;
+  [[nodiscard]] auto decrement() const noexcept -> Tag;
 };
 
 // define all the comparison operators
@@ -56,6 +60,7 @@ private:
 
 public:
   void advance_to(const Tag& tag);
+  void advance_to(const LogicalTime& time);
 
   [[nodiscard]] auto time_point() const noexcept -> TimePoint { return time_point_; }
   [[nodiscard]] auto micro_step() const noexcept -> mstep_t { return micro_step_; }
@@ -86,6 +91,9 @@ auto inline operator<=(const Tag& tag, const LogicalTime& logical_time) noexcept
 auto inline operator>=(const Tag& tag, const LogicalTime& logical_time) noexcept -> bool {
   return !(tag < logical_time);
 }
+
+auto operator<<(std::ostream& os, const Tag& tag) -> std::ostream&;
+auto operator<<(std::ostream& os, const LogicalTime& tag) -> std::ostream&;
 
 } // namespace reactor
 

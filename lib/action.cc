@@ -41,11 +41,11 @@ void Timer::startup() {
     return;
   }
 
-  Tag tag_zero = Tag::from_physical_time(environment()->start_time());
+  const Tag& start_tag = environment()->start_tag();
   if (offset_ != Duration::zero()) {
-    environment()->scheduler()->schedule_sync(this, tag_zero.delay(offset_));
+    environment()->scheduler()->schedule_sync(this, start_tag.delay(offset_));
   } else {
-    environment()->scheduler()->schedule_sync(this, tag_zero);
+    environment()->scheduler()->schedule_sync(this, start_tag);
   }
 }
 
@@ -72,6 +72,25 @@ void ShutdownTrigger::shutdown() {
     Tag tag = Tag::from_logical_time(environment()->logical_time()).delay();
     environment()->scheduler()->schedule_sync(this, tag);
   }
+}
+
+auto Action<void>::schedule_at(const Tag& tag) -> bool {
+  auto* scheduler = environment()->scheduler();
+  if (is_logical()) {
+    if (tag <= scheduler->logical_time()) {
+      return false;
+    }
+    scheduler->schedule_sync(this, tag);
+  } else {
+    // We must call schedule_async while holding the mutex, because otherwise
+    // the scheduler could already start processing the event that we schedule
+    // and call setup() on this action before we insert the value in events_.
+    // Holding both the local mutex mutex_events_ and the scheduler mutex (in
+    // schedule async) should not lead to a deadlock as the scheduler will
+    // only hold one of the two mutexes at once.
+    return scheduler->schedule_async_at(this, tag);
+  }
+  return true;
 }
 
 } // namespace reactor

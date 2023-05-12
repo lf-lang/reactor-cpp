@@ -9,12 +9,15 @@
 #ifndef REACTOR_CPP_ACTION_HH
 #define REACTOR_CPP_ACTION_HH
 
+#include "assert.hh"
 #include "environment.hh"
 #include "fwd.hh"
 #include "logical_time.hh"
 #include "reactor.hh"
+#include "time_barrier.hh"
 #include "value_ptr.hh"
 
+#include <condition_variable>
 #include <map>
 #include <mutex>
 
@@ -34,6 +37,21 @@ protected:
 
   virtual void setup() noexcept { present_ = true; }
   virtual void cleanup() noexcept { present_ = false; }
+
+  /**
+   * Use the given condition variable and lock to wait until the given tag it
+   * safe to process. The waiting is interrupted when the condition variable is
+   * notified (or has a spurious wakeup) and a call to the given `abort_waiting`
+   * function returns true. or until the condition variable is notified.
+   *
+   * Returns false if the wait was interrupted and true otherwise. True
+   * indicates that the tag is safe to process.
+   */
+  virtual auto acquire_tag(const Tag& tag, std::unique_lock<std::mutex>& lock, std::condition_variable& cv,
+                           const std::function<bool(void)>& abort_waiting) -> bool {
+    reactor_assert(!logical_);
+    return PhysicalTimeBarrier::acquire_tag(tag, lock, cv, abort_waiting);
+  }
 
   BaseAction(const std::string& name, Reactor* container, bool logical, Duration min_delay)
       : ReactorElement(name, ReactorElement::Type::Action, container)
@@ -94,6 +112,7 @@ public:
   void shutdown() final {}
 
   template <class Dur = Duration> void schedule(const ImmutableValuePtr<T>& value_ptr, Dur delay = Dur::zero());
+  auto schedule_at(const ImmutableValuePtr<T>& value_ptr, const Tag& tag) -> bool;
 
   template <class Dur = Duration> void schedule(MutableValuePtr<T>&& value_ptr, Dur delay = Dur::zero()) {
     schedule(ImmutableValuePtr<T>(std::forward<MutableValuePtr<T>>(value_ptr)), delay);
@@ -122,6 +141,7 @@ protected:
 
 public:
   template <class Dur = Duration> void schedule(Dur delay = Dur::zero());
+  auto schedule_at(const Tag& tag) -> bool;
 
   void startup() final {}
   void shutdown() final {}

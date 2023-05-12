@@ -63,7 +63,7 @@ ReactorElement::ReactorElement(const std::string& name, ReactorElement::Type typ
     , fqn_(name)
     , environment_(environment) {
   reactor_assert(environment != nullptr);
-  validate(type == Type::Reactor, "Only reactors can be owned by the environment!");
+  validate(type == Type::Reactor || type == Type::Action, "Only reactors and actions can be owned by the environment!");
   validate(this->environment_->phase() == Environment::Phase::Construction,
            "Reactor elements can only be created during construction phase!");
 }
@@ -169,11 +169,11 @@ auto Reactor::get_tag() const noexcept -> Tag {
 }
 
 auto Reactor::get_elapsed_logical_time() const noexcept -> Duration {
-  return get_logical_time() - environment()->start_time();
+  return get_logical_time() - environment()->start_tag().time_point();
 }
 
 auto Reactor::get_elapsed_physical_time() const noexcept -> Duration {
-  return get_physical_time() - environment()->start_time();
+  return get_physical_time() - environment()->start_tag().time_point();
 }
 
 } // namespace reactor

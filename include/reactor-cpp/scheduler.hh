@@ -28,6 +28,8 @@
 
 namespace reactor {
 
+using ReleaseTagCallback = std::function<void(const LogicalTime&)>;
+
 // forward declarations
 class Scheduler;
 class Worker;
@@ -101,7 +103,6 @@ class Scheduler { // NOLINT
 private:
   const bool using_workers_;
   LogicalTime logical_time_{};
-  TimePoint last_observed_physical_time_{TimePoint::min()};
 
   Environment* environment_;
   std::vector<Worker> workers_{};
@@ -109,6 +110,10 @@ private:
 
   std::mutex scheduling_mutex_;
   std::condition_variable cv_schedule_;
+  // lock used to protect the scheduler from asynchronous requests (i.e. from
+  // enclaves pr federates). We hold the mutex from construction and release in
+  // start().
+  std::unique_lock<std::mutex> startup_lock_{scheduling_mutex_};
 
   std::shared_mutex mutex_event_queue_;
   std::map<Tag, ActionListPtr> event_queue_;
@@ -118,6 +123,7 @@ private:
   std::vector<ActionListPtr> action_list_pool_;
   static constexpr std::size_t action_list_pool_increment_{10};
   void fill_action_list_pool();
+  auto insert_event_at(const Tag& tag) -> const ActionListPtr&;
 
   std::vector<std::vector<BasePort*>> set_ports_;
   std::vector<std::vector<Reaction*>> triggered_reactions_;
@@ -129,6 +135,9 @@ private:
 
   std::atomic<bool> stop_{false};
   bool continue_execution_{true};
+
+  std::vector<ReleaseTagCallback> release_tag_callbacks_{};
+  void release_current_tag();
 
   void schedule() noexcept;
   auto schedule_ready_reactions() -> bool;
@@ -142,6 +151,10 @@ public:
 
   void schedule_sync(BaseAction* action, const Tag& tag);
   auto schedule_async(BaseAction* action, const Duration& delay) -> Tag;
+  auto schedule_async_at(BaseAction* action, const Tag& tag) -> bool;
+  auto schedule_empty_async_at(const Tag& tag) -> bool;
+
+  void inline notify() noexcept { cv_schedule_.notify_one(); }
 
   auto inline lock() noexcept -> auto { return std::unique_lock<std::mutex>(scheduling_mutex_); }
 
@@ -151,6 +164,8 @@ public:
 
   void start();
   void stop();
+
+  void register_release_tag_callback(const ReleaseTagCallback& callback);
 
   friend Worker;
 };

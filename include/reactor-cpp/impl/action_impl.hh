@@ -20,29 +20,29 @@ template <class T> template <class Dur> void Action<T>::schedule(const Immutable
   Duration time_delay = std::chrono::duration_cast<Duration>(delay);
   reactor::validate(time_delay >= Duration::zero(), "Schedule cannot be called with a negative delay!");
   reactor::validate(value_ptr != nullptr, "Actions may not be scheduled with a nullptr value!");
+
   auto* scheduler = environment()->scheduler();
   if (is_logical()) {
     time_delay += this->min_delay();
     auto tag = Tag::from_logical_time(scheduler->logical_time()).delay(time_delay);
-    events_[tag] = value_ptr;
+
     scheduler->schedule_sync(this, tag);
+    events_[tag] = value_ptr;
   } else {
-    {
-      std::lock_guard<std::mutex> lock(mutex_events_);
-      // We must call schedule_async while holding the mutex, because otherwise
-      // the scheduler could already start processing the event that we schedule
-      // and call setup() on this action before we insert the value in events_.
-      // Holding both the local mutex mutex_events_ and them scheduler mutes (in
-      // schedule async) should not lead to a deadlock as the scheduler will
-      // only hold one of the two mutexes at once.
-      auto tag = scheduler->schedule_async(this, time_delay);
-      events_[tag] = value_ptr;
-    }
+    std::lock_guard<std::mutex> lock{mutex_events_};
+    // We must call schedule_async while holding the mutex, because otherwise
+    // the scheduler could already start processing the event that we schedule
+    // and call setup() on this action before we insert the value in events_.
+    // Holding both the local mutex mutex_events_ and the scheduler mutex (in
+    // schedule async) should not lead to a deadlock as the scheduler will
+    // only hold one of the two mutexes at once.
+    auto tag = scheduler->schedule_async(this, time_delay);
+    events_[tag] = value_ptr;
   }
 }
 
 template <class Dur> void Action<void>::schedule(Dur delay) {
-  auto time_delay = std::chrono::duration_cast<Duration>(delay);
+  Duration time_delay = std::chrono::duration_cast<Duration>(delay);
   reactor::validate(time_delay >= Duration::zero(), "Schedule cannot be called with a negative delay!");
   auto* scheduler = environment()->scheduler();
   if (is_logical()) {
@@ -50,9 +50,36 @@ template <class Dur> void Action<void>::schedule(Dur delay) {
     auto tag = Tag::from_logical_time(scheduler->logical_time()).delay(time_delay);
     scheduler->schedule_sync(this, tag);
   } else {
-    // physical action
     scheduler->schedule_async(this, time_delay);
   }
+}
+
+template <class T> auto Action<T>::schedule_at(const ImmutableValuePtr<T>& value_ptr, const Tag& tag) -> bool {
+  reactor::validate(value_ptr != nullptr, "Actions may not be scheduled with a nullptr value!");
+
+  auto* scheduler = environment()->scheduler();
+  if (is_logical()) {
+    if (tag <= scheduler->logical_time()) {
+      return false;
+    }
+
+    scheduler->schedule_sync(this, tag);
+    events_[tag] = value_ptr;
+  } else {
+    std::lock_guard<std::mutex> lock{mutex_events_};
+    // We must call schedule_async while holding the mutex, because otherwise
+    // the scheduler could already start processing the event that we schedule
+    // and call setup() on this action before we insert the value in events_.
+    // Holding both the local mutex mutex_events_ and the scheduler mutex (in
+    // schedule async) should not lead to a deadlock as the scheduler will
+    // only hold one of the two mutexes at once.
+    bool result = scheduler->schedule_async_at(this, tag);
+    if (result) {
+      events_[tag] = value_ptr;
+    }
+    return result;
+  }
+  return true;
 }
 
 template <class T> void Action<T>::setup() noexcept {

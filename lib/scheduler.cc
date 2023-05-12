@@ -19,6 +19,7 @@
 #include "reactor-cpp/logging.hh"
 #include "reactor-cpp/port.hh"
 #include "reactor-cpp/reaction.hh"
+#include "reactor-cpp/time_barrier.hh"
 #include "reactor-cpp/trace.hh"
 
 namespace reactor {
@@ -201,12 +202,22 @@ auto Scheduler::schedule_ready_reactions() -> bool {
 void Scheduler::start() {
   log_.debug() << "Starting the scheduler...";
 
+  // Initialize our logical time to the value right before the start tag. This
+  // is important for usage with enclaves/federates, to indicate, that no events
+  // before the start tag ca be generated.
+  logical_time_.advance_to(environment_->start_tag().decrement());
+
   auto num_workers = environment_->num_workers();
   // initialize the reaction queue, set ports vector, and triggered reactions
   // vector
   reaction_queue_.resize(environment_->max_reaction_index() + 1);
   set_ports_.resize(num_workers);
   triggered_reactions_.resize(num_workers);
+
+  // release the scheduling mutex, allowing other asynchronous processes (i.e.
+  // enclaves or federates) to access the event queue and the current logical
+  // time.
+  startup_lock_.unlock();
 
   // Initialize and start the workers. By resizing the workers vector first,
   // we make sure that there is sufficient space for all the workers and non of
@@ -227,6 +238,10 @@ void Scheduler::start() {
 }
 
 void Scheduler::next() { // NOLINT
+  // Notify other environments and let them know that we finished processing the
+  // current tag
+  release_current_tag();
+
   // clean up all actions triggered at the current tag (if there are any remaining)
   if (triggered_actions_ != nullptr) {
     // cleanup all triggered actions
@@ -235,7 +250,6 @@ void Scheduler::next() { // NOLINT
     }
 
     triggered_actions_->clear();
-    action_list_pool_.emplace_back(std::move(triggered_actions_));
   }
 
   // cleanup all set ports
@@ -249,18 +263,22 @@ void Scheduler::next() { // NOLINT
   {
     std::unique_lock<std::mutex> lock{scheduling_mutex_};
 
-    // shutdown if there are no more events in the queue
-    if (event_queue_.empty() && !stop_) {
-      if (environment_->run_forever()) {
-        // wait for a new asynchronous event
-        cv_schedule_.wait(lock, [this]() { return !event_queue_.empty() || stop_; });
-      } else {
-        log_.debug() << "No more events in queue_. -> Terminate!";
-        environment_->sync_shutdown();
-      }
-    }
-
     while (triggered_actions_ == nullptr || triggered_actions_->empty()) {
+      if (triggered_actions_ != nullptr) {
+        action_list_pool_.emplace_back(std::move(triggered_actions_));
+      }
+
+      // shutdown if there are no more events in the queue
+      if (event_queue_.empty() && !stop_) {
+        if (environment_->run_forever()) {
+          // wait for a new asynchronous event
+          cv_schedule_.wait(lock, [this]() { return !event_queue_.empty() || stop_; });
+        } else {
+          log_.debug() << "No more events in queue_. -> Terminate!";
+          environment_->sync_shutdown();
+        }
+      }
+
       if (stop_) {
         continue_execution_ = false;
         log_.debug() << "Shutting down the scheduler";
@@ -270,47 +288,59 @@ void Scheduler::next() { // NOLINT
                           "termination reactions";
           triggered_actions_ = std::move(event_queue_.begin()->second);
           event_queue_.erase(event_queue_.begin());
-          log_.debug() << "advance logical time to tag [" << t_next.time_point() << ", " << t_next.micro_step() << "]";
+          log_.debug() << "advance logical time to tag " << t_next;
           logical_time_.advance_to(t_next);
         } else {
           return;
         }
       } else {
-        // collect events of the next tag
+        // find the next tag
         auto t_next = event_queue_.begin()->first;
+        log_.debug() << "try to advance logical time to tag " << t_next;
 
         // synchronize with physical time if not in fast forward mode
         if (!environment_->fast_fwd_execution()) {
-          // If physical time is smaller than the next logical time point,
-          // then update the physical time. This step is small optimization to
-          // avoid calling get_physical_time() in every iteration as this
-          // would add a significant overhead.
-          if (last_observed_physical_time_ < t_next.time_point()) {
-            last_observed_physical_time_ = get_physical_time();
-          }
-
-          // If physical time is still smaller than the next logical time
-          // point, then wait until the next tag or until a new event is
-          // inserted asynchronously into the queue
-          if (last_observed_physical_time_ < t_next.time_point()) {
-            auto status = cv_schedule_.wait_until(lock, t_next.time_point());
-            // Start over if an event was inserted into the event queue by a physical action
-            if (status == std::cv_status::no_timeout || t_next != event_queue_.begin()->first) {
-              continue;
-            }
-            // update physical time and continue otherwise
-            last_observed_physical_time_ = t_next.time_point();
-            reactor_assert(t_next == event_queue_.begin()->first);
+          bool result = PhysicalTimeBarrier::acquire_tag(
+              t_next, lock, cv_schedule_, [&t_next, this]() { return t_next != event_queue_.begin()->first; });
+          // If acquire tag returns false, then a new event was inserted into the queue and we need to start over
+          if (!result) {
+            continue;
           }
         }
 
-        // retrieve all events with tag equal to current logical time from the
-        // queue
+        // Wait until all input actions mark the tag as safe to process.
+        bool result{true};
+        for (auto* action : environment_->input_actions_) {
+          bool inner_result = action->acquire_tag(t_next, lock, cv_schedule_,
+                                                  [&t_next, this]() { return t_next != event_queue_.begin()->first; });
+          // If the wait was aborted or if the next tag changed in the meantime,
+          // we need to break from the loop and continue with the main loop.
+          if (!inner_result || t_next != event_queue_.begin()->first) {
+            result = false;
+            break;
+          }
+        }
+        // If acquire tag returns false, then a new event was inserted into the queue and we need to start over
+        if (!result) {
+          continue;
+        }
+
+        // Retrieve all events with tag equal to current logical time from the
+        // queue.
+        // We do not need to lock mutex_event_queue_ here, as the lock on
+        // scheduling_mutex_ already ensures that no one can write to the event
+        // queue.
         triggered_actions_ = std::move(event_queue_.extract(event_queue_.begin()).mapped());
 
         // advance logical time
-        log_.debug() << "advance logical time to tag [" << t_next.time_point() << ", " << t_next.micro_step() << "]";
+        log_.debug() << "advance logical time to tag " << t_next;
         logical_time_.advance_to(t_next);
+
+        // If there are no triggered actions at the event, then release the
+        // current tag and go back to the start of the loop
+        if (triggered_actions_->empty()) {
+          release_current_tag();
+        }
       }
     }
   } // mutex schedule_
@@ -346,42 +376,36 @@ void Scheduler::fill_action_list_pool() {
   }
 }
 
+auto Scheduler::insert_event_at(const Tag& tag) -> const ActionListPtr& {
+  auto shared_lock = std::shared_lock<std::shared_mutex>(mutex_event_queue_);
+
+  auto event_it = event_queue_.find(tag);
+  if (event_it == event_queue_.end()) {
+    shared_lock.unlock();
+    {
+      auto unique_lock = std::unique_lock<std::shared_mutex>(mutex_event_queue_);
+      if (action_list_pool_.empty()) {
+        fill_action_list_pool();
+      }
+      const auto& result = event_queue_.try_emplace(tag, std::move(action_list_pool_.back()));
+      if (result.second) {
+        action_list_pool_.pop_back();
+      }
+      return result.first->second;
+    }
+  } else {
+    return event_it->second;
+  }
+}
+
 void Scheduler::schedule_sync(BaseAction* action, const Tag& tag) {
   log_.debug() << "Schedule action " << action->fqn() << (action->is_logical() ? " synchronously " : " asynchronously ")
-               << " with tag [" << tag.time_point() << ", " << tag.micro_step() << "]";
+               << " with tag " << tag;
   reactor_assert(logical_time_ < tag);
   tracepoint(reactor_cpp, schedule_action, action->container()->fqn(), action->name(), tag);
 
-  if (using_workers_) {
-    auto shared_lock = std::shared_lock<std::shared_mutex>(mutex_event_queue_);
-
-    auto event_it = event_queue_.find(tag);
-    if (event_it == event_queue_.end()) {
-      shared_lock.unlock();
-      {
-        auto unique_lock = std::unique_lock<std::shared_mutex>(mutex_event_queue_);
-        if (action_list_pool_.empty()) {
-          fill_action_list_pool();
-        }
-        const auto& result = event_queue_.try_emplace(tag, std::move(action_list_pool_.back()));
-        if (result.second) {
-          action_list_pool_.pop_back();
-        }
-        result.first->second->push_back(action);
-      }
-    } else {
-      event_it->second->push_back(action);
-    }
-  } else {
-    if (action_list_pool_.empty()) {
-      fill_action_list_pool();
-    }
-    const auto& result = event_queue_.try_emplace(tag, std::move(action_list_pool_.back()));
-    if (result.second) {
-      action_list_pool_.pop_back();
-    }
-    result.first->second->push_back(action);
-  }
+  const auto& action_list = insert_event_at(tag);
+  action_list->push_back(action);
 }
 
 auto Scheduler::schedule_async(BaseAction* action, const Duration& delay) -> Tag {
@@ -391,8 +415,36 @@ auto Scheduler::schedule_async(BaseAction* action, const Duration& delay) -> Tag
     tag = Tag::from_physical_time(get_physical_time() + delay);
     schedule_sync(action, tag);
   }
-  cv_schedule_.notify_one();
+  notify();
   return tag;
+}
+
+auto Scheduler::schedule_async_at(BaseAction* action, const Tag& tag) -> bool {
+  {
+    std::lock_guard<std::mutex> lock_guard(scheduling_mutex_);
+    if (tag <= logical_time_) {
+      return false;
+    }
+    schedule_sync(action, tag);
+  }
+  notify();
+  return true;
+}
+
+auto Scheduler::schedule_empty_async_at(const Tag& tag) -> bool {
+  log_.debug() << "Schedule empty event at tag " << tag;
+  {
+    std::lock_guard<std::mutex> lock_guard(scheduling_mutex_);
+    if (tag <= logical_time_) {
+      // If we try to insert an empty event at the current logical time, then we
+      // succeeded because there must be an event at this tag that is currently
+      // processed.
+      return tag == logical_time_;
+    }
+    insert_event_at(tag);
+  }
+  notify();
+  return true;
 }
 
 void Scheduler::set_port(BasePort* port) {
@@ -427,7 +479,22 @@ void Scheduler::set_port_helper(BasePort* port) {
 
 void Scheduler::stop() {
   stop_ = true;
-  cv_schedule_.notify_one();
+  notify();
+}
+
+void Scheduler::register_release_tag_callback(const ReleaseTagCallback& callback) {
+  // Callbacks should only be registered during assembly, which happens strictly
+  // sequentially. Therefore, we should be fine accessing the vector directly
+  // and do not need to lock.
+  validate(environment_->phase() <= Environment::Phase::Assembly,
+           "registering callbacks is only allowed during construction and assembly");
+  release_tag_callbacks_.push_back(callback);
+}
+
+void Scheduler::release_current_tag() {
+  for (const auto& callback : release_tag_callbacks_) {
+    callback(logical_time_);
+  }
 }
 
 } // namespace reactor

@@ -55,7 +55,7 @@ private:
 
   Scheduler scheduler_;
   Phase phase_{Phase::Construction};
-  TimePoint start_time_{};
+  Tag start_tag_{};
 
   const Duration timeout_{};
 
@@ -96,7 +96,7 @@ public:
   auto scheduler() noexcept -> Scheduler* { return &scheduler_; }
 
   [[nodiscard]] auto logical_time() const noexcept -> const LogicalTime& { return scheduler_.logical_time(); }
-  [[nodiscard]] auto start_time() const noexcept -> const TimePoint& { return start_time_; }
+  [[nodiscard]] auto start_tag() const noexcept -> const Tag& { return start_tag_; }
   [[nodiscard]] auto timeout() const noexcept -> const Duration& { return timeout_; }
 
   static auto physical_time() noexcept -> TimePoint { return get_physical_time(); }
@@ -105,6 +105,8 @@ public:
   [[nodiscard]] auto fast_fwd_execution() const noexcept -> bool { return fast_fwd_execution_; }
   [[nodiscard]] auto run_forever() const noexcept -> bool { return run_forever_; }
   [[nodiscard]] auto max_reaction_index() const noexcept -> unsigned int { return max_reaction_index_; }
+
+  friend Scheduler;
 };
 } // namespace reactor
 
