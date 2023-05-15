@@ -99,6 +99,33 @@ public:
 using ActionList = SafeVector<BaseAction*>;
 using ActionListPtr = std::unique_ptr<ActionList>;
 
+class EventQueue {
+private:
+  std::shared_mutex mutex_;
+  std::map<Tag, ActionListPtr> event_queue_;
+  /// stores the actions triggered at the current tag
+  ActionListPtr triggered_actions_{nullptr};
+
+  std::vector<ActionListPtr> action_list_pool_;
+  static constexpr std::size_t action_list_pool_increment_{10};
+
+  void fill_action_list_pool();
+
+public:
+  EventQueue() { fill_action_list_pool(); }
+
+  [[nodiscard]] auto empty() const -> bool { return event_queue_.empty(); }
+  [[nodiscard]] auto next_tag() const -> Tag;
+
+  auto insert_event_at(const Tag& tag) -> const ActionListPtr&;
+
+  // should only be called while holding the scheduler mutex
+  auto extract_next_event() -> ActionListPtr&&;
+
+  // should only be called while holding the scheduler mutex
+  void return_action_list(ActionListPtr&& action_list);
+};
+
 class Scheduler { // NOLINT
 private:
   const bool using_workers_;
@@ -111,15 +138,9 @@ private:
   std::mutex scheduling_mutex_;
   std::condition_variable cv_schedule_;
 
-  std::shared_mutex mutex_event_queue_;
-  std::map<Tag, ActionListPtr> event_queue_;
+  EventQueue event_queue_;
   /// stores the actions triggered at the current tag
   ActionListPtr triggered_actions_{nullptr};
-
-  std::vector<ActionListPtr> action_list_pool_;
-  static constexpr std::size_t action_list_pool_increment_{10};
-  void fill_action_list_pool();
-  auto insert_event_at(const Tag& tag) -> const ActionListPtr&;
 
   std::vector<std::vector<BasePort*>> set_ports_;
   std::vector<std::vector<Reaction*>> triggered_reactions_;
