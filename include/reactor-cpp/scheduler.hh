@@ -120,7 +120,7 @@ public:
   auto insert_event_at(const Tag& tag) -> const ActionListPtr&;
 
   // should only be called while holding the scheduler mutex
-  auto extract_next_event() -> ActionListPtr&&;
+  auto extract_next_event() -> ActionListPtr;
 
   // should only be called while holding the scheduler mutex
   void return_action_list(ActionListPtr&& action_list);

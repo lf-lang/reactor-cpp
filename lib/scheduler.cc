@@ -160,7 +160,7 @@ auto EventQueue::next_tag() const -> Tag {
   return event_queue_.begin()->first;
 }
 
-auto EventQueue::extract_next_event() -> ActionListPtr&& {
+auto EventQueue::extract_next_event() -> ActionListPtr {
   reactor_assert(!event_queue_.empty());
   return std::move(event_queue_.extract(event_queue_.begin()).mapped());
 }
@@ -347,7 +347,7 @@ void Scheduler::next() { // NOLINT
         if (!event_queue_.empty() && t_next == event_queue_.next_tag()) {
           log_.debug() << "Schedule the last round of reactions including all "
                           "termination reactions";
-          triggered_actions_ = std::move(event_queue_.extract_next_event());
+          triggered_actions_ = event_queue_.extract_next_event();
           log_.debug() << "advance logical time to tag " << t_next;
           logical_time_.advance_to(t_next);
         } else {
@@ -388,7 +388,7 @@ void Scheduler::next() { // NOLINT
         // We do not need to lock mutex_event_queue_ here, as the lock on
         // scheduling_mutex_ already ensures that no one can write to the event
         // queue.
-        triggered_actions_ = std::move(event_queue_.extract_next_event());
+        triggered_actions_ = event_queue_.extract_next_event();
 
         // advance logical time
         log_.debug() << "advance logical time to tag " << t_next;
