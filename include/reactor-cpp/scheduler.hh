@@ -110,10 +110,6 @@ private:
 
   std::mutex scheduling_mutex_;
   std::condition_variable cv_schedule_;
-  // lock used to protect the scheduler from asynchronous requests (i.e. from
-  // enclaves pr federates). We hold the mutex from construction and release in
-  // start().
-  std::unique_lock<std::mutex> startup_lock_{scheduling_mutex_};
 
   std::shared_mutex mutex_event_queue_;
   std::map<Tag, ActionListPtr> event_queue_;
