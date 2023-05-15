@@ -61,7 +61,7 @@ protected:
       : ReactorElement(name, ReactorElement::Type::Action, environment)
       , min_delay_(min_delay)
       , logical_(logical) {
-    environment->register_input_action(this);
+    environment->insert_input_action(this);
   }
 
 public:
@@ -153,7 +153,7 @@ public:
       : Action<T>(name, container, false, Duration::zero()) {
     // all physical actions act as input actions to the program as they can be
     // scheduled from external threads
-    container->environment()->register_input_action(this);
+    container->environment()->insert_input_action(this);
   }
 };
 

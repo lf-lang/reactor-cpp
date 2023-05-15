@@ -72,7 +72,7 @@ Reactor::Reactor(const std::string& name, Reactor* container)
     : ReactorElement(name, ReactorElement::Type::Reactor, container) {}
 Reactor::Reactor(const std::string& name, Environment* environment)
     : ReactorElement(name, ReactorElement::Type::Reactor, environment) {
-  environment->register_reactor(this);
+  environment->insert_reactor(this);
 }
 
 void Reactor::register_action([[maybe_unused]] BaseAction* action) {

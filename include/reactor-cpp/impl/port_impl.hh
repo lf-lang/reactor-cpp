@@ -9,34 +9,46 @@
 #ifndef REACTOR_CPP_IMPL_PORT_IMPL_HH
 #define REACTOR_CPP_IMPL_PORT_IMPL_HH
 
-#include "../assert.hh"
-#include "../environment.hh"
+#include "reactor-cpp/assert.hh"
+#include "reactor-cpp/environment.hh"
 #include "reactor-cpp/port.hh"
 
 namespace reactor {
 
 template <class T> [[maybe_unused]] auto Port<T>::typed_outward_bindings() const noexcept -> const std::set<Port<T>*>& {
-  // HACK this cast is ugly but should be safe as long as we only allow to
-  // bind with Port<T>*. The alternative would be to copy the entire set and
-  // cast each element individually, which is also ugly...
-  return reinterpret_cast<const std::set<Port<T>*>&>(outward_bindings()); // NOLINT C++20 std::bit_cast
+  return outward_bindings_; // NOLINT C++20 std::bit_cast
 }
 
 template <class T> auto Port<T>::typed_inward_binding() const noexcept -> Port<T>* {
   // we can use a static cast here since we know that this port is always
   // connected with another Port<T>.
-  return static_cast<Port<T>*>(inward_binding());
+  return inward_binding_;
 }
 
 template <class T> void Port<T>::set(const ImmutableValuePtr<T>& value_ptr) {
-  reactor::validate(!has_inward_binding(), "set() may only be called on ports that do not have an inward "
-                                           "binding!");
-  reactor::validate(value_ptr != nullptr, "Ports may not be set to nullptr!");
+  validate(!has_inward_binding(), "set() may only be called on ports that do not have an inward "
+                                  "binding!");
+  validate(value_ptr != nullptr, "Ports may not be set to nullptr!");
 
-  auto scheduler = environment()->scheduler();
-  this->value_ptr_ = std::move(value_ptr);
-  scheduler->set_port(this);
   this->present_ = true;
+  this->value_ptr_ = std::move(value_ptr);
+
+  this->invoke_set_callback();
+
+  for (auto* const outward : outward_bindings_) {
+    outward->set(value_ptr);
+  };
+
+  auto* scheduler = environment()->scheduler();
+  // this is the start of a crime scene further investigation may lead to psychological terror
+  // we insert here everything in batches to reduce how often the env needs to be loaded from main memory
+  // when every port would insert itself individually
+  if (!outward_bindings_.empty()) {
+    scheduler->set_ports<reactor::Port<T>>(std::end(outward_bindings_), std::end(outward_bindings_));
+  }
+  if (!triggers().empty()) {
+    scheduler->set_triggers(std::begin(triggers()), std::end(triggers()));
+  }
 }
 
 template <class T> auto Port<T>::get() const noexcept -> const ImmutableValuePtr<T>& {

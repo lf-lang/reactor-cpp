@@ -18,19 +18,18 @@ namespace reactor {
 
 class Reaction : public ReactorElement { // NOLINT
 private:
-  std::set<BaseAction*> action_triggers_;
-  std::set<BaseAction*> scheduable_actions_;
-  std::set<BasePort*> port_trigger_;
-  std::set<BasePort*> antidependencies_;
-  std::set<BasePort*> dependencies_;
+  std::set<BaseAction*> action_triggers_{};
+  std::set<BaseAction*> scheduable_actions_{};
+  std::set<BasePort*> port_trigger_{};
+  std::set<BasePort*> antidependencies_; // TODO: discuss
+  std::set<BasePort*> dependencies_;     // TODO: discuss
 
-  const int priority_;
-  unsigned int index_{};
-
-  std::function<void(void)> body_{nullptr};
+  const int priority_{0};
+  unsigned int index_{0};
 
   Duration deadline_{Duration::zero()};
   std::function<void(void)> deadline_handler_{nullptr};
+  std::function<void(void)> body_{};
 
   void set_deadline_impl(Duration deadline, const std::function<void(void)>& handler);
 
@@ -45,17 +44,10 @@ public:
   void declare_antidependency(BasePort* port);
   void declare_dependency(BasePort* port);
 
-  [[nodiscard]] auto action_triggers() const noexcept -> const auto& { return action_triggers_; }
-
-  [[nodiscard]] auto port_triggers() const noexcept -> const auto& { return port_trigger_; }
-
-  [[maybe_unused]] [[nodiscard]] auto antidependencies() const noexcept -> const auto& { return antidependencies_; }
-
-  [[nodiscard]] auto dependencies() const noexcept -> const auto& { return dependencies_; }
-
   [[maybe_unused]] [[nodiscard]] auto scheduable_actions() const noexcept -> const auto& { return scheduable_actions_; }
-
   [[nodiscard]] auto priority() const noexcept -> int { return priority_; }
+  [[maybe_unused]] [[nodiscard]] auto antidependencies() const noexcept -> const auto& { return antidependencies_; }
+  [[nodiscard]] auto dependencies() const noexcept -> const auto& { return dependencies_; }
 
   void startup() final {}
   void shutdown() final {}

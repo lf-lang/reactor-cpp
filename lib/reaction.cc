@@ -46,43 +46,6 @@ void Reaction::declare_schedulable_action(BaseAction* action) {
   action->register_scheduler(this);
 }
 
-void Reaction::declare_trigger(BasePort* port) {
-  reactor_assert(port != nullptr);
-  reactor_assert(this->environment() == port->environment());
-  reactor_assert(this->environment()->phase() == Environment::Phase::Assembly);
-  assert_phase(this, Environment::Phase::Assembly);
-
-  if (port->is_input()) {
-    validate(this->container() == port->container(),
-             "Input port triggers must belong to the same reactor as the triggered "
-             "reaction");
-  } else {
-    validate(this->container() == port->container()->container(),
-             "Output port triggers must belong to a contained reactor");
-  }
-
-  reactor_assert(port_trigger_.insert(port).second);
-  reactor_assert(dependencies_.insert(port).second);
-  port->register_dependency(this, true);
-}
-
-void Reaction::declare_dependency(BasePort* port) {
-  reactor_assert(port != nullptr);
-  reactor_assert(this->environment() == port->environment());
-  assert_phase(this, Environment::Phase::Assembly);
-
-  if (port->is_input()) {
-    validate(this->container() == port->container(), "Dependent input ports must belong to the same reactor as the "
-                                                     "reaction");
-  } else {
-    validate(this->container() == port->container()->container(),
-             "Dependent output ports must belong to a contained reactor");
-  }
-
-  reactor_assert(dependencies_.insert(port).second);
-  port->register_dependency(this, false);
-}
-
 void Reaction::declare_antidependency(BasePort* port) {
   reactor_assert(port != nullptr);
   reactor_assert(this->environment() == port->environment());
@@ -98,6 +61,26 @@ void Reaction::declare_antidependency(BasePort* port) {
 
   reactor_assert(antidependencies_.insert(port).second);
   port->register_antidependency(this);
+}
+
+void Reaction::declare_trigger(BasePort* port) {
+
+  reactor_assert(port != nullptr);
+  reactor_assert(this->environment() == port->environment());
+  reactor_assert(this->environment()->phase() == Environment::Phase::Assembly);
+  assert_phase(this, Environment::Phase::Assembly);
+
+  if (port->is_input()) {
+    validate(this->container() == port->container(),
+             "Input port triggers must belong to the same reactor as the triggered "
+             "reaction");
+  } else {
+    validate(this->container() == port->container()->container(),
+             "Output port triggers must belong to a contained reactor");
+  }
+
+  reactor_assert(port_trigger_.insert(port).second);
+  port->register_dependency(this, true);
 }
 
 void Reaction::trigger() {

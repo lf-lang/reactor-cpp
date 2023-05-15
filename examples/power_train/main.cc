@@ -165,12 +165,12 @@ auto main() -> int {
   Engine engine{&env};
 
   env.assemble();
-  left_pedal.angle.bind_to(&brake_control.angle);
-  left_pedal.on_off.bind_to(&engine_control.on_off);
-  brake_control.force.bind_to(&brakes.force);
-  right_pedal.angle.bind_to(&engine_control.angle);
-  engine_control.check.bind_to(&right_pedal.check);
-  engine_control.torque.bind_to(&engine.torque);
+  left_pedal.angle.set_inward_binding(&brake_control.angle);
+  left_pedal.on_off.set_inward_binding(&engine_control.on_off);
+  brake_control.force.set_inward_binding(&brakes.force);
+  right_pedal.angle.set_inward_binding(&engine_control.angle);
+  engine_control.check.set_inward_binding(&right_pedal.check);
+  engine_control.torque.set_inward_binding(&engine.torque);
 
   env.export_dependency_graph("graph.dot");
 

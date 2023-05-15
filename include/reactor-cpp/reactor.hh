@@ -13,8 +13,10 @@
 #include <sstream>
 #include <string>
 
-#include "fwd.hh"
+//#include "fwd.hh"
+#include "environment.hh"
 #include "logical_time.hh"
+#include "reactor.hh"
 
 namespace reactor {
 class ReactorElement { // NOLINT

@@ -152,9 +152,19 @@ public:
 
   void inline notify() noexcept { cv_schedule_.notify_one(); }
 
-  auto inline lock() noexcept -> auto{ return std::unique_lock<std::mutex>(scheduling_mutex_); }
+  auto inline lock() noexcept -> auto { return std::unique_lock<std::mutex>(scheduling_mutex_); }
 
   void set_port(BasePort* port);
+  void set_triggers(std::set<Reaction*>::iterator start, std::set<Reaction*>::iterator end) noexcept {
+    auto& pool = triggered_reactions_[Worker::current_worker_id()];
+    pool.insert(std::begin(pool), start, end);
+  }
+
+  template <class T>
+  void set_ports(typename std::set<T*>::iterator start, typename std::set<T*>::iterator end) noexcept {
+    auto& pool = set_ports_[Worker::current_worker_id()];
+    pool.insert(std::begin(pool), start, end);
+  }
 
   [[nodiscard]] inline auto logical_time() const noexcept -> const auto& { return logical_time_; }
 

@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "reactor-cpp/reactor-cpp.hh"
+#include <reactor-cpp/reactor-cpp.hh>
 
 using namespace reactor;
 using namespace std::chrono_literals;
@@ -38,6 +38,7 @@ public:
   Output<int> count{"count", this};     // NOLINT
 
   void assemble() override {
+    std::cout << "assemble Counter" << std::endl << std::flush;
     r_trigger.declare_trigger(&trigger);
     r_trigger.declare_antidependency(&count);
   }
@@ -58,7 +59,10 @@ public:
   Printer(const std::string& name, Environment* env)
       : Reactor(name, env) {}
 
-  void assemble() override { r_value.declare_trigger(&value); }
+  void assemble() override {
+    std::cout << "assemble Printer" << std::endl << std::flush;
+    r_value.declare_trigger(&value);
+  }
 
   void on_value() { std::cout << this->name() << ": " << *value.get() << std::endl; }
 };
@@ -84,6 +88,7 @@ public:
   void add() {
     if (i1.is_present() && i2.is_present()) {
       sum.set(*i1.get() + *i2.get());
+      std::cout << "setting sum" << std::endl;
     }
   }
 };
@@ -94,23 +99,50 @@ auto main() -> int {
   Trigger trigger1{"t1", &env, 1s};
   Counter counter1{"c1", &env};
   Printer printer1{"p1", &env};
-  trigger1.trigger.bind_to(&counter1.trigger);
-  counter1.count.bind_to(&printer1.value);
+
+  auto trigger1_trigger = env.register_port(&trigger1.trigger);
+  auto counter1_trigger = env.register_port(&counter1.trigger);
+  auto counter1_count = env.register_port(&counter1.count);
+  auto print1_value = env.register_port(&printer1.value);
+  // trigger1.trigger.set_inward_binding(&counter1.trigger);
+  // counter1.count.set_inward_binding(&printer1.value);
+
+  env.draw_connection(trigger1_trigger, counter1_trigger, Environment::ConnectionProperties{});
+  env.draw_connection(counter1_count, print1_value, Environment::ConnectionProperties{});
 
   Trigger trigger2{"t2", &env, 2s};
   Counter counter2{"c2", &env};
   Printer printer2{"p2", &env};
-  trigger2.trigger.bind_to(&counter2.trigger);
-  counter2.count.bind_to(&printer2.value);
+
+  auto trigger2_trigger = env.register_port(&trigger2.trigger);
+  auto counter2_trigger = env.register_port(&counter2.trigger);
+  auto counter2_count = env.register_port(&counter2.count);
+  auto printer2_value = env.register_port(&printer2.value);
+
+  // trigger2.trigger.set_inward_binding(&counter2.trigger);
+  // counter2.count.set_inward_binding(&printer2.value);
+  env.draw_connection(trigger2_trigger, counter2_trigger, Environment::ConnectionProperties{});
+  env.draw_connection(counter2_count, printer2_value, Environment::ConnectionProperties{});
 
   Adder add{"add", &env};
   Printer p_add{"p_add", &env};
-  counter1.count.bind_to(&add.i1);
-  counter2.count.bind_to(&add.i2);
-  add.sum.bind_to(&p_add.value);
 
+  auto add_i1 = env.register_port(&add.i1);
+  auto add_i2 = env.register_port(&add.i2);
+  auto add_sum = env.register_port(&add.sum);
+  auto p_add_value = env.register_port(&p_add.value);
+
+  env.draw_connection(counter1_count, add_i1, Environment::ConnectionProperties{});
+  env.draw_connection(counter2_count, add_i2, Environment::ConnectionProperties{});
+  env.draw_connection(add_sum, p_add_value, Environment::ConnectionProperties{});
+
+  std::cout << "optimize" << std::endl << std::flush;
+  env.optimize();
+
+  std::cout << "assemble" << std::endl << std::flush;
   env.assemble();
 
+  std::cout << "optimize" << std::endl << std::flush;
   auto thread = env.startup();
   thread.join();
 

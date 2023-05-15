@@ -307,7 +307,7 @@ void Scheduler::next() { // NOLINT
         bool result{true};
         for (auto* action : environment_->input_actions_) {
           bool inner_result = action->acquire_tag(t_next, lock, cv_schedule_,
-                                       [&t_next, this]() { return t_next != event_queue_.begin()->first; });
+                                                  [&t_next, this]() { return t_next != event_queue_.begin()->first; });
           // If the wait was aborted or if the next tag changed in the meantime,
           // we need to break from the loop and continue with the main loop.
           if (!inner_result || t_next != event_queue_.begin()->first) {
@@ -451,25 +451,7 @@ void Scheduler::set_port(BasePort* port) {
   set_ports_[Worker::current_worker_id()].push_back(port);
 
   // recursively search for triggered reactions
-  set_port_helper(port);
-}
-
-void Scheduler::set_port_helper(BasePort* port) {
-  // record the port for cleaning it up later
-  set_ports_[Worker::current_worker_id()].push_back(port);
-
-  // Call the 'set' callback on the port
-  port->invoke_set_callback();
-
-  // Record all triggered reactions
-  for (auto* reaction : port->triggers()) {
-    triggered_reactions_[Worker::current_worker_id()].push_back(reaction);
-  }
-
-  // Continue recursively
-  for (auto* binding : port->outward_bindings()) {
-    set_port_helper(binding);
-  }
+  // set_port_helper(port);
 }
 
 void Scheduler::stop() {

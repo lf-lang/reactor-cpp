@@ -21,7 +21,7 @@ else()
   set(REACTOR_CPP_INCLUDE "include")
 endif()
 
-add_library(${LIB_TARGET} SHARED ${SOURCE_FILES})
+add_library(${LIB_TARGET} STATIC ${SOURCE_FILES}) #TODO: change back to SHARED
 target_include_directories(${LIB_TARGET} PUBLIC
   "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>"
   "$<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>"

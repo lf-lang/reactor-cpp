@@ -4,6 +4,7 @@
  *
  * Authors:
  *   Christian Menard
+ *   Tassilo Tanneberger
  */
 
 #ifndef REACTOR_CPP_ENVIRONMENT_HH
@@ -14,6 +15,7 @@
 #include <vector>
 
 #include "fwd.hh"
+#include "graph.hh"
 #include "reactor-cpp/logging.hh"
 #include "reactor-cpp/time.hh"
 #include "reactor.hh"
@@ -30,21 +32,46 @@ class Environment {
 public:
   enum class Phase { Construction = 0, Assembly = 1, Startup = 2, Execution = 3, Shutdown = 4, Deconstruction = 5 };
 
-private:
+  enum ConnectionType { Delay, Enclaved, EnclavedDelayed, DalayedFederated, Plugin };
+  struct ConnectionProperties {
+    Duration delay_{0};
+    bool delayed_;
+    bool physical_;
+    Connection* connection;
+  };
+
+  // ok this now slowly gets complicated the first indicates which type of component it is the second
+  // tells us the index in the component bucket
+  using GraphElement = std::size_t;
   using Dependency = std::pair<Reaction*, Reaction*>;
 
+private:
+  // name of the environment for debugging
   const std::string name_{};
+
+  // logger
   const log::NamedLogger log_;
+
+  // parameters
   const unsigned int num_workers_{default_number_worker};
   unsigned int max_reaction_index_{default_max_reaction_index};
   bool run_forever_{default_run_forever};
   const bool fast_fwd_execution_{default_fast_fwd_execution};
 
+  // reactors that this program consists of
   std::set<Reactor*> top_level_reactors_{};
+
+  // all reactions that exists in this program
+  std::set<Reaction*> reactions_{};
+
+  // this is how the reaction graph is represented
+  std::vector<Dependency> dependencies_{};
+
+  // port component bucket
+  std::vector<class BasePort*> ports_{};
+
   /// Set of actions that act as an input to the reactor program in this environment
   std::set<BaseAction*> input_actions_{};
-  std::set<Reaction*> reactions_{};
-  std::vector<Dependency> dependencies_{};
 
   /// The environment containing this environment. nullptr if this is the top environment
   Environment* containing_environment_{nullptr};
@@ -53,16 +80,24 @@ private:
   /// Pointer to the top level environment
   Environment* top_environment_{nullptr};
 
+  // scheduler used for execution
   Scheduler scheduler_;
+
+  // phase of the program
   Phase phase_{Phase::Construction};
+
+  // start time of execution
   Tag start_tag_{};
 
   const Duration timeout_{};
 
-  void build_dependency_graph(Reactor* reactor);
-  void calculate_indexes();
-
+  // mutex that coordinates the global shut down over multiple workers
   std::mutex shutdown_mutex_{};
+
+  PropertyGraph<GraphElement, ConnectionProperties> graph_{};
+  PropertyGraph<GraphElement, ConnectionProperties> optimized_graph_{};
+
+  std::size_t tag_counter_{0};
 
   auto startup(const TimePoint& start_time) -> std::thread;
 
@@ -71,25 +106,35 @@ public:
                        const Duration& timeout = Duration::max());
   explicit Environment(const std::string& name, Environment* containing_environment);
 
+  // builds the reactor graph from the given set of reactions
+  void construct();
+
+  // just returns the name of this environment
   auto name() -> const std::string& { return name_; }
 
-  void register_reactor(Reactor* reactor);
-  void register_input_action(BaseAction* action);
+  // this function add components to the reactor graph
+  auto register_port(class BasePort* port) noexcept -> std::size_t;
+
+  void register_reaction(Reaction* reaction) noexcept { reactions_.insert(reaction); }
+
+  // this method draw a connection between two graph elements with some properties
+  void draw_connection(std::size_t source, std::size_t sink, ConnectionProperties properties);
+
+  void insert_reactor(Reactor* reactor);
+  void insert_input_action(BaseAction* action);
+
   void assemble();
+  void optimize();
+  void calculate_indices();
+  void build_dependency_graph(Reactor* reactor);
+
   auto startup() -> std::thread;
   void sync_shutdown();
   void async_shutdown();
 
-  // Debugging methods
-  void export_dependency_graph(const std::string& path);
-  void dump_to_yaml(const std::string& path);
-
-  static void dump_trigger_to_yaml(std::ofstream& yaml, const BaseAction& trigger);
-  static void dump_instance_to_yaml(std::ofstream& yaml, const Reactor& reactor);
-  static void dump_port_to_yaml(std::ofstream& yaml, const BasePort& port);
-  static void dump_reaction_to_yaml(std::ofstream& yaml, const Reaction& reaction);
-
   [[nodiscard]] auto top_level_reactors() const noexcept -> const auto& { return top_level_reactors_; }
+
+  // TODO sync with christian if we need the phases
   [[nodiscard]] auto phase() const noexcept -> Phase { return phase_; }
   [[nodiscard]] auto scheduler() const noexcept -> const Scheduler* { return &scheduler_; }
 
@@ -103,6 +148,8 @@ public:
 
   [[nodiscard]] auto num_workers() const noexcept -> unsigned int { return num_workers_; }
   [[nodiscard]] auto fast_fwd_execution() const noexcept -> bool { return fast_fwd_execution_; }
+
+  // TODO sync with christian if this can now be yeeted
   [[nodiscard]] auto run_forever() const noexcept -> bool { return run_forever_; }
   [[nodiscard]] auto max_reaction_index() const noexcept -> unsigned int { return max_reaction_index_; }
 
