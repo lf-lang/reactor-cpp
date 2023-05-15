@@ -192,6 +192,13 @@ void EventQueue::return_action_list(ActionListPtr&& action_list) {
   action_list_pool_.emplace_back(std::forward<ActionListPtr>(action_list));
 }
 
+void EventQueue::discard_events_until_tag(const Tag& tag) {
+  while (!empty() && next_tag() <= tag) {
+    auto actions = extract_next_event();
+    return_action_list(std::move(actions));
+  }
+}
+
 void Scheduler::terminate_all_workers() {
   log_.debug() << "Send termination signal to all workers";
   auto num_workers = environment_->num_workers();
@@ -245,10 +252,25 @@ auto Scheduler::schedule_ready_reactions() -> bool {
 void Scheduler::start() {
   log_.debug() << "Starting the scheduler...";
 
-  // Initialize our logical time to the value right before the start tag. This
-  // is important for usage with enclaves/federates, to indicate, that no events
-  // before the start tag ca be generated.
-  logical_time_.advance_to(environment_->start_tag().decrement());
+  {
+    // Other schedulers (enclaves or federates) could try to access our logical
+    // time and our event queue. Thus, we need to lock the main scheduling mutex
+    // in order to avoid data races.
+    std::lock_guard<std::mutex> lock_guard(scheduling_mutex_);
+
+    // Initialize our logical time to the value right before the start tag. This
+    // is important for usage with enclaves/federates, to indicate, that no events
+    // before the start tag can be generated.
+    logical_time_.advance_to(environment_->start_tag().decrement());
+
+    // It could happen that another scheduler (enclave or federates) already
+    // tried to acquire a tag before our start tag. In that case, we will have
+    // empty events on the queue, that are earlier than our startup event. We
+    // resolve this simply by deleting all such events. Once we have processed
+    // the startup reactions, the start tag will be released, and consequently
+    // also all earlier tags are released.
+    event_queue_.discard_events_until_tag(Tag::from_logical_time(logical_time_));
+  }
 
   auto num_workers = environment_->num_workers();
   // initialize the reaction queue, set ports vector, and triggered reactions

@@ -124,6 +124,9 @@ public:
 
   // should only be called while holding the scheduler mutex
   void return_action_list(ActionListPtr&& action_list);
+
+  // should only be called while holding the scheduler mutex
+  void discard_events_until_tag(const Tag& tag);
 };
 
 class Scheduler { // NOLINT
