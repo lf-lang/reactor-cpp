@@ -22,7 +22,8 @@ void BaseAction::register_trigger(Reaction* reaction) {
   validate(this->container() == reaction->container(),
            "Action triggers must belong to the same reactor as the triggered "
            "reaction");
-  reactor_assert(triggers_.insert(reaction).second);
+  [[maybe_unused]] bool result = triggers_.insert(reaction).second;
+  reactor_assert(result);
 }
 
 void BaseAction::register_scheduler(Reaction* reaction) {
@@ -32,7 +33,8 @@ void BaseAction::register_scheduler(Reaction* reaction) {
   // the reaction must belong to the same reactor as this action
   validate(this->container() == reaction->container(), "Scheduable actions must belong to the same reactor as the "
                                                        "triggered reaction");
-  reactor_assert(schedulers_.insert(reaction).second);
+  [[maybe_unused]] bool result = schedulers_.insert(reaction).second;
+  reactor_assert(result);
 }
 
 void Timer::startup() {

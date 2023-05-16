@@ -48,7 +48,10 @@ public:
     port->register_set_callback(upstream_set_callback());
   }
 
-  virtual void bind_downstream_port(Port<T>* port) { reactor_assert(this->downstream_ports_.insert(port).second); };
+  virtual void bind_downstream_port(Port<T>* port) {
+    [[maybe_unused]] bool result = this->downstream_ports_.insert(port).second;
+    reactor_assert(result);
+  };
 };
 
 template <class T> class BaseDelayedConnection : public Connection<T> {

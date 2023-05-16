@@ -80,21 +80,24 @@ void Reactor::register_action([[maybe_unused]] BaseAction* action) {
   reactor::validate(this->environment()->phase() == Environment::Phase::Construction ||
                         this->environment()->phase() == Environment::Phase::Assembly,
                     "Actions can only be registered during construction phase!");
-  reactor_assert(actions_.insert(action).second);
+  [[maybe_unused]] bool result = actions_.insert(action).second;
+  reactor_assert(result);
 }
 
 void Reactor::register_input(BasePort* port) {
   reactor_assert(port != nullptr);
   reactor::validate(this->environment()->phase() == Environment::Phase::Construction,
                     "Ports can only be registered during construction phase!");
-  reactor_assert(inputs_.insert(port).second);
+  [[maybe_unused]] bool result = inputs_.insert(port).second;
+  reactor_assert(result);
 }
 
 void Reactor::register_output(BasePort* port) {
   reactor_assert(port != nullptr);
   reactor::validate(this->environment()->phase() == Environment::Phase::Construction,
                     "Ports can only be registered during construction phase!");
-  reactor_assert(outputs_.insert(port).second);
+  [[maybe_unused]] bool result = inputs_.insert(port).second;
+  reactor_assert(result);
 }
 
 void Reactor::register_reaction([[maybe_unused]] Reaction* reaction) {
@@ -102,14 +105,16 @@ void Reactor::register_reaction([[maybe_unused]] Reaction* reaction) {
 
   validate(this->environment()->phase() == Environment::Phase::Construction,
            "Reactions can only be registered during construction phase!");
-  reactor_assert(reactions_.insert(reaction).second);
+  [[maybe_unused]] bool result = reactions_.insert(reaction).second;
+  reactor_assert(result);
 }
 
 void Reactor::register_reactor([[maybe_unused]] Reactor* reactor) {
   reactor_assert(reactor != nullptr);
   validate(this->environment()->phase() == Environment::Phase::Construction,
            "Reactions can only be registered during construction phase!");
-  reactor_assert(reactors_.insert(reactor).second);
+  [[maybe_unused]] bool result = reactors_.insert(reactor).second;
+  reactor_assert(result);
 }
 
 void Reactor::startup() {

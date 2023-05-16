@@ -40,20 +40,23 @@ Environment::Environment(const std::string& name, Environment* containing_enviro
     , top_environment_(containing_environment_->top_environment_)
     , scheduler_(this)
     , timeout_(containing_environment->timeout()) {
-  reactor_assert(containing_environment->contained_environments_.insert(this).second);
+  [[maybe_unused]] bool result = containing_environment->contained_environments_.insert(this).second;
+  reactor_assert(result);
 }
 
 void Environment::register_reactor(Reactor* reactor) {
   reactor_assert(reactor != nullptr);
   validate(this->phase() == Phase::Construction, "Reactors may only be registered during construction phase!");
   validate(reactor->is_top_level(), "The environment may only contain top level reactors!");
-  reactor_assert(top_level_reactors_.insert(reactor).second);
+  [[maybe_unused]] bool result = top_level_reactors_.insert(reactor).second;
+  reactor_assert(result);
 }
 
 void Environment::register_input_action(BaseAction* action) {
   reactor_assert(action != nullptr);
   validate(this->phase() == Phase::Construction, "Input actions may only be registered during construction phase!");
-  reactor_assert(input_actions_.insert(action).second);
+  [[maybe_unused]] bool result = input_actions_.insert(action).second;
+  reactor_assert(result);
   run_forever_ = true;
 }
 

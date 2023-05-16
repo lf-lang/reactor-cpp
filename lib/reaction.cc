@@ -31,7 +31,8 @@ void Reaction::declare_trigger(BaseAction* action) {
   validate(this->container() == action->container(), "Action triggers must belong to the same reactor as the triggered "
                                                      "reaction");
 
-  reactor_assert(action_triggers_.insert(action).second);
+  [[maybe_unused]] bool result = action_triggers_.insert(action).second;
+  reactor_assert(result);
   action->register_trigger(this);
 }
 
@@ -42,7 +43,8 @@ void Reaction::declare_schedulable_action(BaseAction* action) {
   validate(this->container() == action->container(), "Scheduable actions must belong to the same reactor as the "
                                                      "triggered reaction");
 
-  reactor_assert(scheduable_actions_.insert(action).second);
+  [[maybe_unused]] bool result = scheduable_actions_.insert(action).second;
+  reactor_assert(result);
   action->register_scheduler(this);
 }
 
@@ -61,8 +63,10 @@ void Reaction::declare_trigger(BasePort* port) {
              "Output port triggers must belong to a contained reactor");
   }
 
-  reactor_assert(port_trigger_.insert(port).second);
-  reactor_assert(dependencies_.insert(port).second);
+  [[maybe_unused]] bool result = port_trigger_.insert(port).second;
+  reactor_assert(result);
+  result = dependencies_.insert(port).second;
+  reactor_assert(result);
   port->register_dependency(this, true);
 }
 
@@ -79,7 +83,8 @@ void Reaction::declare_dependency(BasePort* port) {
              "Dependent output ports must belong to a contained reactor");
   }
 
-  reactor_assert(dependencies_.insert(port).second);
+  [[maybe_unused]] bool result = dependencies_.insert(port).second;
+  reactor_assert(result);
   port->register_dependency(this, false);
 }
 
@@ -96,7 +101,8 @@ void Reaction::declare_antidependency(BasePort* port) {
              "Antidependent input ports must belong to a contained reactor");
   }
 
-  reactor_assert(antidependencies_.insert(port).second);
+  [[maybe_unused]] bool result = antidependencies_.insert(port).second;
+  reactor_assert(result);
   port->register_antidependency(this);
 }
 
