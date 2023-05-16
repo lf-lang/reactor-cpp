@@ -33,6 +33,18 @@ constexpr bool runtime_assertion = true;
 #include <unistd.h>
 #endif
 
+// assert macro that avoids unused variable warnings
+#ifdef NDEBUG
+// NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
+#define reactor_assert(x)                                                                                              \
+  do {                                                                                                                 \
+    (void)sizeof(x);                                                                                                   \
+  } while (0)
+#else
+// NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
+#define reactor_assert(x) assert(x)
+#endif
+
 namespace reactor {
 using EnvPhase = Environment::Phase;
 
@@ -66,18 +78,6 @@ constexpr inline void validate([[maybe_unused]] bool condition, [[maybe_unused]]
     }
   }
 }
-
-// assert macro that avoids unused variable warnings
-#ifdef NDEBUG
-// NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
-#define reactor_assert(x)                                                                                              \
-  do {                                                                                                                 \
-    (void)sizeof(x);                                                                                                   \
-  } while (0)
-#else
-// NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
-#define reactor_assert(x) assert(x)
-#endif
 
 template <typename E> constexpr auto extract_value(E enum_value) -> typename std::underlying_type<E>::type {
   return static_cast<typename std::underlying_type<E>::type>(enum_value);
