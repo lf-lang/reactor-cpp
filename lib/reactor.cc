@@ -14,6 +14,7 @@
 #include "reactor-cpp/logging.hh"
 #include "reactor-cpp/port.hh"
 #include "reactor-cpp/reaction.hh"
+#include "reactor-cpp/statistics.hh"
 
 namespace reactor {
 
@@ -66,6 +67,17 @@ ReactorElement::ReactorElement(const std::string& name, ReactorElement::Type typ
   validate(type == Type::Reactor || type == Type::Action, "Only reactors and actions can be owned by the environment!");
   validate(this->environment_->phase() == Environment::Phase::Construction,
            "Reactor elements can only be created during construction phase!");
+
+  switch (type) {
+  case Type::Action:
+    Statistics::increment_actions();
+    break;
+  case Type::Reactor:
+    Statistics::increment_reactor_instances();
+    break;
+  default:
+    break;
+  }
 }
 
 Reactor::Reactor(const std::string& name, Reactor* container)
@@ -82,6 +94,7 @@ void Reactor::register_action([[maybe_unused]] BaseAction* action) {
                     "Actions can only be registered during construction phase!");
   [[maybe_unused]] bool result = actions_.insert(action).second;
   reactor_assert(result);
+  Statistics::increment_actions();
 }
 
 void Reactor::register_input(BasePort* port) {
@@ -90,6 +103,7 @@ void Reactor::register_input(BasePort* port) {
                     "Ports can only be registered during construction phase!");
   [[maybe_unused]] bool result = inputs_.insert(port).second;
   reactor_assert(result);
+  Statistics::increment_ports();
 }
 
 void Reactor::register_output(BasePort* port) {
@@ -98,6 +112,7 @@ void Reactor::register_output(BasePort* port) {
                     "Ports can only be registered during construction phase!");
   [[maybe_unused]] bool result = inputs_.insert(port).second;
   reactor_assert(result);
+  Statistics::increment_ports();
 }
 
 void Reactor::register_reaction([[maybe_unused]] Reaction* reaction) {
@@ -107,6 +122,7 @@ void Reactor::register_reaction([[maybe_unused]] Reaction* reaction) {
            "Reactions can only be registered during construction phase!");
   [[maybe_unused]] bool result = reactions_.insert(reaction).second;
   reactor_assert(result);
+  Statistics::increment_reactions();
 }
 
 void Reactor::register_reactor([[maybe_unused]] Reactor* reactor) {
@@ -115,6 +131,7 @@ void Reactor::register_reactor([[maybe_unused]] Reactor* reactor) {
            "Reactions can only be registered during construction phase!");
   [[maybe_unused]] bool result = reactors_.insert(reactor).second;
   reactor_assert(result);
+  Statistics::increment_reactor_instances();
 }
 
 void Reactor::startup() {

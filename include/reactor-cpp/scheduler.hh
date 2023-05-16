@@ -165,6 +165,8 @@ private:
   void terminate_all_workers();
   void set_port_helper(BasePort* port);
 
+  void advance_logical_time_to(const Tag& tag);
+
 public:
   explicit Scheduler(Environment* env);
   ~Scheduler();
