@@ -87,7 +87,7 @@ public:
       reactor::log::Info() << "  - processed events:      " << processed_events();
       reactor::log::Info() << "  - triggered actions:     " << triggered_actions();
       reactor::log::Info() << "  - processed reactions:   " << processed_reactions();
-      reactor::log::Info() << "  - set ports set:         " << set_ports();
+      reactor::log::Info() << "  - set ports:             " << set_ports();
       reactor::log::Info() << "  - scheduled actions:     " << scheduled_actions();
       reactor::log::Info() << "-----------------------------------------------------------";
     }
