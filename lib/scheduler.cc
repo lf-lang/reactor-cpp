@@ -438,6 +438,7 @@ void Scheduler::schedule_sync(BaseAction* action, const Tag& tag) {
                << " with tag " << tag;
   reactor_assert(logical_time_ < tag);
   tracepoint(reactor_cpp, schedule_action, action->container()->fqn(), action->name(), tag);
+  Statistics::increment_scheduled_actions();
 
   const auto& action_list = event_queue_.insert_event_at(tag);
   action_list->push_back(action);
@@ -484,6 +485,7 @@ auto Scheduler::schedule_empty_async_at(const Tag& tag) -> bool {
 
 void Scheduler::set_port(BasePort* port) {
   log_.debug() << "Set port " << port->fqn();
+  Statistics::increment_set_ports();
 
   // We do not check here if port is already in the list. This means clean()
   // could be called multiple times for a single port. However, calling

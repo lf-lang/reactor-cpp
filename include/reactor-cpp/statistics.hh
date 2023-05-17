@@ -40,6 +40,10 @@ private:
   inline static std::atomic_size_t processed_reactions_{0};
   // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
   inline static std::atomic_size_t triggered_actions_{0};
+  // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
+  inline static std::atomic_size_t set_ports_{0};
+  // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
+  inline static std::atomic_size_t scheduled_actions_{0};
 
   inline static void increment(std::atomic_size_t& counter) {
     if constexpr (enabled_) {
@@ -56,6 +60,8 @@ public:
   inline static void increment_processed_events() { increment(processed_events_); }
   inline static void increment_processed_reactions() { increment(processed_reactions_); }
   inline static void increment_triggered_actions() { increment(triggered_actions_); }
+  inline static void increment_set_ports() { increment(set_ports_); }
+  inline static void increment_scheduled_actions() { increment(scheduled_actions_); }
 
   inline static auto reactor_instances() { return reactor_instances_.load(std::memory_order_acquire); }
   inline static auto connections() { return connections_.load(std::memory_order_acquire); }
@@ -65,6 +71,8 @@ public:
   inline static auto processed_events() { return processed_events_.load(std::memory_order_acquire); }
   inline static auto processed_reactions() { return processed_reactions_.load(std::memory_order_acquire); }
   inline static auto triggered_actions() { return triggered_actions_.load(std::memory_order_acquire); }
+  inline static auto set_ports() { return set_ports_.load(std::memory_order_acquire); }
+  inline static auto scheduled_actions() { return scheduled_actions_.load(std::memory_order_acquire); }
 
   inline static void print() {
     if constexpr (enabled_) {
@@ -79,6 +87,8 @@ public:
       reactor::log::Info() << "  - processed events:      " << processed_events();
       reactor::log::Info() << "  - triggered actions:     " << triggered_actions();
       reactor::log::Info() << "  - processed reactions:   " << processed_reactions();
+      reactor::log::Info() << "  - set ports set:         " << set_ports();
+      reactor::log::Info() << "  - scheduled actions:     " << scheduled_actions();
       reactor::log::Info() << "-----------------------------------------------------------";
     }
   }
