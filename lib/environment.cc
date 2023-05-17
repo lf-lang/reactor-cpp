@@ -19,6 +19,7 @@
 #include "reactor-cpp/logging.hh"
 #include "reactor-cpp/port.hh"
 #include "reactor-cpp/reaction.hh"
+#include "reactor-cpp/statistics.hh"
 #include "reactor-cpp/time.hh"
 
 namespace reactor {
@@ -287,6 +288,11 @@ auto Environment::startup(const TimePoint& start_time) -> std::thread {
     // then join all the created threads
     for (auto& thread : threads) {
       thread.join();
+    }
+
+    // If this is the top level environment, then print some execution statistics
+    if (this->containing_environment_ == nullptr) {
+      Statistics::print();
     }
   });
 }

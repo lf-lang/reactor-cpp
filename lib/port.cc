@@ -11,6 +11,7 @@
 #include "reactor-cpp/assert.hh"
 #include "reactor-cpp/environment.hh"
 #include "reactor-cpp/reaction.hh"
+#include "reactor-cpp/statistics.hh"
 
 namespace reactor {
 
@@ -43,6 +44,8 @@ void BasePort::base_bind_to(BasePort* port) {
   port->inward_binding_ = this;
   [[maybe_unused]] bool result = this->outward_bindings_.insert(port).second;
   reactor_assert(result);
+
+  Statistics::increment_connections();
 }
 
 void BasePort::register_dependency(Reaction* reaction, bool is_trigger) noexcept {

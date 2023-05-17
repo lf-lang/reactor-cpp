@@ -19,6 +19,7 @@
 #include "reactor-cpp/logging.hh"
 #include "reactor-cpp/port.hh"
 #include "reactor-cpp/reaction.hh"
+#include "reactor-cpp/statistics.hh"
 #include "reactor-cpp/time_barrier.hh"
 #include "reactor-cpp/trace.hh"
 
@@ -82,6 +83,8 @@ void Worker::execute_reaction(Reaction* reaction) const {
   tracepoint(reactor_cpp, reaction_execution_starts, identity_, reaction->fqn(), scheduler_.logical_time());
   reaction->trigger();
   tracepoint(reactor_cpp, reaction_execution_finishes, identity_, reaction->fqn(), scheduler_.logical_time());
+
+  Statistics::increment_processed_reactions();
 }
 
 void Scheduler::schedule() noexcept {
@@ -297,6 +300,12 @@ void Scheduler::start() {
   }
 }
 
+void Scheduler::advance_logical_time_to(const Tag& tag) {
+  log_.debug() << "advance logical time to tag " << tag;
+  logical_time_.advance_to(tag);
+  Statistics::increment_processed_events();
+}
+
 void Scheduler::next() { // NOLINT
   // Notify other environments and let them know that we finished processing the
   // current tag
@@ -348,8 +357,7 @@ void Scheduler::next() { // NOLINT
           log_.debug() << "Schedule the last round of reactions including all "
                           "termination reactions";
           triggered_actions_ = event_queue_.extract_next_event();
-          log_.debug() << "advance logical time to tag " << t_next;
-          logical_time_.advance_to(t_next);
+          advance_logical_time_to(t_next);
         } else {
           return;
         }
@@ -390,9 +398,7 @@ void Scheduler::next() { // NOLINT
         // queue.
         triggered_actions_ = event_queue_.extract_next_event();
 
-        // advance logical time
-        log_.debug() << "advance logical time to tag " << t_next;
-        logical_time_.advance_to(t_next);
+        advance_logical_time_to(t_next);
 
         // If there are no triggered actions at the event, then release the
         // current tag and go back to the start of the loop
@@ -407,6 +413,7 @@ void Scheduler::next() { // NOLINT
   log_.debug() << "events: " << triggered_actions_->size();
   for (auto* action : *triggered_actions_) {
     log_.debug() << "Action " << action->fqn();
+    Statistics::increment_triggered_actions();
     action->setup();
     for (auto* reaction : action->triggers()) {
       // There is no need to acquire the mutex. At this point the scheduler
@@ -431,6 +438,7 @@ void Scheduler::schedule_sync(BaseAction* action, const Tag& tag) {
                << " with tag " << tag;
   reactor_assert(logical_time_ < tag);
   tracepoint(reactor_cpp, schedule_action, action->container()->fqn(), action->name(), tag);
+  Statistics::increment_scheduled_actions();
 
   const auto& action_list = event_queue_.insert_event_at(tag);
   action_list->push_back(action);
@@ -477,6 +485,7 @@ auto Scheduler::schedule_empty_async_at(const Tag& tag) -> bool {
 
 void Scheduler::set_port(BasePort* port) {
   log_.debug() << "Set port " << port->fqn();
+  Statistics::increment_set_ports();
 
   // We do not check here if port is already in the list. This means clean()
   // could be called multiple times for a single port. However, calling
