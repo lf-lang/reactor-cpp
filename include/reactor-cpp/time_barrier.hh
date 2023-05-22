@@ -67,7 +67,11 @@ public:
     if (try_acquire_tag(tag)) {
       return true;
     }
-    cv.wait(lock, [this, &tag, &abort_waiting]() { return try_acquire_tag(tag) || abort_waiting(); });
+    cv.wait(lock, [this, &tag, &abort_waiting]() {
+          bool predicate = try_acquire_tag(tag) || abort_waiting();
+          std::cout << "cv woken up, predicate=" << predicate << '\n';
+          return predicate;
+    });
     return !abort_waiting();
   }
 };
