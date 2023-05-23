@@ -111,12 +111,14 @@ protected:
 
   EnclaveConnection(const std::string& name, Environment* enclave, const Duration& delay)
       : BaseDelayedConnection<T>(name, enclave, false, delay)
-      , log_{this->fqn()} {}
+      , log_{this->fqn()}
+      , logical_time_barrier_(enclave->scheduler()) {}
 
 public:
   EnclaveConnection(const std::string& name, Environment* enclave)
       : BaseDelayedConnection<T>(name, enclave, false, Duration::zero())
-      , log_{this->fqn()} {}
+      , log_{this->fqn()}
+      , logical_time_barrier_(enclave->scheduler()) {}
 
   inline auto upstream_set_callback() noexcept -> PortCallback override {
     return [this](const BasePort& port) {
@@ -137,7 +139,7 @@ public:
     };
   }
 
-  inline auto acquire_tag(const Tag& tag, std::unique_lock<std::mutex>& lock, std::condition_variable& cv,
+  inline auto acquire_tag(const Tag& tag, std::unique_lock<std::mutex>& lock,
                           const std::function<bool(void)>& abort_waiting) -> bool override {
     reactor_assert(lock.owns_lock());
     log_.debug() << "downstream tries to acquire tag " << tag;
@@ -235,7 +237,7 @@ public:
   inline auto acquire_tag(const Tag& tag, std::unique_lock<std::mutex>& lock,
                           const std::function<bool(void)>& abort_waiting) -> bool override {
     this->log_.debug() << "downstream tries to acquire tag " << tag;
-    return PhysicalTimeBarrier::acquire_tag(tag, lock, this->environmet()->scheduler(), abort_waiting);
+    return PhysicalTimeBarrier::acquire_tag(tag, lock, this->environment()->scheduler(), abort_waiting);
   }
 
   void bind_upstream_port(Port<T>* port) override { Connection<T>::bind_upstream_port(port); }
