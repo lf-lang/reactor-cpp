@@ -50,6 +50,23 @@ private:
   LogicalTime released_time_;
   Scheduler* scheduler_;
 
+  /*
+   * Note that we use the main scheduler lock to protect our `released_time_`
+   * variable. We cannot use a local mutex here that only protects our local
+   * state. This is, because we also need to use a lock to wait on a condition
+   * variable. This lock must be the same lock as the one that is used when
+   * updating the wait condition. (See "An atomic predicate" in
+   * https://www.modernescpp.com/index.php/c-core-guidelines-be-aware-of-the-traps-of-condition-variables)
+   *
+   * Here we have two conditions in which we want to stop the wait:
+   *   1. When the tag that we are waiting for was released.
+   *   2. When the given function `abort_waiting` returns true. In a typical usage
+   *      scenario, this would be the case when a new event was scheduled.
+   *
+   * We need to make sure that both conditions are updated while holding the
+   * lock that we use for waiting on the condition variable. Our only option for
+   * this is to use the global scheduler lock.
+   */
 public:
   LogicalTimeBarrier(Scheduler* scheduler)
       : scheduler_(scheduler) {}
