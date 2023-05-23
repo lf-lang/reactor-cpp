@@ -19,12 +19,14 @@
 #include <thread>
 #include <vector>
 
+#include "assert.hh"
 #include "fwd.hh"
 #include "logical_time.hh"
 #include "reactor-cpp/logging.hh"
 #include "reactor-cpp/time.hh"
 #include "safe_vector.hh"
 #include "semaphore.hh"
+#include "time.hh"
 
 namespace reactor {
 
@@ -176,9 +178,19 @@ public:
   auto schedule_async_at(BaseAction* action, const Tag& tag) -> bool;
   auto schedule_empty_async_at(const Tag& tag) -> bool;
 
+  auto inline lock() noexcept -> std::unique_lock<std::mutex> {
+    return std::unique_lock<std::mutex>(scheduling_mutex_);
+  }
   void inline notify() noexcept { cv_schedule_.notify_one(); }
-
-  auto inline lock() noexcept -> auto { return std::unique_lock<std::mutex>(scheduling_mutex_); }
+  void inline wait(std::unique_lock<std::mutex>& lock, const std::function<bool(void)>& predicate) noexcept {
+    reactor_assert(lock.owns_lock());
+    cv_schedule_.wait(lock, predicate);
+  };
+  auto inline wait_until(std::unique_lock<std::mutex>& lock, TimePoint time_point,
+                         const std::function<bool(void)>& predicate) noexcept -> bool {
+    reactor_assert(lock.owns_lock());
+    return cv_schedule_.wait_until(lock, time_point, predicate);
+  };
 
   void set_port(BasePort* port);
 

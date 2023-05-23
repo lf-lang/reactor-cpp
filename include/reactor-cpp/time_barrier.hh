@@ -11,11 +11,9 @@
 
 #include "fwd.hh"
 #include "logical_time.hh"
+#include "scheduler.hh"
 #include "time.hh"
-#include <atomic>
-#include <condition_variable>
 #include <functional>
-#include <mutex>
 
 namespace reactor {
 
@@ -38,36 +36,38 @@ public:
     return tag.time_point() < physical_time;
   }
 
-  static inline auto acquire_tag(const Tag& tag, std::unique_lock<std::mutex>& lock, std::condition_variable& cv,
-                                 const std::function<bool(void)>& abort_waiting) {
+  static inline auto acquire_tag(const Tag& tag, std::unique_lock<std::mutex>& lock, Scheduler* scheduler,
+                                 const std::function<bool(void)>& abort_waiting) -> bool {
     if (try_acquire_tag(tag)) {
       return true;
     }
-    return !cv.wait_until(lock, tag.time_point(), abort_waiting);
+    return scheduler->wait_until(lock, tag.time_point(), abort_waiting);
   }
 };
 
 class LogicalTimeBarrier {
-  std::mutex mutex_;
+private:
   LogicalTime released_time_;
+  Scheduler* scheduler_;
 
 public:
+  LogicalTimeBarrier(Scheduler* scheduler)
+      : scheduler_(scheduler) {}
+
   inline void release_tag(const LogicalTime& tag) {
-    std::lock_guard lock(mutex_);
+    auto lock = scheduler_->lock();
     released_time_.advance_to(tag);
   }
 
-  inline auto try_acquire_tag(const Tag& tag) {
-    std::lock_guard lock(mutex_);
-    return tag <= released_time_;
-  }
+  // The caller must hold a lock on the scheduler mutex
+  inline auto try_acquire_tag(const Tag& tag) { return tag <= released_time_; }
 
-  inline auto acquire_tag(const Tag& tag, std::unique_lock<std::mutex>& lock, std::condition_variable& cv,
+  inline auto acquire_tag(const Tag& tag, std::unique_lock<std::mutex>& lock,
                           const std::function<bool(void)>& abort_waiting) -> bool {
     if (try_acquire_tag(tag)) {
       return true;
     }
-    cv.wait(lock, [this, &tag, &abort_waiting]() { return try_acquire_tag(tag) || abort_waiting(); });
+    scheduler_->wait(lock, [this, &tag, &abort_waiting]() { return try_acquire_tag(tag) || abort_waiting(); });
     return !abort_waiting();
   }
 };
