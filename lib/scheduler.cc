@@ -368,7 +368,7 @@ void Scheduler::next() { // NOLINT
         // synchronize with physical time if not in fast forward mode
         if (!environment_->fast_fwd_execution()) {
           bool result = PhysicalTimeBarrier::acquire_tag(
-              t_next, lock, cv_schedule_, [&t_next, this]() { return t_next != event_queue_.next_tag(); });
+              t_next, lock, this, [&t_next, this]() { return t_next != event_queue_.next_tag(); });
           // If acquire tag returns false, then a new event was inserted into the queue and we need to start over
           if (!result) {
             continue;
@@ -378,8 +378,8 @@ void Scheduler::next() { // NOLINT
         // Wait until all input actions mark the tag as safe to process.
         bool result{true};
         for (auto* action : environment_->input_actions_) {
-          bool inner_result = action->acquire_tag(t_next, lock, cv_schedule_,
-                                                  [&t_next, this]() { return t_next != event_queue_.next_tag(); });
+          bool inner_result =
+              action->acquire_tag(t_next, lock, [&t_next, this]() { return t_next != event_queue_.next_tag(); });
           // If the wait was aborted or if the next tag changed in the meantime,
           // we need to break from the loop and continue with the main loop.
           if (!inner_result || t_next != event_queue_.next_tag()) {
