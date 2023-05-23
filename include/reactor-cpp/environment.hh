@@ -26,10 +26,9 @@ constexpr unsigned int default_max_reaction_index = 0;
 constexpr bool default_run_forever = false;
 constexpr bool default_fast_fwd_execution = false;
 
-class Environment {
-public:
-  enum class Phase { Construction = 0, Assembly = 1, Startup = 2, Execution = 3, Shutdown = 4, Deconstruction = 5 };
+enum class Phase { Construction = 0, Assembly = 1, Startup = 2, Execution = 3, Shutdown = 4, Deconstruction = 5 };
 
+class Environment {
 private:
   using Dependency = std::pair<Reaction*, Reaction*>;
 

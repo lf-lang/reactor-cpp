@@ -20,7 +20,7 @@ void BasePort::base_bind_to(BasePort* port) {
   reactor_assert(this->environment() == port->environment());
   validate(!port->has_inward_binding(), "Ports may only be connected once");
   validate(!port->has_anti_dependencies(), "Ports with anti dependencies may not be connected to other ports");
-  assert_phase(this, Environment::Phase::Assembly);
+  assert_phase(this, Phase::Assembly);
   if (this->is_input() && port->is_input()) {
     validate(this->container() == port->container()->container(),
              "An input port A may only be bound to another input port B if B is contained by a reactor that in turn is "
@@ -52,7 +52,7 @@ void BasePort::register_dependency(Reaction* reaction, bool is_trigger) noexcept
   reactor_assert(reaction != nullptr);
   reactor_assert(this->environment() == reaction->environment());
   validate(!this->has_outward_bindings(), "Dependencies may no be declared on ports with an outward binding!");
-  assert_phase(this, Environment::Phase::Assembly);
+  assert_phase(this, Phase::Assembly);
 
   if (this->is_input()) {
     validate(this->container() == reaction->container(), "Dependent input ports must belong to the same reactor as the "
@@ -74,7 +74,7 @@ void BasePort::register_antidependency(Reaction* reaction) noexcept {
   reactor_assert(reaction != nullptr);
   reactor_assert(this->environment() == reaction->environment());
   validate(!this->has_inward_binding(), "Antidependencies may no be declared on ports with an inward binding!");
-  assert_phase(this, Environment::Phase::Assembly);
+  assert_phase(this, Phase::Assembly);
 
   if (this->is_output()) {
     validate(this->container() == reaction->container(),
