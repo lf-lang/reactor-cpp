@@ -523,7 +523,7 @@ void Scheduler::register_release_tag_callback(const ReleaseTagCallback& callback
   // Callbacks should only be registered during assembly, which happens strictly
   // sequentially. Therefore, we should be fine accessing the vector directly
   // and do not need to lock.
-  validate(environment_->phase() <= Environment::Phase::Assembly,
+  validate(environment_->phase() <= Phase::Assembly,
            "registering callbacks is only allowed during construction and assembly");
   release_tag_callbacks_.push_back(callback);
 }
