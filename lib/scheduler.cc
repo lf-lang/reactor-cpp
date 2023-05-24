@@ -406,7 +406,11 @@ void Scheduler::next() { // NOLINT
         // If there are no triggered actions at the event, then release the
         // current tag and go back to the start of the loop
         if (triggered_actions_->empty()) {
+          // It is important to unlock the mutex here. Otherwise we could enter a deadlock as
+          // releasing a tag also requires holding the downstream mutex.
+          lock.unlock();
           release_current_tag();
+          lock.lock();
         }
       }
     }
@@ -534,6 +538,7 @@ void Scheduler::register_release_tag_callback(const ReleaseTagCallback& callback
 }
 
 void Scheduler::release_current_tag() {
+  log_.debug() << "Release tag " << logical_time_;
   for (const auto& callback : release_tag_callbacks_) {
     callback(logical_time_);
   }
