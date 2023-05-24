@@ -363,14 +363,15 @@ void Scheduler::next() { // NOLINT
         }
       } else {
         auto t_next = event_queue_.next_tag();
-        log_.debug() << "try to advance logical time to tag " << t_next;
 
         // synchronize with physical time if not in fast forward mode
         if (!environment_->fast_fwd_execution()) {
+          log_.debug() << "acquire tag " << t_next << " from physical time barrier";
           bool result = PhysicalTimeBarrier::acquire_tag(
               t_next, lock, this, [&t_next, this]() { return t_next != event_queue_.next_tag(); });
           // If acquire tag returns false, then a new event was inserted into the queue and we need to start over
           if (!result) {
+            log_.debug() << "abort waiting and restart as the event queue was modified";
             continue;
           }
         }
@@ -378,6 +379,7 @@ void Scheduler::next() { // NOLINT
         // Wait until all input actions mark the tag as safe to process.
         bool result{true};
         for (auto* action : environment_->input_actions_) {
+          log_.debug() << "acquire tag " << t_next << " from input action " << action->fqn();
           bool inner_result =
               action->acquire_tag(t_next, lock, [&t_next, this]() { return t_next != event_queue_.next_tag(); });
           // If the wait was aborted or if the next tag changed in the meantime,
@@ -389,6 +391,7 @@ void Scheduler::next() { // NOLINT
         }
         // If acquire tag returns false, then a new event was inserted into the queue and we need to start over
         if (!result) {
+          log_.debug() << "abort waiting and restart as the event queue was modified";
           continue;
         }
 
@@ -468,18 +471,20 @@ auto Scheduler::schedule_async_at(BaseAction* action, const Tag& tag) -> bool {
 }
 
 auto Scheduler::schedule_empty_async_at(const Tag& tag) -> bool {
-  log_.debug() << "Schedule empty event at tag " << tag;
   {
     std::lock_guard<std::mutex> lock_guard(scheduling_mutex_);
     if (tag <= logical_time_) {
       // If we try to insert an empty event at the current logical time, then we
       // succeeded because there must be an event at this tag that is currently
       // processed.
-      return tag == logical_time_;
+      bool result{tag == logical_time_};
+      log_.debug() << "try to schedule empty event at tag " << tag << (result ? " -> succeeded" : " -> failed");
+      return result;
     }
     event_queue_.insert_event_at(tag);
   }
   notify();
+  log_.debug() << "try to schedule empty event at tag " << tag << " -> succeeded";
   return true;
 }
 
