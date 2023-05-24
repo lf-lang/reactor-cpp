@@ -47,10 +47,11 @@ protected:
    * Returns false if the wait was interrupted and true otherwise. True
    * indicates that the tag is safe to process.
    */
-  virtual auto acquire_tag(const Tag& tag, std::unique_lock<std::mutex>& lock, std::condition_variable& cv,
+  virtual auto acquire_tag(const Tag& tag, std::unique_lock<std::mutex>& lock,
                            const std::function<bool(void)>& abort_waiting) -> bool {
     reactor_assert(!logical_);
-    return PhysicalTimeBarrier::acquire_tag(tag, lock, cv, abort_waiting);
+    reactor_assert(lock.owns_lock());
+    return PhysicalTimeBarrier::acquire_tag(tag, lock, environment()->scheduler(), abort_waiting);
   }
 
   BaseAction(const std::string& name, Reactor* container, bool logical, Duration min_delay)
