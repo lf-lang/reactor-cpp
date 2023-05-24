@@ -41,7 +41,7 @@ public:
     if (try_acquire_tag(tag)) {
       return true;
     }
-    return scheduler->wait_until(lock, tag.time_point(), abort_waiting);
+    return !scheduler->wait_until(lock, tag.time_point(), abort_waiting);
   }
 };
 
