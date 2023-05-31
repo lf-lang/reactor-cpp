@@ -11,6 +11,7 @@
 #include "reactor-cpp/assert.hh"
 #include "reactor-cpp/environment.hh"
 #include "reactor-cpp/reaction.hh"
+#include "reactor-cpp/connection.hh"
 
 namespace reactor {
 
@@ -72,6 +73,17 @@ void Port<void>::set() {
   if (!triggers().empty()) {
     scheduler->set_triggers(std::begin(triggers()), std::end(triggers()));
   }
+}
+
+auto Port<void>::pull_connection(ConnectionProperties* properties) -> Connection<void>*  {
+  if (properties->type_ == ConnectionType::Delayed) {
+    return new DelayedConnection<void>{this->name() + "_delayed_connection", this->container(), properties->delay_};
+  }
+  if (properties->type_ == ConnectionType::Physical) {
+    return new PhysicalConnection<void>{this->name() + "_physical_connection", this->container(), properties->delay_};
+  }
+
+  return nullptr;
 }
 
 // This function can be used to chain two callbacks. This mechanism is not

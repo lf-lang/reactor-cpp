@@ -20,6 +20,7 @@
 #include "reactor-cpp/time.hh"
 #include "reactor.hh"
 #include "scheduler.hh"
+#include "enums.hh"
 
 namespace reactor {
 
@@ -32,19 +33,6 @@ class Environment {
 public:
   enum class Phase { Construction = 0, Assembly = 1, Startup = 2, Execution = 3, Shutdown = 4, Deconstruction = 5 };
 
-  enum ConnectionType {
-        Normal,
-        Delayed,
-        Enclaved,
-        Physical,
-        DelayedEnclaved,
-        PhysicalEnclaved,
-        Plugin
-  };
-  struct ConnectionProperties {
-        ConnectionType type_ = ConnectionType::Normal;
-        Duration delay_{0};
-  };
 
   // ok this now slowly gets complicated the first indicates which type of component it is the second
   // tells us the index in the component bucket

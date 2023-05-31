@@ -17,8 +17,12 @@
 #include "multiport.hh"
 #include "reactor.hh"
 #include "value_ptr.hh"
+#include "enums.hh"
 
 namespace reactor {
+
+template<class T>
+class Connection;
 
 enum class PortType { Input, Output, Delay };
 
@@ -196,6 +200,8 @@ public:
 
   [[nodiscard]] auto typed_inward_binding() const noexcept -> Port<void>*;
   [[nodiscard]] auto typed_outward_bindings() const noexcept -> const std::set<Port<void>*>&;
+
+  auto pull_connection(ConnectionProperties* properties) -> Connection<void>*;
 
   void set();
 

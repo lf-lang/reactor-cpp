@@ -107,8 +107,8 @@ auto main() -> int {
   // trigger1.trigger.set_inward_binding(&counter1.trigger);
   // counter1.count.set_inward_binding(&printer1.value);
 
-  env.draw_connection(trigger1_trigger, counter1_trigger, Environment::ConnectionProperties{});
-  env.draw_connection(counter1_count, print1_value, Environment::ConnectionProperties{});
+  env.draw_connection(trigger1_trigger, counter1_trigger, ConnectionProperties{});
+  env.draw_connection(counter1_count, print1_value, ConnectionProperties{});
 
   Trigger trigger2{"t2", &env, 2s};
   Counter counter2{"c2", &env};
@@ -121,8 +121,8 @@ auto main() -> int {
 
   // trigger2.trigger.set_inward_binding(&counter2.trigger);
   // counter2.count.set_inward_binding(&printer2.value);
-  env.draw_connection(trigger2_trigger, counter2_trigger, Environment::ConnectionProperties{});
-  env.draw_connection(counter2_count, printer2_value, Environment::ConnectionProperties{});
+  env.draw_connection(trigger2_trigger, counter2_trigger, ConnectionProperties{});
+  env.draw_connection(counter2_count, printer2_value, ConnectionProperties{});
 
   Adder add{"add", &env};
   Printer p_add{"p_add", &env};
@@ -132,9 +132,9 @@ auto main() -> int {
   auto add_sum = env.register_port(&add.sum);
   auto p_add_value = env.register_port(&p_add.value);
 
-  env.draw_connection(counter1_count, add_i1, Environment::ConnectionProperties{});
-  env.draw_connection(counter2_count, add_i2, Environment::ConnectionProperties{});
-  env.draw_connection(add_sum, p_add_value, Environment::ConnectionProperties{});
+  env.draw_connection(counter1_count, add_i1, ConnectionProperties{});
+  env.draw_connection(counter2_count, add_i2, ConnectionProperties{});
+  env.draw_connection(add_sum, p_add_value, ConnectionProperties{});
 
   std::cout << "optimize" << std::endl << std::flush;
   env.optimize();
