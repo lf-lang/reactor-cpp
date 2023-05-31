@@ -10,10 +10,17 @@
 #define REACTOR_CPP_IMPL_PORT_IMPL_HH
 
 #include "reactor-cpp/assert.hh"
+#include "reactor-cpp/connection.hh"
 #include "reactor-cpp/environment.hh"
 #include "reactor-cpp/port.hh"
 
 namespace reactor {
+
+template<class T>
+class DelayedConnection;
+
+template<class T>
+class PhysicalConnection;
 
 template <class T> [[maybe_unused]] auto Port<T>::typed_outward_bindings() const noexcept -> const std::set<Port<T>*>& {
   return outward_bindings_; // NOLINT C++20 std::bit_cast
@@ -56,6 +63,18 @@ template <class T> auto Port<T>::get() const noexcept -> const ImmutableValuePtr
     return typed_inward_binding()->get();
   }
   return value_ptr_;
+}
+
+template <class T>
+auto Port<T>::pull_connection(ConnectionProperties* properties) -> Connection<T>*  {
+  if (properties->type_ == ConnectionType::Delayed) {
+    return new DelayedConnection<T>{this->name() + "_delayed_connection", this->container(), properties->delay_};
+  }
+  if (properties->type_ == ConnectionType::Physical) {
+    return new PhysicalConnection<T>{this->name() + "_physical_connection", this->container(), properties->delay_};
+  }
+
+  return nullptr;
 }
 
 } // namespace reactor

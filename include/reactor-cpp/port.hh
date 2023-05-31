@@ -154,6 +154,9 @@ public:
   void set(MutableValuePtr<T>&& value_ptr) { set(ImmutableValuePtr<T>(std::forward<MutableValuePtr<T>>(value_ptr))); }
   void set(const T& value) { set(make_immutable_value<T>(value)); }
   void set(T&& value) { set(make_immutable_value<T>(std::forward<T>(value))); }
+
+  auto pull_connection(ConnectionProperties* properties) -> Connection<T>*;
+
   // Setting a port to nullptr is not permitted.
   void set(std::nullptr_t) = delete;
   void startup() final {}
