@@ -112,6 +112,13 @@ void Reactor::register_reactor([[maybe_unused]] Reactor* reactor) {
   reactor_assert(reactors_.insert(reactor).second);
 }
 
+void Reactor::register_connection([[maybe_unused]] BaseAction* connection) {
+  reactor_assert(connection != nullptr);
+  validate(this->environment()->phase() == Environment::Phase::Construction,
+           "Reactions can only be registered during construction phase!");
+  reactor_assert(connections_.insert(connection).second);
+}
+
 void Reactor::startup() {
   reactor_assert(environment()->phase() == Environment::Phase::Startup);
   log::Debug() << "Starting up reactor " << fqn();

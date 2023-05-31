@@ -12,6 +12,7 @@
 #include <set>
 #include <sstream>
 #include <string>
+#include <memory>
 
 //#include "fwd.hh"
 #include "environment.hh"
@@ -61,12 +62,14 @@ private:
   std::set<BasePort*> outputs_{};
   std::set<Reaction*> reactions_{};
   std::set<Reactor*> reactors_{};
+  std::set<BaseAction*> connections_{};
 
   void register_action(BaseAction* action);
   void register_input(BasePort* port);
   void register_output(BasePort* port);
   void register_reaction(Reaction* reaction);
   void register_reactor(Reactor* reactor);
+  void register_connection(BaseAction* connection);
 
 public:
   Reactor(const std::string& name, Reactor* container);
