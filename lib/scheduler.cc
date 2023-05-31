@@ -19,6 +19,7 @@
 #include "reactor-cpp/logging.hh"
 #include "reactor-cpp/port.hh"
 #include "reactor-cpp/reaction.hh"
+#include "reactor-cpp/statistics.hh"
 #include "reactor-cpp/time_barrier.hh"
 #include "reactor-cpp/trace.hh"
 
@@ -82,6 +83,8 @@ void Worker::execute_reaction(Reaction* reaction) const {
   tracepoint(reactor_cpp, reaction_execution_starts, identity_, reaction->fqn(), scheduler_.logical_time());
   reaction->trigger();
   tracepoint(reactor_cpp, reaction_execution_finishes, identity_, reaction->fqn(), scheduler_.logical_time());
+
+  Statistics::increment_processed_reactions();
 }
 
 void Scheduler::schedule() noexcept {
@@ -149,6 +152,56 @@ void ReadyQueue::fill_up(std::vector<Reaction*>& ready_reactions) {
   }
 }
 
+void EventQueue::fill_action_list_pool() {
+  for (std::size_t i{0}; i < action_list_pool_increment_; i++) {
+    action_list_pool_.emplace_back(std::make_unique<ActionList>());
+  }
+}
+
+auto EventQueue::next_tag() const -> Tag {
+  reactor_assert(!event_queue_.empty());
+  return event_queue_.begin()->first;
+}
+
+auto EventQueue::extract_next_event() -> ActionListPtr {
+  reactor_assert(!event_queue_.empty());
+  return std::move(event_queue_.extract(event_queue_.begin()).mapped());
+}
+
+auto EventQueue::insert_event_at(const Tag& tag) -> const ActionListPtr& {
+  auto shared_lock = std::shared_lock<std::shared_mutex>(mutex_);
+
+  auto event_it = event_queue_.find(tag);
+  if (event_it == event_queue_.end()) {
+    shared_lock.unlock();
+    {
+      auto unique_lock = std::unique_lock<std::shared_mutex>(mutex_);
+      if (action_list_pool_.empty()) {
+        fill_action_list_pool();
+      }
+      const auto& result = event_queue_.try_emplace(tag, std::move(action_list_pool_.back()));
+      if (result.second) {
+        action_list_pool_.pop_back();
+      }
+      return result.first->second;
+    }
+  } else {
+    return event_it->second;
+  }
+}
+
+void EventQueue::return_action_list(ActionListPtr&& action_list) {
+  reactor_assert(action_list != nullptr);
+  action_list_pool_.emplace_back(std::forward<ActionListPtr>(action_list));
+}
+
+void EventQueue::discard_events_until_tag(const Tag& tag) {
+  while (!empty() && next_tag() <= tag) {
+    auto actions = extract_next_event();
+    return_action_list(std::move(actions));
+  }
+}
+
 void Scheduler::terminate_all_workers() {
   log_.debug() << "Send termination signal to all workers";
   auto num_workers = environment_->num_workers();
@@ -202,10 +255,25 @@ auto Scheduler::schedule_ready_reactions() -> bool {
 void Scheduler::start() {
   log_.debug() << "Starting the scheduler...";
 
-  // Initialize our logical time to the value right before the start tag. This
-  // is important for usage with enclaves/federates, to indicate, that no events
-  // before the start tag ca be generated.
-  logical_time_.advance_to(environment_->start_tag().decrement());
+  {
+    // Other schedulers (enclaves or federates) could try to access our logical
+    // time and our event queue. Thus, we need to lock the main scheduling mutex
+    // in order to avoid data races.
+    std::lock_guard<std::mutex> lock_guard(scheduling_mutex_);
+
+    // Initialize our logical time to the value right before the start tag. This
+    // is important for usage with enclaves/federates, to indicate, that no events
+    // before the start tag can be generated.
+    logical_time_.advance_to(environment_->start_tag().decrement());
+
+    // It could happen that another scheduler (enclave or federates) already
+    // tried to acquire a tag before our start tag. In that case, we will have
+    // empty events on the queue, that are earlier than our startup event. We
+    // resolve this simply by deleting all such events. Once we have processed
+    // the startup reactions, the start tag will be released, and consequently
+    // also all earlier tags are released.
+    event_queue_.discard_events_until_tag(Tag::from_logical_time(logical_time_));
+  }
 
   auto num_workers = environment_->num_workers();
   // initialize the reaction queue, set ports vector, and triggered reactions
@@ -230,6 +298,12 @@ void Scheduler::start() {
   for (auto& worker : workers_) {
     worker.join_thread();
   }
+}
+
+void Scheduler::advance_logical_time_to(const Tag& tag) {
+  log_.debug() << "advance logical time to tag " << tag;
+  logical_time_.advance_to(tag);
+  Statistics::increment_processed_events();
 }
 
 void Scheduler::next() { // NOLINT
@@ -260,8 +334,9 @@ void Scheduler::next() { // NOLINT
 
     while (triggered_actions_ == nullptr || triggered_actions_->empty()) {
       if (triggered_actions_ != nullptr) {
-        action_list_pool_.emplace_back(std::move(triggered_actions_));
+        event_queue_.return_action_list(std::move(triggered_actions_));
       }
+      reactor_assert(triggered_actions_ == nullptr);
 
       // shutdown if there are no more events in the queue
       if (event_queue_.empty() && !stop_) {
@@ -278,27 +353,25 @@ void Scheduler::next() { // NOLINT
         continue_execution_ = false;
         log_.debug() << "Shutting down the scheduler";
         Tag t_next = Tag::from_logical_time(logical_time_).delay();
-        if (!event_queue_.empty() && t_next == event_queue_.begin()->first) {
+        if (!event_queue_.empty() && t_next == event_queue_.next_tag()) {
           log_.debug() << "Schedule the last round of reactions including all "
                           "termination reactions";
-          triggered_actions_ = std::move(event_queue_.begin()->second);
-          event_queue_.erase(event_queue_.begin());
-          log_.debug() << "advance logical time to tag " << t_next;
-          logical_time_.advance_to(t_next);
+          triggered_actions_ = event_queue_.extract_next_event();
+          advance_logical_time_to(t_next);
         } else {
           return;
         }
       } else {
-        // find the next tag
-        auto t_next = event_queue_.begin()->first;
-        log_.debug() << "try to advance logical time to tag " << t_next;
+        auto t_next = event_queue_.next_tag();
 
         // synchronize with physical time if not in fast forward mode
         if (!environment_->fast_fwd_execution()) {
+          log_.debug() << "acquire tag " << t_next << " from physical time barrier";
           bool result = PhysicalTimeBarrier::acquire_tag(
-              t_next, lock, cv_schedule_, [&t_next, this]() { return t_next != event_queue_.begin()->first; });
+              t_next, lock, this, [&t_next, this]() { return t_next != event_queue_.next_tag(); });
           // If acquire tag returns false, then a new event was inserted into the queue and we need to start over
           if (!result) {
+            log_.debug() << "abort waiting and restart as the event queue was modified";
             continue;
           }
         }
@@ -306,35 +379,38 @@ void Scheduler::next() { // NOLINT
         // Wait until all input actions mark the tag as safe to process.
         bool result{true};
         for (auto* action : environment_->input_actions_) {
-          bool inner_result = action->acquire_tag(t_next, lock, cv_schedule_,
-                                                  [&t_next, this]() { return t_next != event_queue_.begin()->first; });
+          log_.debug() << "acquire tag " << t_next << " from input action " << action->fqn();
+          bool inner_result =
+              action->acquire_tag(t_next, lock, [&t_next, this]() { return t_next != event_queue_.next_tag(); });
           // If the wait was aborted or if the next tag changed in the meantime,
           // we need to break from the loop and continue with the main loop.
-          if (!inner_result || t_next != event_queue_.begin()->first) {
+          if (!inner_result || t_next != event_queue_.next_tag()) {
             result = false;
             break;
           }
         }
         // If acquire tag returns false, then a new event was inserted into the queue and we need to start over
         if (!result) {
+          log_.debug() << "abort waiting and restart as the event queue was modified";
           continue;
         }
 
-        // Retrieve all events with tag equal to current logical time from the
-        // queue.
+        // Retrieve all triggered actions at the next tag.
         // We do not need to lock mutex_event_queue_ here, as the lock on
         // scheduling_mutex_ already ensures that no one can write to the event
         // queue.
-        triggered_actions_ = std::move(event_queue_.extract(event_queue_.begin()).mapped());
+        triggered_actions_ = event_queue_.extract_next_event();
 
-        // advance logical time
-        log_.debug() << "advance logical time to tag " << t_next;
-        logical_time_.advance_to(t_next);
+        advance_logical_time_to(t_next);
 
         // If there are no triggered actions at the event, then release the
         // current tag and go back to the start of the loop
         if (triggered_actions_->empty()) {
+          // It is important to unlock the mutex here. Otherwise we could enter a deadlock as
+          // releasing a tag also requires holding the downstream mutex.
+          lock.unlock();
           release_current_tag();
+          lock.lock();
         }
       }
     }
@@ -344,6 +420,7 @@ void Scheduler::next() { // NOLINT
   log_.debug() << "events: " << triggered_actions_->size();
   for (auto* action : *triggered_actions_) {
     log_.debug() << "Action " << action->fqn();
+    Statistics::increment_triggered_actions();
     action->setup();
     for (auto* reaction : action->triggers()) {
       // There is no need to acquire the mutex. At this point the scheduler
@@ -359,47 +436,18 @@ Scheduler::Scheduler(Environment* env)
     : using_workers_(env->num_workers() > 1)
     , environment_(env)
     , log_("Scheduler " + env->name())
-    , ready_queue_(log_, env->num_workers()) {
-  fill_action_list_pool();
-}
+    , ready_queue_(log_, env->num_workers()) {}
 
 Scheduler::~Scheduler() = default;
-
-void Scheduler::fill_action_list_pool() {
-  for (std::size_t i{0}; i < action_list_pool_increment_; i++) {
-    action_list_pool_.emplace_back(std::make_unique<ActionList>());
-  }
-}
-
-auto Scheduler::insert_event_at(const Tag& tag) -> const ActionListPtr& {
-  auto shared_lock = std::shared_lock<std::shared_mutex>(mutex_event_queue_);
-
-  auto event_it = event_queue_.find(tag);
-  if (event_it == event_queue_.end()) {
-    shared_lock.unlock();
-    {
-      auto unique_lock = std::unique_lock<std::shared_mutex>(mutex_event_queue_);
-      if (action_list_pool_.empty()) {
-        fill_action_list_pool();
-      }
-      const auto& result = event_queue_.try_emplace(tag, std::move(action_list_pool_.back()));
-      if (result.second) {
-        action_list_pool_.pop_back();
-      }
-      return result.first->second;
-    }
-  } else {
-    return event_it->second;
-  }
-}
 
 void Scheduler::schedule_sync(BaseAction* action, const Tag& tag) {
   log_.debug() << "Schedule action " << action->fqn() << (action->is_logical() ? " synchronously " : " asynchronously ")
                << " with tag " << tag;
   reactor_assert(logical_time_ < tag);
   tracepoint(reactor_cpp, schedule_action, action->container()->fqn(), action->name(), tag);
+  Statistics::increment_scheduled_actions();
 
-  const auto& action_list = insert_event_at(tag);
+  const auto& action_list = event_queue_.insert_event_at(tag);
   action_list->push_back(action);
 }
 
@@ -427,23 +475,26 @@ auto Scheduler::schedule_async_at(BaseAction* action, const Tag& tag) -> bool {
 }
 
 auto Scheduler::schedule_empty_async_at(const Tag& tag) -> bool {
-  log_.debug() << "Schedule empty event at tag " << tag;
   {
     std::lock_guard<std::mutex> lock_guard(scheduling_mutex_);
     if (tag <= logical_time_) {
       // If we try to insert an empty event at the current logical time, then we
       // succeeded because there must be an event at this tag that is currently
       // processed.
-      return tag == logical_time_;
+      bool result{tag == logical_time_};
+      log_.debug() << "try to schedule empty event at tag " << tag << (result ? " -> succeeded" : " -> failed");
+      return result;
     }
-    insert_event_at(tag);
+    event_queue_.insert_event_at(tag);
   }
   notify();
+  log_.debug() << "try to schedule empty event at tag " << tag << " -> succeeded";
   return true;
 }
 
 void Scheduler::set_port(BasePort* port) {
   log_.debug() << "Set port " << port->fqn();
+  Statistics::increment_set_ports();
 
   // We do not check here if port is already in the list. This means clean()
   // could be called multiple times for a single port. However, calling
@@ -463,12 +514,13 @@ void Scheduler::register_release_tag_callback(const ReleaseTagCallback& callback
   // Callbacks should only be registered during assembly, which happens strictly
   // sequentially. Therefore, we should be fine accessing the vector directly
   // and do not need to lock.
-  validate(environment_->phase() <= Environment::Phase::Assembly,
+  validate(environment_->phase() <= Phase::Assembly,
            "registering callbacks is only allowed during construction and assembly");
   release_tag_callbacks_.push_back(callback);
 }
 
 void Scheduler::release_current_tag() {
+  log_.debug() << "Release tag " << logical_time_;
   for (const auto& callback : release_tag_callbacks_) {
     callback(logical_time_);
   }

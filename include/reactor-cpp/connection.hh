@@ -47,12 +47,15 @@ public:
     port->register_set_callback(upstream_set_callback());
   }
 
-  virtual void bind_downstream_port(Port<T>* port) { reactor_assert(this->downstream_ports_.insert(port).second); };
   virtual void bind_downstream_ports(const std::vector<BasePort*> ports) {
     // with C++23 we can use insert_rage here
     for (auto* port : ports) {
       reactor_assert(this->downstream_ports_.insert(static_cast<Port<T>*>(port)).second);
     }
+  }
+  virtual void bind_downstream_port(Port<T>* port) {
+    [[maybe_unused]] bool result = this->downstream_ports_.insert(port).second;
+    reactor_assert(result);
   };
 };
 
@@ -112,12 +115,14 @@ protected:
 
   EnclaveConnection(const std::string& name, Environment* enclave, const Duration& delay)
       : BaseDelayedConnection<T>(name, enclave, false, delay)
-      , log_{this->fqn()} {}
+      , log_{this->fqn()}
+      , logical_time_barrier_(enclave->scheduler()) {}
 
 public:
   EnclaveConnection(const std::string& name, Environment* enclave)
       : BaseDelayedConnection<T>(name, enclave, false, Duration::zero())
-      , log_{this->fqn()} {}
+      , log_{this->fqn()}
+      , logical_time_barrier_(enclave->scheduler()) {}
 
   inline auto upstream_set_callback() noexcept -> PortCallback override {
     return [this](const BasePort& port) {
@@ -138,8 +143,9 @@ public:
     };
   }
 
-  inline auto acquire_tag(const Tag& tag, std::unique_lock<std::mutex>& lock, std::condition_variable& cv,
+  inline auto acquire_tag(const Tag& tag, std::unique_lock<std::mutex>& lock,
                           const std::function<bool(void)>& abort_waiting) -> bool override {
+    reactor_assert(lock.owns_lock());
     log_.debug() << "downstream tries to acquire tag " << tag;
 
     if (this->upstream_port() == nullptr) {
@@ -166,7 +172,7 @@ public:
     }
 
     // Wait until we receive a release_tag message from upstream
-    return logical_time_barrier_.acquire_tag(tag, lock, cv, abort_waiting);
+    return logical_time_barrier_.acquire_tag(tag, lock, abort_waiting);
   }
 
   void bind_upstream_port(Port<T>* port) override {
@@ -203,7 +209,7 @@ public:
     };
   }
 
-  inline auto acquire_tag(const Tag& tag, std::unique_lock<std::mutex>& lock, std::condition_variable& cv,
+  inline auto acquire_tag(const Tag& tag, std::unique_lock<std::mutex>& lock,
                           const std::function<bool(void)>& abort_waiting) -> bool override {
     // Since this is a delayed connection, we can go back in time and need to
     // acquire the latest upstream tag that can create an event at the given
@@ -211,7 +217,7 @@ public:
     // for any value of n, g + d = (t, 0). Hence, we need to quire a tag with
     // the highest possible microstep value.
     auto upstream_tag = tag.subtract(this->min_delay());
-    return EnclaveConnection<T>::acquire_tag(upstream_tag, lock, cv, abort_waiting);
+    return EnclaveConnection<T>::acquire_tag(upstream_tag, lock, abort_waiting);
   }
 };
 
@@ -232,10 +238,10 @@ public:
     };
   }
 
-  inline auto acquire_tag(const Tag& tag, std::unique_lock<std::mutex>& lock, std::condition_variable& cv,
+  inline auto acquire_tag(const Tag& tag, std::unique_lock<std::mutex>& lock,
                           const std::function<bool(void)>& abort_waiting) -> bool override {
     this->log_.debug() << "downstream tries to acquire tag " << tag;
-    return PhysicalTimeBarrier::acquire_tag(tag, lock, cv, abort_waiting);
+    return PhysicalTimeBarrier::acquire_tag(tag, lock, this->environment()->scheduler(), abort_waiting);
   }
 
   void bind_upstream_port(Port<T>* port) override { Connection<T>::bind_upstream_port(port); }

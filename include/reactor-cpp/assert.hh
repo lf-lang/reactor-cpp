@@ -21,7 +21,7 @@ constexpr bool runtime_assertion = false;
 constexpr bool runtime_assertion = true;
 #endif
 
-#include "environment.hh"
+#include "fwd.hh"
 
 #include <cassert>
 #include <sstream>
@@ -33,8 +33,10 @@ constexpr bool runtime_assertion = true;
 #include <unistd.h>
 #endif
 
+// NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
+#define reactor_assert(x) assert(x)
+
 namespace reactor {
-using EnvPhase = Environment::Phase;
 
 class ValidationError : public std::runtime_error {
 private:
@@ -67,47 +69,12 @@ constexpr inline void validate([[maybe_unused]] bool condition, [[maybe_unused]]
   }
 }
 
-// Use plain assert on Windows and when assertions are enabled.
-// Otherwise, the locations of assertion errors are not properly reported.
-#if defined(_WIN32) && !defined(NDEBUG)
-#define reactor_assert(condition) assert(condition)
-#else
-constexpr inline void reactor_assert([[maybe_unused]] bool condition) {
-  if constexpr (runtime_assertion) { // NOLINT
-    assert(condition);               // NOLINT
-  }
-}
-#endif
-
 template <typename E> constexpr auto extract_value(E enum_value) -> typename std::underlying_type<E>::type {
   return static_cast<typename std::underlying_type<E>::type>(enum_value);
 }
 
-inline void assert_phase([[maybe_unused]] const ReactorElement* ptr, [[maybe_unused]] EnvPhase phase) {
-  if constexpr (runtime_assertion) { // NOLINT
-    if (ptr->environment()->phase() != phase) {
-      auto enum_value_to_name = [](EnvPhase phase) -> std::string {
-        const std::map<EnvPhase, std::string> conversation_map = {
-            // NOLINT
-            {EnvPhase::Construction, "Construction"}, {EnvPhase::Assembly, "Assembly"},
-            {EnvPhase::Startup, "Startup"},           {EnvPhase::Execution, "Execution"},
-            {EnvPhase::Shutdown, "Shutdown"},         {EnvPhase::Deconstruction, "Deconstruction"}};
-        // in C++20 use .contains()
-        if (conversation_map.find(phase) != std::end(conversation_map)) {
-          return conversation_map.at(phase);
-        }
-        return "Unknown Phase: Value: " + std::to_string(extract_value(phase));
-      };
-#ifdef __linux__
-      print_debug_backtrace();
-#endif
+void assert_phase([[maybe_unused]] const ReactorElement* ptr, [[maybe_unused]] Phase phase);
 
-      // C++20 std::format
-      throw ValidationError("Expected Phase: " + enum_value_to_name(phase) +
-                            " Current Phase: " + enum_value_to_name(ptr->environment()->phase()));
-    }
-  }
-}
 } // namespace reactor
 
 #endif // REACTOR_CPP_ASSERT_HH

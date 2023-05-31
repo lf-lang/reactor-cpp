@@ -19,12 +19,14 @@
 #include <thread>
 #include <vector>
 
+#include "assert.hh"
 #include "fwd.hh"
 #include "logical_time.hh"
 #include "reactor-cpp/logging.hh"
 #include "reactor-cpp/time.hh"
 #include "safe_vector.hh"
 #include "semaphore.hh"
+#include "time.hh"
 
 namespace reactor {
 
@@ -99,6 +101,36 @@ public:
 using ActionList = SafeVector<BaseAction*>;
 using ActionListPtr = std::unique_ptr<ActionList>;
 
+class EventQueue {
+private:
+  std::shared_mutex mutex_;
+  std::map<Tag, ActionListPtr> event_queue_;
+  /// stores the actions triggered at the current tag
+  ActionListPtr triggered_actions_{nullptr};
+
+  std::vector<ActionListPtr> action_list_pool_;
+  static constexpr std::size_t action_list_pool_increment_{10};
+
+  void fill_action_list_pool();
+
+public:
+  EventQueue() { fill_action_list_pool(); }
+
+  [[nodiscard]] auto empty() const -> bool { return event_queue_.empty(); }
+  [[nodiscard]] auto next_tag() const -> Tag;
+
+  auto insert_event_at(const Tag& tag) -> const ActionListPtr&;
+
+  // should only be called while holding the scheduler mutex
+  auto extract_next_event() -> ActionListPtr;
+
+  // should only be called while holding the scheduler mutex
+  void return_action_list(ActionListPtr&& action_list);
+
+  // should only be called while holding the scheduler mutex
+  void discard_events_until_tag(const Tag& tag);
+};
+
 class Scheduler { // NOLINT
 private:
   const bool using_workers_;
@@ -111,15 +143,9 @@ private:
   std::mutex scheduling_mutex_;
   std::condition_variable cv_schedule_;
 
-  std::shared_mutex mutex_event_queue_;
-  std::map<Tag, ActionListPtr> event_queue_;
+  EventQueue event_queue_;
   /// stores the actions triggered at the current tag
   ActionListPtr triggered_actions_{nullptr};
-
-  std::vector<ActionListPtr> action_list_pool_;
-  static constexpr std::size_t action_list_pool_increment_{10};
-  void fill_action_list_pool();
-  auto insert_event_at(const Tag& tag) -> const ActionListPtr&;
 
   std::vector<std::vector<BasePort*>> set_ports_;
   std::vector<std::vector<Reaction*>> triggered_reactions_;
@@ -141,6 +167,8 @@ private:
   void terminate_all_workers();
   void set_port_helper(BasePort* port);
 
+  void advance_logical_time_to(const Tag& tag);
+
 public:
   explicit Scheduler(Environment* env);
   ~Scheduler();
@@ -150,9 +178,19 @@ public:
   auto schedule_async_at(BaseAction* action, const Tag& tag) -> bool;
   auto schedule_empty_async_at(const Tag& tag) -> bool;
 
+  auto inline lock() noexcept -> std::unique_lock<std::mutex> {
+    return std::unique_lock<std::mutex>(scheduling_mutex_);
+  }
   void inline notify() noexcept { cv_schedule_.notify_one(); }
-
-  auto inline lock() noexcept -> auto { return std::unique_lock<std::mutex>(scheduling_mutex_); }
+  void inline wait(std::unique_lock<std::mutex>& lock, const std::function<bool(void)>& predicate) noexcept {
+    reactor_assert(lock.owns_lock());
+    cv_schedule_.wait(lock, predicate);
+  };
+  auto inline wait_until(std::unique_lock<std::mutex>& lock, TimePoint time_point,
+                         const std::function<bool(void)>& predicate) noexcept -> bool {
+    reactor_assert(lock.owns_lock());
+    return cv_schedule_.wait_until(lock, time_point, predicate);
+  };
 
   void set_port(BasePort* port);
   void set_triggers(std::set<Reaction*>::iterator start, std::set<Reaction*>::iterator end) noexcept {

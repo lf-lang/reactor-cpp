@@ -29,16 +29,16 @@ constexpr unsigned int default_max_reaction_index = 0;
 constexpr bool default_run_forever = false;
 constexpr bool default_fast_fwd_execution = false;
 
-class Environment {
-public:
-  enum class Phase { Construction = 0, Assembly = 1, Startup = 2, Execution = 3, Shutdown = 4, Deconstruction = 5 };
+enum class Phase { Construction = 0, Assembly = 1, Startup = 2, Execution = 3, Shutdown = 4, Deconstruction = 5 };
 
-  // ok this now slowly gets complicated the first indicates which type of component it is the second
-  // tells us the index in the component bucket
-  using GraphElement = std::size_t;
+// ok this now slowly gets complicated the first indicates which type of component it is the second
+// tells us the index in the component bucket
+using GraphElement = std::size_t;
+
+class Environment {
+private:
   using Dependency = std::pair<Reaction*, Reaction*>;
 
-private:
   // name of the environment for debugging
   const std::string name_{};
 

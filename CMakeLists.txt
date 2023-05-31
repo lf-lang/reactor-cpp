@@ -40,6 +40,7 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
   set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
 endif()
 
+option(REACTOR_CPP_PRINT_STATISTICS "Print statistics after execution" OFF)
 option(REACTOR_CPP_TRACE "Enable tracing" OFF)
 option(REACTOR_CPP_VALIDATE "Enable runtime validation" ON)
 if (NOT DEFINED REACTOR_CPP_LOG_LEVEL)

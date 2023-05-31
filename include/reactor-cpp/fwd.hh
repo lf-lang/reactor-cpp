@@ -16,8 +16,10 @@ namespace reactor {
 class BaseAction;
 class BasePort;
 class Environment;
+enum class Phase;
 class Reaction;
 class Reactor;
+class ReactorElement;
 class Scheduler;
 class Tag;
 

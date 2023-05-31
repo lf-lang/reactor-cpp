@@ -9,7 +9,7 @@
 #ifndef REACTOR_CPP_LOGGING_HH
 #define REACTOR_CPP_LOGGING_HH
 
-#include "reactor-cpp/config.hh" //NOLINT
+#include "reactor-cpp/config.hh"
 #include "reactor-cpp/time.hh"
 #include <chrono>
 #include <iostream>
