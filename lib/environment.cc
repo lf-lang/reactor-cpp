@@ -152,7 +152,6 @@ void Environment::assemble() {
     recursive_assemble(reactor);
   }
 
-
   auto graph = optimized_graph_.get_edges();
   // this generates the port graph
   for (auto const& [source, sinks] : graph) {
@@ -160,18 +159,18 @@ void Environment::assemble() {
     auto source_port = source.first;
     auto properties = source.second;
 
-
     if (properties.type_ == ConnectionType::Normal) {
       for (const auto destination_port : sinks) {
         ports_[destination_port]->set_inward_binding(ports_[source_port]);
         ports_[source_port]->add_outward_binding(ports_[destination_port]);
         std::cout << "from: " << ports_[source_port]->container()->name() << "." << ports_[source_port]->name()
-                  << " --> to: " << ports_[destination_port]->container()->name() << "." << ports_[destination_port]->name()
-                  << std::endl;
+                  << " --> to: " << ports_[destination_port]->container()->name() << "."
+                  << ports_[destination_port]->name() << std::endl;
       }
     } else {
       std::vector<BasePort*> pointers;
-      std::transform(std::begin(sinks), std::end(sinks),std::back_inserter(pointers), [this](std::size_t index) {return this->ports_[index];});
+      std::transform(std::begin(sinks), std::end(sinks), std::back_inserter(pointers),
+                     [this](std::size_t index) { return this->ports_[index]; });
       ports_[source_port]->pull_connection(properties, pointers);
     }
   }

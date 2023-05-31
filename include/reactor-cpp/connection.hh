@@ -39,7 +39,6 @@ protected:
   [[nodiscard]] auto upstream_port() -> auto* { return upstream_port_; }
   [[nodiscard]] auto upstream_port() const -> const auto* { return upstream_port_; }
 
-
 public:
   virtual auto upstream_set_callback() noexcept -> PortCallback = 0;
   virtual void bind_upstream_port(Port<T>* port) {

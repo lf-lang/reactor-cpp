@@ -14,13 +14,13 @@
 #include <string>
 #include <vector>
 
+#include "enums.hh"
 #include "fwd.hh"
 #include "graph.hh"
 #include "reactor-cpp/logging.hh"
 #include "reactor-cpp/time.hh"
 #include "reactor.hh"
 #include "scheduler.hh"
-#include "enums.hh"
 
 namespace reactor {
 
@@ -32,7 +32,6 @@ constexpr bool default_fast_fwd_execution = false;
 class Environment {
 public:
   enum class Phase { Construction = 0, Assembly = 1, Startup = 2, Execution = 3, Shutdown = 4, Deconstruction = 5 };
-
 
   // ok this now slowly gets complicated the first indicates which type of component it is the second
   // tells us the index in the component bucket

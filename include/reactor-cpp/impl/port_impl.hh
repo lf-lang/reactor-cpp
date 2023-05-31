@@ -16,11 +16,9 @@
 
 namespace reactor {
 
-template<class T>
-class DelayedConnection;
+template <class T> class DelayedConnection;
 
-template<class T>
-class PhysicalConnection;
+template <class T> class PhysicalConnection;
 
 template <class T> [[maybe_unused]] auto Port<T>::typed_outward_bindings() const noexcept -> const std::set<Port<T>*>& {
   return outward_bindings_; // NOLINT C++20 std::bit_cast

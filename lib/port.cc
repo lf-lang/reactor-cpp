@@ -9,9 +9,9 @@
 #include "reactor-cpp/port.hh"
 
 #include "reactor-cpp/assert.hh"
+#include "reactor-cpp/connection.hh"
 #include "reactor-cpp/environment.hh"
 #include "reactor-cpp/reaction.hh"
-#include "reactor-cpp/connection.hh"
 
 namespace reactor {
 
@@ -78,10 +78,12 @@ void Port<void>::set() {
 void Port<void>::pull_connection(const ConnectionProperties& properties, const std::vector<BasePort*>& downstream) {
   Connection<void>* connection = nullptr;
   if (properties.type_ == ConnectionType::Delayed) {
-    connection = new DelayedConnection<void>{this->name() + "_delayed_connection", this->container(), properties.delay_};
+    connection =
+        new DelayedConnection<void>{this->name() + "_delayed_connection", this->container(), properties.delay_};
   }
   if (properties.type_ == ConnectionType::Physical) {
-    connection = new PhysicalConnection<void>{this->name() + "_physical_connection", this->container(), properties.delay_};
+    connection =
+        new PhysicalConnection<void>{this->name() + "_physical_connection", this->container(), properties.delay_};
   }
 
   if (connection != nullptr) {

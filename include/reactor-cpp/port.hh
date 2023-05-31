@@ -13,16 +13,15 @@
 #include <vector>
 
 #include "assert.hh"
+#include "enums.hh"
 #include "fwd.hh"
 #include "multiport.hh"
 #include "reactor.hh"
 #include "value_ptr.hh"
-#include "enums.hh"
 
 namespace reactor {
 
-template<class T>
-class Connection;
+template <class T> class Connection;
 
 enum class PortType { Input, Output, Delay };
 

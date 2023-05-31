@@ -9,20 +9,12 @@
 
 namespace reactor {
 
-enum ConnectionType {
-  Normal,
-  Delayed,
-  Enclaved,
-  Physical,
-  DelayedEnclaved,
-  PhysicalEnclaved,
-  Plugin
-};
+enum ConnectionType { Normal, Delayed, Enclaved, Physical, DelayedEnclaved, PhysicalEnclaved, Plugin };
 struct ConnectionProperties {
   ConnectionType type_ = ConnectionType::Normal;
   Duration delay_{0};
 };
 
-}
+} // namespace reactor
 
 #endif // REACTOR_CPP_ENUMS_HH

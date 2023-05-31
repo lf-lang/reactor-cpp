@@ -9,10 +9,10 @@
 #ifndef REACTOR_CPP_REACTOR_HH
 #define REACTOR_CPP_REACTOR_HH
 
+#include <memory>
 #include <set>
 #include <sstream>
 #include <string>
-#include <memory>
 
 //#include "fwd.hh"
 #include "environment.hh"
