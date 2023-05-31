@@ -64,6 +64,7 @@ private:
   std::set<Reactor*> reactors_{};
   std::set<BaseAction*> connections_{};
 
+public:
   void register_action(BaseAction* action);
   void register_input(BasePort* port);
   void register_output(BasePort* port);
@@ -71,10 +72,9 @@ private:
   void register_reactor(Reactor* reactor);
   void register_connection(BaseAction* connection);
 
-public:
   Reactor(const std::string& name, Reactor* container);
   Reactor(const std::string& name, Environment* environment);
-  ~Reactor() override = default;
+  ~Reactor() override;
 
   [[nodiscard]] auto inline actions() const noexcept -> const auto& { return actions_; }
   [[nodiscard]] auto inline inputs() const noexcept -> const auto& { return inputs_; }

@@ -75,15 +75,21 @@ void Port<void>::set() {
   }
 }
 
-auto Port<void>::pull_connection(ConnectionProperties* properties) -> Connection<void>*  {
-  if (properties->type_ == ConnectionType::Delayed) {
-    return new DelayedConnection<void>{this->name() + "_delayed_connection", this->container(), properties->delay_};
+void Port<void>::pull_connection(const ConnectionProperties& properties, const std::vector<BasePort*>& downstream) {
+  Connection<void>* connection = nullptr;
+  if (properties.type_ == ConnectionType::Delayed) {
+    connection = new DelayedConnection<void>{this->name() + "_delayed_connection", this->container(), properties.delay_};
   }
-  if (properties->type_ == ConnectionType::Physical) {
-    return new PhysicalConnection<void>{this->name() + "_physical_connection", this->container(), properties->delay_};
+  if (properties.type_ == ConnectionType::Physical) {
+    connection = new PhysicalConnection<void>{this->name() + "_physical_connection", this->container(), properties.delay_};
   }
 
-  return nullptr;
+  if (connection != nullptr) {
+    connection->bind_downstream_ports(downstream);
+    connection->bind_upstream_port(this);
+    this->register_set_callback(connection->upstream_set_callback());
+    this->container()->register_connection(connection);
+  }
 }
 
 // This function can be used to chain two callbacks. This mechanism is not

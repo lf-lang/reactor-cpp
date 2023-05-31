@@ -39,9 +39,9 @@ protected:
   [[nodiscard]] auto upstream_port() -> auto* { return upstream_port_; }
   [[nodiscard]] auto upstream_port() const -> const auto* { return upstream_port_; }
 
-  virtual auto upstream_set_callback() noexcept -> PortCallback = 0;
 
 public:
+  virtual auto upstream_set_callback() noexcept -> PortCallback = 0;
   virtual void bind_upstream_port(Port<T>* port) {
     reactor_assert(upstream_port_ == nullptr);
     upstream_port_ = port;
@@ -49,6 +49,12 @@ public:
   }
 
   virtual void bind_downstream_port(Port<T>* port) { reactor_assert(this->downstream_ports_.insert(port).second); };
+  virtual void bind_downstream_ports(const std::vector<BasePort*> ports) {
+    // with C++23 we can use insert_rage here
+    for (auto* port : ports) {
+      reactor_assert(this->downstream_ports_.insert(static_cast<Port<T>*>(port)).second);
+    }
+  };
 };
 
 template <class T> class BaseDelayedConnection : public Connection<T> {

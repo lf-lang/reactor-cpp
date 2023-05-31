@@ -66,15 +66,21 @@ template <class T> auto Port<T>::get() const noexcept -> const ImmutableValuePtr
 }
 
 template <class T>
-auto Port<T>::pull_connection(ConnectionProperties* properties) -> Connection<T>*  {
-  if (properties->type_ == ConnectionType::Delayed) {
-    return new DelayedConnection<T>{this->name() + "_delayed_connection", this->container(), properties->delay_};
+void Port<T>::pull_connection(const ConnectionProperties& properties, const std::vector<BasePort*>& downstream) {
+  Connection<T>* connection = nullptr;
+  if (properties.type_ == ConnectionType::Delayed) {
+    connection = new DelayedConnection<T>{this->name() + "_delayed_connection", this->container(), properties.delay_};
   }
-  if (properties->type_ == ConnectionType::Physical) {
-    return new PhysicalConnection<T>{this->name() + "_physical_connection", this->container(), properties->delay_};
+  if (properties.type_ == ConnectionType::Physical) {
+    connection = new PhysicalConnection<T>{this->name() + "_physical_connection", this->container(), properties.delay_};
   }
 
-  return nullptr;
+  if (connection != nullptr) {
+    connection->bind_downstream_ports(downstream);
+    connection->bind_upstream_port(this);
+    this->register_set_callback(connection->upstream_set_callback());
+    this->container()->register_connection(connection);
+  }
 }
 
 } // namespace reactor

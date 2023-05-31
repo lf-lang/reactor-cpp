@@ -160,20 +160,19 @@ void Environment::assemble() {
     auto source_port = source.first;
     auto properties = source.second;
 
-    for (const auto destination_port : sinks) {
-      if (properties.type_ == ConnectionType::Normal) {
+
+    if (properties.type_ == ConnectionType::Normal) {
+      for (const auto destination_port : sinks) {
         ports_[destination_port]->set_inward_binding(ports_[source_port]);
         ports_[source_port]->add_outward_binding(ports_[destination_port]);
-      } else if (properties.type_ == ConnectionType::Delayed) {
-        //auto connection_object = ports_[source_port];
+        std::cout << "from: " << ports_[source_port]->container()->name() << "." << ports_[source_port]->name()
+                  << " --> to: " << ports_[destination_port]->container()->name() << "." << ports_[destination_port]->name()
+                  << std::endl;
       }
-
-      // TODO: fixing properties
-      // TODO: connect ordered by priority
-
-      std::cout << "from: " << ports_[source_port]->container()->name() << "." << ports_[source_port]->name()
-                << " --> to: " << ports_[destination_port]->container()->name() << "." << ports_[destination_port]->name()
-                << std::endl;
+    } else {
+      std::vector<BasePort*> pointers;
+      std::transform(std::begin(sinks), std::end(sinks),std::back_inserter(pointers), [this](std::size_t index) {return this->ports_[index];});
+      ports_[source_port]->pull_connection(properties, pointers);
     }
   }
 

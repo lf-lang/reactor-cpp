@@ -100,6 +100,8 @@ public:
 
   inline void set_tag(std::size_t tag) noexcept { tag_ = tag; }
 
+  virtual void pull_connection(const ConnectionProperties& properties, const std::vector<BasePort*>& downstreams) = 0;
+
   void register_set_callback(const PortCallback& callback);
   void register_clean_callback(const PortCallback& callback);
 
@@ -155,7 +157,7 @@ public:
   void set(const T& value) { set(make_immutable_value<T>(value)); }
   void set(T&& value) { set(make_immutable_value<T>(std::forward<T>(value))); }
 
-  auto pull_connection(ConnectionProperties* properties) -> Connection<T>*;
+  void pull_connection(const ConnectionProperties& properties, const std::vector<BasePort*>& downstream) override;
 
   // Setting a port to nullptr is not permitted.
   void set(std::nullptr_t) = delete;
@@ -204,7 +206,7 @@ public:
   [[nodiscard]] auto typed_inward_binding() const noexcept -> Port<void>*;
   [[nodiscard]] auto typed_outward_bindings() const noexcept -> const std::set<Port<void>*>&;
 
-  auto pull_connection(ConnectionProperties* properties) -> Connection<void>*;
+  void pull_connection(const ConnectionProperties& properties, const std::vector<BasePort*>& downstream) override;
 
   void set();
 

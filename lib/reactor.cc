@@ -75,6 +75,10 @@ Reactor::Reactor(const std::string& name, Environment* environment)
   environment->insert_reactor(this);
 }
 
+Reactor::~Reactor() noexcept {
+  std::for_each(std::begin(connections_), std::end(connections_), [](BaseAction* action) { delete action; });
+}
+
 void Reactor::register_action([[maybe_unused]] BaseAction* action) {
   reactor_assert(action != nullptr);
   reactor::validate(this->environment()->phase() == Environment::Phase::Construction ||
