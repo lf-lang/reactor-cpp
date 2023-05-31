@@ -143,7 +143,6 @@ void recursive_assemble(Reactor* container) { // NOLINT
     recursive_assemble(reactor);
   }
 }
-
 void Environment::assemble() {
   phase_ = Phase::Assembly;
 
@@ -153,24 +152,29 @@ void Environment::assemble() {
     recursive_assemble(reactor);
   }
 
+
+  auto graph = optimized_graph_.get_edges();
   // this generates the port graph
-  for (const auto& edge : optimized_graph_.get_edges()) {
-    auto source = std::get<0>(edge);
-    auto destination = std::get<2>(edge);
-    auto properties = std::get<1>(edge);
+  for (auto const& [source, sinks] : graph) {
 
-    if (properties.delay_.count() == 0) {
-      ports_[destination]->set_inward_binding(ports_[source]);
-      ports_[source]->add_outward_binding(ports_[destination]);
-    } else {
+    auto source_port = source.first;
+    auto properties = source.second;
+
+    for (const auto destination_port : sinks) {
+      if (properties.type_ == ConnectionType::Normal) {
+        ports_[destination_port]->set_inward_binding(ports_[source_port]);
+        ports_[source_port]->add_outward_binding(ports_[destination_port]);
+      } else if (properties.type_ == ConnectionType::Delayed) {
+        //auto connection_object = ports_[source_port];
+      }
+
+      // TODO: fixing properties
+      // TODO: connect ordered by priority
+
+      std::cout << "from: " << ports_[source_port]->container()->name() << "." << ports_[source_port]->name()
+                << " --> to: " << ports_[destination_port]->container()->name() << "." << ports_[destination_port]->name()
+                << std::endl;
     }
-
-    // TODO: fixing properties
-    // TODO: connect ordered by priority
-
-    std::cout << "from: " << ports_[source]->container()->name() << "." << ports_[source]->name()
-              << " --> to: " << ports_[destination]->container()->name() << "." << ports_[destination]->name()
-              << std::endl;
   }
 
   for (auto* reactor : top_level_reactors_) {
