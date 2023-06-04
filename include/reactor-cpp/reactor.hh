@@ -15,12 +15,11 @@
 #include <string>
 
 //#include "fwd.hh"
-//#include "action.hh"
 #include "environment.hh"
 #include "logical_time.hh"
 #include "reactor.hh"
 #include "reactor_element.hh"
-
+#include "action.hh"
 namespace reactor {
 
 class Reactor : public ReactorElement { // NOLINT
@@ -30,7 +29,7 @@ private:
   std::set<BasePort*> outputs_{};
   std::set<Reaction*> reactions_{};
   std::set<Reactor*> reactors_{};
-  std::set<BaseAction*> connections_{};
+  std::set<std::unique_ptr<BaseAction>> connections_{};
 
 public:
   void register_action(BaseAction* action);

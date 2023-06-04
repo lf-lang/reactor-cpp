@@ -8,6 +8,7 @@
 
 #include "reactor-cpp/assert.hh"
 #include "reactor-cpp/environment.hh"
+#include "reactor-cpp/reactor_element.hh"
 
 namespace reactor {
 
