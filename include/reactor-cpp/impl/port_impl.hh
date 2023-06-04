@@ -16,9 +16,12 @@
 
 namespace reactor {
 
+// connection fwd
 template <class T> class DelayedConnection;
-
 template <class T> class PhysicalConnection;
+template <class T> class EnclaveConnection;
+template <class T> class DelayedEnclaveConnection;
+template <class T> class PhysicalEnclaveConnection;
 
 template <class T> [[maybe_unused]] auto Port<T>::typed_outward_bindings() const noexcept -> const std::set<Port<T>*>& {
   return outward_bindings_; // NOLINT C++20 std::bit_cast
@@ -66,11 +69,22 @@ template <class T> auto Port<T>::get() const noexcept -> const ImmutableValuePtr
 template <class T>
 void Port<T>::pull_connection(const ConnectionProperties& properties, const std::vector<BasePort*>& downstream) {
   Connection<T>* connection = nullptr;
+
+  //TODO: maybe turn this into a switch
   if (properties.type_ == ConnectionType::Delayed) {
     connection = new DelayedConnection<T>(this->name() + "_delayed_connection", this->container(), properties.delay_);
   }
   if (properties.type_ == ConnectionType::Physical) {
     connection = new PhysicalConnection<T>(this->name() + "_physical_connection", this->container(), properties.delay_);
+  }
+  if (properties.type_ == ConnectionType::Enclaved) {
+    connection = new EnclaveConnection<T>(this->name() + "_enclave_connection", properties.enclave_);
+  }
+  if (properties.type_ == ConnectionType::DelayedEnclaved) {
+    connection = new DelayedEnclaveConnection<T>(this->name() + "_enclave_connection", properties.enclave_, properties.delay_);
+  }
+  if (properties.type_ == ConnectionType::PhysicalEnclaved) {
+    connection = new PhysicalEnclaveConnection<T>(this->name() + "_enclave_connection", properties.enclave_);
   }
 
   if (connection != nullptr) {

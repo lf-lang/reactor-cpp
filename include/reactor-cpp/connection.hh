@@ -115,14 +115,14 @@ protected:
 
   EnclaveConnection(const std::string& name, Environment* enclave, const Duration& delay)
       : BaseDelayedConnection<T>(name, enclave, false, delay)
-      , log_{this->fqn()}
-      , logical_time_barrier_(enclave->scheduler()) {}
+      , logical_time_barrier_(enclave->scheduler())
+      , log_{this->fqn()} {}
 
 public:
   EnclaveConnection(const std::string& name, Environment* enclave)
       : BaseDelayedConnection<T>(name, enclave, false, Duration::zero())
-      , log_{this->fqn()}
-      , logical_time_barrier_(enclave->scheduler()) {}
+      , logical_time_barrier_(enclave->scheduler())
+      , log_{this->fqn()} {};
 
   inline auto upstream_set_callback() noexcept -> PortCallback override {
     return [this](const BasePort& port) {
