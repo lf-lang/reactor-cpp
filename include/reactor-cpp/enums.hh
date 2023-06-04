@@ -1,6 +1,10 @@
-//
-// Created by revol-xut on 5/31/23.
-//
+/*
+ * Copyright (C) 2023 TU Dresden
+ * All rights reserved.
+ *
+ * Authors:
+ *   Tassilo Tanneberger
+ */
 
 #ifndef REACTOR_CPP_ENUMS_HH
 #define REACTOR_CPP_ENUMS_HH
