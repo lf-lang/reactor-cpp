@@ -15,11 +15,11 @@
 #include <string>
 
 //#include "fwd.hh"
+#include "action.hh"
 #include "environment.hh"
 #include "logical_time.hh"
 #include "reactor.hh"
 #include "reactor_element.hh"
-#include "action.hh"
 namespace reactor {
 
 class Reactor : public ReactorElement { // NOLINT

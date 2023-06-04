@@ -14,9 +14,9 @@
 #include "fwd.hh"
 #include "logical_time.hh"
 #include "reactor.hh"
+#include "reactor_element.hh"
 #include "time_barrier.hh"
 #include "value_ptr.hh"
-#include "reactor_element.hh"
 
 #include <condition_variable>
 #include <map>

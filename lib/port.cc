@@ -105,7 +105,8 @@ void Port<void>::pull_connection(const ConnectionProperties& properties, const s
     connection = new EnclaveConnection<void>(this->name() + "_enclave_connection", properties.enclave_);
   }
   if (properties.type_ == ConnectionType::DelayedEnclaved) {
-    connection = new DelayedEnclaveConnection<void>(this->name() + "_enclave_connection", properties.enclave_, properties.delay_);
+    connection = new DelayedEnclaveConnection<void>(this->name() + "_enclave_connection", properties.enclave_,
+                                                    properties.delay_);
   }
   if (properties.type_ == ConnectionType::PhysicalEnclaved) {
     connection = new PhysicalEnclaveConnection<void>(this->name() + "_enclave_connection", properties.enclave_);

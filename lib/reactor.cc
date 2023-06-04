@@ -26,7 +26,7 @@ Reactor::Reactor(const std::string& name, Environment* environment)
 }
 
 Reactor::~Reactor() noexcept {
-  //std::for_each(std::begin(connections_), std::end(connections_), [](BaseAction* action) { delete action; });
+  // std::for_each(std::begin(connections_), std::end(connections_), [](BaseAction* action) { delete action; });
 }
 
 void Reactor::register_action([[maybe_unused]] BaseAction* action) {

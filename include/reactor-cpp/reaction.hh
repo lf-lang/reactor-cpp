@@ -13,8 +13,8 @@
 #include <set>
 
 #include "fwd.hh"
-#include "reactor_element.hh"
 #include "logical_time.hh"
+#include "reactor_element.hh"
 
 namespace reactor {
 

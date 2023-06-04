@@ -70,7 +70,7 @@ template <class T>
 void Port<T>::pull_connection(const ConnectionProperties& properties, const std::vector<BasePort*>& downstream) {
   Connection<T>* connection = nullptr;
 
-  //TODO: maybe turn this into a switch
+  // TODO: maybe turn this into a switch
   if (properties.type_ == ConnectionType::Delayed) {
     connection = new DelayedConnection<T>(this->name() + "_delayed_connection", this->container(), properties.delay_);
   }
@@ -81,7 +81,8 @@ void Port<T>::pull_connection(const ConnectionProperties& properties, const std:
     connection = new EnclaveConnection<T>(this->name() + "_enclave_connection", properties.enclave_);
   }
   if (properties.type_ == ConnectionType::DelayedEnclaved) {
-    connection = new DelayedEnclaveConnection<T>(this->name() + "_enclave_connection", properties.enclave_, properties.delay_);
+    connection =
+        new DelayedEnclaveConnection<T>(this->name() + "_enclave_connection", properties.enclave_, properties.delay_);
   }
   if (properties.type_ == ConnectionType::PhysicalEnclaved) {
     connection = new PhysicalEnclaveConnection<T>(this->name() + "_enclave_connection", properties.enclave_);
