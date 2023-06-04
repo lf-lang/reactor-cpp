@@ -134,7 +134,7 @@ auto main() -> int {
 
   env.draw_connection(counter1_count, add_i1, ConnectionProperties{});
   env.draw_connection(counter2_count, add_i2, ConnectionProperties{});
-  env.draw_connection(add_sum, p_add_value, ConnectionProperties{});
+  env.draw_connection(add_sum, p_add_value, ConnectionProperties{ConnectionType::Delayed, 10s, nullptr});
 
   std::cout << "optimize" << std::endl << std::flush;
   env.optimize();
