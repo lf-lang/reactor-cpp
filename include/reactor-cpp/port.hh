@@ -16,7 +16,7 @@
 #include "enums.hh"
 #include "fwd.hh"
 #include "multiport.hh"
-#include "reactor.hh"
+#include "reactor_element.hh"
 #include "value_ptr.hh"
 
 namespace reactor {

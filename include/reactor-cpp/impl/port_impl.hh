@@ -67,10 +67,10 @@ template <class T>
 void Port<T>::pull_connection(const ConnectionProperties& properties, const std::vector<BasePort*>& downstream) {
   Connection<T>* connection = nullptr;
   if (properties.type_ == ConnectionType::Delayed) {
-    connection = new DelayedConnection<T>{this->name() + "_delayed_connection", this->container(), properties.delay_};
+    connection = new DelayedConnection<T>(this->name() + "_delayed_connection", this->container(), properties.delay_);
   }
   if (properties.type_ == ConnectionType::Physical) {
-    connection = new PhysicalConnection<T>{this->name() + "_physical_connection", this->container(), properties.delay_};
+    connection = new PhysicalConnection<T>(this->name() + "_physical_connection", this->container(), properties.delay_);
   }
 
   if (connection != nullptr) {

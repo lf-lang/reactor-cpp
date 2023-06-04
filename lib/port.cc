@@ -95,11 +95,11 @@ void Port<void>::pull_connection(const ConnectionProperties& properties, const s
   Connection<void>* connection = nullptr;
   if (properties.type_ == ConnectionType::Delayed) {
     connection =
-        new DelayedConnection<void>{this->name() + "_delayed_connection", this->container(), properties.delay_};
+        new DelayedConnection<void>(this->name() + "_delayed_connection", this->container(), properties.delay_);
   }
   if (properties.type_ == ConnectionType::Physical) {
     connection =
-        new PhysicalConnection<void>{this->name() + "_physical_connection", this->container(), properties.delay_};
+        new PhysicalConnection<void>(this->name() + "_physical_connection", this->container(), properties.delay_);
   }
 
   if (connection != nullptr) {

@@ -9,10 +9,11 @@ set(SOURCE_FILES
     scheduler.cc
     time.cc
     multiport.cc
+    reactor_element.cc
     )
 
 if(REACTOR_CPP_TRACE)
-  set(SOURCE_FILES ${SOURCE_FILES} trace.cc )
+  set(SOURCE_FILES ${SOURCE_FILES} trace.cc reactor_element.cc)
 endif()
 
 if (DEFINED LF_REACTOR_CPP_SUFFIX)
