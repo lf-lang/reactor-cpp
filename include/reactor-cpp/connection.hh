@@ -49,7 +49,7 @@ public:
 
   virtual void bind_downstream_ports(const std::vector<BasePort*>& ports) {
     // with C++23 we can use insert_rage here
-    for (auto* port : ports) { // NOLINT
+    for ([[maybe_unused]]auto* port : ports) { // NOLINT
       reactor_assert(this->downstream_ports_.insert(static_cast<Port<T>*>(port)).second);
     }
   }
