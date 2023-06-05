@@ -39,6 +39,15 @@ public:
       : graph_(std::move(graph.graph_)) {}
   ~PropertyGraph() noexcept = default;
 
+  auto operator=(const PropertyGraph& other) -> PropertyGraph& {
+    graph_ = other.graph_;
+    return *this;
+  }
+  auto operator=(const PropertyGraph&& other) -> PropertyGraph& {
+    graph_ = std::move(other.graph_);
+    return *this;
+  }
+
   // adds a single edge too the graph structure
   void add_edge(E source, E destination, P properties) noexcept {
     if (!graph_.contains(source)) {
