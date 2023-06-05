@@ -41,7 +41,7 @@ public:
 
   Reactor(const std::string& name, Reactor* container);
   Reactor(const std::string& name, Environment* environment);
-  ~Reactor() override;
+  ~Reactor() override = default;
 
   [[nodiscard]] auto inline actions() const noexcept -> const auto& { return actions_; }
   [[nodiscard]] auto inline inputs() const noexcept -> const auto& { return inputs_; }
