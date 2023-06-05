@@ -14,7 +14,7 @@
 
 namespace reactor {
 
-enum ConnectionType { Normal, Delayed, Enclaved, Physical, DelayedEnclaved, PhysicalEnclaved, Plugin };
+enum ConnectionType { Normal, Delayed, Enclaved, Physical, DelayedEnclaved, PhysicalEnclaved, Plugin, Invalid };
 struct ConnectionProperties {
   ConnectionType type_ = ConnectionType::Normal;
   Duration delay_{0};

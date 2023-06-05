@@ -55,7 +55,7 @@ private:
 
 public:
   Input<int> value{"value", this}; // NOLINT
-
+  Input<int> forward{"forward", this};
   Printer(const std::string& name, Environment* env)
       : Reactor(name, env) {}
 
@@ -130,11 +130,13 @@ auto main() -> int {
   auto add_i1 = env.register_port(&add.i1);
   auto add_i2 = env.register_port(&add.i2);
   auto add_sum = env.register_port(&add.sum);
+  auto p_add_forward = env.register_port(&p_add.forward);
   auto p_add_value = env.register_port(&p_add.value);
 
   env.draw_connection(counter1_count, add_i1, ConnectionProperties{});
   env.draw_connection(counter2_count, add_i2, ConnectionProperties{});
-  env.draw_connection(add_sum, p_add_value, ConnectionProperties{ConnectionType::Delayed, 10s, nullptr});
+  env.draw_connection(add_sum, p_add_forward, ConnectionProperties{ConnectionType::Delayed, 10s, nullptr});
+  env.draw_connection(p_add_forward, p_add_value, ConnectionProperties{ConnectionType::Delayed, 5s, nullptr});
 
   std::cout << "optimize" << std::endl << std::flush;
   env.optimize();
