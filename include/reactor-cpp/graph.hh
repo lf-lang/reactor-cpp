@@ -26,11 +26,15 @@ private:
   using map_key = std::pair<E, P>;
   struct map_key_compare {
     // TODO: check this maybe will cause some very funny TM problems later
-    auto operator()(const map_key& l, const map_key& r) const -> bool { return l.first < r.first; }
+    auto operator()(const map_key& left_site, const map_key& right_site) const -> bool {
+      return left_site.first < right_site.first;
+    }
   };
 
 public:
   PropertyGraph() noexcept = default;
+  PropertyGraph(const PropertyGraph& graph) noexcept: graph_(graph.graph_) {}
+  PropertyGraph(const PropertyGraph&& graph)  noexcept : graph_(std::move(graph.graph_)) {}
   ~PropertyGraph() noexcept = default;
 
   // adds a single edge too the graph structure

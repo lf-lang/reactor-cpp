@@ -28,7 +28,7 @@ class BaseAction : public ReactorElement {
 private:
   std::set<Reaction*> triggers_{};
   std::set<Reaction*> schedulers_{};
-  const Duration min_delay_{};
+  const Duration min_delay_{0};
   const bool logical_{true};
   bool present_{false};
 
@@ -153,8 +153,8 @@ public:
 
 class Timer : public BaseAction {
 private:
-  const Duration offset_{};
-  const Duration period_{};
+  const Duration offset_{0};
+  const Duration period_{0};
 
   void cleanup() noexcept final;
 
