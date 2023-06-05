@@ -33,8 +33,10 @@ private:
 
 public:
   PropertyGraph() noexcept = default;
-  PropertyGraph(const PropertyGraph& graph) noexcept: graph_(graph.graph_) {}
-  PropertyGraph(const PropertyGraph&& graph)  noexcept : graph_(std::move(graph.graph_)) {}
+  PropertyGraph(const PropertyGraph& graph) noexcept
+      : graph_(graph.graph_) {}
+  PropertyGraph(const PropertyGraph&& graph) noexcept
+      : graph_(std::move(graph.graph_)) {}
   ~PropertyGraph() noexcept = default;
 
   // adds a single edge too the graph structure
