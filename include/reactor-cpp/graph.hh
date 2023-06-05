@@ -39,7 +39,7 @@ public:
       : graph_(std::move(graph.graph_)) {}
   ~PropertyGraph() noexcept = default;
 
-  auto operator=(const PropertyGraph& other) noexcept -> PropertyGraph& {
+  auto operator=(PropertyGraph other) noexcept -> PropertyGraph& {
     graph_ = other.graph_;
     return *this;
   }
