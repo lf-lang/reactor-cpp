@@ -52,7 +52,7 @@ template <class T> void Port<T>::set(const ImmutableValuePtr<T>& value_ptr) {
   // we insert here everything in batches to reduce how often the env needs to be loaded from main memory
   // when every port would insert itself individually
   if (!outward_bindings_.empty()) {
-    scheduler->set_ports<reactor::Port<T>>(std::end(outward_bindings_), std::end(outward_bindings_));
+    scheduler->template set_ports<reactor::Port<T>>(std::end(outward_bindings_), std::end(outward_bindings_));
   }
   if (!triggers().empty()) {
     scheduler->set_triggers(std::begin(triggers()), std::end(triggers()));

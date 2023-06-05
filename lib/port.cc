@@ -12,7 +12,6 @@
 #include "reactor-cpp/connection.hh"
 #include "reactor-cpp/environment.hh"
 #include "reactor-cpp/reaction.hh"
-#include "reactor-cpp/statistics.hh"
 
 namespace reactor {
 

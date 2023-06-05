@@ -17,10 +17,8 @@
 
 #include "reactor-cpp/action.hh"
 #include "reactor-cpp/assert.hh"
-#include "reactor-cpp/logging.hh"
 #include "reactor-cpp/port.hh"
 #include "reactor-cpp/reaction.hh"
-#include "reactor-cpp/statistics.hh"
 #include "reactor-cpp/time.hh"
 
 namespace reactor {
