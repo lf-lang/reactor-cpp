@@ -47,7 +47,7 @@ public:
     port->register_set_callback(upstream_set_callback());
   }
 
-  virtual void bind_downstream_ports(const std::vector<BasePort*> ports) {
+  virtual void bind_downstream_ports(const std::vector<BasePort*>& ports) {
     // with C++23 we can use insert_rage here
     for (auto* port : ports) {
       reactor_assert(this->downstream_ports_.insert(static_cast<Port<T>*>(port)).second);
@@ -199,7 +199,7 @@ public:
       // of the upstream port. Hence, we can retrieve the current tag directly
       // without locking.
       auto tag = Tag::from_logical_time(scheduler->logical_time()).delay(this->min_delay());
-      bool result{false};
+      bool result{false}; // NOLINT
       if constexpr (std::is_same<T, void>::value) {
         result = this->schedule_at(tag);
       } else {
