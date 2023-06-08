@@ -19,7 +19,6 @@
 #include "graph.hh"
 #include "reactor-cpp/logging.hh"
 #include "reactor-cpp/time.hh"
-//#include "reactor.hh"
 #include "scheduler.hh"
 
 namespace reactor {

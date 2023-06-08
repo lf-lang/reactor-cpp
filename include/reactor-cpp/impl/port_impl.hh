@@ -4,6 +4,7 @@
  *
  * Authors:
  *   Christian Menard
+ *   Tassilo Tannebeger
  */
 
 #ifndef REACTOR_CPP_IMPL_PORT_IMPL_HH
