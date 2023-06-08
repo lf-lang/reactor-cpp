@@ -14,33 +14,33 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-latest, windows-latest, macos-latest ]
+        os: [ubuntu-latest, windows-latest, macos-latest]
 
     steps:
-      - uses: actions/checkout@v1
-      - name: Install clang-tidy
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y clang-tidy
-        if: matrix.os == 'ubuntu-latest'
-      - name: configure
-        run: |
-          mkdir build
-          cd build
-          cmake ..
-      - name: build the library
-        run: cmake --build build
-      - name: build examples
-        run:
-          cmake --build build --target examples
-      - name: build with tracing enabled
-        run: |
-          sudo apt-get install -y liblttng-ust-dev
-          cd build
-          cmake -DREACTOR_CPP_TRACE=ON ..
-          cd ..
-          cmake --build build --target examples
-        if: matrix.os == 'ubuntu-latest'
+    - uses: actions/checkout@v1
+    - name: Install clang-tidy
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y clang-tidy
+      if: matrix.os == 'ubuntu-latest'
+    - name: configure
+      run: |
+        mkdir build
+        cd build
+        cmake ..
+    - name: build the library
+      run: cmake --build build
+    - name: build examples
+      run:
+        cmake --build build --target examples
+    - name: build with tracing enabled
+      run: |
+        sudo apt-get install -y liblttng-ust-dev
+        cd build
+        cmake -DREACTOR_CPP_TRACE=ON ..
+        cd ..
+        cmake --build build --target examples
+      if: matrix.os == 'ubuntu-latest'
 
   lf-tests-pull-request:
     uses: lf-lang/lingua-franca/.github/workflows/cpp-tests.yml@master

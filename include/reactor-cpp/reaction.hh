@@ -23,8 +23,8 @@ private:
   std::set<BaseAction*> action_triggers_{};
   std::set<BaseAction*> scheduable_actions_{};
   std::set<BasePort*> port_trigger_{};
-  std::set<BasePort*> antidependencies_; // TODO: discuss
-  std::set<BasePort*> dependencies_;     // TODO: discuss
+  std::set<BasePort*> antidependencies_;
+  std::set<BasePort*> dependencies_;
 
   const int priority_{0};
   unsigned int index_{0};

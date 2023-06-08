@@ -31,12 +31,14 @@ private:
   std::set<Reactor*> reactors_{};
   std::set<std::unique_ptr<BaseAction>> connections_{};
 
-public:
+protected:
   void register_action(BaseAction* action);
   void register_input(BasePort* port);
   void register_output(BasePort* port);
   void register_reaction(Reaction* reaction);
   void register_reactor(Reactor* reactor);
+
+public:
   void register_connection(BaseAction* connection);
 
   Reactor(const std::string& name, Reactor* container);
@@ -62,6 +64,7 @@ public:
   [[nodiscard]] auto get_elapsed_physical_time() const noexcept -> Duration;
 
   friend ReactorElement;
+  friend BasePort;
 };
 
 } // namespace reactor

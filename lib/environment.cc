@@ -269,15 +269,11 @@ void Environment::optimize() {
       for (auto element : path) {
         auto property = element.first;
 
-        // TODO: make a big fat fucking table of what are valid transisions and which are not
-        // so we only need to make a look up into this table and can save us this ass cancer
-
         auto return_type =
             construction_table[std::pair<ConnectionType, ConnectionType>(merged_properties.type_, property.type_)];
 
+        // invalid will split the connections
         if (return_type == Invalid) {
-          // splitting the connection
-
           // first add connection until this point
           optimized_graph_.add_edge(current_source, element.second, merged_properties);
 

@@ -192,7 +192,6 @@ public:
     return cv_schedule_.wait_until(lock, time_point, predicate);
   };
 
-  void set_port(BasePort* port);
   void set_triggers(std::set<Reaction*>::iterator start, std::set<Reaction*>::iterator end) noexcept {
     auto& pool = triggered_reactions_[Worker::current_worker_id()];
     pool.insert(std::begin(pool), start, end);

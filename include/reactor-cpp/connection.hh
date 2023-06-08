@@ -21,6 +21,8 @@
 #include "time.hh"
 #include "time_barrier.hh"
 
+#define _U_ __attribute__((unused)) // NOLINT macro to surpress unused warning by clang
+
 namespace reactor {
 
 template <class T> class Connection : public Action<T> {
@@ -125,21 +127,18 @@ public:
       , log_{this->fqn()} {};
 
   inline auto upstream_set_callback() noexcept -> PortCallback override {
-    return [this](const BasePort& port) {
-      // We know that port must be of type Port<T>
-      auto& typed_port = reinterpret_cast<const Port<T>&>(port); // NOLINT
-      const auto* scheduler = port.environment()->scheduler();
+    return [&](const BasePort& port) { // NOLINT unused this
       // This callback will be called from a reaction executing in the context
       // of the upstream port. Hence, we can retrieve the current tag directly
       // without locking.
-      auto tag = Tag::from_logical_time(scheduler->logical_time());
-      bool result{false}; // NOLINT
       if constexpr (std::is_same<T, void>::value) {
-        result = this->schedule_at(tag);
+        reactor_assert(this->schedule_at(Tag::from_logical_time(port.environment()->scheduler()->logical_time())));
       } else {
-        result = this->schedule_at(std::move(typed_port.get()), tag);
+        // We know that port must be of type Port<T>
+        auto& typed_port = reinterpret_cast<const Port<T>&>(port); // NOLINT
+        reactor_assert(this->schedule_at(std::move(typed_port.get()),
+                                         Tag::from_logical_time(port.environment()->scheduler()->logical_time())));
       }
-      reactor_assert(result);
     };
   }
 
@@ -191,21 +190,20 @@ public:
       : EnclaveConnection<T>(name, enclave, delay) {}
 
   inline auto upstream_set_callback() noexcept -> PortCallback override {
-    return [this](const BasePort& port) {
-      // We know that port must be of type Port<T>
-      auto& typed_port = reinterpret_cast<const Port<T>&>(port); // NOLINT
-      const auto* scheduler = port.environment()->scheduler();
+    return [&](const BasePort& port) { // NOLINT unused this
       // This callback will be called from a reaction executing in the context
       // of the upstream port. Hence, we can retrieve the current tag directly
       // without locking.
-      auto tag = Tag::from_logical_time(scheduler->logical_time()).delay(this->min_delay());
-      bool result{false}; // NOLINT
       if constexpr (std::is_same<T, void>::value) {
-        result = this->schedule_at(tag);
+        reactor_assert(this->schedule_at(
+            Tag::from_logical_time(port.environment()->scheduler()->logical_time()).delay(this->min_delay())));
       } else {
-        result = this->schedule_at(std::move(typed_port.get()), tag);
+        // We know that port must be of type Port<T>
+        auto& typed_port = reinterpret_cast<const Port<T>&>(port); // NOLINT
+        reactor_assert(this->schedule_at(
+            std::move(typed_port.get()),
+            Tag::from_logical_time(port.environment()->scheduler()->logical_time()).delay(this->min_delay())));
       }
-      reactor_assert(result);
     };
   }
 

@@ -9,4 +9,4 @@
 #define TRACEPOINT_CREATE_PROBES
 #define TRACEPOINT_DEFINE
 
-#include "reactor-cpp/trace.hh"
+#include "reactor-cpp/trace.hpp"

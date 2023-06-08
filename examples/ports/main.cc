@@ -54,8 +54,8 @@ private:
   Reaction r_value{"r_value", 1, this, [this]() { on_value(); }};
 
 public:
-  Input<int> value{"value", this}; // NOLINT
-  Input<int> forward{"forward", this};
+  Input<int> value{"value", this};     // NOLINT
+  Input<int> forward{"forward", this}; // NOLINT
   Printer(const std::string& name, Environment* env)
       : Reactor(name, env) {}
 

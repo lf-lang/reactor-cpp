@@ -21,7 +21,7 @@
 #include "reactor-cpp/reaction.hh"
 #include "reactor-cpp/statistics.hh"
 #include "reactor-cpp/time_barrier.hh"
-#include "reactor-cpp/trace.hh"
+#include "reactor-cpp/trace.hpp"
 
 namespace reactor {
 
@@ -490,19 +490,6 @@ auto Scheduler::schedule_empty_async_at(const Tag& tag) -> bool {
   notify();
   log_.debug() << "try to schedule empty event at tag " << tag << " -> succeeded";
   return true;
-}
-
-void Scheduler::set_port(BasePort* port) {
-  log_.debug() << "Set port " << port->fqn();
-  Statistics::increment_set_ports();
-
-  // We do not check here if port is already in the list. This means clean()
-  // could be called multiple times for a single port. However, calling
-  // clean() multiple time is not harmful and more efficient then checking if
-  set_ports_[Worker::current_worker_id()].push_back(port);
-
-  // recursively search for triggered reactions
-  // set_port_helper(port);
 }
 
 void Scheduler::stop() {

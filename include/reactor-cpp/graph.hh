@@ -49,9 +49,9 @@ public:
     return *this;
   }
 
-  // adds a single edge too the graph structure
+  // adds a single edge to the graph structure
   void add_edge(E source, E destination, P properties) noexcept {
-    if (!graph_.contains(source)) {
+    if (graph_.find(source) != std::end(graph_)) {
       std::vector<std::pair<P, E>> edges{std::make_pair(properties, destination)};
       graph_[source] = edges;
     } else {

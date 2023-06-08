@@ -172,7 +172,7 @@ auto main() -> int {
   engine_control.check.set_inward_binding(&right_pedal.check);
   engine_control.torque.set_inward_binding(&engine.torque);
 
-  env.export_dependency_graph("graph.dot");
+  // TODO: env.export_dependency_graph("graph.dot");
 
   auto thread = env.startup();
   thread.join();
