@@ -21,8 +21,6 @@
 #include "time.hh"
 #include "time_barrier.hh"
 
-#define _U_ __attribute__((unused)) // NOLINT macro to surpress unused warning by clang
-
 namespace reactor {
 
 template <class T> class Connection : public Action<T> {
