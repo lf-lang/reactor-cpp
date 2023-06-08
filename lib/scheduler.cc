@@ -25,9 +25,6 @@
 
 namespace reactor {
 
-// NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
-thread_local const Worker* Worker::current_worker = nullptr;
-
 Worker::Worker(Worker&& work) // NOLINT(performance-noexcept-move-constructor)
     : scheduler_{work.scheduler_}
     , identity_{work.identity_}

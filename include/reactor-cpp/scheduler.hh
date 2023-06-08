@@ -44,7 +44,7 @@ private:
   log::NamedLogger log_;
 
   // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
-  static thread_local const Worker* current_worker;
+  static thread_local inline const Worker* current_worker{nullptr};
 
   void work() const;
   void execute_reaction(Reaction* reaction) const;
