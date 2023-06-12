@@ -27,8 +27,10 @@ enum class PortType { Input, Output, Delay };
 
 class BasePort : public ReactorElement {
 private:
+  // type of the port input/output
   const PortType type_;
-  std::size_t tag_{0};
+  // index of the port in the environment
+  std::size_t index_{0};
 
   // triggers and dependencies
   std::set<Reaction*> dependencies_{};
@@ -40,14 +42,15 @@ private:
   PortCallback clean_callback_{nullptr};
 
 protected:
+  // graph implementation this needs to accessed frequently by Port<T>
+  BasePort* inward_binding_{nullptr};
+  std::set<BasePort*> outward_bindings_{};
+
   bool present_{false}; // NOLINT cppcoreguidelines-non-private-member-variables-in-classes
 
   BasePort(const std::string& name, PortType type, Reactor* container)
       : ReactorElement(name, match_port_enum(type), container)
-      , type_(type) {
-
-    // environment()->register_port(this);
-  }
+      , type_(type) {}
 
   void register_dependency(Reaction* reaction, bool is_trigger) noexcept;
   void register_antidependency(Reaction* reaction) noexcept;
@@ -91,31 +94,39 @@ public:
   [[nodiscard]] inline auto triggers() const noexcept -> const auto& { return triggers_; }
   [[nodiscard]] inline auto dependencies() const noexcept -> const auto& { return dependencies_; }
 
-  [[nodiscard]] virtual auto is_present() const noexcept -> bool = 0;
-  [[nodiscard]] inline auto get_tag() const noexcept -> std::size_t { return tag_; };
-  [[nodiscard]] virtual auto untyped_inward_binding() const noexcept -> BasePort* = 0;
-  [[nodiscard]] virtual auto has_inward_binding() const noexcept -> bool = 0;
+  [[nodiscard]] inline auto untyped_inward_binding() const noexcept -> BasePort* { return inward_binding_; }
+  [[nodiscard]] inline auto has_inward_binding() const noexcept -> bool { return inward_binding_ != nullptr; }
+  [[nodiscard]] inline auto has_outward_bindings() const noexcept -> bool { return !outward_bindings_.empty(); }
+
   [[nodiscard]] inline auto anti_dependencies() const noexcept -> std::set<Reaction*> { return anti_dependencies_; }
 
-  inline void set_tag(std::size_t tag) noexcept { tag_ = tag; }
+  [[nodiscard]] inline auto get_index() const noexcept -> std::size_t { return index_; };
+  inline void set_index(std::size_t index) noexcept { index_ = index; }
 
   virtual void pull_connection(const ConnectionProperties& properties, const std::vector<BasePort*>& downstreams) = 0;
+
+  [[nodiscard]] inline auto is_present() const noexcept -> bool {
+    if (has_inward_binding()) {
+      return inward_binding_->is_present();
+    }
+    return present_;
+  };
+
+  void set_inward_binding(BasePort* port) noexcept { inward_binding_ = port; }
+
+  void add_outward_binding(BasePort* port) noexcept {
+    outward_bindings_.insert(port); // NOLINT
+  }
 
   void register_set_callback(const PortCallback& callback);
   void register_clean_callback(const PortCallback& callback);
 
   friend class Reaction;
   friend class Scheduler;
-  virtual void set_inward_binding(BasePort* port) noexcept = 0;
-  virtual void add_outward_binding(BasePort* port) noexcept = 0;
 };
 
 template <class T> class Port : public BasePort {
 private:
-  // graph
-  Port<T>* inward_binding_{nullptr};
-  std::set<Port<T>*> outward_bindings_{};
-
   // stored value
   ImmutableValuePtr<T> value_ptr_{nullptr};
 
@@ -131,25 +142,8 @@ public:
   Port(const std::string& name, PortType type, Reactor* container)
       : BasePort(name, type, container) {}
 
-  void set_inward_binding(BasePort* port) noexcept override { inward_binding_ = static_cast<Port<T>*>(port); }
-
-  void add_outward_binding(BasePort* port) noexcept override {
-    outward_bindings_.insert(static_cast<Port<T>*>(port)); // NOLINT
-  }
-
   [[nodiscard]] auto typed_inward_binding() const noexcept -> Port<T>*;
   [[nodiscard]] auto typed_outward_bindings() const noexcept -> const std::set<Port<T>*>&;
-
-  [[nodiscard]] inline auto is_present() const noexcept -> bool override {
-    if (has_inward_binding()) {
-      return inward_binding_->is_present();
-    }
-    return present_;
-  };
-
-  [[nodiscard]] inline auto untyped_inward_binding() const noexcept -> BasePort* override { return inward_binding_; }
-  [[nodiscard]] inline auto has_inward_binding() const noexcept -> bool override { return inward_binding_ != nullptr; }
-  [[nodiscard]] inline auto has_outward_bindings() const noexcept -> bool { return !outward_bindings_.empty(); }
 
   virtual void set(const ImmutableValuePtr<T>& value_ptr);
   void set(MutableValuePtr<T>&& value_ptr) { set(ImmutableValuePtr<T>(std::forward<MutableValuePtr<T>>(value_ptr))); }
@@ -168,10 +162,6 @@ public:
 
 template <> class Port<void> : public BasePort {
 private:
-  // graph
-  Port<void>* inward_binding_{nullptr};
-  std::set<Port<void>*> outward_bindings_{};
-
   void cleanup() noexcept final {
     present_ = false;
     invoke_clean_callback();
@@ -182,25 +172,6 @@ public:
 
   Port(const std::string& name, PortType type, Reactor* container)
       : BasePort(name, type, container) {}
-
-  void set_inward_binding(BasePort* port) noexcept override {
-    inward_binding_ = static_cast<Port<void>*>(port); // NOLINT
-  }
-
-  void add_outward_binding(BasePort* port) noexcept override {
-    outward_bindings_.insert(static_cast<Port<void>*>(port)); // NOLINT
-  }
-
-  [[nodiscard]] inline auto is_present() const noexcept -> bool override {
-    if (has_inward_binding()) {
-      return inward_binding_->is_present();
-    }
-    return present_;
-  };
-
-  [[nodiscard]] inline auto untyped_inward_binding() const noexcept -> BasePort* override { return inward_binding_; }
-  [[nodiscard]] inline auto has_inward_binding() const noexcept -> bool override { return inward_binding_ != nullptr; }
-  [[nodiscard]] inline auto has_outward_bindings() const noexcept -> bool { return !outward_bindings_.empty(); }
 
   [[nodiscard]] auto typed_inward_binding() const noexcept -> Port<void>*;
   [[nodiscard]] auto typed_outward_bindings() const noexcept -> const std::set<Port<void>*>&;

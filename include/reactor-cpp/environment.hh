@@ -30,8 +30,6 @@ constexpr bool default_fast_fwd_execution = false;
 
 enum class Phase { Construction = 0, Assembly = 1, Startup = 2, Execution = 3, Shutdown = 4, Deconstruction = 5 };
 
-// ok this now slowly gets complicated the first indicates which type of component it is the second
-// tells us the index in the component bucket
 using GraphElement = std::size_t;
 
 class Environment {
@@ -62,14 +60,14 @@ private:
   // port component bucket
   std::vector<class BasePort*> ports_{};
 
-  /// Set of actions that act as an input to the reactor program in this environment
+  // Set of actions that act as an input to the reactor program in this environment
   std::set<BaseAction*> input_actions_{};
 
-  /// The environment containing this environment. nullptr if this is the top environment
+  // The environment containing this environment. nullptr if this is the top environment
   Environment* containing_environment_{nullptr};
-  /// Set of all environments contained by this environment
+  // Set of all environments contained by this environment
   std::set<Environment*> contained_environments_{};
-  /// Pointer to the top level environment
+  // Pointer to the top level environment
   Environment* top_environment_{nullptr};
 
   // scheduler used for execution

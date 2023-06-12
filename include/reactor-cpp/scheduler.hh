@@ -165,7 +165,6 @@ private:
   auto schedule_ready_reactions() -> bool;
   void next();
   void terminate_all_workers();
-  void set_port_helper(BasePort* port);
 
   void advance_logical_time_to(const Tag& tag);
 
@@ -197,8 +196,7 @@ public:
     pool.insert(std::begin(pool), start, end);
   }
 
-  template <class T>
-  void set_ports(typename std::set<T*>::iterator start, typename std::set<T*>::iterator end) noexcept {
+  void set_ports(typename std::set<BasePort*>::iterator start, typename std::set<BasePort*>::iterator end) noexcept {
     auto& pool = set_ports_[Worker::current_worker_id()];
     pool.insert(std::begin(pool), start, end);
   }

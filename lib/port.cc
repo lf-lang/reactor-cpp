@@ -75,7 +75,7 @@ void Port<void>::set() {
   this->invoke_set_callback();
 
   for (auto* const outward : outward_bindings_) {
-    outward->set();
+    static_cast<Port<void>*>(outward)->set(); // NOLINT dynamic_cast is performance killer
   };
 
   auto* scheduler = environment()->scheduler();
@@ -83,7 +83,7 @@ void Port<void>::set() {
   // we insert here everything in batches to reduce how often the env needs to be loaded from main memory
   // when every port would insert itself individually
   if (!outward_bindings_.empty()) {
-    scheduler->set_ports<reactor::Port<void>>(std::end(outward_bindings_), std::end(outward_bindings_));
+    scheduler->set_ports(std::end(outward_bindings_), std::end(outward_bindings_));
   }
   if (!triggers().empty()) {
     scheduler->set_triggers(std::begin(triggers()), std::end(triggers()));

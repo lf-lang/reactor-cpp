@@ -31,7 +31,7 @@ template <class T> [[maybe_unused]] auto Port<T>::typed_outward_bindings() const
 template <class T> auto Port<T>::typed_inward_binding() const noexcept -> Port<T>* {
   // we can use a static cast here since we know that this port is always
   // connected with another Port<T>.
-  return inward_binding_;
+  return static_cast<Port<T>*>(inward_binding_);
 }
 
 template <class T> void Port<T>::set(const ImmutableValuePtr<T>& value_ptr) {
@@ -45,7 +45,7 @@ template <class T> void Port<T>::set(const ImmutableValuePtr<T>& value_ptr) {
   this->invoke_set_callback();
 
   for (auto* const outward : outward_bindings_) {
-    outward->set(value_ptr);
+    static_cast<Port<T>*>(outward)->set(value_ptr);
   };
 
   auto* scheduler = environment()->scheduler();
@@ -53,7 +53,7 @@ template <class T> void Port<T>::set(const ImmutableValuePtr<T>& value_ptr) {
   // we insert here everything in batches to reduce how often the env needs to be loaded from main memory
   // when every port would insert itself individually
   if (!outward_bindings_.empty()) {
-    scheduler->template set_ports<reactor::Port<T>>(std::end(outward_bindings_), std::end(outward_bindings_));
+    scheduler->set_ports(std::end(outward_bindings_), std::end(outward_bindings_));
   }
   if (!triggers().empty()) {
     scheduler->set_triggers(std::begin(triggers()), std::end(triggers()));

@@ -3,6 +3,7 @@
  * All rights reserved.
  *
  * Authors:
+ *   Tassilo Tanneberger
  *   Christian Menard
  */
 

@@ -133,10 +133,10 @@ void Environment::draw_connection(std::size_t source, std::size_t sink, Connecti
 }
 
 auto Environment::register_port(BasePort* port) noexcept -> std::size_t {
-  auto tag = ports_.size();
-  port->set_tag(tag);
+  auto index = ports_.size();
+  port->set_index(index);
   ports_.push_back(port);
-  return tag;
+  return index;
 }
 
 void recursive_assemble(Reactor* container) { // NOLINT
@@ -167,7 +167,7 @@ void Environment::assemble() {
         ports_[source_port]->add_outward_binding(ports_[destination_port]);
         std::cout << "from: " << ports_[source_port]->container()->name() << "." << ports_[source_port]->name()
                   << " --> to: " << ports_[destination_port]->container()->name() << "."
-                  << ports_[destination_port]->name() << std::endl;
+                  << ports_[destination_port]->name() << std::endl; // TODO: proper logging
       }
     } else {
       std::vector<BasePort*> pointers;
