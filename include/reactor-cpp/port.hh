@@ -43,7 +43,7 @@ private:
 
 protected:
   // graph implementation this needs to accessed frequently by Port<T>
-  BasePort* inward_binding_{nullptr}; // NOLINT protected visibility is fine used by Port<T> frequently
+  BasePort* inward_binding_{nullptr};      // NOLINT protected visibility is fine used by Port<T> frequently
   std::set<BasePort*> outward_bindings_{}; // NOLINT
 
   bool present_{false}; // NOLINT cppcoreguidelines-non-private-member-variables-in-classes

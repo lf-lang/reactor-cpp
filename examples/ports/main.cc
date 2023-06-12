@@ -138,9 +138,6 @@ auto main() -> int {
   env.draw_connection(add_sum, p_add_forward, ConnectionProperties{ConnectionType::Delayed, 10s, nullptr});
   env.draw_connection(p_add_forward, p_add_value, ConnectionProperties{ConnectionType::Delayed, 5s, nullptr});
 
-  std::cout << "optimize" << std::endl << std::flush;
-  env.optimize();
-
   std::cout << "assemble" << std::endl << std::flush;
   env.assemble();
 
