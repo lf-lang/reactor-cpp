@@ -55,7 +55,8 @@ void Environment::register_reactor(Reactor* reactor) {
 
 void Environment::register_input_action(BaseAction* action) {
   reactor_assert(action != nullptr);
-  validate(this->phase() == Phase::Construction, "Input actions may only be registered during construction phase!");
+  validate(this->phase() == Phase::Construction || this->phase() == Phase::Assembly,
+           "Input actions may only be registered during construction or assembly phase!");
   [[maybe_unused]] bool result = input_actions_.insert(action).second;
   reactor_assert(result);
   run_forever_ = true;
