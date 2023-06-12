@@ -154,6 +154,9 @@ void Environment::assemble() {
     recursive_assemble(reactor);
   }
 
+  // optimize the graph
+  this->optimize();
+
   auto graph = optimized_graph_.get_edges();
   // this generates the port graph
   for (auto const& [source, sinks] : graph) {
