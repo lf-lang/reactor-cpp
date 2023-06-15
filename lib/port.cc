@@ -92,6 +92,13 @@ void Port<void>::set() {
 
 void Port<void>::pull_connection(const ConnectionProperties& properties, const std::vector<BasePort*>& downstream) {
   Connection<void>* connection = nullptr;
+
+  if (downstream.empty()) {
+    return;
+  }
+
+  Environment* enclave = downstream[0]->environment();
+
   if (properties.type_ == ConnectionType::Delayed) {
     connection = new DelayedConnection<void>(this->name() + "_delayed_connection", this->container(), // NOLINT
                                              properties.delay_);                                      // NOLINT
@@ -101,15 +108,14 @@ void Port<void>::pull_connection(const ConnectionProperties& properties, const s
                                               properties.delay_);                                       // NOLINT
   }
   if (properties.type_ == ConnectionType::Enclaved) {
-    connection = new EnclaveConnection<void>(this->name() + "_enclave_connection", properties.enclave_); // NOLINT
+    connection = new EnclaveConnection<void>(this->name() + "_enclave_connection", enclave); // NOLINT
   }
   if (properties.type_ == ConnectionType::DelayedEnclaved) {
-    connection = new DelayedEnclaveConnection<void>(this->name() + "_enclave_connection", properties.enclave_, // NOLINT
-                                                    properties.delay_);                                        // NOLINT
+    connection = new DelayedEnclaveConnection<void>(this->name() + "_enclave_connection", enclave, // NOLINT
+                                                    properties.delay_);                            // NOLINT
   }
   if (properties.type_ == ConnectionType::PhysicalEnclaved) {
-    connection =
-        new PhysicalEnclaveConnection<void>(this->name() + "_enclave_connection", properties.enclave_); // NOLINT
+    connection = new PhysicalEnclaveConnection<void>(this->name() + "_enclave_connection", enclave); // NOLINT
   }
 
   if (connection != nullptr) {

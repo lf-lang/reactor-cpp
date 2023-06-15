@@ -132,6 +132,10 @@ void Environment::draw_connection(std::size_t source, std::size_t sink, Connecti
   graph_.add_edge(source, sink, properties);
 }
 
+void Environment::draw_connection(const BasePort& source, const BasePort& sink, ConnectionProperties properties) {
+  this->draw_connection(source.get_index(), sink.get_index(), properties);
+}
+
 auto Environment::register_port(BasePort* port) noexcept -> std::size_t {
   auto index = ports_.size();
   port->set_index(index);

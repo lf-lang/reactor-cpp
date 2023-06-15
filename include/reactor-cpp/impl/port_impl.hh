@@ -70,6 +70,11 @@ template <class T> auto Port<T>::get() const noexcept -> const ImmutableValuePtr
 template <class T>
 void Port<T>::pull_connection(const ConnectionProperties& properties, const std::vector<BasePort*>& downstream) {
   Connection<T>* connection = nullptr;
+  if (downstream.empty()) {
+    return;
+  }
+
+  Environment* enclave = downstream[0]->environment();
 
   // TODO: maybe turn this into a switch
   if (properties.type_ == ConnectionType::Delayed) {
