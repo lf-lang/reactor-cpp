@@ -13,6 +13,7 @@
 #include "action.hh"
 #include "connection.hh"
 #include "connection_endpoint.hh"
+#include "ros2_connection_endpoint.hh"
 #include "environment.hh"
 #include "logging.hh"
 #include "logical_time.hh"

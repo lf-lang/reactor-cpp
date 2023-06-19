@@ -14,9 +14,9 @@ namespace reactor {
 Downstream inherits from Action bec it produces event on receiver end
 */
 template <class T>
-class DownstreamEndpoint : Action<T> {
+class DownstreamEndpoint : public Action<T> {
     protected:
-        std::set<Port<T>*>  ports_ = nullptr;
+        std::set<Port<T>*> ports_;
 
         virtual void schedule_this(/*value here*/) {
             if constexpr (std::is_same<T, void>::value) {
@@ -42,11 +42,11 @@ class DownstreamEndpoint : Action<T> {
             Action<T>::setup();
 
             if constexpr (std::is_same<T, void>::value) {
-                for (auto port : this->ports_()) {
+                for (auto port : this->ports_) {
                     port->set();
                 }
             } else {
-                for (auto port : this->ports_()) {
+                for (auto port : this->ports_) {
                     port->set(std::move(this->get()));
                 }
             }
