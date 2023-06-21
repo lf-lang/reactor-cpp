@@ -1,21 +1,8 @@
-{ pkgs
-, config
-, lib
-, mkDerivation
-, jdk17_headless
-, lingua-franca-src
-}:
-let
-  # takes the first file in the jars repo which should be the relavant jar file
-  jar_path = (builtins.head (builtins.attrNames (builtins.readDir "${lingua-franca-src}/lib/jars")));
+{ lib, pkgs, stdenv, fetchzip, jdk17_headless, lingua-franca-src}:
 
-  # filter out name
-  extracted_name = (builtins.head (lib.reverseList (builtins.split "/" jar_path)));
-
-in
-mkDerivation {
+stdenv.mkDerivation rec {
   pname = "lfc";
-  version = "0.1.0";
+  version = "0.4.0";
 
   src = lingua-franca-src;
 
@@ -24,13 +11,11 @@ mkDerivation {
   _JAVA_HOME = "${jdk17_headless}/";
 
   postPatch = ''
+    ls
+    ls bin
     substituteInPlace bin/lfc \
       --replace 'base=`dirname $(dirname ''${abs_path})`' "base='$out'" \
-      --replace "run_lfc_with_args" "${jdk17_headless}/bin/java -jar $out/lib/jars/${extracted_name}"
-  '';
-
-  buildPhase = ''
-    echo "SKIPPING BUILDPHASE FOR LFC"
+      --replace "run_lfc_with_args" "${jdk17_headless}/bin/java -jar $out/lib/jars/org.lflang.lfc-${version}-all.jar"
   '';
 
   installPhase = ''
@@ -46,6 +31,7 @@ mkDerivation {
       embedded code to distributed cloud and edge applications.
     '';
     homepage = "https://github.com/lf-lang/lingua-franca";
+    sourceProvenance = with sourceTypes; [ binaryBytecode ];
     license = licenses.bsd2;
     platforms = platforms.linux;
     maintainers = with maintainers; [ revol-xut ];

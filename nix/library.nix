@@ -10,7 +10,6 @@ let
   # lingua-franca compiler package
   lingua-franca = pkgs.callPackage ./lfc.nix {
     lingua-franca-src = lingua-franca-src;
-    mkDerivation = stdenv.mkDerivation;
   };
 
   # reactor-cpp runtime package 
@@ -73,22 +72,22 @@ let
         src = ./.;
 
         # libgmp-dev is only required here because there is some special snowflake benchmark
-        buildInputs = with pkgs; [ lingua-franca which cmake git boost gmp ] ++ [ compiler ];
+        buildInputs = with pkgs; [ which cmake git boost gmp jdk17_headless gradle ] ++ [ compiler ];
 
         configurePhase = ''
           echo "+++++ CURRENT TEST: ${test_file} +++++";
         '';
 
         buildPhase = ''
-          ${lingua-franca}/bin/lfc --external-runtime-path ${cpp-runtime}/ --output ./ ${test_file}
+          ${lingua-franca}/bin/lfc --no-compile --external-runtime-path ${cpp-runtime}/ --output-path ./ ${test_file}
         '';
 
         installPhase = ''
           mkdir -p $out/bin
           mkdir -p $out/debug
           cp -r ./src-gen/* $out/debug/
-          cp -r ./bin/${file_name} $out/bin/${file_name}-${compiler.pname}
-          cp -r ./bin/${file_name} $out/bin/${package_name}
+          #cp -r ./bin/${file_name} $out/bin/${file_name}-${compiler.pname}
+          #cp -r ./bin/${file_name} $out/bin/${package_name}
         '';
       };
     });

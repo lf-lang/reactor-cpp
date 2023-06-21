@@ -129,7 +129,13 @@ auto Environment::startup(const TimePoint& start_time) -> std::thread {
   });
 }
 void Environment::draw_connection(std::size_t source, std::size_t sink, ConnectionProperties properties) {
-  graph_.add_edge(source, sink, properties);
+  reactor::assert_phase(this, Phase::Assembly);
+
+  if (top_environment_ == nullptr) {
+    graph_.add_edge(source, sink, properties);
+  } else {
+    top_environment_->draw_connection(source, sink, properties);
+  }
 }
 
 void Environment::draw_connection(const BasePort& source, const BasePort& sink, ConnectionProperties properties) {

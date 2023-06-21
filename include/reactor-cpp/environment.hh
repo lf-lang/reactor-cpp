@@ -125,7 +125,6 @@ public:
 
   [[nodiscard]] auto top_level_reactors() const noexcept -> const auto& { return top_level_reactors_; }
 
-  // TODO sync with christian if we need the phases
   [[nodiscard]] auto phase() const noexcept -> Phase { return phase_; }
   [[nodiscard]] auto scheduler() const noexcept -> const Scheduler* { return &scheduler_; }
 
@@ -140,7 +139,6 @@ public:
   [[nodiscard]] auto num_workers() const noexcept -> unsigned int { return num_workers_; }
   [[nodiscard]] auto fast_fwd_execution() const noexcept -> bool { return fast_fwd_execution_; }
 
-  // TODO sync with christian if this can now be yeeted
   [[nodiscard]] auto run_forever() const noexcept -> bool { return run_forever_; }
   [[nodiscard]] auto max_reaction_index() const noexcept -> unsigned int { return max_reaction_index_; }
 

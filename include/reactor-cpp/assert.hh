@@ -74,6 +74,7 @@ template <typename E> constexpr auto extract_value(E enum_value) -> typename std
 }
 
 void assert_phase([[maybe_unused]] const ReactorElement* ptr, [[maybe_unused]] Phase phase);
+void assert_phase([[maybe_unused]] const Environment* ptr, [[maybe_unused]] Phase phase);
 
 } // namespace reactor
 
