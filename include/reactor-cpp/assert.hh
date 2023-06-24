@@ -9,6 +9,19 @@
 #ifndef REACTOR_CPP_ASSERT_HH
 #define REACTOR_CPP_ASSERT_HH
 
+#include "reactor-cpp/config.hh"
+#include "reactor-cpp/fwd.hh"
+
+#include <cassert>
+#include <sstream>
+#include <stdexcept>
+#include <string>
+
+#ifdef __linux__
+#include <execinfo.h>
+#include <unistd.h>
+#endif
+
 #ifdef REACTOR_CPP_VALIDATE
 constexpr bool runtime_validation = true;
 #else
@@ -19,18 +32,6 @@ constexpr bool runtime_validation = false;
 constexpr bool runtime_assertion = false;
 #else
 constexpr bool runtime_assertion = true;
-#endif
-
-#include "fwd.hh"
-
-#include <cassert>
-#include <sstream>
-#include <stdexcept>
-#include <string>
-
-#ifdef __linux__
-#include <execinfo.h>
-#include <unistd.h>
 #endif
 
 // NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
