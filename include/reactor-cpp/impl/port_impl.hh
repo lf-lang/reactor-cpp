@@ -86,26 +86,27 @@ void Port<T>::pull_connection(const ConnectionProperties& properties, const std:
   auto index = this->container()->number_of_connections();
 
   if (properties.type_ == ConnectionType::Delayed) {
-    connection = new DelayedConnection<T>(this->name() + "_delayed_connection_" + std::to_string(index),
-                                          this->container(),  // NOLINT
-                                          properties.delay_); // NOLINT
+    connection = new DelayedConnection<T>(this->name() + "_delayed_connection_" + std::to_string(index), // NOLINT
+                                          this->container(),                                             // NOLINT
+                                          properties.delay_);                                            // NOLINT
   }
   if (properties.type_ == ConnectionType::Physical) {
-    connection = new PhysicalConnection<T>(this->name() + "_physical_connection_" + std::to_string(index),
-                                           this->container(),  // NOLINT
-                                           properties.delay_); // NOLINT
+    connection = new PhysicalConnection<T>(this->name() + "_physical_connection_" + std::to_string(index), // NOLINT
+                                           this->container(),                                              // NOLINT
+                                           properties.delay_);                                             // NOLINT
   }
   if (properties.type_ == ConnectionType::Enclaved) {
-    connection =
+    connection =                                                                                          // NOLINT
         new EnclaveConnection<T>(this->name() + "_enclave_connection_" + std::to_string(index), enclave); // NOLINT
   }
   if (properties.type_ == ConnectionType::DelayedEnclaved) {
-    connection = new DelayedEnclaveConnection<T>(this->name() + "_delayed_enclave_connection_" + std::to_string(index),
-                                                 enclave,            // NOLINT
-                                                 properties.delay_); // NOLINT
+    connection =                                                                                               // NOLINT
+        new DelayedEnclaveConnection<T>(this->name() + "_delayed_enclave_connection_" + std::to_string(index), // NOLINT
+                                        enclave,                                                               // NOLINT
+                                        properties.delay_);                                                    // NOLINT
   }
   if (properties.type_ == ConnectionType::PhysicalEnclaved) {
-    connection = new PhysicalEnclaveConnection<T>(
+    connection = new PhysicalEnclaveConnection<T>(                                        // NOLINT
         this->name() + "_physical_enclave_connection_" + std::to_string(index), enclave); // NOLINT
   }
 

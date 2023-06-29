@@ -81,7 +81,7 @@ void Port<void>::recursive_set() {
   this->invoke_set_callback();
 
   for (auto* const outward : outward_bindings_) {
-    static_cast<Port<void>*>(outward)->recursive_set();
+    static_cast<Port<void>*>(outward)->recursive_set(); // NOLINT
   };
 
   auto* scheduler = environment()->scheduler();
