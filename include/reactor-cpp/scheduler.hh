@@ -200,6 +200,10 @@ public:
     auto& pool = set_ports_[Worker::current_worker_id()];
     pool.insert(std::begin(pool), start, end);
   }
+  void set_port(BasePort* port) noexcept {
+    auto& pool = set_ports_[Worker::current_worker_id()];
+    pool.push_back(port);
+  }
 
   [[nodiscard]] inline auto logical_time() const noexcept -> const auto& { return logical_time_; }
 

@@ -14,6 +14,7 @@ auto reactor::BaseMultiport::get_set_callback(std::size_t index) noexcept -> rea
   // tells the parent multiport that this port has been set.
   return [this, index](const BasePort& port) {
     // if the port is present, the callback was already invoked before
+
     if (!port.is_present()) {
       this->set_present(index);
     }
@@ -22,7 +23,6 @@ auto reactor::BaseMultiport::get_set_callback(std::size_t index) noexcept -> rea
 
 void reactor::BaseMultiport::set_present(std::size_t index) {
   auto calculated_index = size_.fetch_add(1, std::memory_order_relaxed);
-
   reactor_assert(calculated_index < present_ports_.size());
 
   present_ports_[calculated_index] = index;

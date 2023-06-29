@@ -39,13 +39,20 @@ template <class T> void Port<T>::set(const ImmutableValuePtr<T>& value_ptr) {
                                   "binding!");
   validate(value_ptr != nullptr, "Ports may not be set to nullptr!");
 
+  recursive_set();
+
   this->present_ = true;
   this->value_ptr_ = std::move(value_ptr);
 
+  auto* scheduler = environment()->scheduler();
+  scheduler->set_port(this);
+}
+
+template <class T> void Port<T>::recursive_set() {
   this->invoke_set_callback();
 
   for (auto* const outward : outward_bindings_) {
-    static_cast<Port<T>*>(outward)->set(value_ptr);
+    static_cast<Port<T>*>(outward)->recursive_set();
   };
 
   auto* scheduler = environment()->scheduler();
@@ -64,6 +71,7 @@ template <class T> auto Port<T>::get() const noexcept -> const ImmutableValuePtr
   if (has_inward_binding()) {
     return typed_inward_binding()->get();
   }
+
   return value_ptr_;
 }
 
@@ -75,25 +83,30 @@ void Port<T>::pull_connection(const ConnectionProperties& properties, const std:
   }
 
   Environment* enclave = downstream[0]->environment();
+  auto index = this->container()->number_of_connections();
 
-  // TODO: maybe turn this into a switch
   if (properties.type_ == ConnectionType::Delayed) {
-    connection =                                                                                              // NOLINT
-        new DelayedConnection<T>(this->name() + "_delayed_connection", this->container(), properties.delay_); // NOLINT
+    connection = new DelayedConnection<T>(this->name() + "_delayed_connection_" + std::to_string(index),
+                                          this->container(),  // NOLINT
+                                          properties.delay_); // NOLINT
   }
   if (properties.type_ == ConnectionType::Physical) {
-    connection = new PhysicalConnection<T>(this->name() + "_physical_connection", this->container(), // NOLINT
-                                           properties.delay_);                                       // NOLINT
+    connection = new PhysicalConnection<T>(this->name() + "_physical_connection_" + std::to_string(index),
+                                           this->container(),  // NOLINT
+                                           properties.delay_); // NOLINT
   }
   if (properties.type_ == ConnectionType::Enclaved) {
-    connection = new EnclaveConnection<T>(this->name() + "_enclave_connection", properties.enclave_); // NOLINT
+    connection =
+        new EnclaveConnection<T>(this->name() + "_enclave_connection_" + std::to_string(index), enclave); // NOLINT
   }
   if (properties.type_ == ConnectionType::DelayedEnclaved) {
-    connection = new DelayedEnclaveConnection<T>(this->name() + "_enclave_connection", properties.enclave_, // NOLINT
-                                                 properties.delay_);                                        // NOLINT
+    connection = new DelayedEnclaveConnection<T>(this->name() + "_delayed_enclave_connection_" + std::to_string(index),
+                                                 enclave,            // NOLINT
+                                                 properties.delay_); // NOLINT
   }
   if (properties.type_ == ConnectionType::PhysicalEnclaved) {
-    connection = new PhysicalEnclaveConnection<T>(this->name() + "_enclave_connection", properties.enclave_); // NOLINT
+    connection = new PhysicalEnclaveConnection<T>(
+        this->name() + "_physical_enclave_connection_" + std::to_string(index), enclave); // NOLINT
   }
 
   if (connection != nullptr) {

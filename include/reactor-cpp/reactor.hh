@@ -50,6 +50,7 @@ public:
   [[nodiscard]] auto inline outputs() const noexcept -> const auto& { return outputs_; }
   [[nodiscard]] auto inline reactions() const noexcept -> const auto& { return reactions_; }
   [[nodiscard]] auto inline reactors() const noexcept -> const auto& { return reactors_; }
+  [[nodiscard]] auto inline number_of_connections() const noexcept -> std::size_t { return connections_.size(); }
 
   void startup() final;
   void shutdown() final;

@@ -14,6 +14,7 @@
 
 #include "assert.hh"
 #include "enums.hh"
+#include "environment.hh"
 #include "fwd.hh"
 #include "multiport.hh"
 #include "reactor_element.hh"
@@ -23,7 +24,7 @@ namespace reactor {
 
 template <class T> class Connection;
 
-enum class PortType { Input, Output, Delay };
+enum class PortType { Input, Output };
 
 class BasePort : public ReactorElement {
 private:
@@ -47,10 +48,6 @@ protected:
   std::set<BasePort*> outward_bindings_{}; // NOLINT
 
   bool present_{false}; // NOLINT cppcoreguidelines-non-private-member-variables-in-classes
-
-  BasePort(const std::string& name, PortType type, Reactor* container)
-      : ReactorElement(name, match_port_enum(type), container)
-      , type_(type) {}
 
   void register_dependency(Reaction* reaction, bool is_trigger) noexcept;
   void register_antidependency(Reaction* reaction) noexcept;
@@ -86,6 +83,12 @@ protected:
   }
 
 public:
+  BasePort(const std::string& name, PortType type, Reactor* container)
+      : ReactorElement(name, match_port_enum(type), container)
+      , type_(type) {
+    environment()->register_port(this);
+  }
+
   [[nodiscard]] inline auto is_input() const noexcept -> bool { return type_ == PortType::Input; }
   [[nodiscard]] inline auto is_output() const noexcept -> bool { return type_ == PortType::Output; }
   [[nodiscard]] inline auto port_type() const noexcept -> PortType { return type_; }
@@ -149,6 +152,7 @@ public:
   void set(MutableValuePtr<T>&& value_ptr) { set(ImmutableValuePtr<T>(std::forward<MutableValuePtr<T>>(value_ptr))); }
   void set(const T& value) { set(make_immutable_value<T>(value)); }
   void set(T&& value) { set(make_immutable_value<T>(std::forward<T>(value))); }
+  void recursive_set();
 
   void pull_connection(const ConnectionProperties& properties, const std::vector<BasePort*>& downstream) override;
 
@@ -179,6 +183,7 @@ public:
   void pull_connection(const ConnectionProperties& properties, const std::vector<BasePort*>& downstream) override;
 
   void set();
+  void recursive_set();
 
   void startup() final {}
   void shutdown() final {}

@@ -30,7 +30,10 @@ private:
   inline void set_present(std::size_t index);
 
   // reset the list of set port indexes
-  inline void reset() noexcept { size_.store(0, std::memory_order_relaxed); }
+  inline void reset() noexcept {
+    present_ports_.resize(0);
+    size_.store(0, std::memory_order_relaxed);
+  }
 
   [[nodiscard]] auto get_set_callback(std::size_t index) noexcept -> PortCallback;
   const PortCallback clean_callback_{[this]([[maybe_unused]] const BasePort& port) { this->reset(); }};
@@ -83,7 +86,7 @@ public:
   [[nodiscard]] inline auto empty() const noexcept -> bool { return ports_.empty(); };
 
   [[nodiscard]] inline auto present_indices_unsorted() const noexcept -> std::vector<std::size_t> {
-    return std::vector<std::size_t>(std::begin(present_ports()), std::begin(present_ports()) + present_ports_size());
+    return present_ports();
   }
 
   [[nodiscard]] inline auto present_indices_sorted() const noexcept -> std::vector<std::size_t> {

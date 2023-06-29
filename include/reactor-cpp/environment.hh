@@ -110,6 +110,7 @@ public:
   // this method draw a connection between two graph elements with some properties
   void draw_connection(std::size_t source, std::size_t sink, ConnectionProperties properties);
   void draw_connection(const BasePort& source, const BasePort& sink, ConnectionProperties properties);
+  void draw_connection(const BasePort* source, const BasePort* sink, ConnectionProperties properties);
 
   void insert_reactor(Reactor* reactor);
   void insert_input_action(BaseAction* action);

@@ -70,12 +70,18 @@ void Port<void>::set() {
   validate(!has_inward_binding(), "set() may only be called on ports that do not have an inward "
                                   "binding!");
 
-  this->present_ = true;
+  recursive_set();
 
+  this->present_ = true;
+  auto* scheduler = environment()->scheduler();
+  scheduler->set_port(this);
+}
+
+void Port<void>::recursive_set() {
   this->invoke_set_callback();
 
   for (auto* const outward : outward_bindings_) {
-    static_cast<Port<void>*>(outward)->set(); // NOLINT dynamic_cast is performance killer
+    static_cast<Port<void>*>(outward)->recursive_set();
   };
 
   auto* scheduler = environment()->scheduler();
@@ -99,23 +105,30 @@ void Port<void>::pull_connection(const ConnectionProperties& properties, const s
 
   Environment* enclave = downstream[0]->environment();
 
+  auto index = this->container()->number_of_connections();
+
   if (properties.type_ == ConnectionType::Delayed) {
-    connection = new DelayedConnection<void>(this->name() + "_delayed_connection", this->container(), // NOLINT
-                                             properties.delay_);                                      // NOLINT
+    connection = new DelayedConnection<void>(this->name() + "_delayed_connection_" + std::to_string(index),
+                                             this->container(),  // NOLINT
+                                             properties.delay_); // NOLINT
   }
   if (properties.type_ == ConnectionType::Physical) {
-    connection = new PhysicalConnection<void>(this->name() + "_physical_connection", this->container(), // NOLINT
-                                              properties.delay_);                                       // NOLINT
+    connection = new PhysicalConnection<void>(this->name() + "_physical_connection_" + std::to_string(index),
+                                              this->container(),  // NOLINT
+                                              properties.delay_); // NOLINT
   }
   if (properties.type_ == ConnectionType::Enclaved) {
-    connection = new EnclaveConnection<void>(this->name() + "_enclave_connection", enclave); // NOLINT
+    connection =
+        new EnclaveConnection<void>(this->name() + "_enclave_connection_" + std::to_string(index), enclave); // NOLINT
   }
   if (properties.type_ == ConnectionType::DelayedEnclaved) {
-    connection = new DelayedEnclaveConnection<void>(this->name() + "_enclave_connection", enclave, // NOLINT
-                                                    properties.delay_);                            // NOLINT
+    connection = new DelayedEnclaveConnection<void>(
+        this->name() + "_delayed_enclave_connection_" + std::to_string(index), enclave, // NOLINT
+        properties.delay_);                                                             // NOLINT
   }
   if (properties.type_ == ConnectionType::PhysicalEnclaved) {
-    connection = new PhysicalEnclaveConnection<void>(this->name() + "_enclave_connection", enclave); // NOLINT
+    connection = new PhysicalEnclaveConnection<void>(
+        this->name() + "_physical_enclave_connection_" + std::to_string(index), enclave); // NOLINT
   }
 
   if (connection != nullptr) {
@@ -140,6 +153,7 @@ auto compose_callbacks(const PortCallback& callback1, const PortCallback& callba
 }
 
 void BasePort::register_set_callback(const PortCallback& callback) {
+  log::Debug() << "setting callback";
   if (set_callback_ == nullptr) {
     set_callback_ = callback;
   } else {

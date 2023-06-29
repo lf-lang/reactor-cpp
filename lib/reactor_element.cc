@@ -38,10 +38,13 @@ ReactorElement::ReactorElement(const std::string& name, ReactorElement::Type typ
     container->register_action(reinterpret_cast<BaseAction*>(this)); // NOLINT
     break;
   case Type::Input:
-    container->register_input(reinterpret_cast<BasePort*>(this)); // NOLINT
+    // container->register_input(reinterpret_cast<BasePort*>(this)); // NOLINT
     break;
   case Type::Output:
-    container->register_output(reinterpret_cast<BasePort*>(this)); // NOLINT
+    // container->register_output(reinterpret_cast<BasePort*>(this)); // NOLINT
+    break;
+  case Type::Port:
+    // container->register_output(reinterpret_cast<BasePort*>(this)); // NOLINT
     break;
   case Type::Reaction:
     container->register_reaction(reinterpret_cast<Reaction*>(this)); // NOLINT

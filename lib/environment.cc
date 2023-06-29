@@ -132,7 +132,7 @@ auto Environment::startup(const TimePoint& start_time) -> std::thread {
 void Environment::draw_connection(std::size_t source, std::size_t sink, ConnectionProperties properties) {
   reactor::assert_phase(this, Phase::Assembly);
 
-  if (top_environment_ == nullptr) {
+  if (top_environment_ == nullptr || top_environment_ == this) {
     graph_.add_edge(source, sink, properties);
   } else {
     top_environment_->draw_connection(source, sink, properties);
@@ -141,6 +141,10 @@ void Environment::draw_connection(std::size_t source, std::size_t sink, Connecti
 
 void Environment::draw_connection(const BasePort& source, const BasePort& sink, ConnectionProperties properties) {
   this->draw_connection(source.get_index(), sink.get_index(), properties);
+}
+
+void Environment::draw_connection(const BasePort* source, const BasePort* sink, ConnectionProperties properties) {
+  this->draw_connection(source->get_index(), sink->get_index(), properties);
 }
 
 auto Environment::register_port(BasePort* port) noexcept -> std::size_t {
@@ -152,6 +156,7 @@ auto Environment::register_port(BasePort* port) noexcept -> std::size_t {
 
 void recursive_assemble(Reactor* container) { // NOLINT
   container->assemble();
+
   for (auto* reactor : container->reactors()) {
     recursive_assemble(reactor);
   }
@@ -161,6 +166,7 @@ void Environment::assemble() {
 
   // constructing all the reactors
   // this mainly tell the reactors that they should connect their ports and actions not ports and ports
+
   for (auto* reactor : top_level_reactors_) {
     recursive_assemble(reactor);
   }
@@ -179,15 +185,17 @@ void Environment::assemble() {
       for (const auto destination_port : sinks) {
         ports_[destination_port]->set_inward_binding(ports_[source_port]);
         ports_[source_port]->add_outward_binding(ports_[destination_port]);
-        log_.debug() << "from: " << ports_[source_port]->container()->name() << "." << ports_[source_port]->name()
-                     << " --> to: " << ports_[destination_port]->container()->name() << "."
-                     << ports_[destination_port]->name();
+        log::Debug() << "from: " << ports_[source_port]->fqn() << "(" << source_port << ")"
+                     << " --> to: " << ports_[destination_port]->fqn() << "(" << destination_port << ")";
       }
     } else {
       std::vector<BasePort*> pointers;
       std::transform(std::begin(sinks), std::end(sinks), std::back_inserter(pointers),
                      [this](std::size_t index) { return this->ports_[index]; });
       ports_[source_port]->pull_connection(properties, pointers);
+
+      log::Debug() << "from: " << ports_[source_port]->container()->fqn() << " |-> to: " << pointers.size()
+                   << " objects";
     }
   }
 

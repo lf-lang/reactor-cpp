@@ -36,8 +36,9 @@ void Reactor::register_action([[maybe_unused]] BaseAction* action) {
 }
 
 void Reactor::register_input(BasePort* port) {
+  std::cout << "register input" << std::endl << std::flush;
   reactor_assert(port != nullptr);
-  reactor_assert(environment()->register_port(port)); // adding port to env
+  environment()->register_port(port);
   reactor::validate(this->environment()->phase() == Phase::Construction,
                     "Ports can only be registered during construction phase!");
   [[maybe_unused]] bool result = inputs_.insert(port).second;
@@ -46,8 +47,9 @@ void Reactor::register_input(BasePort* port) {
 }
 
 void Reactor::register_output(BasePort* port) {
+  std::cout << "register output" << std::endl << std::flush;
   reactor_assert(port != nullptr);
-  reactor_assert(environment()->register_port(port)); // adding port to env
+  environment()->register_port(port);
   reactor::validate(this->environment()->phase() == Phase::Construction,
                     "Ports can only be registered during construction phase!");
   [[maybe_unused]] bool result = inputs_.insert(port).second;
