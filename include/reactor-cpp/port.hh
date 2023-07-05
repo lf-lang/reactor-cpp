@@ -83,7 +83,7 @@ protected:
   }
 
 public:
-  BasePort(const std::string& name, PortType type, Reactor* container)
+  explicit BasePort(const std::string& name, PortType type, Reactor* container)
       : ReactorElement(name, match_port_enum(type), container)
       , type_(type) {
     environment()->register_port(this);

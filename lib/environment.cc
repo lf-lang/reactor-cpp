@@ -148,10 +148,14 @@ void Environment::draw_connection(const BasePort* source, const BasePort* sink, 
 }
 
 auto Environment::register_port(BasePort* port) noexcept -> std::size_t {
-  auto index = ports_.size();
-  port->set_index(index);
-  ports_.push_back(port);
-  return index;
+  if (top_environment_ == nullptr || top_environment_ == this) {
+    auto index = ports_.size();
+    port->set_index(index);
+    ports_.push_back(port);
+    return index;
+  } else {
+    return top_environment_->register_port(port);
+  }
 }
 
 void recursive_assemble(Reactor* container) { // NOLINT
@@ -167,13 +171,15 @@ void Environment::assemble() {
   // constructing all the reactors
   // this mainly tell the reactors that they should connect their ports and actions not ports and ports
 
+  log::Debug() << "start assembly of reactors";
   for (auto* reactor : top_level_reactors_) {
     recursive_assemble(reactor);
   }
 
-  // optimize the graph
+  log::Debug() << "start optimization on port graph";
   this->optimize();
 
+  log::Debug() << "instantiating port graph declaration";
   auto graph = optimized_graph_.get_edges();
   // this generates the port graph
   for (auto const& [source, sinks] : graph) {
@@ -192,6 +198,7 @@ void Environment::assemble() {
       std::vector<BasePort*> pointers;
       std::transform(std::begin(sinks), std::end(sinks), std::back_inserter(pointers),
                      [this](std::size_t index) { return this->ports_[index]; });
+
       ports_[source_port]->pull_connection(properties, pointers);
 
       log::Debug() << "from: " << ports_[source_port]->container()->fqn() << " |-> to: " << pointers.size()
@@ -199,6 +206,7 @@ void Environment::assemble() {
     }
   }
 
+  log::Debug() << "Building the Graph";
   for (auto* reactor : top_level_reactors_) {
     build_dependency_graph(reactor);
   }
