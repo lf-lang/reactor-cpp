@@ -6,11 +6,6 @@
  *   Christian Menard
  */
 
-// NOTE: This file is named trace.hpp (with the hpp file extension) on purpose.
-// This is to exclude the file from all clang-tidy checks. This is more a hacky
-// workaround than an actual solution, but apparently clang-tidy does not allow
-// something nicer at the moment.
-
 #include <string>
 
 #include "reactor-cpp/config.hh"
@@ -27,7 +22,7 @@
 #define TRACEPOINT_PROVIDER reactor_cpp
 
 #undef TRACEPOINT_INCLUDE
-#define TRACEPOINT_INCLUDE "reactor-cpp/trace.hpp"
+#define TRACEPOINT_INCLUDE "reactor-cpp/trace.hh"
 
 // LTTng requires this header to be included multiple times.
 #ifndef REACTOR_CPP_TRACE_HH
