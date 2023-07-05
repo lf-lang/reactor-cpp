@@ -70,9 +70,10 @@ void Port<void>::set() {
   validate(!has_inward_binding(), "set() may only be called on ports that do not have an inward "
                                   "binding!");
 
+  this->present_ = true;
+
   recursive_set();
 
-  this->present_ = true;
   auto* scheduler = environment()->scheduler();
   scheduler->set_port(this);
 }

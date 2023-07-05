@@ -209,8 +209,6 @@ void Environment::assemble() {
                      << " objects";
       }
     }
-  } else {
-    std::cout << "NO TOP Environment: " << optimized_graph_.get_edges().size() << std::endl << std::flush;
   }
 
   log::Debug() << "Building the Graph";

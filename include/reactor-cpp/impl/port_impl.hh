@@ -39,10 +39,10 @@ template <class T> void Port<T>::set(const ImmutableValuePtr<T>& value_ptr) {
                                   "binding!");
   validate(value_ptr != nullptr, "Ports may not be set to nullptr!");
 
-  recursive_set();
-
   this->present_ = true;
   this->value_ptr_ = std::move(value_ptr);
+
+  recursive_set();
 
   auto* scheduler = environment()->scheduler();
   scheduler->set_port(this);
