@@ -15,8 +15,7 @@
 #include <vector>
 
 namespace reactor {
-// this graph is special, because to every edge properties or type T are annotated
-// TODO: maybe give some restrictions on type T e.g. Size and so on
+// this graph is special, because to every edge properties are annotated
 template <class E, class P> class Graph {
 private:
   std::map<E, std::vector<std::pair<P, E>>> graph_;

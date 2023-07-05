@@ -82,6 +82,9 @@ void Port<T>::pull_connection(const ConnectionProperties& properties, const std:
     return;
   }
 
+  // normal connections should be handled by environment
+  reactor_assert(properties.type_ != ConnectionType::Normal);
+
   Environment* enclave = downstream[0]->environment();
   auto index = this->container()->number_of_connections();
 
@@ -110,12 +113,12 @@ void Port<T>::pull_connection(const ConnectionProperties& properties, const std:
         this->name() + "_physical_enclave_connection_" + std::to_string(index), enclave); // NOLINT
   }
 
-  if (connection != nullptr) {
-    connection->bind_downstream_ports(downstream);
-    connection->bind_upstream_port(this);
-    this->register_set_callback(connection->upstream_set_callback());
-    this->container()->register_connection(connection);
-  }
+  // if the connection here is null we have a vaulty enum value
+  reactor_assert(connection != nullptr);
+  connection->bind_downstream_ports(downstream);
+  connection->bind_upstream_port(this);
+  this->register_set_callback(connection->upstream_set_callback());
+  this->container()->register_connection(connection);
 }
 
 } // namespace reactor

@@ -38,7 +38,7 @@ public:
   [[nodiscard]] static auto from_physical_time(TimePoint time_point) noexcept -> Tag;
   [[nodiscard]] static auto from_logical_time(const LogicalTime& logical_time) noexcept -> Tag;
 
-  [[nodiscard]] static auto max_for_timepoint(TimePoint time_point) noexcept -> Tag; // NOLINT
+  [[nodiscard]] static auto max_for_timepoint(TimePoint time_point) noexcept -> Tag;
 
   [[nodiscard]] auto delay(Duration offset = Duration::zero()) const noexcept -> Tag;
   [[nodiscard]] auto subtract(Duration offset = Duration::zero()) const noexcept -> Tag;
