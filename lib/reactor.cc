@@ -74,7 +74,8 @@ void Reactor::register_reactor([[maybe_unused]] Reactor* reactor) {
 
 void Reactor::register_connection([[maybe_unused]] BaseAction* connection) {
   reactor_assert(connection != nullptr);
-  reactor_assert(connections_.insert(std::unique_ptr<BaseAction>(connection)).second);
+  auto result = connections_.insert(std::unique_ptr<BaseAction>(connection)).second;
+  reactor_assert(result);
 }
 
 void Reactor::startup() {
