@@ -49,7 +49,7 @@ public:
   virtual void bind_downstream_ports(const std::vector<BasePort*>& ports) {
     // with C++23 we can use insert_rage here
     for ([[maybe_unused]] auto* port : ports) { // NOLINT
-      this->downstream_ports_.insert(static_cast<Port<T>*>(port)).second;
+      this->downstream_ports_.insert(static_cast<Port<T>*>(port));
     }
   }
   virtual void bind_downstream_port(Port<T>* port) {
