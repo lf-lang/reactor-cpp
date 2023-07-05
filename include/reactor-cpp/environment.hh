@@ -84,8 +84,8 @@ private:
   // mutex that coordinates the global shut down over multiple workers
   std::mutex shutdown_mutex_{};
 
-  PropertyGraph<GraphElement, ConnectionProperties> graph_{};
-  PropertyGraph<GraphElement, ConnectionProperties> optimized_graph_{};
+  Graph<GraphElement, ConnectionProperties> graph_{};
+  Graph<GraphElement, ConnectionProperties> optimized_graph_{};
 
   std::size_t tag_counter_{0};
 

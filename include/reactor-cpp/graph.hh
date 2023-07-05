@@ -17,12 +17,12 @@
 namespace reactor {
 // this graph is special, because to every edge properties or type T are annotated
 // TODO: maybe give some restrictions on type T e.g. Size and so on
-template <class E, class P> class PropertyGraph {
+template <class E, class P> class Graph {
 private:
   std::map<E, std::vector<std::pair<P, E>>> graph_;
 
   // custom compare operator this is required if u want special key values in std::map
-  // this is required for the PropertyGraph::get_edges() method
+  // this is required for the Graph::get_edges() method
   using map_key = std::pair<E, P>;
   struct map_key_compare {
     // TODO: check this maybe will cause some very funny TM problems later
@@ -32,19 +32,19 @@ private:
   };
 
 public:
-  PropertyGraph() noexcept = default;
-  PropertyGraph(const PropertyGraph& graph) noexcept
+  Graph() noexcept = default;
+  Graph(const Graph& graph) noexcept
       : graph_(graph.graph_) {}
-  PropertyGraph(const PropertyGraph&& graph) noexcept
+  Graph(const Graph&& graph) noexcept
       : graph_(std::move(graph.graph_)) {}
-  ~PropertyGraph() noexcept = default;
+  ~Graph() noexcept = default;
 
-  auto operator=(PropertyGraph other) noexcept -> PropertyGraph& {
+  auto operator=(Graph other) noexcept -> Graph& {
     graph_ = other.graph_;
     return *this;
   }
 
-  auto operator=(PropertyGraph&& other) noexcept -> PropertyGraph& {
+  auto operator=(Graph&& other) noexcept -> Graph& {
     graph_ = std::move(other.graph_);
     return *this;
   }
@@ -127,7 +127,7 @@ public:
     }
   }
 
-  friend auto operator<<(std::ostream& outstream, const PropertyGraph& graph) -> std::ostream& {
+  friend auto operator<<(std::ostream& outstream, const Graph& graph) -> std::ostream& {
     for (auto const& [source, destinations] : graph.graph_) {
       for (auto destination : destinations) {
         outstream << source << " --> " << destination.second << std::endl;
