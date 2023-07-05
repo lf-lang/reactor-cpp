@@ -133,6 +133,7 @@ void Environment::draw_connection(std::size_t source, std::size_t sink, Connecti
   reactor::assert_phase(this, Phase::Assembly);
 
   if (top_environment_ == nullptr || top_environment_ == this) {
+    log::Debug() << "drawing connection: " << source << " --> " << sink;
     graph_.add_edge(source, sink, properties);
   } else {
     top_environment_->draw_connection(source, sink, properties);
@@ -153,9 +154,9 @@ auto Environment::register_port(BasePort* port) noexcept -> std::size_t {
     port->set_index(index);
     ports_.push_back(port);
     return index;
-  } else {
-    return top_environment_->register_port(port);
   }
+
+  return top_environment_->register_port(port);
 }
 
 void recursive_assemble(Reactor* container) { // NOLINT
@@ -180,30 +181,38 @@ void Environment::assemble() {
   this->optimize();
 
   log::Debug() << "instantiating port graph declaration";
-  auto graph = optimized_graph_.get_edges();
-  // this generates the port graph
-  for (auto const& [source, sinks] : graph) {
 
-    auto source_port = source.first;
-    auto properties = source.second;
+  if (top_environment_ == nullptr || top_environment_ == this) {
+    log::Debug() << "graph: ";
+    log::Debug() << optimized_graph_;
 
-    if (properties.type_ == ConnectionType::Normal) {
-      for (const auto destination_port : sinks) {
-        ports_[destination_port]->set_inward_binding(ports_[source_port]);
-        ports_[source_port]->add_outward_binding(ports_[destination_port]);
-        log::Debug() << "from: " << ports_[source_port]->fqn() << "(" << source_port << ")"
-                     << " --> to: " << ports_[destination_port]->fqn() << "(" << destination_port << ")";
+    auto graph = optimized_graph_.get_edges();
+    // this generates the port graph
+    for (auto const& [source, sinks] : graph) {
+
+      auto source_port = source.first;
+      auto properties = source.second;
+
+      if (properties.type_ == ConnectionType::Normal) {
+        for (const auto destination_port : sinks) {
+          ports_[destination_port]->set_inward_binding(ports_[source_port]);
+          ports_[source_port]->add_outward_binding(ports_[destination_port]);
+          log::Debug() << "from: " << ports_[source_port]->fqn() << "(" << source_port << ")"
+                       << " --> to: " << ports_[destination_port]->fqn() << "(" << destination_port << ")";
+        }
+      } else {
+        std::vector<BasePort*> pointers;
+        std::transform(std::begin(sinks), std::end(sinks), std::back_inserter(pointers),
+                       [this](std::size_t index) { return this->ports_[index]; });
+
+        ports_[source_port]->pull_connection(properties, pointers);
+
+        log::Debug() << "from: " << ports_[source_port]->container()->fqn() << " |-> to: " << pointers.size()
+                     << " objects";
       }
-    } else {
-      std::vector<BasePort*> pointers;
-      std::transform(std::begin(sinks), std::end(sinks), std::back_inserter(pointers),
-                     [this](std::size_t index) { return this->ports_[index]; });
-
-      ports_[source_port]->pull_connection(properties, pointers);
-
-      log::Debug() << "from: " << ports_[source_port]->container()->fqn() << " |-> to: " << pointers.size()
-                   << " objects";
     }
+  } else {
+    std::cout << "NO TOP Environment: " << optimized_graph_.get_edges().size() << std::endl << std::flush;
   }
 
   log::Debug() << "Building the Graph";

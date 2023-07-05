@@ -51,7 +51,7 @@ public:
 
   // adds a single edge to the graph structure
   void add_edge(E source, E destination, P properties) noexcept {
-    if (graph_.find(source) != std::end(graph_)) {
+    if (graph_.find(source) == std::end(graph_)) {
       std::vector<std::pair<P, E>> edges{std::make_pair(properties, destination)};
       graph_[source] = edges;
     } else {
@@ -125,6 +125,15 @@ public:
         return source;
       }
     }
+  }
+
+  friend std::ostream& operator<<(std::ostream& o, const PropertyGraph& graph) {
+    for (auto const& [source, destinations] : graph.graph_) {
+      for (auto destination : destinations) {
+        o << source << " --> " << destination.second << std::endl;
+      }
+    }
+    return o;
   }
 };
 } // namespace reactor
