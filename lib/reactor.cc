@@ -74,8 +74,6 @@ void Reactor::register_reactor([[maybe_unused]] Reactor* reactor) {
 
 void Reactor::register_connection([[maybe_unused]] BaseAction* connection) {
   reactor_assert(connection != nullptr);
-  validate(this->environment()->phase() == Phase::Construction,
-           "Reactions can only be registered during construction phase!");
   reactor_assert(connections_.insert(std::unique_ptr<BaseAction>(connection)).second);
 }
 
