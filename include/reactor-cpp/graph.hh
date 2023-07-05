@@ -127,13 +127,13 @@ public:
     }
   }
 
-  friend std::ostream& operator<<(std::ostream& o, const PropertyGraph& graph) {
+  friend auto operator<<(std::ostream& outstream, const PropertyGraph& graph) -> std::ostream& {
     for (auto const& [source, destinations] : graph.graph_) {
       for (auto destination : destinations) {
-        o << source << " --> " << destination.second << std::endl;
+        outstream << source << " --> " << destination.second << std::endl;
       }
     }
-    return o;
+    return outstream;
   }
 };
 } // namespace reactor
