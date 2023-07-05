@@ -128,8 +128,6 @@ auto Environment::startup(const TimePoint& start_time) -> std::thread {
   });
 }
 void Environment::draw_connection(std::size_t source, std::size_t sink, ConnectionProperties properties) {
-  reactor::assert_phase(this, Phase::Assembly);
-
   if (top_environment_ == nullptr || top_environment_ == this) {
     log::Debug() << "drawing connection: " << source << " --> " << sink;
     graph_.add_edge(source, sink, properties);
@@ -179,7 +177,6 @@ void Environment::assemble() {
   this->optimize();
 
   log::Debug() << "instantiating port graph declaration";
-
   if (top_environment_ == nullptr || top_environment_ == this) {
     log::Debug() << "graph: ";
     log::Debug() << optimized_graph_;

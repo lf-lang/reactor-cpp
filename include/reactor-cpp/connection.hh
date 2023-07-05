@@ -44,13 +44,12 @@ public:
   virtual void bind_upstream_port(Port<T>* port) {
     reactor_assert(upstream_port_ == nullptr);
     upstream_port_ = port;
-    port->register_set_callback(upstream_set_callback());
   }
 
   virtual void bind_downstream_ports(const std::vector<BasePort*>& ports) {
     // with C++23 we can use insert_rage here
     for ([[maybe_unused]] auto* port : ports) { // NOLINT
-      reactor_assert(this->downstream_ports_.insert(static_cast<Port<T>*>(port)).second);
+      this->downstream_ports_.insert(static_cast<Port<T>*>(port)).second;
     }
   }
   virtual void bind_downstream_port(Port<T>* port) {
@@ -130,12 +129,12 @@ public:
       // of the upstream port. Hence, we can retrieve the current tag directly
       // without locking.
       if constexpr (std::is_same<T, void>::value) {
-        reactor_assert(this->schedule_at(Tag::from_logical_time(port.environment()->scheduler()->logical_time())));
+        this->schedule_at(Tag::from_logical_time(port.environment()->scheduler()->logical_time()));
       } else {
         // We know that port must be of type Port<T>
         auto& typed_port = reinterpret_cast<const Port<T>&>(port); // NOLINT
-        reactor_assert(this->schedule_at(std::move(typed_port.get()),
-                                         Tag::from_logical_time(port.environment()->scheduler()->logical_time())));
+        this->schedule_at(std::move(typed_port.get()),
+                          Tag::from_logical_time(port.environment()->scheduler()->logical_time()));
       }
     };
   }
