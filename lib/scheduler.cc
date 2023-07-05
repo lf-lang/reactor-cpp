@@ -21,7 +21,7 @@
 #include "reactor-cpp/reaction.hh"
 #include "reactor-cpp/statistics.hh"
 #include "reactor-cpp/time_barrier.hh"
-#include "reactor-cpp/trace.hpp"
+#include "reactor-cpp/trace.hh"
 
 namespace reactor {
 
