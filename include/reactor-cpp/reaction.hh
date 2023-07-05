@@ -47,6 +47,8 @@ public:
   void declare_dependency(BasePort* port);
 
   [[maybe_unused]] [[nodiscard]] auto scheduable_actions() const noexcept -> const auto& { return scheduable_actions_; }
+  [[maybe_unused]] [[nodiscard]] auto action_triggers() const noexcept -> const auto& { return action_triggers_; }
+  [[maybe_unused]] [[nodiscard]] auto port_triggers() const noexcept -> const auto& { return port_trigger_; }
   [[nodiscard]] auto priority() const noexcept -> int { return priority_; }
   [[maybe_unused]] [[nodiscard]] auto antidependencies() const noexcept -> const auto& { return antidependencies_; }
   [[nodiscard]] auto dependencies() const noexcept -> const auto& { return dependencies_; }

@@ -100,6 +100,7 @@ public:
   [[nodiscard]] inline auto untyped_inward_binding() const noexcept -> BasePort* { return inward_binding_; }
   [[nodiscard]] inline auto has_inward_binding() const noexcept -> bool { return inward_binding_ != nullptr; }
   [[nodiscard]] inline auto has_outward_bindings() const noexcept -> bool { return !outward_bindings_.empty(); }
+  [[nodiscard]] inline auto outward_bindings() const noexcept -> const auto& { return outward_bindings_; }
 
   [[nodiscard]] inline auto anti_dependencies() const noexcept -> std::set<Reaction*> { return anti_dependencies_; }
 

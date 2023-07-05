@@ -96,9 +96,6 @@ public:
                        const Duration& timeout = Duration::max());
   explicit Environment(const std::string& name, Environment* containing_environment);
 
-  // builds the reactor graph from the given set of reactions
-  void construct();
-
   // just returns the name of this environment
   auto name() -> const std::string& { return name_; }
 
@@ -142,6 +139,15 @@ public:
 
   [[nodiscard]] auto run_forever() const noexcept -> bool { return run_forever_; }
   [[nodiscard]] auto max_reaction_index() const noexcept -> unsigned int { return max_reaction_index_; }
+
+  // Debugging methods
+  void export_dependency_graph(const std::string& path);
+  void dump_to_yaml(const std::string& path);
+
+  static void dump_trigger_to_yaml(std::ofstream& yaml, const BaseAction& trigger);
+  static void dump_instance_to_yaml(std::ofstream& yaml, const Reactor& reactor);
+  static void dump_port_to_yaml(std::ofstream& yaml, const BasePort& port);
+  static void dump_reaction_to_yaml(std::ofstream& yaml, const Reaction& reaction);
 
   friend Scheduler;
 };
