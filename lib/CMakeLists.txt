@@ -48,13 +48,6 @@ set_target_properties(${LIB_TARGET} PROPERTIES
     VERSION ${PROJECT_VERSION}
     SOVERSION 1)
 
-option(GRAPH_OPTIMIZATIONS "Graph optimizations" OFF)
-if(GRAPH_OPTIMIZATIONS)
-  target_compile_definitions(${LIB_TARGET} PRIVATE GRAPH_OPTIMIZATIONS=1 )
-else (GRAPH_OPTIMIZATIONS)
-  target_compile_definitions(${LIB_TARGET} PRIVATE GRAPH_OPTIMIZATIONS=0 )
-endif(GRAPH_OPTIMIZATIONS)
-
 if(DEFINED LF_REACTOR_CPP_SUFFIX)
   install(FILES "${PROJECT_BINARY_DIR}/include/reactor-cpp/config.hh" DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${LIB_TARGET}/reactor-cpp")
 else()

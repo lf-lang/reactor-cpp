@@ -13,7 +13,7 @@
 #include <vector>
 
 #include "assert.hh"
-#include "enums.hh"
+#include "connection_properties.hh"
 #include "environment.hh"
 #include "fwd.hh"
 #include "multiport.hh"

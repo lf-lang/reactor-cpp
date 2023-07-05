@@ -14,7 +14,7 @@
 #include <string>
 #include <vector>
 
-#include "enums.hh"
+#include "connection_properties.hh"
 #include "fwd.hh"
 #include "graph.hh"
 #include "reactor-cpp/logging.hh"

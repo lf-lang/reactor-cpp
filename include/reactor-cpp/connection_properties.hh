@@ -6,8 +6,8 @@
  *   Tassilo Tanneberger
  */
 
-#ifndef REACTOR_CPP_ENUMS_HH
-#define REACTOR_CPP_ENUMS_HH
+#ifndef REACTOR_CPP_CONNECTION_PROPERTIES_HH
+#define REACTOR_CPP_CONNECTION_PROPERTIES_HH
 
 #include "fwd.hh"
 #include "logical_time.hh"
@@ -23,4 +23,4 @@ struct ConnectionProperties {
 
 } // namespace reactor
 
-#endif // REACTOR_CPP_ENUMS_HH
+#endif // REACTOR_CPP_CONNECTION_PROPERTIES_HH
