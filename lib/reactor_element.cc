@@ -63,8 +63,10 @@ ReactorElement::ReactorElement(const std::string& name, ReactorElement::Type typ
     , fqn_(name)
     , environment_(environment) {
   reactor_assert(environment != nullptr);
+
   validate(type == Type::Reactor || type == Type::Action, "Only reactors and actions can be owned by the environment!");
-  validate(this->environment_->phase() == Phase::Construction,
+  validate(this->environment_->phase() == Phase::Construction ||
+               (type == Type::Action && this->environment_->phase() == Phase::Assembly),
            "Reactor elements can only be created during construction phase!");
 
   switch (type) {
