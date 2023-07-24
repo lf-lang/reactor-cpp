@@ -35,7 +35,16 @@ template <class T> auto Port<T>::typed_inward_binding() const noexcept -> Port<T
 }
 
 template <class T> void Port<T>::set(const ImmutableValuePtr<T>& value_ptr) {
-  validate(!has_inward_binding(), "set() may only be called on ports that do not have an inward "
+  reactor::validate(!has_inward_binding(), "set() may only be called on ports that do not have an inward "
+                                           "binding!");
+  reactor::validate(value_ptr != nullptr, "Ports may not be set to nullptr!");
+
+  auto scheduler = environment()->scheduler();
+  this->value_ptr_ = std::move(value_ptr);
+  scheduler->set_port(this);
+  this->present_ = true;
+
+  /*validate(!has_inward_binding(), "set() may only be called on ports that do not have an inward "
                                   "binding!");
   validate(value_ptr != nullptr, "Ports may not be set to nullptr!");
 
@@ -45,26 +54,44 @@ template <class T> void Port<T>::set(const ImmutableValuePtr<T>& value_ptr) {
   recursive_set();
 
   auto* scheduler = environment()->scheduler();
-  scheduler->set_port(this);
+  scheduler->set_port(this);*/
 }
 
 template <class T> void Port<T>::recursive_set() {
+
+  /*
+  std::cout << "LOL1" << std::endl << std::flush;
   this->invoke_set_callback();
 
   for (auto* const outward : outward_bindings_) {
+    //std::cout << "LOL" << std::endl << std::flush;
     static_cast<Port<T>*>(outward)->recursive_set();
   };
 
+
+  //std::cout << "LOL2" << std::endl << std::flush;
+  this->invoke_set_callback();
+
+  //std::cout << "LOL2.1" << std::endl << std::flush;
   auto* scheduler = environment()->scheduler();
   // this is the start of a crime scene further investigation may lead to psychological terror
   // we insert here everything in batches to reduce how often the env needs to be loaded from main memory
   // when every port would insert itself individually
-  if (!outward_bindings_.empty()) {
-    scheduler->set_ports(std::end(outward_bindings_), std::end(outward_bindings_));
-  }
-  if (!triggers().empty()) {
-    scheduler->set_triggers(std::begin(triggers()), std::end(triggers()));
-  }
+
+
+  //std::cout << "LOL3 " << std::this_thread::get_id() << std::endl << std::flush;
+  scheduler->set_ports(std::end(outward_bindings_), std::end(outward_bindings_));
+
+  std::cout << "LOL4.1 " << std::this_thread::get_id() << std::endl << std::flush;
+  auto begin = std::begin(triggers());
+
+  std::cout << "LOL4.2 " << std::this_thread::get_id() << std::endl << std::flush;
+  auto end = std::end(triggers());
+
+  std::cout << "LOL4.3 " << std::this_thread::get_id() << std::endl << std::flush;
+  scheduler->set_triggers(begin, end);
+
+  std::cout << "LOL5 " << std::this_thread::get_id() << std::endl << std::flush; */
 }
 
 template <class T> auto Port<T>::get() const noexcept -> const ImmutableValuePtr<T>& {

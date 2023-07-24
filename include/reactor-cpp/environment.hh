@@ -30,7 +30,7 @@ constexpr bool default_fast_fwd_execution = false;
 
 enum class Phase { Construction = 0, Assembly = 1, Startup = 2, Execution = 3, Shutdown = 4, Deconstruction = 5 };
 
-using GraphElement = std::size_t;
+using GraphElement = BasePort*;
 
 class Environment {
 private:

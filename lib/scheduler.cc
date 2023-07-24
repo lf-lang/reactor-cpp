@@ -199,6 +199,41 @@ void EventQueue::discard_events_until_tag(const Tag& tag) {
   }
 }
 
+void Scheduler::set_port(BasePort* port) {
+  log_.debug() << "Set port " << port->fqn();
+  Statistics::increment_set_ports();
+
+  // We do not check here if port is already in the list. This means clean()
+  // could be called multiple times for a single port. However, calling
+  // clean() multiple time is not harmful and more efficient then checking if
+
+  std::cout << Worker::current_worker_id() << " / " << set_ports_.size() << std::endl << std::flush;
+  set_ports_[Worker::current_worker_id()].push_back(port);
+
+  // recursively search for triggered reactions
+  set_port_helper(port);
+}
+
+void Scheduler::set_port_helper(BasePort* port) {
+  // record the port for cleaning it up later
+
+  std::cout << Worker::current_worker_id() << " / " << set_ports_.size() << std::endl << std::flush;
+  set_ports_[Worker::current_worker_id()].push_back(port);
+
+  // Call the 'set' callback on the port
+  port->invoke_set_callback();
+
+  // Record all triggered reactions
+  for (auto* reaction : port->triggers()) {
+    triggered_reactions_[Worker::current_worker_id()].push_back(reaction);
+  }
+
+  // Continue recursively
+  for (auto* binding : port->outward_bindings()) {
+    set_port_helper(binding);
+  }
+}
+
 void Scheduler::terminate_all_workers() {
   log_.debug() << "Send termination signal to all workers";
   auto num_workers = environment_->num_workers();
@@ -276,6 +311,7 @@ void Scheduler::start() {
   // initialize the reaction queue, set ports vector, and triggered reactions
   // vector
   reaction_queue_.resize(environment_->max_reaction_index() + 1);
+  std::cout << "RESIZE:" << num_workers << std::endl;
   set_ports_.resize(num_workers);
   triggered_reactions_.resize(num_workers);
 

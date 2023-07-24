@@ -70,16 +70,23 @@ void Port<void>::set() {
   validate(!has_inward_binding(), "set() may only be called on ports that do not have an inward "
                                   "binding!");
 
+  auto* scheduler = environment()->scheduler();
+  scheduler->set_port(this);
+  this->present_ = true;
+
+  /*validate(!has_inward_binding(), "set() may only be called on ports that do not have an inward "
+                                  "binding!");
+
   this->present_ = true;
 
   recursive_set();
 
   auto* scheduler = environment()->scheduler();
-  scheduler->set_port(this);
+  scheduler->set_port(this);*/
 }
 
 void Port<void>::recursive_set() {
-  this->invoke_set_callback();
+  /*this->invoke_set_callback();
 
   for (auto* const outward : outward_bindings_) {
     static_cast<Port<void>*>(outward)->recursive_set(); // NOLINT
@@ -94,7 +101,7 @@ void Port<void>::recursive_set() {
   }
   if (!triggers().empty()) {
     scheduler->set_triggers(std::begin(triggers()), std::end(triggers()));
-  }
+  }*/
 }
 
 void Port<void>::pull_connection(const ConnectionProperties& properties, const std::vector<BasePort*>& downstream) {

@@ -145,7 +145,9 @@ public:
 
   Port(const std::string& name, PortType type, Reactor* container)
       : BasePort(name, type, container) {}
-
+  ~Port() {
+    std::cout << "DELETING" << std::endl << std::flush;
+  }
   [[nodiscard]] auto typed_inward_binding() const noexcept -> Port<T>*;
   [[nodiscard]] auto typed_outward_bindings() const noexcept -> const std::set<Port<T>*>&;
 

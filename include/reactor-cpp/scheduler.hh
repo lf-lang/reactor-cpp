@@ -191,19 +191,26 @@ public:
     return cv_schedule_.wait_until(lock, time_point, predicate);
   };
 
+  void set_trigger(Reaction* element) {
+    auto& pool = triggered_reactions_[Worker::current_worker_id()];
+    pool.insert(std::begin(pool), element);
+  }
   void set_triggers(std::set<Reaction*>::iterator start, std::set<Reaction*>::iterator end) noexcept {
     auto& pool = triggered_reactions_[Worker::current_worker_id()];
     pool.insert(std::begin(pool), start, end);
   }
 
   void set_ports(typename std::set<BasePort*>::iterator start, typename std::set<BasePort*>::iterator end) noexcept {
+    std::cout << Worker::current_worker_id() << " / " << set_ports_.size() << std::endl;
     auto& pool = set_ports_[Worker::current_worker_id()];
-    pool.insert(std::begin(pool), start, end);
+    auto index = std::begin(pool);
+    std::cout << "POOL: " << std::endl << std::flush;
+    pool.insert(index, start, end);
+    std::cout << "done" << std::endl;
   }
-  void set_port(BasePort* port) noexcept {
-    auto& pool = set_ports_[Worker::current_worker_id()];
-    pool.push_back(port);
-  }
+
+  void set_port(BasePort* port);
+  void set_port_helper(BasePort* port);
 
   [[nodiscard]] inline auto logical_time() const noexcept -> const auto& { return logical_time_; }
 
