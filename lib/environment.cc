@@ -24,7 +24,7 @@
 
 namespace reactor {
 
-Environment::Environment(unsigned int num_workers, bool fast_fwd_execution, const Duration& timeout)
+Environment::Environment(unsigned int num_workers, bool fast_fwd_execution, const Duration& timeout) //NOLINT
     : log_("Environment")
     , num_workers_(num_workers)
     , fast_fwd_execution_(fast_fwd_execution)
@@ -96,7 +96,7 @@ void Environment::register_port(BasePort* port) noexcept {
   return top_environment_->register_port(port);
 }
 
-void Environment::assemble() {
+void Environment::assemble() { //NOLINT
   phase_ = Phase::Assembly;
 
   // constructing all the reactors
@@ -119,11 +119,11 @@ void Environment::assemble() {
     // this generates the port graph
     for (auto const& [source, sinks] : graph) {
 
-      auto source_port = source.first;
+      auto *source_port = source.first;
       auto properties = source.second;
 
       if (properties.type_ == ConnectionType::Normal) {
-        for (const auto destination_port : sinks) {
+        for (auto *const destination_port : sinks) {
           destination_port->set_inward_binding(source_port);
           source_port->add_outward_binding(destination_port);
           log::Debug() << "from: " << source_port->fqn() << "(" << source_port << ")"
@@ -147,7 +147,7 @@ void Environment::assemble() {
           for (auto& [env, sinks_same_env] : collector) {
             source_port->pull_connection(properties, sinks_same_env);
 
-            log::Debug() << "from: " << source_port->container()->fqn() << " |-> to: " << sinks.size() << " objects";
+            log::Debug() << "from: " << source_port->container()->fqn() << " |-> to: " << sinks_same_env.size() << " objects";
           }
         } else {
           source_port->pull_connection(properties, sinks);
@@ -234,7 +234,7 @@ void Environment::sync_shutdown() {
 }
 
 void Environment::async_shutdown() {
-  auto lock_guard = scheduler_.lock();
+  scheduler_.lock();
   sync_shutdown();
 }
 

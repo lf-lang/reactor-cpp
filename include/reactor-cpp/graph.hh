@@ -38,7 +38,7 @@ public:
       : graph_(std::move(graph.graph_)) {}
   ~Graph() noexcept = default;
 
-  auto operator=(Graph other) noexcept -> Graph& {
+  auto operator=(const Graph other) noexcept -> Graph& {
     graph_ = other.graph_;
     return *this;
   }

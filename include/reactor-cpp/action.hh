@@ -73,8 +73,8 @@ template <class T> class Action : public BaseAction {
 private:
   ImmutableValuePtr<T> value_ptr_{nullptr};
 
-  std::map<Tag, ImmutableValuePtr<T>> events_;
-  std::mutex mutex_events_;
+  std::map<Tag, ImmutableValuePtr<T>> events_{};
+  std::mutex mutex_events_{};
 
 protected:
   void setup() noexcept override;

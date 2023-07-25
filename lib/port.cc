@@ -116,7 +116,7 @@ void Port<void>::pull_connection(const ConnectionProperties& properties, const s
 
   // if the connection here is null we have a vaulty enum value
   reactor_assert(connection != nullptr);
-  connection->bind_downstream_ports(downstream);
+  connection->bind_downstream_ports(downstream); //NOLINT Pointer is not null
   connection->bind_upstream_port(this);
   this->register_set_callback(connection->upstream_set_callback());
   this->container()->register_connection(connection);
