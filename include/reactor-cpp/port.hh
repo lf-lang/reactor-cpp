@@ -13,11 +13,11 @@
 #include <vector>
 
 #include "assert.hh"
+#include "connection_properties.hh"
 #include "fwd.hh"
 #include "multiport.hh"
 #include "reactor_element.hh"
 #include "value_ptr.hh"
-#include "connection_properties.hh"
 
 namespace reactor {
 
@@ -42,7 +42,6 @@ protected:
   BasePort(const std::string& name, PortType type, Reactor* container)
       : ReactorElement(name, match_port_enum(type), container)
       , type_(type) {}
-
 
   void register_dependency(Reaction* reaction, bool is_trigger) noexcept;
   void register_antidependency(Reaction* reaction) noexcept;
@@ -72,9 +71,7 @@ protected:
   }
 
 public:
-  void set_inward_binding(BasePort* port) noexcept {
-    inward_binding_ = port;
-  }
+  void set_inward_binding(BasePort* port) noexcept { inward_binding_ = port; }
   void add_outward_binding(BasePort* port) noexcept {
     outward_bindings_.insert(port); // NOLINT
   }

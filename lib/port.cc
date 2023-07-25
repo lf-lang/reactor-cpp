@@ -9,10 +9,10 @@
 #include "reactor-cpp/port.hh"
 
 #include "reactor-cpp/assert.hh"
+#include "reactor-cpp/connection.hh"
 #include "reactor-cpp/environment.hh"
 #include "reactor-cpp/reaction.hh"
 #include "reactor-cpp/statistics.hh"
-#include "reactor-cpp/connection.hh"
 
 namespace reactor {
 

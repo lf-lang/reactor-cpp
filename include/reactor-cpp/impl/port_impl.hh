@@ -54,7 +54,8 @@ template <class T> auto Port<T>::get() const noexcept -> const ImmutableValuePtr
     return typed_inward_binding()->get();
   }
   return value_ptr_;
-}template <class T>
+}
+template <class T>
 void Port<T>::pull_connection(const ConnectionProperties& properties, const std::vector<BasePort*>& downstream) {
   Connection<T>* connection = nullptr;
   if (downstream.empty()) {

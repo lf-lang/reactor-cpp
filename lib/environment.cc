@@ -130,11 +130,12 @@ void Environment::assemble() {
                        << " --> to: " << destination_port->fqn() << "(" << destination_port << ")";
         }
       } else {
-        if (properties.type_ == ConnectionType::Enclaved || properties.type_ == ConnectionType::PhysicalEnclaved or properties.type_ == ConnectionType::DelayedEnclaved) {
+        if (properties.type_ == ConnectionType::Enclaved || properties.type_ == ConnectionType::PhysicalEnclaved or
+            properties.type_ == ConnectionType::DelayedEnclaved) {
           // here we need to bundle the downstream ports by their enclave
           std::map<Environment*, std::vector<BasePort*>> collector{};
 
-          for (auto *downstream : sinks) {
+          for (auto* downstream : sinks) {
             if (collector.find(downstream->environment()) == std::end(collector)) {
               // didn't find the enviroment in collector yet
               collector.insert(std::make_pair(downstream->environment(), std::vector<BasePort*>{downstream}));
@@ -146,14 +147,12 @@ void Environment::assemble() {
           for (auto& [env, sinks_same_env] : collector) {
             source_port->pull_connection(properties, sinks_same_env);
 
-            log::Debug() << "from: " << source_port->container()->fqn() << " |-> to: " << sinks.size()
-                         << " objects";
+            log::Debug() << "from: " << source_port->container()->fqn() << " |-> to: " << sinks.size() << " objects";
           }
         } else {
           source_port->pull_connection(properties, sinks);
 
-          log::Debug() << "from: " << source_port->container()->fqn() << " |-> to: " << sinks.size()
-                       << " objects";
+          log::Debug() << "from: " << source_port->container()->fqn() << " |-> to: " << sinks.size() << " objects";
         }
       }
     }
