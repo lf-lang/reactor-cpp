@@ -13,10 +13,11 @@
 #include <string>
 #include <vector>
 
+#include "connection_properties.hh"
 #include "fwd.hh"
+#include "graph.hh"
 #include "reactor-cpp/logging.hh"
 #include "reactor-cpp/time.hh"
-#include "reactor.hh"
 #include "scheduler.hh"
 
 namespace reactor {
@@ -43,6 +44,7 @@ private:
   /// Set of actions that act as an input to the reactor program in this environment
   std::set<BaseAction*> input_actions_{};
   std::set<Reaction*> reactions_{};
+  std::set<BasePort*> ports_{};
   std::vector<Dependency> dependencies_{};
 
   /// The environment containing this environment. nullptr if this is the top environment
@@ -58,6 +60,9 @@ private:
 
   const Duration timeout_{};
 
+  Graph<BasePort*, ConnectionProperties> graph_{};
+  Graph<BasePort*, ConnectionProperties> optimized_graph_{};
+
   void build_dependency_graph(Reactor* reactor);
   void calculate_indexes();
 
@@ -72,7 +77,14 @@ public:
 
   auto name() -> const std::string& { return name_; }
 
+  // this method draw a connection between two graph elements with some properties
+  void draw_connection(BasePort& source, BasePort& sink, ConnectionProperties properties);
+  void draw_connection(BasePort* source, BasePort* sink, ConnectionProperties properties);
+
+  void optimize();
+
   void register_reactor(Reactor* reactor);
+  void register_port(BasePort* port) noexcept;
   void register_input_action(BaseAction* action);
   void assemble();
   auto startup() -> std::thread;

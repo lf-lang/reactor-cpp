@@ -15,8 +15,9 @@
 #include "assert.hh"
 #include "fwd.hh"
 #include "multiport.hh"
-#include "reactor.hh"
+#include "reactor_element.hh"
 #include "value_ptr.hh"
+#include "connection_properties.hh"
 
 namespace reactor {
 
@@ -42,7 +43,7 @@ protected:
       : ReactorElement(name, match_port_enum(type), container)
       , type_(type) {}
 
-  void base_bind_to(BasePort* port);
+
   void register_dependency(Reaction* reaction, bool is_trigger) noexcept;
   void register_antidependency(Reaction* reaction) noexcept;
   virtual void cleanup() = 0;
@@ -71,6 +72,15 @@ protected:
   }
 
 public:
+  void set_inward_binding(BasePort* port) noexcept {
+    inward_binding_ = port;
+  }
+  void add_outward_binding(BasePort* port) noexcept {
+    outward_bindings_.insert(port); // NOLINT
+  }
+
+  virtual void pull_connection(const ConnectionProperties& properties, const std::vector<BasePort*>& downstreams) = 0;
+
   [[nodiscard]] inline auto is_input() const noexcept -> bool { return type_ == PortType::Input; }
   [[nodiscard]] inline auto is_output() const noexcept -> bool { return type_ == PortType::Output; }
   [[nodiscard]] inline auto is_present() const noexcept -> bool {
@@ -116,7 +126,7 @@ public:
   Port(const std::string& name, PortType type, Reactor* container)
       : BasePort(name, type, container) {}
 
-  void bind_to(Port<T>* port) { base_bind_to(port); }
+  void pull_connection(const ConnectionProperties& properties, const std::vector<BasePort*>& downstream) override;
   [[nodiscard]] auto typed_inward_binding() const noexcept -> Port<T>*;
   [[nodiscard]] auto typed_outward_bindings() const noexcept -> const std::set<Port<T>*>&;
 
@@ -145,7 +155,7 @@ public:
   Port(const std::string& name, PortType type, Reactor* container)
       : BasePort(name, type, container) {}
 
-  void bind_to(Port<void>* port) { base_bind_to(port); }
+  void pull_connection(const ConnectionProperties& properties, const std::vector<BasePort*>& downstream) override;
   [[nodiscard]] auto typed_inward_binding() const noexcept -> Port<void>*;
   [[nodiscard]] auto typed_outward_bindings() const noexcept -> const std::set<Port<void>*>&;
 

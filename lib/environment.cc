@@ -62,6 +62,11 @@ void Environment::register_input_action(BaseAction* action) {
   run_forever_ = true;
 }
 
+void Environment::optimize() {
+  // no optimizations
+  optimized_graph_ = graph_;
+}
+
 void recursive_assemble(Reactor* container) { // NOLINT
   container->assemble();
   for (auto* reactor : container->reactors()) {
@@ -69,21 +74,99 @@ void recursive_assemble(Reactor* container) { // NOLINT
   }
 }
 
+void Environment::draw_connection(BasePort& source, BasePort& sink, ConnectionProperties properties) {
+  this->draw_connection(&source, &sink, properties);
+}
+
+void Environment::draw_connection(BasePort* source, BasePort* sink, ConnectionProperties properties) {
+  if (top_environment_ == nullptr || top_environment_ == this) {
+    log::Debug() << "drawing connection: " << source << " --> " << sink;
+    graph_.add_edge(source, sink, properties);
+  } else {
+    top_environment_->draw_connection(source, sink, properties);
+  }
+}
+
+void Environment::register_port(BasePort* port) noexcept {
+  if (top_environment_ == nullptr || top_environment_ == this) {
+    ports_.insert(port);
+    return;
+  }
+
+  return top_environment_->register_port(port);
+}
+
 void Environment::assemble() {
-  log_.debug() << "Assemble";
-  validate(this->phase() == Phase::Construction, "assemble() may only be called during construction phase!");
   phase_ = Phase::Assembly;
+
+  // constructing all the reactors
+  // this mainly tell the reactors that they should connect their ports and actions not ports and ports
+
+  log::Debug() << "start assembly of reactors";
   for (auto* reactor : top_level_reactors_) {
     recursive_assemble(reactor);
   }
 
-  // build the dependency graph
+  log::Debug() << "start optimization on port graph";
+  this->optimize();
+
+  log::Debug() << "instantiating port graph declaration";
+  if (top_environment_ == nullptr || top_environment_ == this) {
+    log::Debug() << "graph: ";
+    log::Debug() << optimized_graph_;
+
+    auto graph = optimized_graph_.get_edges();
+    // this generates the port graph
+    for (auto const& [source, sinks] : graph) {
+
+      auto source_port = source.first;
+      auto properties = source.second;
+
+      if (properties.type_ == ConnectionType::Normal) {
+        for (const auto destination_port : sinks) {
+          destination_port->set_inward_binding(source_port);
+          source_port->add_outward_binding(destination_port);
+          log::Debug() << "from: " << source_port->fqn() << "(" << source_port << ")"
+                       << " --> to: " << destination_port->fqn() << "(" << destination_port << ")";
+        }
+      } else {
+        if (properties.type_ == ConnectionType::Enclaved || properties.type_ == ConnectionType::PhysicalEnclaved or properties.type_ == ConnectionType::DelayedEnclaved) {
+          // here we need to bundle the downstream ports by their enclave
+          std::map<Environment*, std::vector<BasePort*>> collector{};
+
+          for (auto *downstream : sinks) {
+            if (collector.find(downstream->environment()) == std::end(collector)) {
+              // didn't find the enviroment in collector yet
+              collector.insert(std::make_pair(downstream->environment(), std::vector<BasePort*>{downstream}));
+            } else {
+              // environment already contained in collector
+              collector[downstream->environment()].push_back(downstream);
+            }
+          }
+          for (auto& [env, sinks_same_env] : collector) {
+            source_port->pull_connection(properties, sinks_same_env);
+
+            log::Debug() << "from: " << source_port->container()->fqn() << " |-> to: " << sinks.size()
+                         << " objects";
+          }
+        } else {
+          source_port->pull_connection(properties, sinks);
+
+          log::Debug() << "from: " << source_port->container()->fqn() << " |-> to: " << sinks.size()
+                       << " objects";
+        }
+      }
+    }
+  }
+
+  log::Debug() << "Building the Graph";
   for (auto* reactor : top_level_reactors_) {
     build_dependency_graph(reactor);
   }
+
   calculate_indexes();
 
-  // assemble all contained environments
+  // this assembles all the contained environments aka enclaves
   for (auto* env : contained_environments_) {
     env->assemble();
   }

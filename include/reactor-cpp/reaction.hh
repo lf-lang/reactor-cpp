@@ -12,7 +12,9 @@
 #include <functional>
 #include <set>
 
-#include "reactor.hh"
+#include "fwd.hh"
+#include "logical_time.hh"
+#include "reactor_element.hh"
 
 namespace reactor {
 

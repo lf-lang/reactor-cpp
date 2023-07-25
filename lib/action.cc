@@ -15,6 +15,13 @@
 
 namespace reactor {
 
+BaseAction::BaseAction(const std::string& name, Environment* environment, bool logical, Duration min_delay)
+    : ReactorElement(name, ReactorElement::Type::Action, environment)
+    , min_delay_(min_delay)
+    , logical_(logical) {
+  environment->register_input_action(this);
+}
+
 void BaseAction::register_trigger(Reaction* reaction) {
   reactor_assert(reaction != nullptr);
   reactor_assert(this->environment() == reaction->environment());
@@ -93,6 +100,13 @@ auto Action<void>::schedule_at(const Tag& tag) -> bool {
     return scheduler->schedule_async_at(this, tag);
   }
   return true;
+}
+
+auto BaseAction::acquire_tag(const Tag& tag, std::unique_lock<std::mutex>& lock,
+                             const std::function<bool(void)>& abort_waiting) -> bool {
+  reactor_assert(!logical_);
+  reactor_assert(lock.owns_lock());
+  return PhysicalTimeBarrier::acquire_tag(tag, lock, environment()->scheduler(), abort_waiting);
 }
 
 } // namespace reactor
