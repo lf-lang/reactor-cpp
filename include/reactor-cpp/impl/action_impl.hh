@@ -108,7 +108,7 @@ PhysicalAction<T>::PhysicalAction(const std::string& name, reactor::Reactor* con
     : Action<T>(name, container, false, Duration::zero()) {
   // all physical actions act as input actions to the program as they can be
   // scheduled from external threads
-  this->environment()->insert_input_action(this);
+  this->environment()->register_input_action(this);
 }
 
 } // namespace reactor

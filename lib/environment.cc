@@ -130,7 +130,7 @@ void Environment::assemble() { // NOLINT
                        << " --> to: " << destination_port->fqn() << "(" << destination_port << ")";
         }
       } else {
-        if (properties.type_ == ConnectionType::Enclaved || properties.type_ == ConnectionType::PhysicalEnclaved or
+        if (properties.type_ == ConnectionType::Enclaved || properties.type_ == ConnectionType::PhysicalEnclaved ||
             properties.type_ == ConnectionType::DelayedEnclaved) {
           // here we need to bundle the downstream ports by their enclave
           std::map<Environment*, std::vector<BasePort*>> collector{};
