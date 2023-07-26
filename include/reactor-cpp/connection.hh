@@ -132,7 +132,7 @@ public:
       // of the upstream port. Hence, we can retrieve the current tag directly
       // without locking.
       auto tag = Tag::from_logical_time(scheduler->logical_time());
-      bool result{false}; // NOLINT value set is not used
+      [[maybe_unused]] bool result{false}; // NOLINT value set is not used
       if constexpr (std::is_same<T, void>::value) {
         result = this->schedule_at(tag);
       } else {
