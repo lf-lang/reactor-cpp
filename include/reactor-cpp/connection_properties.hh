@@ -21,7 +21,11 @@ struct ConnectionProperties {
   Environment* enclave_{nullptr};
 
   auto operator<(const ConnectionProperties& elem2) const noexcept -> bool {
-    return this->type_ < elem2.type_ && this->delay_ < elem2.delay_;
+    return (this->type_ < elem2.type_) || (this->type_ == elem2.type_ && this->delay_ < elem2.delay_);
+  }
+
+  auto operator==(const ConnectionProperties& elem2) const noexcept -> bool {
+    return this->type_ == elem2.type_ && this->delay_ == elem2.delay_;
   }
 };
 
