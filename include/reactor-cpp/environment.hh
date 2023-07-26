@@ -44,7 +44,6 @@ private:
   /// Set of actions that act as an input to the reactor program in this environment
   std::set<BaseAction*> input_actions_{};
   std::set<Reaction*> reactions_{};
-  std::set<BasePort*> ports_{};
   std::vector<Dependency> dependencies_{};
 
   /// The environment containing this environment. nullptr if this is the top environment

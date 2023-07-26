@@ -71,9 +71,9 @@ void Reactor::register_reactor([[maybe_unused]] Reactor* reactor) {
   Statistics::increment_reactor_instances();
 }
 
-void Reactor::register_connection([[maybe_unused]] BaseAction* connection) {
+void Reactor::register_connection([[maybe_unused]] std::unique_ptr<BaseAction>&& connection) {
   reactor_assert(connection != nullptr);
-  [[maybe_unused]] auto result = connections_.insert(std::unique_ptr<BaseAction>(connection)).second;
+  [[maybe_unused]] auto result = connections_.insert(std::move(connection)).second;
   reactor_assert(result);
 }
 

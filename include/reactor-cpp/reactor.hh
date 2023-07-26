@@ -39,7 +39,7 @@ public:
   Reactor(const std::string& name, Environment* environment);
   ~Reactor() override = default;
 
-  void register_connection(BaseAction* connection);
+  void register_connection(std::unique_ptr<BaseAction>&& connection);
   [[nodiscard]] auto inline actions() const noexcept -> const auto& { return actions_; }
   [[nodiscard]] auto inline inputs() const noexcept -> const auto& { return inputs_; }
   [[nodiscard]] auto inline outputs() const noexcept -> const auto& { return outputs_; }

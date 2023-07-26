@@ -19,6 +19,10 @@ struct ConnectionProperties {
   ConnectionType type_ = ConnectionType::Normal;
   Duration delay_{0};
   Environment* enclave_{nullptr};
+
+  auto operator<(const ConnectionProperties& elem2) const noexcept -> bool {
+    return this->type_ < elem2.type_ && this->delay_ < elem2.delay_;
+  }
 };
 
 } // namespace reactor

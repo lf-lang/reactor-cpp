@@ -10,9 +10,9 @@
 #define REACTOR_CPP_IMPL_PORT_IMPL_HH
 
 #include "reactor-cpp/assert.hh"
-#include "reactor-cpp/connection.hh"
 #include "reactor-cpp/environment.hh"
 #include "reactor-cpp/port.hh"
+#include "reactor-cpp/reactor.hh"
 
 namespace reactor {
 
@@ -56,8 +56,9 @@ template <class T> auto Port<T>::get() const noexcept -> const ImmutableValuePtr
   return value_ptr_;
 }
 template <class T>
-void Port<T>::pull_connection(const ConnectionProperties& properties, const std::vector<BasePort*>& downstream) {
-  Connection<T>* connection = nullptr;
+void Port<T>::instantiate_connection_to(const ConnectionProperties& properties,
+                                        const std::vector<BasePort*>& downstream) {
+  std::unique_ptr<Connection<T>> connection = nullptr;
   if (downstream.empty()) {
     return;
   }
@@ -69,27 +70,31 @@ void Port<T>::pull_connection(const ConnectionProperties& properties, const std:
   auto index = this->container()->number_of_connections();
 
   if (properties.type_ == ConnectionType::Delayed) {
-    connection = new DelayedConnection<T>(this->name() + "_delayed_connection_" + std::to_string(index), // NOLINT
-                                          this->container(),                                             // NOLINT
-                                          properties.delay_);                                            // NOLINT
+    connection =
+        std::make_unique<DelayedConnection<T>>(this->name() + "_delayed_connection_" + std::to_string(index), // NOLINT
+                                               this->container(),                                             // NOLINT
+                                               properties.delay_);                                            // NOLINT
   }
   if (properties.type_ == ConnectionType::Physical) {
-    connection = new PhysicalConnection<T>(this->name() + "_physical_connection_" + std::to_string(index), // NOLINT
-                                           this->container(),                                              // NOLINT
-                                           properties.delay_);                                             // NOLINT
+    connection = std::make_unique<PhysicalConnection<T>>(this->name() + "_physical_connection_" +
+                                                             std::to_string(index), // NOLINT
+                                                         this->container(),         // NOLINT
+                                                         properties.delay_);        // NOLINT
   }
   if (properties.type_ == ConnectionType::Enclaved) {
-    connection =                                                                                          // NOLINT
-        new EnclaveConnection<T>(this->name() + "_enclave_connection_" + std::to_string(index), enclave); // NOLINT
+    connection = // NOLINT
+        std::make_unique<EnclaveConnection<T>>(this->name() + "_enclave_connection_" + std::to_string(index),
+                                               enclave); // NOLINT
   }
   if (properties.type_ == ConnectionType::DelayedEnclaved) {
-    connection =                                                                                               // NOLINT
-        new DelayedEnclaveConnection<T>(this->name() + "_delayed_enclave_connection_" + std::to_string(index), // NOLINT
-                                        enclave,                                                               // NOLINT
-                                        properties.delay_);                                                    // NOLINT
+    connection = // NOLINT
+        std::make_unique<DelayedEnclaveConnection<T>>(this->name() + "_delayed_enclave_connection_" +
+                                                          std::to_string(index), // NOLINT
+                                                      enclave,                   // NOLINT
+                                                      properties.delay_);        // NOLINT
   }
   if (properties.type_ == ConnectionType::PhysicalEnclaved) {
-    connection = new PhysicalEnclaveConnection<T>(                                        // NOLINT
+    connection = std::make_unique<PhysicalEnclaveConnection<T>>(                          // NOLINT
         this->name() + "_physical_enclave_connection_" + std::to_string(index), enclave); // NOLINT
   }
 
@@ -98,7 +103,7 @@ void Port<T>::pull_connection(const ConnectionProperties& properties, const std:
   connection->bind_downstream_ports(downstream);
   connection->bind_upstream_port(this);
   this->register_set_callback(connection->upstream_set_callback());
-  this->container()->register_connection(connection);
+  this->container()->register_connection(std::move(connection));
 }
 
 } // namespace reactor

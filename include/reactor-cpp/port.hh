@@ -76,7 +76,8 @@ public:
     outward_bindings_.insert(port); // NOLINT
   }
 
-  virtual void pull_connection(const ConnectionProperties& properties, const std::vector<BasePort*>& downstreams) = 0;
+  virtual void instantiate_connection_to(const ConnectionProperties& properties,
+                                         const std::vector<BasePort*>& downstreams) = 0;
 
   [[nodiscard]] inline auto is_input() const noexcept -> bool { return type_ == PortType::Input; }
   [[nodiscard]] inline auto is_output() const noexcept -> bool { return type_ == PortType::Output; }
@@ -123,7 +124,8 @@ public:
   Port(const std::string& name, PortType type, Reactor* container)
       : BasePort(name, type, container) {}
 
-  void pull_connection(const ConnectionProperties& properties, const std::vector<BasePort*>& downstream) override;
+  void instantiate_connection_to(const ConnectionProperties& properties,
+                                 const std::vector<BasePort*>& downstream) override;
   [[nodiscard]] auto typed_inward_binding() const noexcept -> Port<T>*;
   [[nodiscard]] auto typed_outward_bindings() const noexcept -> const std::set<Port<T>*>&;
 
@@ -152,7 +154,8 @@ public:
   Port(const std::string& name, PortType type, Reactor* container)
       : BasePort(name, type, container) {}
 
-  void pull_connection(const ConnectionProperties& properties, const std::vector<BasePort*>& downstream) override;
+  void instantiate_connection_to(const ConnectionProperties& properties,
+                                 const std::vector<BasePort*>& downstream) override;
   [[nodiscard]] auto typed_inward_binding() const noexcept -> Port<void>*;
   [[nodiscard]] auto typed_outward_bindings() const noexcept -> const std::set<Port<void>*>&;
 

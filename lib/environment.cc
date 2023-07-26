@@ -24,7 +24,7 @@
 
 namespace reactor {
 
-Environment::Environment(unsigned int num_workers, bool fast_fwd_execution, const Duration& timeout) // NOLINT
+Environment::Environment(unsigned int num_workers, bool fast_fwd_execution, const Duration& timeout)
     : log_("Environment")
     , num_workers_(num_workers)
     , fast_fwd_execution_(fast_fwd_execution)
@@ -72,15 +72,6 @@ void recursive_assemble(Reactor* container) { // NOLINT
   for (auto* reactor : container->reactors()) {
     recursive_assemble(reactor);
   }
-}
-
-void Environment::register_port(BasePort* port) noexcept {
-  if (top_environment_ == nullptr || top_environment_ == this) {
-    ports_.insert(port);
-    return;
-  }
-
-  return top_environment_->register_port(port);
 }
 
 void Environment::assemble() { // NOLINT
@@ -132,13 +123,13 @@ void Environment::assemble() { // NOLINT
             }
           }
           for (auto& [env, sinks_same_env] : collector) {
-            source_port->pull_connection(properties, sinks_same_env);
+            source_port->instantiate_connection_to(properties, sinks_same_env);
 
             log::Debug() << "from: " << source_port->container()->fqn() << " |-> to: " << sinks_same_env.size()
                          << " objects";
           }
         } else {
-          source_port->pull_connection(properties, sinks);
+          source_port->instantiate_connection_to(properties, sinks);
 
           log::Debug() << "from: " << source_port->container()->fqn() << " |-> to: " << sinks.size() << " objects";
         }
@@ -146,7 +137,7 @@ void Environment::assemble() { // NOLINT
     }
   }
 
-  log::Debug() << "Building the Graph";
+  log::Debug() << "Building the Dependency-Graph";
   for (auto* reactor : top_level_reactors_) {
     build_dependency_graph(reactor);
   }
@@ -222,7 +213,7 @@ void Environment::sync_shutdown() {
 }
 
 void Environment::async_shutdown() {
-  scheduler_.lock();
+  [[maybe_unused]] auto lock_guard = scheduler_.lock();
   sync_shutdown();
 }
 

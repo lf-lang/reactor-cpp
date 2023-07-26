@@ -77,8 +77,9 @@ void Port<void>::set() {
   this->present_ = true;
 }
 
-void Port<void>::pull_connection(const ConnectionProperties& properties, const std::vector<BasePort*>& downstream) {
-  Connection<void>* connection = nullptr;
+void Port<void>::instantiate_connection_to(const ConnectionProperties& properties,
+                                           const std::vector<BasePort*>& downstream) {
+  std::unique_ptr<Connection<void>> connection = nullptr;
 
   if (downstream.empty()) {
     return;
@@ -91,26 +92,28 @@ void Port<void>::pull_connection(const ConnectionProperties& properties, const s
   auto index = this->container()->number_of_connections();
 
   if (properties.type_ == ConnectionType::Delayed) {
-    connection = new DelayedConnection<void>(this->name() + "_delayed_connection_" + std::to_string(index),
-                                             this->container(),  // NOLINT
-                                             properties.delay_); // NOLINT
+    connection =
+        std::make_unique<DelayedConnection<void>>(this->name() + "_delayed_connection_" + std::to_string(index),
+                                                  this->container(),  // NOLINT
+                                                  properties.delay_); // NOLINT
   }
   if (properties.type_ == ConnectionType::Physical) {
-    connection = new PhysicalConnection<void>(this->name() + "_physical_connection_" + std::to_string(index),
-                                              this->container(),  // NOLINT
-                                              properties.delay_); // NOLINT
+    connection =
+        std::make_unique<PhysicalConnection<void>>(this->name() + "_physical_connection_" + std::to_string(index),
+                                                   this->container(),  // NOLINT
+                                                   properties.delay_); // NOLINT
   }
   if (properties.type_ == ConnectionType::Enclaved) {
-    connection =
-        new EnclaveConnection<void>(this->name() + "_enclave_connection_" + std::to_string(index), enclave); // NOLINT
+    connection = std::make_unique<EnclaveConnection<void>>(
+        this->name() + "_enclave_connection_" + std::to_string(index), enclave); // NOLINT
   }
   if (properties.type_ == ConnectionType::DelayedEnclaved) {
-    connection = new DelayedEnclaveConnection<void>(
+    connection = std::make_unique<DelayedEnclaveConnection<void>>(
         this->name() + "_delayed_enclave_connection_" + std::to_string(index), enclave, // NOLINT
         properties.delay_);                                                             // NOLINT
   }
   if (properties.type_ == ConnectionType::PhysicalEnclaved) {
-    connection = new PhysicalEnclaveConnection<void>(
+    connection = std::make_unique<PhysicalEnclaveConnection<void>>(
         this->name() + "_physical_enclave_connection_" + std::to_string(index), enclave); // NOLINT
   }
 
@@ -119,7 +122,7 @@ void Port<void>::pull_connection(const ConnectionProperties& properties, const s
   connection->bind_downstream_ports(downstream); // NOLINT Pointer is not null
   connection->bind_upstream_port(this);
   this->register_set_callback(connection->upstream_set_callback());
-  this->container()->register_connection(connection);
+  this->container()->register_connection(std::move(connection));
 }
 
 // This function can be used to chain two callbacks. This mechanism is not

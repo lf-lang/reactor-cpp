@@ -24,9 +24,8 @@ private:
   // this is required for the Graph::get_edges() method
   using map_key = std::pair<E, P>;
   struct map_key_compare {
-    // TODO: check this maybe will cause some very funny TM problems later
     auto operator()(const map_key& left_site, const map_key& right_site) const -> bool {
-      return left_site.first < right_site.first;
+      return left_site.first < right_site.first && left_site.second < right_site.second;
     }
   };
 

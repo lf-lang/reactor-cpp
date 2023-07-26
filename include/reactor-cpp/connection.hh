@@ -124,18 +124,21 @@ public:
       , log_{this->fqn()} {};
 
   inline auto upstream_set_callback() noexcept -> PortCallback override {
-    return [&](const BasePort& port) { // NOLINT unused this
+    return [this](const BasePort& port) {
+      // We know that port must be of type Port<T>
+      auto& typed_port = reinterpret_cast<const Port<T>&>(port); // NOLINT
+      const auto* scheduler = port.environment()->scheduler();
       // This callback will be called from a reaction executing in the context
       // of the upstream port. Hence, we can retrieve the current tag directly
       // without locking.
+      auto tag = Tag::from_logical_time(scheduler->logical_time());
+      bool result{false};
       if constexpr (std::is_same<T, void>::value) {
-        this->schedule_at(Tag::from_logical_time(port.environment()->scheduler()->logical_time()));
+        result = this->schedule_at(tag);
       } else {
-        // We know that port must be of type Port<T>
-        auto& typed_port = reinterpret_cast<const Port<T>&>(port); // NOLINT
-        this->schedule_at(std::move(typed_port.get()),
-                          Tag::from_logical_time(port.environment()->scheduler()->logical_time()));
+        result = this->schedule_at(std::move(typed_port.get()), tag);
       }
+      reactor_assert(result);
     };
   }
 
