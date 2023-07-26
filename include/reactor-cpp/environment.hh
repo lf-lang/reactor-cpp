@@ -82,14 +82,13 @@ public:
     this->draw_connection(&source, &sink, properties);
   }
 
-  template <class T>
-  void draw_connection(Port<T>* source, Port<T>* sink, ConnectionProperties properties) {
-      if (top_environment_ == nullptr || top_environment_ == this) {
-        log::Debug() << "drawing connection: " << source << " --> " << sink;
-        graph_.add_edge(source, sink, properties);
-      } else {
-        top_environment_->draw_connection(source, sink, properties);
-      }
+  template <class T> void draw_connection(Port<T>* source, Port<T>* sink, ConnectionProperties properties) {
+    if (top_environment_ == nullptr || top_environment_ == this) {
+      log::Debug() << "drawing connection: " << source << " --> " << sink;
+      graph_.add_edge(source, sink, properties);
+    } else {
+      top_environment_->draw_connection(source, sink, properties);
+    }
   }
 
   void optimize();
