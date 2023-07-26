@@ -74,15 +74,6 @@ void recursive_assemble(Reactor* container) { // NOLINT
   }
 }
 
-void Environment::draw_connection(BasePort* source, BasePort* sink, ConnectionProperties properties) {
-  if (top_environment_ == nullptr || top_environment_ == this) {
-    log::Debug() << "drawing connection: " << source << " --> " << sink;
-    graph_.add_edge(source, sink, properties);
-  } else {
-    top_environment_->draw_connection(source, sink, properties);
-  }
-}
-
 void Environment::register_port(BasePort* port) noexcept {
   if (top_environment_ == nullptr || top_environment_ == this) {
     ports_.insert(port);
