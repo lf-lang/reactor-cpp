@@ -74,10 +74,6 @@ void recursive_assemble(Reactor* container) { // NOLINT
   }
 }
 
-void Environment::draw_connection(BasePort& source, BasePort& sink, ConnectionProperties properties) {
-  this->draw_connection(&source, &sink, properties);
-}
-
 void Environment::draw_connection(BasePort* source, BasePort* sink, ConnectionProperties properties) {
   if (top_environment_ == nullptr || top_environment_ == this) {
     log::Debug() << "drawing connection: " << source << " --> " << sink;

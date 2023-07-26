@@ -78,7 +78,9 @@ public:
   auto name() -> const std::string& { return name_; }
 
   // this method draw a connection between two graph elements with some properties
-  void draw_connection(BasePort& source, BasePort& sink, ConnectionProperties properties);
+  template <class T> void draw_connection(Port<T>& source, Port<T>& sink, ConnectionProperties properties) {
+    this->draw_connection(&source, &sink, properties);
+  }
   void draw_connection(BasePort* source, BasePort* sink, ConnectionProperties properties);
 
   void optimize();
