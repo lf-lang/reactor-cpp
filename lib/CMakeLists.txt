@@ -48,7 +48,7 @@ set_target_properties(${LIB_TARGET} PROPERTIES
     VERSION ${PROJECT_VERSION}
     SOVERSION 1)
 
-option(GRAPH_OPTIMIZATIONS "Graph optimizations" OFF)
+option(GRAPH_OPTIMIZATIONS "Graph optimizations" ON)
 if(GRAPH_OPTIMIZATIONS)
   target_compile_definitions(${LIB_TARGET} PRIVATE GRAPH_OPTIMIZATIONS=1 )
 else (GRAPH_OPTIMIZATIONS)
