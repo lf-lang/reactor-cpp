@@ -12,6 +12,7 @@
 // include everything that is needed to use reactor-cpp
 #include "action.hh"
 #include "connection.hh"
+#include "connection_properties.hh"
 #include "environment.hh"
 #include "logging.hh"
 #include "logical_time.hh"

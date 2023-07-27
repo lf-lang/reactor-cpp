@@ -9,6 +9,7 @@ set(SOURCE_FILES
     scheduler.cc
     time.cc
     multiport.cc
+    reactor_element.cc
     )
 
 if(REACTOR_CPP_TRACE)

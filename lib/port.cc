@@ -9,44 +9,12 @@
 #include "reactor-cpp/port.hh"
 
 #include "reactor-cpp/assert.hh"
+#include "reactor-cpp/connection.hh"
 #include "reactor-cpp/environment.hh"
 #include "reactor-cpp/reaction.hh"
 #include "reactor-cpp/statistics.hh"
 
 namespace reactor {
-
-void BasePort::base_bind_to(BasePort* port) {
-  reactor_assert(port != nullptr);
-  reactor_assert(this->environment() == port->environment());
-  validate(!port->has_inward_binding(), "Ports may only be connected once");
-  validate(!port->has_anti_dependencies(), "Ports with anti dependencies may not be connected to other ports");
-  assert_phase(this, Phase::Assembly);
-  if (this->is_input() && port->is_input()) {
-    validate(this->container() == port->container()->container(),
-             "An input port A may only be bound to another input port B if B is contained by a reactor that in turn is "
-             "contained by the reactor of A");
-  } else if (this->is_input() && port->is_output()) {
-    validate(
-        this->container() == port->container(),
-        "An input port A may only be bound directly to an output port B if A and B are contained by the same reactor.");
-  } else if (this->is_output() && port->is_input()) {
-    validate(this->container()->container() == port->container()->container(),
-             "An output port can only be bound to an input port if both ports belong to reactors in the same "
-             "hierarichal level");
-  } else if (this->is_output() && port->is_output()) {
-    validate(this->container()->container() == port->container(),
-             "An output port A may only be bound to another output port B if A is contained by a reactor that in turn "
-             "is contained by the reactor of B");
-  } else {
-    throw std::runtime_error("invalid connection");
-  }
-
-  port->inward_binding_ = this;
-  [[maybe_unused]] bool result = this->outward_bindings_.insert(port).second;
-  reactor_assert(result);
-
-  Statistics::increment_connections();
-}
 
 void BasePort::register_dependency(Reaction* reaction, bool is_trigger) noexcept {
   reactor_assert(reaction != nullptr);
@@ -107,6 +75,49 @@ void Port<void>::set() {
   auto* scheduler = environment()->scheduler();
   scheduler->set_port(this);
   this->present_ = true;
+}
+
+void Port<void>::instantiate_connection_to(const ConnectionProperties& properties,
+                                           const std::vector<BasePort*>& downstream) {
+  std::unique_ptr<Connection<void>> connection = nullptr;
+
+  if (downstream.empty()) {
+    return;
+  }
+
+  // normal connections should be handled by environment
+  reactor_assert(properties.type_ != ConnectionType::Normal);
+
+  Environment* enclave = downstream[0]->environment();
+  auto index = this->container()->number_of_connections();
+
+  if (properties.type_ == ConnectionType::Delayed) {
+    connection = std::make_unique<DelayedConnection<void>>(
+        this->name() + "_delayed_connection_" + std::to_string(index), this->container(), properties.delay_);
+  }
+  if (properties.type_ == ConnectionType::Physical) {
+    connection = std::make_unique<PhysicalConnection<void>>(
+        this->name() + "_physical_connection_" + std::to_string(index), this->container(), properties.delay_);
+  }
+  if (properties.type_ == ConnectionType::Enclaved) {
+    connection = std::make_unique<EnclaveConnection<void>>(
+        this->name() + "_enclave_connection_" + std::to_string(index), enclave);
+  }
+  if (properties.type_ == ConnectionType::DelayedEnclaved) {
+    connection = std::make_unique<DelayedEnclaveConnection<void>>(
+        this->name() + "_delayed_enclave_connection_" + std::to_string(index), enclave, properties.delay_);
+  }
+  if (properties.type_ == ConnectionType::PhysicalEnclaved) {
+    connection = std::make_unique<PhysicalEnclaveConnection<void>>(
+        this->name() + "_physical_enclave_connection_" + std::to_string(index), enclave);
+  }
+
+  // if the connection here is null we have a vaulty enum value
+  reactor_assert(connection != nullptr);
+  connection->bind_downstream_ports(downstream);
+  connection->bind_upstream_port(this);
+  this->register_set_callback(connection->upstream_set_callback());
+  this->container()->register_connection(std::move(connection));
 }
 
 // This function can be used to chain two callbacks. This mechanism is not

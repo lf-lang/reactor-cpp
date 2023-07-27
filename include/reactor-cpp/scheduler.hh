@@ -69,7 +69,7 @@ private:
   std::atomic<std::ptrdiff_t> size_{0};
   Semaphore sem_{0};
   std::ptrdiff_t waiting_workers_{0};
-  const std::ptrdiff_t num_workers_;
+  const std::ptrdiff_t num_workers_{};
   log::NamedLogger& log_;
 
 public:
@@ -103,12 +103,12 @@ using ActionListPtr = std::unique_ptr<ActionList>;
 
 class EventQueue {
 private:
-  std::shared_mutex mutex_;
-  std::map<Tag, ActionListPtr> event_queue_;
+  std::shared_mutex mutex_{};
+  std::map<Tag, ActionListPtr> event_queue_{};
   /// stores the actions triggered at the current tag
   ActionListPtr triggered_actions_{nullptr};
 
-  std::vector<ActionListPtr> action_list_pool_;
+  std::vector<ActionListPtr> action_list_pool_{};
   static constexpr std::size_t action_list_pool_increment_{10};
 
   void fill_action_list_pool();
@@ -136,20 +136,20 @@ private:
   const bool using_workers_;
   LogicalTime logical_time_{};
 
-  Environment* environment_;
+  Environment* environment_{nullptr};
   std::vector<Worker> workers_{};
   log::NamedLogger log_;
 
-  std::mutex scheduling_mutex_;
-  std::condition_variable cv_schedule_;
+  std::mutex scheduling_mutex_{};
+  std::condition_variable cv_schedule_{};
 
   EventQueue event_queue_;
   /// stores the actions triggered at the current tag
   ActionListPtr triggered_actions_{nullptr};
 
-  std::vector<std::vector<BasePort*>> set_ports_;
-  std::vector<std::vector<Reaction*>> triggered_reactions_;
-  std::vector<std::vector<Reaction*>> reaction_queue_;
+  std::vector<std::vector<BasePort*>> set_ports_{};
+  std::vector<std::vector<Reaction*>> triggered_reactions_{};
+  std::vector<std::vector<Reaction*>> reaction_queue_{};
   unsigned int reaction_queue_pos_{std::numeric_limits<unsigned>::max()};
 
   ReadyQueue ready_queue_;

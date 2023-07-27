@@ -9,8 +9,10 @@
 #ifndef REACTOR_CPP_IMPL_ACTION_IMPL_HH
 #define REACTOR_CPP_IMPL_ACTION_IMPL_HH
 
-#include "../assert.hh"
-#include "../environment.hh"
+#include "reactor-cpp/assert.hh"
+#include "reactor-cpp/environment.hh"
+#include "reactor-cpp/reactor.hh"
+
 #include <iterator>
 #include <mutex>
 
@@ -99,6 +101,14 @@ template <class T> void Action<T>::setup() noexcept {
 template <class T> void Action<T>::cleanup() noexcept {
   BaseAction::cleanup();
   value_ptr_ = nullptr;
+}
+
+template <class T>
+PhysicalAction<T>::PhysicalAction(const std::string& name, reactor::Reactor* container)
+    : Action<T>(name, container, false, Duration::zero()) {
+  // all physical actions act as input actions to the program as they can be
+  // scheduled from external threads
+  this->environment()->register_input_action(this);
 }
 
 } // namespace reactor

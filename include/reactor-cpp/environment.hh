@@ -13,10 +13,11 @@
 #include <string>
 #include <vector>
 
+#include "connection_properties.hh"
 #include "fwd.hh"
+#include "graph.hh"
 #include "reactor-cpp/logging.hh"
 #include "reactor-cpp/time.hh"
-#include "reactor.hh"
 #include "scheduler.hh"
 
 namespace reactor {
@@ -58,6 +59,9 @@ private:
 
   const Duration timeout_{};
 
+  Graph<BasePort*, ConnectionProperties> graph_{};
+  Graph<BasePort*, ConnectionProperties> optimized_graph_{};
+
   void build_dependency_graph(Reactor* reactor);
   void calculate_indexes();
 
@@ -72,7 +76,24 @@ public:
 
   auto name() -> const std::string& { return name_; }
 
+  // this method draw a connection between two graph elements with some properties
+  template <class T> void draw_connection(Port<T>& source, Port<T>& sink, ConnectionProperties properties) {
+    this->draw_connection(&source, &sink, properties);
+  }
+
+  template <class T> void draw_connection(Port<T>* source, Port<T>* sink, ConnectionProperties properties) {
+    if (top_environment_ == nullptr || top_environment_ == this) {
+      log::Debug() << "drawing connection: " << source << " --> " << sink;
+      graph_.add_edge(source, sink, properties);
+    } else {
+      top_environment_->draw_connection(source, sink, properties);
+    }
+  }
+
+  void optimize();
+
   void register_reactor(Reactor* reactor);
+  void register_port(BasePort* port) noexcept;
   void register_input_action(BaseAction* action);
   void assemble();
   auto startup() -> std::thread;

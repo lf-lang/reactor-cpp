@@ -14,6 +14,7 @@
 #include "fwd.hh"
 #include "logical_time.hh"
 #include "reactor.hh"
+#include "reactor_element.hh"
 #include "time_barrier.hh"
 #include "value_ptr.hh"
 
@@ -27,7 +28,7 @@ class BaseAction : public ReactorElement {
 private:
   std::set<Reaction*> triggers_{};
   std::set<Reaction*> schedulers_{};
-  const Duration min_delay_{};
+  const Duration min_delay_{0};
   const bool logical_{true};
   bool present_{false};
 
@@ -48,22 +49,13 @@ protected:
    * indicates that the tag is safe to process.
    */
   virtual auto acquire_tag(const Tag& tag, std::unique_lock<std::mutex>& lock,
-                           const std::function<bool(void)>& abort_waiting) -> bool {
-    reactor_assert(!logical_);
-    reactor_assert(lock.owns_lock());
-    return PhysicalTimeBarrier::acquire_tag(tag, lock, environment()->scheduler(), abort_waiting);
-  }
+                           const std::function<bool(void)>& abort_waiting) -> bool;
 
   BaseAction(const std::string& name, Reactor* container, bool logical, Duration min_delay)
       : ReactorElement(name, ReactorElement::Type::Action, container)
       , min_delay_(min_delay)
       , logical_(logical) {}
-  BaseAction(const std::string& name, Environment* environment, bool logical, Duration min_delay)
-      : ReactorElement(name, ReactorElement::Type::Action, environment)
-      , min_delay_(min_delay)
-      , logical_(logical) {
-    environment->register_input_action(this);
-  }
+  BaseAction(const std::string& name, Environment* environment, bool logical, Duration min_delay);
 
 public:
   [[nodiscard]] auto inline triggers() const noexcept -> const auto& { return triggers_; }
@@ -81,8 +73,8 @@ template <class T> class Action : public BaseAction {
 private:
   ImmutableValuePtr<T> value_ptr_{nullptr};
 
-  std::map<Tag, ImmutableValuePtr<T>> events_;
-  std::mutex mutex_events_;
+  std::map<Tag, ImmutableValuePtr<T>> events_{};
+  std::mutex mutex_events_{};
 
 protected:
   void setup() noexcept override;
@@ -150,12 +142,7 @@ public:
 
 template <class T> class PhysicalAction : public Action<T> {
 public:
-  PhysicalAction(const std::string& name, Reactor* container)
-      : Action<T>(name, container, false, Duration::zero()) {
-    // all physical actions act as input actions to the program as they can be
-    // scheduled from external threads
-    container->environment()->register_input_action(this);
-  }
+  PhysicalAction(const std::string& name, Reactor* container);
 };
 
 template <class T> class LogicalAction : public Action<T> {
@@ -166,8 +153,8 @@ public:
 
 class Timer : public BaseAction {
 private:
-  const Duration offset_{};
-  const Duration period_{};
+  const Duration offset_{0};
+  const Duration period_{0};
 
   void cleanup() noexcept final;
 
