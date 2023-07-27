@@ -70,32 +70,25 @@ void Port<T>::instantiate_connection_to(const ConnectionProperties& properties,
   auto index = this->container()->number_of_connections();
 
   if (properties.type_ == ConnectionType::Delayed) {
-    connection =
-        std::make_unique<DelayedConnection<T>>(this->name() + "_delayed_connection_" + std::to_string(index), // NOLINT
-                                               this->container(),                                             // NOLINT
-                                               properties.delay_);                                            // NOLINT
+    connection = std::make_unique<DelayedConnection<T>>(this->name() + "_delayed_connection_" + std::to_string(index),
+                                                        this->container(), properties.delay_);
   }
   if (properties.type_ == ConnectionType::Physical) {
-    connection = std::make_unique<PhysicalConnection<T>>(this->name() + "_physical_connection_" +
-                                                             std::to_string(index), // NOLINT
-                                                         this->container(),         // NOLINT
-                                                         properties.delay_);        // NOLINT
+    connection = std::make_unique<PhysicalConnection<T>>(this->name() + "_physical_connection_" + std::to_string(index),
+                                                         this->container(), properties.delay_);
   }
   if (properties.type_ == ConnectionType::Enclaved) {
     connection = // NOLINT
-        std::make_unique<EnclaveConnection<T>>(this->name() + "_enclave_connection_" + std::to_string(index),
-                                               enclave); // NOLINT
+        std::make_unique<EnclaveConnection<T>>(this->name() + "_enclave_connection_" + std::to_string(index), enclave);
   }
   if (properties.type_ == ConnectionType::DelayedEnclaved) {
     connection = // NOLINT
-        std::make_unique<DelayedEnclaveConnection<T>>(this->name() + "_delayed_enclave_connection_" +
-                                                          std::to_string(index), // NOLINT
-                                                      enclave,                   // NOLINT
-                                                      properties.delay_);        // NOLINT
+        std::make_unique<DelayedEnclaveConnection<T>>(
+            this->name() + "_delayed_enclave_connection_" + std::to_string(index), enclave, properties.delay_);
   }
   if (properties.type_ == ConnectionType::PhysicalEnclaved) {
-    connection = std::make_unique<PhysicalEnclaveConnection<T>>(                          // NOLINT
-        this->name() + "_physical_enclave_connection_" + std::to_string(index), enclave); // NOLINT
+    connection = std::make_unique<PhysicalEnclaveConnection<T>>(
+        this->name() + "_physical_enclave_connection_" + std::to_string(index), enclave);
   }
 
   // if the connection here is null we have a vaulty enum value

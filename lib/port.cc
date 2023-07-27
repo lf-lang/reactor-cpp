@@ -92,34 +92,29 @@ void Port<void>::instantiate_connection_to(const ConnectionProperties& propertie
   auto index = this->container()->number_of_connections();
 
   if (properties.type_ == ConnectionType::Delayed) {
-    connection =
-        std::make_unique<DelayedConnection<void>>(this->name() + "_delayed_connection_" + std::to_string(index),
-                                                  this->container(),  // NOLINT
-                                                  properties.delay_); // NOLINT
+    connection = std::make_unique<DelayedConnection<void>>(
+        this->name() + "_delayed_connection_" + std::to_string(index), this->container(), properties.delay_);
   }
   if (properties.type_ == ConnectionType::Physical) {
-    connection =
-        std::make_unique<PhysicalConnection<void>>(this->name() + "_physical_connection_" + std::to_string(index),
-                                                   this->container(),  // NOLINT
-                                                   properties.delay_); // NOLINT
+    connection = std::make_unique<PhysicalConnection<void>>(
+        this->name() + "_physical_connection_" + std::to_string(index), this->container(), properties.delay_);
   }
   if (properties.type_ == ConnectionType::Enclaved) {
     connection = std::make_unique<EnclaveConnection<void>>(
-        this->name() + "_enclave_connection_" + std::to_string(index), enclave); // NOLINT
+        this->name() + "_enclave_connection_" + std::to_string(index), enclave);
   }
   if (properties.type_ == ConnectionType::DelayedEnclaved) {
     connection = std::make_unique<DelayedEnclaveConnection<void>>(
-        this->name() + "_delayed_enclave_connection_" + std::to_string(index), enclave, // NOLINT
-        properties.delay_);                                                             // NOLINT
+        this->name() + "_delayed_enclave_connection_" + std::to_string(index), enclave, properties.delay_);
   }
   if (properties.type_ == ConnectionType::PhysicalEnclaved) {
     connection = std::make_unique<PhysicalEnclaveConnection<void>>(
-        this->name() + "_physical_enclave_connection_" + std::to_string(index), enclave); // NOLINT
+        this->name() + "_physical_enclave_connection_" + std::to_string(index), enclave);
   }
 
   // if the connection here is null we have a vaulty enum value
   reactor_assert(connection != nullptr);
-  connection->bind_downstream_ports(downstream); // NOLINT Pointer is not null
+  connection->bind_downstream_ports(downstream);
   connection->bind_upstream_port(this);
   this->register_set_callback(connection->upstream_set_callback());
   this->container()->register_connection(std::move(connection));
