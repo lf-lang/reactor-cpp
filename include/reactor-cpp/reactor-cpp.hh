@@ -13,6 +13,7 @@
 #include "action.hh"
 #include "connection.hh"
 #include "connection_endpoint.hh"
+// TODO only include this if ros is acutally requested (and therefore must be installed)
 #include "ros2_connection_endpoint.hh"
 #include "environment.hh"
 #include "logging.hh"

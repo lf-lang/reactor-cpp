@@ -257,7 +257,10 @@ private:
   /// The internal shared smart pointer that this class builds upon.
   std::shared_ptr<T> internal_ptr;
 
-  /**
+ 
+
+public:
+   /**
    * Constructor from an existing raw pointer.
    *
    * @rst
@@ -268,8 +271,7 @@ private:
    */
   explicit ImmutableValuePtr(std::shared_ptr<T>&& value)
       : internal_ptr(std::move(value)) {}
-
-public:
+    
   /**
    * Default constructor.
    * @rst
@@ -480,11 +482,12 @@ private:
   T value_{};
   bool valid_{false};
 
-  explicit ImmutableValuePtr(T value)
-      : value_{value}
-      , valid_{true} {}
-
 public:
+
+  explicit ImmutableValuePtr(T value)
+        : value_{value}
+        , valid_{true} {}
+  
   constexpr ImmutableValuePtr() = default;
   ~ImmutableValuePtr() = default;
   ImmutableValuePtr(const ImmutableValuePtr& ptr) = default;

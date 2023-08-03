@@ -20,11 +20,11 @@ private:
   TimePoint time_point_{};
   mstep_t micro_step_{0};
 
-  Tag(const TimePoint& time_point, const mstep_t& micro_step)
-      : time_point_{time_point}
-      , micro_step_{micro_step} {}
-
 public:
+
+  Tag(const TimePoint& time_point, const mstep_t& micro_step)
+        : time_point_{time_point}
+        , micro_step_{micro_step} {}
   Tag() = default;
   Tag(Tag&&) = default;
   Tag(const Tag&) = default;
