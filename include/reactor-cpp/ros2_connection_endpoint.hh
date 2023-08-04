@@ -108,7 +108,7 @@ class ROS2SubEndpoint : public DownstreamEndpoint<UserType, WrappedType> {
                 this->schedule(ImmutableValuePtr<UserType>(std::move(inner_ptr)));
         }
 
-        virtual bool acquire_tag(const Tag& tag, std::unique_lock<std::mutex>& lock, std::condition_variable& cv,
+        virtual bool acquire_tag(const Tag& tag, std::unique_lock<std::mutex>& lock,
                            const std::function<bool(void)>& abort_waiting) override {
             if (logical_time_barrier_.try_acquire_tag(tag)) {
                 return true;
@@ -118,7 +118,7 @@ class ROS2SubEndpoint : public DownstreamEndpoint<UserType, WrappedType> {
             t.time_point = tag.time_point().time_since_epoch().count();
             empty_event_pub_->publish(std::move(t));
 
-            return logical_time_barrier_.acquire_tag(tag, lock, cv, abort_waiting);
+            return logical_time_barrier_.acquire_tag(tag, lock, abort_waiting);
         }
 
         virtual void sub_to_tag(const std::string& topic_name) {
@@ -137,7 +137,9 @@ class ROS2SubEndpoint : public DownstreamEndpoint<UserType, WrappedType> {
 
     public:
         ROS2SubEndpoint(const std::string& topic_name, const std::string& name, Environment* environment, bool is_logical, Duration min_delay) 
-        : DownstreamEndpoint<UserType, WrappedType>(name, environment, is_logical, min_delay){
+        : DownstreamEndpoint<UserType, WrappedType>(name, environment, is_logical, min_delay),
+            logical_time_barrier_(environment->scheduler())
+        {
             while (!lf_node->count_publishers(topic_name));
 
             
@@ -190,9 +192,9 @@ class ROS2SubEndpointPhysical : public ROS2SubEndpoint<UserType, WrappedType> {
             // not necessary
         }
 
-        inline auto acquire_tag(const Tag& tag, std::unique_lock<std::mutex>& lock, std::condition_variable& cv,
+        inline auto acquire_tag(const Tag& tag, std::unique_lock<std::mutex>& lock,
                           const std::function<bool(void)>& abort_waiting) -> bool override {
-            return PhysicalTimeBarrier::acquire_tag(tag, lock, cv, abort_waiting);
+            return PhysicalTimeBarrier::acquire_tag(tag, lock, this->environment()->scheduler(), abort_waiting);
         }
 
     public:
