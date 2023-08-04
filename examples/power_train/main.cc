@@ -164,13 +164,14 @@ auto main() -> int {
   Brake brakes{&env};
   Engine engine{&env};
 
+  env.draw_connection(left_pedal.angle, brake_control.angle, ConnectionProperties{});
+  env.draw_connection(left_pedal.angle, engine_control.on_off, ConnectionProperties{});
+  env.draw_connection(brake_control.force, brakes.force, ConnectionProperties{});
+  env.draw_connection(right_pedal.angle, engine_control.angle, ConnectionProperties{});
+  env.draw_connection(engine_control.check, right_pedal.check, ConnectionProperties{});
+  env.draw_connection(engine_control.torque, engine.torque, ConnectionProperties{});
+
   env.assemble();
-  left_pedal.angle.bind_to(&brake_control.angle);
-  left_pedal.on_off.bind_to(&engine_control.on_off);
-  brake_control.force.bind_to(&brakes.force);
-  right_pedal.angle.bind_to(&engine_control.angle);
-  engine_control.check.bind_to(&right_pedal.check);
-  engine_control.torque.bind_to(&engine.torque);
 
   env.export_dependency_graph("graph.dot");
 

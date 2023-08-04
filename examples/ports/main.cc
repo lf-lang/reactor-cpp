@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "reactor-cpp/reactor-cpp.hh"
+#include <reactor-cpp/reactor-cpp.hh>
 
 using namespace reactor;
 using namespace std::chrono_literals;
@@ -38,6 +38,7 @@ public:
   Output<int> count{"count", this};     // NOLINT
 
   void assemble() override {
+    std::cout << "assemble Counter" << std::endl << std::flush;
     r_trigger.declare_trigger(&trigger);
     r_trigger.declare_antidependency(&count);
   }
@@ -53,12 +54,15 @@ private:
   Reaction r_value{"r_value", 1, this, [this]() { on_value(); }};
 
 public:
-  Input<int> value{"value", this}; // NOLINT
-
+  Input<int> value{"value", this};     // NOLINT
+  Input<int> forward{"forward", this}; // NOLINT
   Printer(const std::string& name, Environment* env)
       : Reactor(name, env) {}
 
-  void assemble() override { r_value.declare_trigger(&value); }
+  void assemble() override {
+    std::cout << "assemble Printer" << std::endl << std::flush;
+    r_value.declare_trigger(&value);
+  }
 
   void on_value() { std::cout << this->name() << ": " << *value.get() << std::endl; }
 };
@@ -84,6 +88,7 @@ public:
   void add() {
     if (i1.is_present() && i2.is_present()) {
       sum.set(*i1.get() + *i2.get());
+      std::cout << "setting sum" << std::endl;
     }
   }
 };
@@ -94,23 +99,31 @@ auto main() -> int {
   Trigger trigger1{"t1", &env, 1s};
   Counter counter1{"c1", &env};
   Printer printer1{"p1", &env};
-  trigger1.trigger.bind_to(&counter1.trigger);
-  counter1.count.bind_to(&printer1.value);
+
+  env.draw_connection(trigger1.trigger, counter1.trigger, ConnectionProperties{});
+  env.draw_connection(counter1.count, printer1.value, ConnectionProperties{});
 
   Trigger trigger2{"t2", &env, 2s};
   Counter counter2{"c2", &env};
   Printer printer2{"p2", &env};
-  trigger2.trigger.bind_to(&counter2.trigger);
-  counter2.count.bind_to(&printer2.value);
+
+  // trigger2.trigger.set_inward_binding(&counter2.trigger);
+  // counter2.count.set_inward_binding(&printer2.value);
+  env.draw_connection(trigger2.trigger, counter2.trigger, ConnectionProperties{});
+  env.draw_connection(counter2.count, printer2.value, ConnectionProperties{});
 
   Adder add{"add", &env};
   Printer p_add{"p_add", &env};
-  counter1.count.bind_to(&add.i1);
-  counter2.count.bind_to(&add.i2);
-  add.sum.bind_to(&p_add.value);
 
+  env.draw_connection(counter1.count, add.i1, ConnectionProperties{});
+  env.draw_connection(counter2.count, add.i2, ConnectionProperties{});
+  env.draw_connection(add.sum, p_add.forward, ConnectionProperties{ConnectionType::Delayed, 10s, nullptr});
+  env.draw_connection(p_add.forward, p_add.value, ConnectionProperties{ConnectionType::Delayed, 5s, nullptr});
+
+  std::cout << "assemble" << std::endl << std::flush;
   env.assemble();
 
+  std::cout << "optimize" << std::endl << std::flush;
   auto thread = env.startup();
   thread.join();
 

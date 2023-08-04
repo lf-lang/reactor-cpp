@@ -15,6 +15,7 @@
 #include "connection_endpoint.hh"
 // TODO only include this if ros is acutally requested (and therefore must be installed)
 #include "ros2_connection_endpoint.hh"
+#include "connection_properties.hh"
 #include "environment.hh"
 #include "logging.hh"
 #include "logical_time.hh"

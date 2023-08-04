@@ -13,10 +13,11 @@
 #include <string>
 #include <vector>
 
+#include "connection_properties.hh"
 #include "fwd.hh"
+#include "graph.hh"
 #include "reactor-cpp/logging.hh"
 #include "reactor-cpp/time.hh"
-#include "reactor.hh"
 #include "scheduler.hh"
 
 namespace reactor {
@@ -26,10 +27,9 @@ constexpr unsigned int default_max_reaction_index = 0;
 constexpr bool default_run_forever = false;
 constexpr bool default_fast_fwd_execution = false;
 
-class Environment {
-public:
-  enum class Phase { Construction = 0, Assembly = 1, Startup = 2, Execution = 3, Shutdown = 4, Deconstruction = 5 };
+enum class Phase { Construction = 0, Assembly = 1, Startup = 2, Execution = 3, Shutdown = 4, Deconstruction = 5 };
 
+class Environment {
 private:
   using Dependency = std::pair<Reaction*, Reaction*>;
 
@@ -59,6 +59,9 @@ private:
 
   const Duration timeout_{};
 
+  Graph<BasePort*, ConnectionProperties> graph_{};
+  Graph<BasePort*, ConnectionProperties> optimized_graph_{};
+
   void build_dependency_graph(Reactor* reactor);
   void calculate_indexes();
 
@@ -73,7 +76,24 @@ public:
 
   auto name() -> const std::string& { return name_; }
 
+  // this method draw a connection between two graph elements with some properties
+  template <class T> void draw_connection(Port<T>& source, Port<T>& sink, ConnectionProperties properties) {
+    this->draw_connection(&source, &sink, properties);
+  }
+
+  template <class T> void draw_connection(Port<T>* source, Port<T>* sink, ConnectionProperties properties) {
+    if (top_environment_ == nullptr || top_environment_ == this) {
+      log::Debug() << "drawing connection: " << source << " --> " << sink;
+      graph_.add_edge(source, sink, properties);
+    } else {
+      top_environment_->draw_connection(source, sink, properties);
+    }
+  }
+
+  void optimize();
+
   void register_reactor(Reactor* reactor);
+  void register_port(BasePort* port) noexcept;
   void register_input_action(BaseAction* action);
   void assemble();
   auto startup() -> std::thread;
