@@ -19,8 +19,7 @@ namespace reactor {
 template <class E, class P> class Graph {
 private:
   std::map<E, std::vector<std::pair<P, E>>> graph_;
-  std::size_t index{0};
-  std::map<E, std::string> name_map{};
+  std::set<E> nodes_{};
 
   // custom compare operator this is required if u want special key values in std::map
   // this is required for the Graph::get_edges() method
@@ -54,6 +53,8 @@ public:
 
   // adds a single edge to the graph structure
   void add_edge(E source, E destination, P properties) noexcept {
+    nodes_.insert(source);
+    nodes_.insert(destination);
     if (graph_.find(source) == std::end(graph_)) {
       Path edges{std::make_pair(properties, destination)};
       graph_[source] = edges;
@@ -61,6 +62,8 @@ public:
       graph_[source].emplace_back(properties, destination);
     }
   }
+
+  auto get_nodes() -> std::set<E> { return nodes_; }
 
   // this groups connections by same source and properties
   [[nodiscard]] auto get_edges() const noexcept -> std::map<map_key, std::vector<E>, map_key_compare> {
@@ -89,39 +92,16 @@ public:
     return keys;
   }
 
-  auto name_resolver(E object) -> std::string {
-    char names[] = "ABCDEFGHIJKLMNOPQRSTUVGXYZabcdefghijklmnopqrstuvgxyz";
-    if(name_map.find(object) == std::end(name_map)) {
-      name_map[object] = names[index];
-      index++;
-      return std::string{names[index - 1], 1};
-    }
-    return name_map[object];
-  }
-
   // the return type looks a little bit cursed what is happening here ?
   // we have a map from the destination as a key to a list of paths through the graph.
   // A path here is modelled by a list of edges (with properties and the next vertex).
   auto naive_spanning_tree(E source) noexcept -> std::vector<std::vector<std::pair<P, E>>> {
-    auto result = recursive_spanning_tree(source, std::vector<E>{});
-
-    std::string mermaid_string = "graph TD;\n";
-
-    for (auto path : result ) {
-      mermaid_string += std::string("    ") + name_resolver(source);
-      for (auto edge : path) {
-         mermaid_string += std::string("-->")+ name_resolver(edge.second);
-      }
-      mermaid_string += std::string(";\n");
-
-    }
-    //std::cout << "EDGE: \n" << mermaid_string << std::endl;
-    return result;
+    return recursive_spanning_tree(source, std::vector<E>{});
   }
 
-
   // this function goes recursively though the graph and tries to find every possible path
-  auto recursive_spanning_tree(E source_node, std::vector<E> visited_nodes) -> std::vector<std::vector<std::pair<P, E>>> {
+  auto recursive_spanning_tree(E source_node, std::vector<E> visited_nodes)
+      -> std::vector<std::vector<std::pair<P, E>>> {
     std::vector<Path> paths{};
 
     if (graph_[source_node].empty()) {
@@ -138,7 +118,7 @@ public:
         auto temp_nodes = visited_nodes;
         temp_nodes.push_back(current_node);
 
-        for (auto path: recursive_spanning_tree(current_node, temp_nodes)) {
+        for (auto path : recursive_spanning_tree(current_node, temp_nodes)) {
           path.insert(std::begin(path), child);
           paths.push_back(path);
         }
@@ -154,9 +134,8 @@ public:
     auto spanning_tre = naive_spanning_tree(source);
     std::vector<Path> relevant_paths{};
 
-    std::copy_if(spanning_tre.begin(), spanning_tre.end(), std::back_inserter(relevant_paths), [destination](Path path) {
-      return (*path.end()).second == destination;
-    });
+    std::copy_if(spanning_tre.begin(), spanning_tre.end(), std::back_inserter(relevant_paths),
+                 [&, destination](Path path) { return path[path.size() - 1].second == destination; });
 
     if (relevant_paths.empty()) {
       return std::nullopt;
@@ -185,12 +164,25 @@ public:
     }
   }
 
-  auto to_mermaid() noexcept -> std::string {
+  auto to_mermaid() const noexcept -> std::string {
+    std::size_t index{0};
+    std::map<E, std::string> name_map{};
     std::string mermaid_string = "graph TD;\n";
+
+    auto name_resolver = [&](E object) -> std::string {
+      char names[] = "ABCDEFGHIJKLMNOPQRSTUVGXYZabcdefghijklmnopqrstuvgxyz";
+      if (name_map.find(object) == std::end(name_map)) {
+        name_map[object] = names[index];
+        index++;
+        return std::string{names[index - 1], 1};
+      }
+      return name_map[object];
+    };
 
     for (const auto& [source, destinations] : graph_) {
       for (auto dest : destinations) {
-        mermaid_string += std::string("    ") + name_resolver(source) + std::string("-->") + name_resolver(dest.second) + std::string(";\n");
+        mermaid_string += std::string("    ") + name_resolver(source) + std::string("-->") +
+                          name_resolver(dest.second) + std::string(";\n");
       }
     }
     return mermaid_string;

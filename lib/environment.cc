@@ -68,13 +68,9 @@ void Environment::optimize() {
 #else
   constexpr bool enable_optimizations = false;
 #endif
-  std::cout << "OPTIMIZATIONS: " << enable_optimizations << std::endl;
   if constexpr (enable_optimizations) {
-    std::cout << graph_.to_mermaid() << std::endl;
     expand_and_merge();
     strip_and_optimize();
-
-    std::cout << optimized_graph_.to_mermaid() << std::endl;
   } else {
     // no optimizations
     optimized_graph_ = graph_;
@@ -155,9 +151,7 @@ void Environment::expand_and_merge() {
       ConnectionProperties merged_properties{};
       auto* current_source = source;
 
-      std::cout << std::string("    ") << graph_.name_resolver(source);
       for (auto element : path) {
-        std::cout << std::string("-->") << graph_.name_resolver(element.second);
         auto property = element.first;
 
         auto return_type =
@@ -180,13 +174,11 @@ void Environment::expand_and_merge() {
           merged_properties.delay_ += property.delay_;
 
           // updating target enclave if not nullptr
-          merged_properties.enclave_ =
-              (property.enclave_ != nullptr) ? property.enclave_ : merged_properties.enclave_;
+          merged_properties.enclave_ = (property.enclave_ != nullptr) ? property.enclave_ : merged_properties.enclave_;
 
           optimized_graph_.add_edge(current_source, element.second, merged_properties);
         }
       }
-      std::cout << std::endl;
     }
   }
 }
@@ -194,16 +186,14 @@ void Environment::expand_and_merge() {
 void Environment::strip_and_optimize() {
   Graph<BasePort*, ConnectionProperties> striped_graph{};
 
-  auto nodes = optimized_graph_.keys();
+  auto nodes = optimized_graph_.get_nodes();
   std::vector<BasePort*> has_downstream_reactions{};
-  std::copy_if(nodes.begin(), nodes.end(), std::back_inserter(has_downstream_reactions), [](BasePort* port) {
-    return port->has_anti_dependencies();
-  });
+  std::copy_if(nodes.begin(), nodes.end(), std::back_inserter(has_downstream_reactions),
+               [](BasePort* port) { return port->has_anti_dependencies(); });
 
   std::vector<BasePort*> has_triggers{};
-  std::copy_if(nodes.begin(), nodes.end(), std::back_inserter(has_triggers), [](BasePort* port) {
-    return port->has_dependencies();
-  });
+  std::copy_if(nodes.begin(), nodes.end(), std::back_inserter(has_triggers),
+               [](BasePort* port) { return port->has_dependencies(); });
 
   for (auto downstream : has_downstream_reactions) {
     for (auto upstream : has_triggers) {
