@@ -19,6 +19,8 @@ namespace reactor {
 template <class E, class P> class Graph {
 private:
   std::map<E, std::vector<std::pair<P, E>>> graph_;
+  std::size_t index{0};
+  std::map<E, std::string> name_map{};
 
   // custom compare operator this is required if u want special key values in std::map
   // this is required for the Graph::get_edges() method
@@ -38,6 +40,8 @@ public:
       : graph_(std::move(graph.graph_)) {}
   ~Graph() noexcept = default;
 
+  using Path = std::vector<std::pair<P, E>>;
+
   auto operator=(const Graph other) noexcept -> Graph& {
     graph_ = other.graph_;
     return *this;
@@ -51,7 +55,7 @@ public:
   // adds a single edge to the graph structure
   void add_edge(E source, E destination, P properties) noexcept {
     if (graph_.find(source) == std::end(graph_)) {
-      std::vector<std::pair<P, E>> edges{std::make_pair(properties, destination)};
+      Path edges{std::make_pair(properties, destination)};
       graph_[source] = edges;
     } else {
       graph_[source].emplace_back(properties, destination);
@@ -85,33 +89,88 @@ public:
     return keys;
   }
 
-  // returns the spanning tree of a given source including properties
-  [[nodiscard]] auto spanning_tree(E source) noexcept -> std::map<E, std::vector<std::pair<P, E>>> {
-    std::map<E, std::vector<std::pair<P, E>>> tree{};
-    std::vector<E> work_nodes{source};
+  auto name_resolver(E object) -> std::string {
+    char names[] = "ABCDEFGHIJKLMNOPQRSTUVGXYZabcdefghijklmnopqrstuvgxyz";
+    if(name_map.find(object) == std::end(name_map)) {
+      name_map[object] = names[index];
+      index++;
+      return std::string{names[index - 1], 1};
+    }
+    return name_map[object];
+  }
 
-    while (!work_nodes.empty()) {
-      auto parent = *work_nodes.begin();
+  // the return type looks a little bit cursed what is happening here ?
+  // we have a map from the destination as a key to a list of paths through the graph.
+  // A path here is modelled by a list of edges (with properties and the next vertex).
+  auto naive_spanning_tree(E source) noexcept -> std::vector<std::vector<std::pair<P, E>>> {
+    auto result = recursive_spanning_tree(source, std::vector<E>{});
 
-      for (auto child : graph_[parent]) {
-        // figuring out the properties until this node
-        std::vector<std::pair<P, E>> parent_properties{};
-        if (tree.find(parent) != std::end(tree)) {
-          // this if should always be the case except the first time when tree is empty
-          parent_properties = tree[parent]; // TODO: make sure this is a copy otherwise we change this properties as
-                                            // well
-        }
+    std::string mermaid_string = "graph TD;\n";
 
-        // appending the new property and inserting into the tree
-        parent_properties.push_back(child);
-        work_nodes.push_back(child.second);
-        tree[child.second] = parent_properties;
+    for (auto path : result ) {
+      mermaid_string += std::string("    ") + name_resolver(source);
+      for (auto edge : path) {
+         mermaid_string += std::string("-->")+ name_resolver(edge.second);
       }
+      mermaid_string += std::string(";\n");
 
-      work_nodes.erase(std::begin(work_nodes));
+    }
+    //std::cout << "EDGE: \n" << mermaid_string << std::endl;
+    return result;
+  }
+
+
+  // this function goes recursively though the graph and tries to find every possible path
+  auto recursive_spanning_tree(E source_node, std::vector<E> visited_nodes) -> std::vector<std::vector<std::pair<P, E>>> {
+    std::vector<Path> paths{};
+
+    if (graph_[source_node].empty()) {
+      return std::vector<Path>{Path{}};
     }
 
-    return tree;
+    for (auto child : graph_[source_node]) {
+      E current_node = child.second;
+
+      // means this node has not been visited yey
+      if (std::find(std::begin(visited_nodes), std::end(visited_nodes), current_node) == std::end(visited_nodes)) {
+
+        // creating a temporary vector where the currently selected vertex is appended
+        auto temp_nodes = visited_nodes;
+        temp_nodes.push_back(current_node);
+
+        for (auto path: recursive_spanning_tree(current_node, temp_nodes)) {
+          path.insert(std::begin(path), child);
+          paths.push_back(path);
+        }
+      }
+    }
+
+    return paths;
+  }
+
+  auto shortest_path(E source, E destination) -> std::optional<Path> {
+    // TODO: maybe build proper djikstra here
+
+    auto spanning_tre = naive_spanning_tree(source);
+    std::vector<Path> relevant_paths{};
+
+    std::copy_if(spanning_tre.begin(), spanning_tre.end(), std::back_inserter(relevant_paths), [destination](Path path) {
+      return (*path.end()).second == destination;
+    });
+
+    if (relevant_paths.empty()) {
+      return std::nullopt;
+    }
+
+    Path best_path = *relevant_paths.begin();
+
+    for (auto path : relevant_paths) {
+      if (path.size() < best_path.size()) {
+        best_path = path;
+      }
+    }
+
+    return best_path;
   }
 
   [[nodiscard]] auto get_destinations(E source) const noexcept -> std::vector<std::pair<P, E>> {
@@ -124,6 +183,17 @@ public:
         return source;
       }
     }
+  }
+
+  auto to_mermaid() noexcept -> std::string {
+    std::string mermaid_string = "graph TD;\n";
+
+    for (const auto& [source, destinations] : graph_) {
+      for (auto dest : destinations) {
+        mermaid_string += std::string("    ") + name_resolver(source) + std::string("-->") + name_resolver(dest.second) + std::string(";\n");
+      }
+    }
+    return mermaid_string;
   }
 
   friend auto operator<<(std::ostream& outstream, const Graph& graph) -> std::ostream& {

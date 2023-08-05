@@ -91,6 +91,8 @@ public:
   }
 
   void optimize();
+  void expand_and_merge();
+  void strip_and_optimize();
 
   void register_reactor(Reactor* reactor);
   void register_port(BasePort* port) noexcept;
