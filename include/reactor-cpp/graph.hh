@@ -170,7 +170,7 @@ public:
     std::string mermaid_string = "graph TD;\n";
 
     auto name_resolver = [&](E object) -> std::string {
-      char names[] = "ABCDEFGHIJKLMNOPQRSTUVGXYZabcdefghijklmnopqrstuvgxyz"; //NOLINT
+      char names[] = "ABCDEFGHIJKLMNOPQRSTUVGXYZabcdefghijklmnopqrstuvgxyz"; // NOLINT
       if (name_map.find(object) == std::end(name_map)) {
         name_map[object] = names[index];
         index++;

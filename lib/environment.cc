@@ -24,6 +24,16 @@
 
 namespace reactor {
 
+void vector_shuffle(std::vector<std::pair<ConnectionProperties, BasePort*>>& path, BasePort* source) {
+  for (auto it = std::begin(path); it != std::end(path); ++it) {
+    if (std::next(it) == std::end(path)) {
+      it->second = source;
+    } else {
+      it->second = std::next(it)->second;
+    }
+  }
+};
+
 Environment::Environment(unsigned int num_workers, bool fast_fwd_execution, const Duration& timeout)
     : log_("Environment")
     , num_workers_(num_workers)
@@ -155,13 +165,7 @@ void Environment::expand_and_merge() {
       std::reverse(path.begin(), path.end());
 
       auto* previous_element = std::begin(path)->second;
-      for (auto it = std::begin(path); it != std::end(path); ++it) {
-        if (std::next(it) == std::end(path)) {
-          it->second = source;
-        } else {
-          it->second = std::next(it)->second;
-        }
-      }
+      vector_shuffle(path, source);
 
       auto current_rating = previous_element->rating();
 
