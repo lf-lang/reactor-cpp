@@ -63,14 +63,16 @@ void Environment::register_input_action(BaseAction* action) {
 }
 
 void Environment::optimize() {
-#ifdef GRAPH_OPTIMIZATIONS
+#if GRAPH_OPTIMIZATIONS
   constexpr bool enable_optimizations = true;
 #else
   constexpr bool enable_optimizations = false;
 #endif
+  log::Debug() << "Opimizations:" << enable_optimizations;
   if constexpr (enable_optimizations) {
+    log::Debug() << graph_.to_mermaid();
     expand_and_merge();
-    strip_and_optimize();
+    log::Debug() << optimized_graph_.to_mermaid();
   } else {
     // no optimizations
     optimized_graph_ = graph_;
@@ -149,70 +151,53 @@ void Environment::expand_and_merge() {
     auto spanning_tree = graph_.naive_spanning_tree(source);
     for (auto& path : spanning_tree) {
       ConnectionProperties merged_properties{};
-      auto* current_source = source;
+
+      std::reverse(path.begin(), path.end());
+
+      auto* previous_element = std::begin(path)->second;
+      for (auto it = std::begin(path); it != std::end(path); ++it) {
+        if (std::next(it) == std::end(path)) {
+          it->second = source;
+        } else {
+          it->second = std::next(it)->second;
+        }
+      }
+
+      auto current_rating = previous_element->rating();
 
       for (auto element : path) {
         auto property = element.first;
+        current_rating += element.second->rating();
 
-        auto return_type =
-            construction_table[std::pair<ConnectionType, ConnectionType>(merged_properties.type_, property.type_)];
+        if (current_rating > 0) {
+          auto return_type =
+              construction_table[std::pair<ConnectionType, ConnectionType>(merged_properties.type_, property.type_)];
+          // invalid will split the connections
+          if (return_type == Invalid) {
+            // first add connection until this point
+            optimized_graph_.add_edge(element.second, previous_element, merged_properties);
 
-        // invalid will split the connections
-        if (return_type == Invalid) {
-          // first add connection until this point
-          optimized_graph_.add_edge(current_source, element.second, merged_properties);
+            // updating the source of the connection and resetting the properties
+            previous_element = element.second;
+            merged_properties = property;
 
-          // updating the source of the connection and resetting the properties
-          current_source = element.second;
-          merged_properties = property;
+          } else {
+            // merging the connections
+            merged_properties.type_ = return_type;
 
-        } else {
-          // merging the connections
-          merged_properties.type_ = return_type;
+            // adding up delays
+            merged_properties.delay_ += property.delay_;
 
-          // adding up delays
-          merged_properties.delay_ += property.delay_;
+            // updating target enclave if not nullptr
+            merged_properties.enclave_ =
+                (property.enclave_ != nullptr) ? property.enclave_ : merged_properties.enclave_;
 
-          // updating target enclave if not nullptr
-          merged_properties.enclave_ = (property.enclave_ != nullptr) ? property.enclave_ : merged_properties.enclave_;
-
-          optimized_graph_.add_edge(current_source, element.second, merged_properties);
-        }
-      }
-    }
-  }
-}
-
-void Environment::strip_and_optimize() {
-  Graph<BasePort*, ConnectionProperties> striped_graph{};
-
-  auto nodes = optimized_graph_.get_nodes();
-  std::vector<BasePort*> has_downstream_reactions{};
-  std::copy_if(nodes.begin(), nodes.end(), std::back_inserter(has_downstream_reactions),
-               [](BasePort* port) { return port->has_anti_dependencies(); });
-
-  std::vector<BasePort*> has_triggers{};
-  std::copy_if(nodes.begin(), nodes.end(), std::back_inserter(has_triggers),
-               [](BasePort* port) { return port->has_dependencies(); });
-
-  for (auto downstream : has_downstream_reactions) {
-    for (auto upstream : has_triggers) {
-      if (upstream != downstream) {
-        auto optional_path = optimized_graph_.shortest_path(downstream, upstream);
-
-        if (optional_path.has_value()) {
-          auto best_path = optional_path.value();
-          auto source = downstream;
-          for (auto hop : best_path) {
-            striped_graph.add_edge(source, hop.second, hop.first);
-            source = hop.second;
+            optimized_graph_.add_edge(element.second, previous_element, merged_properties);
           }
         }
       }
     }
   }
-
-  optimized_graph_ = striped_graph;
 }
 
 void recursive_assemble(Reactor* container) { // NOLINT
@@ -233,11 +218,17 @@ void Environment::assemble() { // NOLINT
     recursive_assemble(reactor);
   }
 
-  log::Debug() << "start optimization on port graph";
-  this->optimize();
+  // this assembles all the contained environments aka enclaves
+  for (auto* env : contained_environments_) {
+    env->assemble();
+  }
 
-  log::Debug() << "instantiating port graph declaration";
   if (top_environment_ == nullptr || top_environment_ == this) {
+    log::Debug() << "start optimization on port graph";
+    this->optimize();
+
+    log::Debug() << "instantiating port graph declaration";
+
     log::Debug() << "graph: ";
     log::Debug() << optimized_graph_;
 
@@ -291,11 +282,6 @@ void Environment::assemble() { // NOLINT
   }
 
   calculate_indexes();
-
-  // this assembles all the contained environments aka enclaves
-  for (auto* env : contained_environments_) {
-    env->assemble();
-  }
 }
 
 void Environment::build_dependency_graph(Reactor* reactor) { // NOLINT

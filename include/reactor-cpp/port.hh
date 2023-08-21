@@ -93,6 +93,7 @@ public:
   [[nodiscard]] inline auto has_dependencies() const noexcept -> bool { return !dependencies_.empty(); }
   [[nodiscard]] inline auto has_anti_dependencies() const noexcept -> bool { return !anti_dependencies_.empty(); }
   [[nodiscard]] inline auto has_triggers() const noexcept -> bool { return !triggers_.empty(); }
+  [[nodiscard]] inline auto rating() const noexcept -> std::size_t { return triggers_.size() + dependencies_.size(); }
 
   [[nodiscard]] inline auto inward_binding() const noexcept -> BasePort* { return inward_binding_; }
   [[nodiscard]] inline auto outward_bindings() const noexcept -> const auto& { return outward_bindings_; }

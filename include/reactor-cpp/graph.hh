@@ -164,13 +164,13 @@ public:
     }
   }
 
-  auto to_mermaid() const noexcept -> std::string {
+  [[nodiscard]] auto to_mermaid() const noexcept -> std::string {
     std::size_t index{0};
     std::map<E, std::string> name_map{};
     std::string mermaid_string = "graph TD;\n";
 
     auto name_resolver = [&](E object) -> std::string {
-      char names[] = "ABCDEFGHIJKLMNOPQRSTUVGXYZabcdefghijklmnopqrstuvgxyz";
+      char names[] = "ABCDEFGHIJKLMNOPQRSTUVGXYZabcdefghijklmnopqrstuvgxyz"; //NOLINT
       if (name_map.find(object) == std::end(name_map)) {
         name_map[object] = names[index];
         index++;
