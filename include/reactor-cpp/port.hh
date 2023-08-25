@@ -15,6 +15,7 @@
 #include "assert.hh"
 #include "connection_properties.hh"
 #include "fwd.hh"
+#include "graph.hh"
 #include "multiport.hh"
 #include "reactor_element.hh"
 #include "value_ptr.hh"
@@ -23,7 +24,7 @@ namespace reactor {
 
 enum class PortType { Input, Output, Delay };
 
-class BasePort : public ReactorElement {
+class BasePort : public ReactorElement, public GraphElement { // NOLINT
 private:
   BasePort* inward_binding_{nullptr};
   std::set<BasePort*> outward_bindings_{};
@@ -38,10 +39,6 @@ private:
 
 protected:
   bool present_{false}; // NOLINT cppcoreguidelines-non-private-member-variables-in-classes
-
-  BasePort(const std::string& name, PortType type, Reactor* container)
-      : ReactorElement(name, match_port_enum(type), container)
-      , type_(type) {}
 
   void register_dependency(Reaction* reaction, bool is_trigger) noexcept;
   void register_antidependency(Reaction* reaction) noexcept;
@@ -71,6 +68,11 @@ protected:
   }
 
 public:
+  BasePort(const std::string& name, PortType type, Reactor* container)
+      : ReactorElement(name, match_port_enum(type), container)
+      , type_(type) {}
+  ~BasePort() noexcept override = default;
+
   void set_inward_binding(BasePort* port) noexcept { inward_binding_ = port; }
   void add_outward_binding(BasePort* port) noexcept {
     outward_bindings_.insert(port); // NOLINT
@@ -93,7 +95,6 @@ public:
   [[nodiscard]] inline auto has_dependencies() const noexcept -> bool { return !dependencies_.empty(); }
   [[nodiscard]] inline auto has_anti_dependencies() const noexcept -> bool { return !anti_dependencies_.empty(); }
   [[nodiscard]] inline auto has_triggers() const noexcept -> bool { return !triggers_.empty(); }
-  [[nodiscard]] inline auto rating() const noexcept -> std::size_t { return triggers_.size() + dependencies_.size(); }
 
   [[nodiscard]] inline auto inward_binding() const noexcept -> BasePort* { return inward_binding_; }
   [[nodiscard]] inline auto outward_bindings() const noexcept -> const auto& { return outward_bindings_; }
@@ -102,6 +103,14 @@ public:
   [[nodiscard]] inline auto dependencies() const noexcept -> const auto& { return dependencies_; }
   [[nodiscard]] inline auto anti_dependencies() const noexcept -> const auto& { return anti_dependencies_; }
   [[nodiscard]] inline auto port_type() const noexcept -> PortType { return type_; }
+
+  [[nodiscard]] auto connected_to_downstream_actions() const noexcept -> bool final {
+    return has_dependencies() || has_triggers();
+  };
+  [[nodiscard]] auto connected_to_upstream_actions() const noexcept -> bool final { return has_anti_dependencies(); };
+  [[nodiscard]] auto rating() const noexcept -> std::size_t final {
+    return dependencies_.size() + triggers_.size() + ((set_callback_ != nullptr) ? 1 : 0);
+  }
 
   void register_set_callback(const PortCallback& callback);
   void register_clean_callback(const PortCallback& callback);

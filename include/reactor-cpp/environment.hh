@@ -59,8 +59,8 @@ private:
 
   const Duration timeout_{};
 
-  Graph<BasePort*, ConnectionProperties> graph_{};
-  Graph<BasePort*, ConnectionProperties> optimized_graph_{};
+  Graph<BasePort> graph_{};
+  Graph<BasePort> optimized_graph_{};
 
   void build_dependency_graph(Reactor* reactor);
   void calculate_indexes();
@@ -91,7 +91,6 @@ public:
   }
 
   void optimize();
-  void expand_and_merge();
 
   void register_reactor(Reactor* reactor);
   void register_input_action(BaseAction* action);

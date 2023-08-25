@@ -24,16 +24,6 @@
 
 namespace reactor {
 
-void vector_shuffle(std::vector<std::pair<ConnectionProperties, BasePort*>>& path, BasePort* source) {
-  for (auto it = std::begin(path); it != std::end(path); ++it) {
-    if (std::next(it) == std::end(path)) {
-      it->second = source;
-    } else {
-      it->second = std::next(it)->second;
-    }
-  }
-};
-
 Environment::Environment(unsigned int num_workers, bool fast_fwd_execution, const Duration& timeout)
     : log_("Environment")
     , num_workers_(num_workers)
@@ -81,126 +71,11 @@ void Environment::optimize() {
   log::Debug() << "Opimizations:" << enable_optimizations;
   if constexpr (enable_optimizations) {
     log::Debug() << graph_.to_mermaid();
-    expand_and_merge();
+    graph_.optimize(optimized_graph_);
     log::Debug() << optimized_graph_.to_mermaid();
   } else {
     // no optimizations
     optimized_graph_ = graph_;
-  }
-}
-
-void Environment::expand_and_merge() {
-
-  static std::map<std::pair<ConnectionType, ConnectionType>, ConnectionType> construction_table = {
-      // Normal + x
-      {std::make_pair<ConnectionType, ConnectionType>(Normal, Normal), Normal},
-      {std::make_pair<ConnectionType, ConnectionType>(Normal, Delayed), Delayed},
-      {std::make_pair<ConnectionType, ConnectionType>(Normal, Enclaved), Enclaved},
-      {std::make_pair<ConnectionType, ConnectionType>(Normal, Physical), Physical},
-      {std::make_pair<ConnectionType, ConnectionType>(Normal, DelayedEnclaved), DelayedEnclaved},
-      {std::make_pair<ConnectionType, ConnectionType>(Normal, PhysicalEnclaved), PhysicalEnclaved},
-      {std::make_pair<ConnectionType, ConnectionType>(Normal, Plugin), Plugin},
-      // Delayed + x
-      {std::make_pair<ConnectionType, ConnectionType>(Delayed, Normal), Delayed},
-      {std::make_pair<ConnectionType, ConnectionType>(Delayed, Delayed), Delayed},
-      {std::make_pair<ConnectionType, ConnectionType>(Delayed, Enclaved), DelayedEnclaved},
-      {std::make_pair<ConnectionType, ConnectionType>(Delayed, Physical), Invalid}, //!!!
-      {std::make_pair<ConnectionType, ConnectionType>(Delayed, DelayedEnclaved), DelayedEnclaved},
-      {std::make_pair<ConnectionType, ConnectionType>(Delayed, PhysicalEnclaved), Invalid}, //!!!
-      {std::make_pair<ConnectionType, ConnectionType>(Delayed, Plugin), Invalid},
-      // Enclaved + x
-      {std::make_pair<ConnectionType, ConnectionType>(Enclaved, Normal), Enclaved},
-      {std::make_pair<ConnectionType, ConnectionType>(Enclaved, Delayed), DelayedEnclaved},
-      {std::make_pair<ConnectionType, ConnectionType>(Enclaved, Enclaved), Enclaved},
-      {std::make_pair<ConnectionType, ConnectionType>(Enclaved, Physical), PhysicalEnclaved},
-      {std::make_pair<ConnectionType, ConnectionType>(Enclaved, DelayedEnclaved), DelayedEnclaved},
-      {std::make_pair<ConnectionType, ConnectionType>(Enclaved, PhysicalEnclaved), PhysicalEnclaved},
-      {std::make_pair<ConnectionType, ConnectionType>(Enclaved, Plugin), Invalid},
-      // Physical + x
-      {std::make_pair<ConnectionType, ConnectionType>(Physical, Normal), Physical},
-      {std::make_pair<ConnectionType, ConnectionType>(Physical, Delayed), Invalid}, // !!!
-      {std::make_pair<ConnectionType, ConnectionType>(Physical, Enclaved), PhysicalEnclaved},
-      {std::make_pair<ConnectionType, ConnectionType>(Physical, Physical), Physical},
-      {std::make_pair<ConnectionType, ConnectionType>(Physical, DelayedEnclaved), Invalid}, // !!!
-      {std::make_pair<ConnectionType, ConnectionType>(Physical, PhysicalEnclaved), PhysicalEnclaved},
-      {std::make_pair<ConnectionType, ConnectionType>(Physical, Plugin), Invalid},
-      // DelayedEnclaved + x
-      {std::make_pair<ConnectionType, ConnectionType>(DelayedEnclaved, Normal), DelayedEnclaved},
-      {std::make_pair<ConnectionType, ConnectionType>(DelayedEnclaved, Delayed), DelayedEnclaved},
-      {std::make_pair<ConnectionType, ConnectionType>(DelayedEnclaved, Enclaved), DelayedEnclaved},
-      {std::make_pair<ConnectionType, ConnectionType>(DelayedEnclaved, Physical), Invalid}, // !!!
-      {std::make_pair<ConnectionType, ConnectionType>(DelayedEnclaved, DelayedEnclaved), DelayedEnclaved},
-      {std::make_pair<ConnectionType, ConnectionType>(DelayedEnclaved, PhysicalEnclaved), Invalid}, // !!!
-      {std::make_pair<ConnectionType, ConnectionType>(DelayedEnclaved, Plugin), Invalid},
-      // PhysicalEnclaved + x
-      {std::make_pair<ConnectionType, ConnectionType>(PhysicalEnclaved, Normal), PhysicalEnclaved},
-      {std::make_pair<ConnectionType, ConnectionType>(PhysicalEnclaved, Delayed), Invalid}, // !!!
-      {std::make_pair<ConnectionType, ConnectionType>(PhysicalEnclaved, Enclaved), PhysicalEnclaved},
-      {std::make_pair<ConnectionType, ConnectionType>(PhysicalEnclaved, Physical), PhysicalEnclaved},
-      {std::make_pair<ConnectionType, ConnectionType>(PhysicalEnclaved, DelayedEnclaved), Invalid}, // !!!
-      {std::make_pair<ConnectionType, ConnectionType>(PhysicalEnclaved, PhysicalEnclaved), PhysicalEnclaved},
-      {std::make_pair<ConnectionType, ConnectionType>(PhysicalEnclaved, Plugin), Invalid},
-      // Plugin + x = Invalid
-      {std::make_pair<ConnectionType, ConnectionType>(Plugin, Normal), Invalid},           // !!!
-      {std::make_pair<ConnectionType, ConnectionType>(Plugin, Delayed), Invalid},          // !!!
-      {std::make_pair<ConnectionType, ConnectionType>(Plugin, Enclaved), Invalid},         // !!!
-      {std::make_pair<ConnectionType, ConnectionType>(Plugin, Physical), Invalid},         // !!!
-      {std::make_pair<ConnectionType, ConnectionType>(Plugin, DelayedEnclaved), Invalid},  // !!!
-      {std::make_pair<ConnectionType, ConnectionType>(Plugin, PhysicalEnclaved), Invalid}, // !!!
-      {std::make_pair<ConnectionType, ConnectionType>(Plugin, Plugin), Invalid},           // !!!
-  };
-
-  // discards all current changes
-  optimized_graph_.clear();
-
-  // getting all the sources from the graph
-  auto keys = graph_.keys();
-
-  // generating all the possible destinations for all sources
-  for (auto* source : keys) {
-    auto spanning_tree = graph_.naive_spanning_tree(source);
-    for (auto& path : spanning_tree) {
-      ConnectionProperties merged_properties{};
-
-      std::reverse(path.begin(), path.end());
-
-      auto* previous_element = std::begin(path)->second;
-      vector_shuffle(path, source);
-
-      auto current_rating = previous_element->rating();
-
-      for (auto element : path) {
-        auto property = element.first;
-        current_rating += element.second->rating();
-
-        if (current_rating > 0) {
-          auto return_type =
-              construction_table[std::pair<ConnectionType, ConnectionType>(merged_properties.type_, property.type_)];
-          // invalid will split the connections
-          if (return_type == Invalid) {
-            // first add connection until this point
-            optimized_graph_.add_edge(element.second, previous_element, merged_properties);
-
-            // updating the source of the connection and resetting the properties
-            previous_element = element.second;
-            merged_properties = property;
-
-          } else {
-            // merging the connections
-            merged_properties.type_ = return_type;
-
-            // adding up delays
-            merged_properties.delay_ += property.delay_;
-
-            // updating target enclave if not nullptr
-            merged_properties.enclave_ =
-                (property.enclave_ != nullptr) ? property.enclave_ : merged_properties.enclave_;
-
-            optimized_graph_.add_edge(element.second, previous_element, merged_properties);
-          }
-        }
-      }
-    }
   }
 }
 
