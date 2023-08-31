@@ -253,6 +253,10 @@ public:
       auto spanning_tree = naive_spanning_tree(source);
 
       for (auto& path : spanning_tree) {
+        if (path.empty()) {
+          continue;
+        }
+
         ConnectionProperties merged_properties{};
         auto* final_destination = std::get<2>(*std::begin(path));
         std::size_t current_rating = 0;
