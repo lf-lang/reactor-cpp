@@ -24,7 +24,7 @@ namespace reactor {
 
 enum class PortType { Input, Output, Delay };
 
-class BasePort : public ReactorElement, public GraphElement { // NOLINT
+class BasePort : public GraphElement, public ReactorElement { // NOLINT
 private:
   BasePort* inward_binding_{nullptr};
   std::set<BasePort*> outward_bindings_{};
@@ -39,6 +39,10 @@ private:
 
 protected:
   bool present_{false}; // NOLINT cppcoreguidelines-non-private-member-variables-in-classes
+
+  BasePort(const std::string& name, PortType type, Reactor* container)
+      : ReactorElement(name, match_port_enum(type), container)
+      , type_(type) {}
 
   void register_dependency(Reaction* reaction, bool is_trigger) noexcept;
   void register_antidependency(Reaction* reaction) noexcept;
@@ -68,9 +72,6 @@ protected:
   }
 
 public:
-  BasePort(const std::string& name, PortType type, Reactor* container)
-      : ReactorElement(name, match_port_enum(type), container)
-      , type_(type) {}
   ~BasePort() noexcept override = default;
 
   void set_inward_binding(BasePort* port) noexcept { inward_binding_ = port; }
@@ -181,7 +182,7 @@ public:
   Input(const std::string& name, Reactor* container)
       : Port<T>(name, PortType::Input, container) {}
 
-  Input(Input&&) = default; // NOLINT(performance-noexcept-move-constructor)
+  Input(Input&&) noexcept = default; // NOLINT(performance-noexcept-move-constructor)
 };
 
 template <class T> class Output : public Port<T> { // NOLINT
@@ -189,7 +190,7 @@ public:
   Output(const std::string& name, Reactor* container)
       : Port<T>(name, PortType::Output, container) {}
 
-  Output(Output&&) = default; // NOLINT(performance-noexcept-move-constructor)
+  Output(Output&&) noexcept = default; // NOLINT(performance-noexcept-move-constructor)
 };
 
 } // namespace reactor
