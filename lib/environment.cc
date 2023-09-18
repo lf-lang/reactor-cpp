@@ -330,6 +330,12 @@ auto Environment::startup(const TimePoint& start_time) -> std::thread {
   phase_ = Phase::Startup;
 
   this->start_tag_ = Tag::from_physical_time(start_time);
+  if (this->timeout_ == Duration::max()) {
+    this->timeout_tag_ = Tag::max();
+  } else {
+    this->timeout_tag_ = this->start_tag_.delay(this->timeout_);
+  }
+
   // start up initialize all reactors
   for (auto* reactor : top_level_reactors_) {
     reactor->startup();

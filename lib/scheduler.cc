@@ -91,17 +91,17 @@ void Scheduler::schedule() noexcept {
   bool found_ready_reactions = schedule_ready_reactions();
 
   while (!found_ready_reactions) {
-    log_.debug() << "call next()";
-    next();
-    reaction_queue_pos_ = 0;
-
-    found_ready_reactions = schedule_ready_reactions();
-
     if (!continue_execution_ && !found_ready_reactions) {
       // let all workers know that they should terminate
       terminate_all_workers();
       break;
     }
+
+    log_.debug() << "call next()";
+    next();
+    reaction_queue_pos_ = 0;
+
+    found_ready_reactions = schedule_ready_reactions();
   }
 }
 
@@ -354,8 +354,8 @@ void Scheduler::next() { // NOLINT
         log_.debug() << "Shutting down the scheduler";
         Tag t_next = Tag::from_logical_time(logical_time_).delay();
         if (!event_queue_.empty() && t_next == event_queue_.next_tag()) {
-          log_.debug() << "Schedule the last round of reactions including all "
-                          "termination reactions";
+          log_.debug() << "Trigger the last round of reactions including all "
+                          "shutdown reactions";
           triggered_actions_ = event_queue_.extract_next_event();
           advance_logical_time_to(t_next);
         } else {
@@ -363,6 +363,13 @@ void Scheduler::next() { // NOLINT
         }
       } else {
         auto t_next = event_queue_.next_tag();
+
+        if (t_next == environment_->timeout_tag()) {
+          continue_execution_ = false;
+          log_.debug() << "Shutting down the scheduler due to timeout";
+          log_.debug() << "Trigger the last round of reactions including all "
+                          "shutdwon reactions";
+        }
 
         // synchronize with physical time if not in fast forward mode
         if (!environment_->fast_fwd_execution()) {

@@ -43,6 +43,8 @@ public:
   [[nodiscard]] auto delay(Duration offset = Duration::zero()) const noexcept -> Tag;
   [[nodiscard]] auto subtract(Duration offset = Duration::zero()) const noexcept -> Tag;
   [[nodiscard]] auto decrement() const noexcept -> Tag;
+
+  [[nodiscard]] static auto max() noexcept -> Tag { return {TimePoint::max(), std::numeric_limits<mstep_t>::max()}; }
 };
 
 // define all the comparison operators

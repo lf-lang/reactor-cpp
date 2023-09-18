@@ -58,6 +58,7 @@ private:
   Tag start_tag_{};
 
   const Duration timeout_{};
+  Tag timeout_tag_{};
 
   Graph<BasePort*, ConnectionProperties> graph_{};
   Graph<BasePort*, ConnectionProperties> optimized_graph_{};
@@ -118,6 +119,7 @@ public:
   [[nodiscard]] auto logical_time() const noexcept -> const LogicalTime& { return scheduler_.logical_time(); }
   [[nodiscard]] auto start_tag() const noexcept -> const Tag& { return start_tag_; }
   [[nodiscard]] auto timeout() const noexcept -> const Duration& { return timeout_; }
+  [[nodiscard]] auto timeout_tag() const noexcept -> const Tag& { return timeout_tag_; }
 
   static auto physical_time() noexcept -> TimePoint { return get_physical_time(); }
 
