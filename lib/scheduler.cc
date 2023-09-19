@@ -364,13 +364,6 @@ void Scheduler::next() { // NOLINT
       } else {
         auto t_next = event_queue_.next_tag();
 
-        if (t_next == environment_->timeout_tag()) {
-          continue_execution_ = false;
-          log_.debug() << "Shutting down the scheduler due to timeout";
-          log_.debug() << "Trigger the last round of reactions including all "
-                          "shutdwon reactions";
-        }
-
         // synchronize with physical time if not in fast forward mode
         if (!environment_->fast_fwd_execution()) {
           log_.debug() << "acquire tag " << t_next << " from physical time barrier";
@@ -400,6 +393,17 @@ void Scheduler::next() { // NOLINT
         if (!result) {
           log_.debug() << "abort waiting and restart as the event queue was modified";
           continue;
+        }
+
+        // Stop execution in case we reach the timeout tag. This checks needs to
+        // be done here, after acquiring the check, as only then we are fully
+        // commited to executing the tag t_next. Otherwise, we could still get
+        // earlier events (e.g., from a physical action).
+        if (t_next == environment_->timeout_tag()) {
+          continue_execution_ = false;
+          log_.debug() << "Shutting down the scheduler due to timeout";
+          log_.debug() << "Trigger the last round of reactions including all "
+                          "shutdwon reactions";
         }
 
         // Retrieve all triggered actions at the next tag.
