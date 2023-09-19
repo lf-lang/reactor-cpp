@@ -334,7 +334,7 @@ void Scheduler::cleanup_after_tag() {
 void Scheduler::next() { // NOLINT
   // First, clean up after the last tag.
   cleanup_after_tag();
-  
+
   {
     std::unique_lock<std::mutex> lock{scheduling_mutex_};
 

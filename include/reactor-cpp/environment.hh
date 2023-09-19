@@ -55,9 +55,13 @@ private:
 
   Scheduler scheduler_;
   Phase phase_{Phase::Construction};
-  Tag start_tag_{};
 
+  /// Timeout as given in the constructor
   const Duration timeout_{};
+
+  /// The start tag as determined during startup()
+  Tag start_tag_{};
+  /// The timeout tag as determined during startup()
   Tag timeout_tag_{};
 
   Graph<BasePort*, ConnectionProperties> graph_{};
