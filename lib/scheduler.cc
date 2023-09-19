@@ -92,7 +92,8 @@ void Scheduler::schedule() noexcept {
 
   while (!found_ready_reactions) {
     if (!continue_execution_ && !found_ready_reactions) {
-      // let all workers know that they should terminate
+      // Cleanup and let all workers know that they should terminate.
+      cleanup_after_tag();
       terminate_all_workers();
       break;
     }
@@ -306,7 +307,7 @@ void Scheduler::advance_logical_time_to(const Tag& tag) {
   Statistics::increment_processed_events();
 }
 
-void Scheduler::next() { // NOLINT
+void Scheduler::cleanup_after_tag() {
   // Notify other environments and let them know that we finished processing the
   // current tag
   release_current_tag();
@@ -328,7 +329,12 @@ void Scheduler::next() { // NOLINT
     }
     vec_ports.clear();
   }
+}
 
+void Scheduler::next() { // NOLINT
+  // First, clean up after the last tag.
+  cleanup_after_tag();
+  
   {
     std::unique_lock<std::mutex> lock{scheduling_mutex_};
 
