@@ -332,6 +332,8 @@ auto Environment::startup(const TimePoint& start_time) -> std::thread {
   this->start_tag_ = Tag::from_physical_time(start_time);
   if (this->timeout_ == Duration::max()) {
     this->timeout_tag_ = Tag::max();
+  } else if (this->timeout_ == Duration::zero()) {
+    this->timeout_tag_ = this->start_tag_;
   } else {
     this->timeout_tag_ = this->start_tag_.delay(this->timeout_);
   }
