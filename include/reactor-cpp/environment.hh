@@ -67,8 +67,6 @@ private:
 
   std::mutex shutdown_mutex_{};
 
-  auto startup(const TimePoint& start_time) -> std::thread;
-
 public:
   explicit Environment(unsigned int num_workers, bool fast_fwd_execution = default_fast_fwd_execution,
                        const Duration& timeout = Duration::max());
@@ -97,6 +95,7 @@ public:
   void register_input_action(BaseAction* action);
   void assemble();
   auto startup() -> std::thread;
+  auto startup(const TimePoint& start_time) -> std::thread;
   void sync_shutdown();
   void async_shutdown();
 

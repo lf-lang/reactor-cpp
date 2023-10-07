@@ -18,7 +18,7 @@ class DownstreamEndpoint : public Action<UserType> {
     protected:
         std::set<Port<UserType>*> ports_;
 
-        virtual void schedule_this(/*value here*/) {
+        virtual void schedule_this(/*wrapped type here*/) {
             if constexpr (std::is_same<UserType, void>::value) {
                 this->schedule();
             } else {
@@ -28,9 +28,9 @@ class DownstreamEndpoint : public Action<UserType> {
 
 
     public:
-        DownstreamEndpoint(const std::string& name, Reactor* container, bool is_logical, Duration min_delay)
+        DownstreamEndpoint(const std::string& name, Reactor* container, bool is_logical, Duration min_delay = Duration::zero())
         : Action<UserType>(name, container, is_logical, min_delay) {}
-        DownstreamEndpoint(const std::string& name, Environment* environment, bool is_logical, Duration min_delay)
+        DownstreamEndpoint(const std::string& name, Environment* environment, bool is_logical, Duration min_delay = Duration::zero())
         : Action<UserType>(name, environment, is_logical, min_delay) {}
  
         void add_port(Port<UserType>* port) {
