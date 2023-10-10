@@ -85,11 +85,17 @@ void Environment::assemble() { // NOLINT
     recursive_assemble(reactor);
   }
 
-  log::Debug() << "start optimization on port graph";
-  this->optimize();
+  // this assembles all the contained environments aka enclaves
+  for (auto* env : contained_environments_) {
+    env->assemble();
+  }
 
-  log::Debug() << "instantiating port graph declaration";
+  // If this is the top level environment, then instantiate all connections.
   if (top_environment_ == nullptr || top_environment_ == this) {
+    log::Debug() << "start optimization on port graph";
+    this->optimize();
+
+    log::Debug() << "instantiating port graph declaration";
     log::Debug() << "graph: ";
     log::Debug() << optimized_graph_;
 
@@ -135,18 +141,6 @@ void Environment::assemble() { // NOLINT
         }
       }
     }
-  }
-
-  log::Debug() << "Building the Dependency-Graph";
-  for (auto* reactor : top_level_reactors_) {
-    build_dependency_graph(reactor);
-  }
-
-  calculate_indexes();
-
-  // this assembles all the contained environments aka enclaves
-  for (auto* env : contained_environments_) {
-    env->assemble();
   }
 }
 
@@ -325,6 +319,13 @@ auto Environment::startup() -> std::thread {
 
 auto Environment::startup(const TimePoint& start_time) -> std::thread {
   validate(this->phase() == Phase::Assembly, "startup() may only be called during assembly phase!");
+
+  log::Debug() << "Building the Dependency-Graph";
+  for (auto* reactor : top_level_reactors_) {
+    build_dependency_graph(reactor);
+  }
+
+  calculate_indexes();
 
   log_.debug() << "Starting the execution";
   phase_ = Phase::Startup;
