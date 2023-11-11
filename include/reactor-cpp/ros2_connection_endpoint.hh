@@ -12,7 +12,7 @@
 extern rclcpp::Node* lf_node;
 static const rclcpp::QoS RELIABLE_QoS = rclcpp::QoS(rclcpp::KeepAll()).reliable().transient_local();
 // TODO: remove errorstr, its just for printdebug
-#define errorstr(x) RCLCPP_ERROR_STREAM(lf_node->get_logger(), x);
+#define errorstr(x) RCLCPP_ERROR_STREAM(lf_node->get_logger(), x)
 #define TAG_RELEASE_SUFFIX "/released_tags"
 #define EMPTY_EVENT_SUFFIX "/request_empty_event"
 
@@ -27,14 +27,24 @@ namespace reactor {
     WrappedType is a generated message which includes the UserType message and a Tag
 */
 template <class UserType, class WrappedType>
-class ROS2PubEndpoint : public UpstreamEndpoint<UserType, WrappedType> {
+class ROS2PubEndpoint : public UpstreamEndpoint<UserType> {
     static_assert(std::is_same<decltype(WrappedType::tag), lf_msgs_ros::msg::Tag>::value);
     static_assert(std::is_same<decltype(WrappedType::message), UserType>::value);
 
     private:
+        LogicalTime latest_sent_;
         std::shared_ptr<rclcpp::Publisher<WrappedType>> pub_;
         std::shared_ptr<rclcpp::Subscription<lf_msgs_ros::msg::Tag>> empty_event_sub_;
         std::shared_ptr<rclcpp::Publisher<lf_msgs_ros::msg::Tag>> tag_only_pub_;
+
+        void update_published_tag(const Tag& tag) {
+            if (tag < latest_sent_) return;
+            lf_msgs_ros::msg::Tag tag_msg;
+            tag_msg.microstep = tag.micro_step();
+            tag_msg.time_point = tag.time_point().time_since_epoch().count();
+            tag_only_pub_->publish(std::move(tag_msg));
+            latest_sent_.advance_to(tag);
+        }
 
     protected:
         PortCallback set_cb() override{
@@ -47,6 +57,8 @@ class ROS2PubEndpoint : public UpstreamEndpoint<UserType, WrappedType> {
                 wrapped_msg.tag.microstep = tag.micro_step();
                 wrapped_msg.message = *typed_port.get();
                 pub_->publish(std::move(wrapped_msg));
+                if (tag > latest_sent_)
+                    latest_sent_.advance_to(tag);
             };
         }
 
@@ -70,38 +82,31 @@ class ROS2PubEndpoint : public UpstreamEndpoint<UserType, WrappedType> {
                     // scheduler already processes a later event. In this case, it is safe to assume that
                     // the tag is acquired.
                     if (!result) {
-                        tag_only_pub_->publish(*msg.get());
-                        // maybe we should send most recent tag instead of the one requested
-                        //auto tag = Tag::from_logical_time(this->port_->environment()->scheduler()->logical_time());
-                        //errorstr("but we are at " << tag);
-                        
+                        // sending most recent tag
+                        update_published_tag(reactor::Tag::from_logical_time(this->port_->environment()->scheduler()->logical_time()));
                     }
                 });
         }
 
 
     public:
-        ROS2PubEndpoint(const std::string& topic_name) : UpstreamEndpoint<UserType, WrappedType>() {
-            errorstr("publisher endpoint on topic " + topic_name);
+        ROS2PubEndpoint(const std::string& topic_name) : UpstreamEndpoint<UserType>() {
+            //errorstr("publisher endpoint on topic " + topic_name);
             pub_ = lf_node->create_publisher<WrappedType>(topic_name, RELIABLE_QoS);
             create_publisher_tag_only(topic_name);
             sub_empty_event_request(topic_name);
         }
 
         void set_port(Port<UserType>* port) override {
-            this->UpstreamEndpoint<UserType, WrappedType>::set_port(port);
+            this->UpstreamEndpoint<UserType>::set_port(port);
             port->environment()->scheduler()->register_release_tag_callback([this](const LogicalTime& tag) {
-                lf_msgs_ros::msg::Tag t;
-                t.microstep = tag.micro_step();
-                t.time_point = tag.time_point().time_since_epoch().count();
-                tag_only_pub_->publish(std::move(t));
-                
+                update_published_tag(reactor::Tag::from_logical_time(tag));
             });
         }
 };
 
 template <class UserType, class WrappedType>
-class ROS2SubEndpoint : public DownstreamEndpoint<UserType, WrappedType> {
+class ROS2SubEndpoint : public DownstreamEndpoint<UserType, std::shared_ptr<WrappedType>> {
     static_assert(std::is_same<decltype(WrappedType::tag), lf_msgs_ros::msg::Tag>::value);
     static_assert(std::is_same<decltype(WrappedType::message), UserType>::value);
 
@@ -111,7 +116,7 @@ class ROS2SubEndpoint : public DownstreamEndpoint<UserType, WrappedType> {
         rclcpp::Publisher<lf_msgs_ros::msg::Tag>::SharedPtr empty_event_pub_;
         LogicalTimeBarrier publisher_time_barrier_;
 
-        virtual void schedule_this(std::shared_ptr<WrappedType> wrapped_msg) {
+        virtual void schedule_this(std::shared_ptr<WrappedType> wrapped_msg) override{
             // unwrapping the message using an aliasing constructor
             std::shared_ptr<UserType> inner_ptr(wrapped_msg, &wrapped_msg->message);
             reactor::Tag tag(reactor::TimePoint(std::chrono::nanoseconds(wrapped_msg->tag.time_point)), mstep_t(wrapped_msg->tag.microstep));
@@ -152,10 +157,10 @@ class ROS2SubEndpoint : public DownstreamEndpoint<UserType, WrappedType> {
         }
 
         ROS2SubEndpoint(const std::string& topic_name, const std::string& name, Environment* environment, const Duration& delay) 
-            : DownstreamEndpoint<UserType, WrappedType>(name, environment, true, delay),
+            : DownstreamEndpoint<UserType, std::shared_ptr<WrappedType>>(name, environment, true, delay),
             publisher_time_barrier_(environment->scheduler())
         {
-            errorstr("sub endpoint on topic " + topic_name);
+            errorstr("sub endpoint for " + name + " on topic " + topic_name);
             std::function<void(std::shared_ptr<WrappedType>)> f = 
                 std::bind(&ROS2SubEndpoint::schedule_this, this, std::placeholders::_1);
             sub_ = lf_node->create_subscription<WrappedType>(topic_name, RELIABLE_QoS, f);
@@ -224,7 +229,7 @@ class ROS2PubEndpointPhysical : public ROS2PubEndpoint<UserType, WrappedType> {
         }
 
         void set_port(Port<UserType>* port) override {
-            this->UpstreamEndpoint<UserType, WrappedType>::set_port(port);
+            this->UpstreamEndpoint<UserType>::set_port(port);
             // no registering of tag release callback necessary
         }
 };
@@ -232,11 +237,11 @@ class ROS2PubEndpointPhysical : public ROS2PubEndpoint<UserType, WrappedType> {
 
 
 template <class UserType, class WrappedType>
-class ROS2SubEndpointPhysical : public DownstreamEndpoint<UserType, WrappedType> {
+class ROS2SubEndpointPhysical : public DownstreamEndpoint<UserType, std::shared_ptr<WrappedType>> {
     private:
         std::shared_ptr<rclcpp::Subscription<WrappedType>> sub_;
     protected:
-        virtual void schedule_this(std::shared_ptr<WrappedType> wrapped_msg) {
+        virtual void schedule_this(std::shared_ptr<WrappedType> wrapped_msg) override {
             // unwrapping the message using an aliasing constructor, ignoring the tag
             std::shared_ptr<UserType> inner_ptr(wrapped_msg, &wrapped_msg->message);
             if constexpr(detail::is_trivial<UserType>())
@@ -251,7 +256,7 @@ class ROS2SubEndpointPhysical : public DownstreamEndpoint<UserType, WrappedType>
         }
 
         ROS2SubEndpointPhysical(const std::string& topic_name, const std::string& name, Environment* environment, const Duration& delay) 
-        : DownstreamEndpoint<UserType, WrappedType>(name, environment, false, delay){
+        : DownstreamEndpoint<UserType, std::shared_ptr<WrappedType>>(name, environment, false, delay){
             std::function<void(std::shared_ptr<WrappedType>)> f = 
                 std::bind(&ROS2SubEndpointPhysical::schedule_this, this, std::placeholders::_1);
             sub_ = lf_node->create_subscription<WrappedType>(topic_name, RELIABLE_QoS,

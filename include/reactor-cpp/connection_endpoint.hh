@@ -13,19 +13,12 @@ namespace reactor {
 /*
 Downstream inherits from Action bec it produces event on receiver end
 */
-template <class UserType, class WrappedType>
+template <class UserType, class InternalMessageType>
 class DownstreamEndpoint : public Action<UserType> {
     protected:
         std::set<Port<UserType>*> ports_;
 
-        virtual void schedule_this(/*wrapped type here*/) {
-            if constexpr (std::is_same<UserType, void>::value) {
-                this->schedule();
-            } else {
-                //this->schedule(std::move(value here));
-            }
-        }
-
+        virtual void schedule_this(InternalMessageType) = 0;
 
     public:
         DownstreamEndpoint(const std::string& name, Reactor* container, bool is_logical, Duration min_delay = Duration::zero())
@@ -54,21 +47,12 @@ class DownstreamEndpoint : public Action<UserType> {
         }
 };
 
-template <class UserType, class WrappedType>
+template <class UserType>
 class UpstreamEndpoint {
     protected: 
         Port<UserType>* port_ = nullptr;
 
-        virtual PortCallback set_cb() {
-            return [this](const BasePort& port) {
-                auto& typed_port = reinterpret_cast<const Port<UserType>&>(port); 
-                if constexpr (std::is_same<UserType, void>::value) {
-                    // send void
-                } else {
-                    // send std::move(typed_port.get());
-                }
-            };
-        }
+        virtual PortCallback set_cb() = 0;
 
     public:
         virtual void set_port(Port<UserType>* port) {
