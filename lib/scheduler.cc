@@ -91,17 +91,18 @@ void Scheduler::schedule() noexcept {
   bool found_ready_reactions = schedule_ready_reactions();
 
   while (!found_ready_reactions) {
+    if (!continue_execution_ && !found_ready_reactions) {
+      // Cleanup and let all workers know that they should terminate.
+      cleanup_after_tag();
+      terminate_all_workers();
+      break;
+    }
+
     log_.debug() << "call next()";
     next();
     reaction_queue_pos_ = 0;
 
     found_ready_reactions = schedule_ready_reactions();
-
-    if (!continue_execution_ && !found_ready_reactions) {
-      // let all workers know that they should terminate
-      terminate_all_workers();
-      break;
-    }
   }
 }
 
@@ -306,7 +307,7 @@ void Scheduler::advance_logical_time_to(const Tag& tag) {
   Statistics::increment_processed_events();
 }
 
-void Scheduler::next() { // NOLINT
+void Scheduler::cleanup_after_tag() {
   // Notify other environments and let them know that we finished processing the
   // current tag
   release_current_tag();
@@ -328,6 +329,11 @@ void Scheduler::next() { // NOLINT
     }
     vec_ports.clear();
   }
+}
+
+void Scheduler::next() { // NOLINT
+  // First, clean up after the last tag.
+  cleanup_after_tag();
 
   {
     std::unique_lock<std::mutex> lock{scheduling_mutex_};
@@ -354,8 +360,8 @@ void Scheduler::next() { // NOLINT
         log_.debug() << "Shutting down the scheduler";
         Tag t_next = Tag::from_logical_time(logical_time_).delay();
         if (!event_queue_.empty() && t_next == event_queue_.next_tag()) {
-          log_.debug() << "Schedule the last round of reactions including all "
-                          "termination reactions";
+          log_.debug() << "Trigger the last round of reactions including all "
+                          "shutdown reactions";
           triggered_actions_ = event_queue_.extract_next_event();
           advance_logical_time_to(t_next);
         } else {
@@ -393,6 +399,17 @@ void Scheduler::next() { // NOLINT
         if (!result) {
           log_.debug() << "abort waiting and restart as the event queue was modified";
           continue;
+        }
+
+        // Stop execution in case we reach the timeout tag. This checks needs to
+        // be done here, after acquiring the check, as only then we are fully
+        // commited to executing the tag t_next. Otherwise, we could still get
+        // earlier events (e.g., from a physical action).
+        if (t_next == environment_->timeout_tag()) {
+          continue_execution_ = false;
+          log_.debug() << "Shutting down the scheduler due to timeout";
+          log_.debug() << "Trigger the last round of reactions including all "
+                          "shutdwon reactions";
         }
 
         // Retrieve all triggered actions at the next tag.
