@@ -41,13 +41,12 @@ class ROS2PubEndpoint : public UpstreamEndpoint<UserType> {
 
         void update_published_tag(const Tag& tag) {
             if (tag <= latest_sent_) return;
-            lf_logger_.debug() << "Updating latest published tag to " << tag;
             lf_msgs_ros::msg::Tag tag_msg;
             tag_msg.microstep = tag.micro_step();
             tag_msg.time_point = tag.time_point().time_since_epoch().count();
             tag_only_pub_->publish(std::move(tag_msg));
+            lf_logger_.debug() << "Updating latest published tag to " << tag << " by tag message";
             latest_sent_.advance_to(tag);
-            
         }
 
     protected:
@@ -56,14 +55,15 @@ class ROS2PubEndpoint : public UpstreamEndpoint<UserType> {
                 auto& typed_port = reinterpret_cast<const Port<UserType>&>(port); 
                 const auto* scheduler = port.environment()->scheduler();
                 auto tag = Tag::from_logical_time(scheduler->logical_time());
-                lf_logger_.debug() << "Updating latest published tag to " << tag;
                 WrappedType wrapped_msg;
                 wrapped_msg.tag.time_point = tag.time_point().time_since_epoch().count();
                 wrapped_msg.tag.microstep = tag.micro_step();
                 wrapped_msg.message = *typed_port.get();
                 pub_->publish(std::move(wrapped_msg));
-                if (tag > latest_sent_)
+                if (tag > latest_sent_) {
+                    lf_logger_.debug() << "Updating latest published tag to " << tag << " by wrapped message";
                     latest_sent_.advance_to(tag);
+                }
             };
         }
 
@@ -119,22 +119,40 @@ class ROS2SubEndpoint : public DownstreamEndpoint<UserType, std::shared_ptr<Wrap
         std::shared_ptr<rclcpp::Subscription<WrappedType>> sub_;
         rclcpp::Subscription<lf_msgs_ros::msg::Tag>::SharedPtr tag_only_sub_;
         rclcpp::Publisher<lf_msgs_ros::msg::Tag>::SharedPtr empty_event_pub_;
-        LogicalTimeBarrier publisher_time_barrier_;
         log::NamedLogger lf_logger_;
+
+        LogicalTimeBarrier publisher_time_barrier_;
+
+        // this tracks the time of publisher_time_barrier_
+        // to avoid using a lock for try_acquire_tag()
+        // should be fine as this endpoint is the only one releasing tags on that barrier
+        // TODO: verify that that makes sense (or use try_acquire_tag with lock)
+        LogicalTime publisher_time_barrier_time_;
+
+        void publisher_time_barrier_release(const reactor::Tag& tag) {
+            if (publisher_time_barrier_time_ < tag) {
+                lf_logger_.debug() << "Releasing " << tag << " on publisher_time_barrier";
+                publisher_time_barrier_time_.advance_to(tag);
+                publisher_time_barrier_.release_tag(publisher_time_barrier_time_);
+            }
+        }
+
+        void schedule_this_at_tag(const std::shared_ptr<UserType>&& msg, const reactor::Tag& tag) {
+
+        }
+        
 
         virtual void schedule_this(std::shared_ptr<WrappedType> wrapped_msg) override{
             // unwrapping the message using an aliasing constructor
             std::shared_ptr<UserType> inner_ptr(wrapped_msg, &wrapped_msg->message);
             reactor::Tag tag(reactor::TimePoint(std::chrono::nanoseconds(wrapped_msg->tag.time_point)), mstep_t(wrapped_msg->tag.microstep));
-            reactor::LogicalTime t;
-            t.advance_to(tag);
             
-            lf_logger_.debug() << "Releasing " << t;
+            lf_logger_.debug() << "Got tag from wrapped message " << tag;
             if constexpr(detail::is_trivial<UserType>())
                 this->schedule_at(ImmutableValuePtr<UserType>(*inner_ptr.get()), tag);
             else 
                 this->schedule_at(ImmutableValuePtr<UserType>(std::move(inner_ptr)), tag);
-            publisher_time_barrier_.release_tag(t);
+            publisher_time_barrier_release(tag);
         }
 
         virtual bool acquire_tag(const Tag& tag, std::unique_lock<std::mutex>& lock,
@@ -142,7 +160,7 @@ class ROS2SubEndpoint : public DownstreamEndpoint<UserType, std::shared_ptr<Wrap
 
             lf_logger_.debug() <<"Trying to acquire tag " << tag << " at local " << this->environment()->scheduler()->logical_time();
             if (publisher_time_barrier_.try_acquire_tag(tag)) {
-                lf_logger_.debug() << "Tag already done";
+                lf_logger_.debug() << "Tag already done " << tag; 
                 return true;
             }
             lf_logger_.debug() << "Requesting empty event at tag " << tag;
@@ -157,10 +175,9 @@ class ROS2SubEndpoint : public DownstreamEndpoint<UserType, std::shared_ptr<Wrap
         virtual void sub_to_tag(const std::string& topic_name) {
             tag_only_sub_ = lf_node->create_subscription<lf_msgs_ros::msg::Tag>(topic_name + TAG_RELEASE_SUFFIX, RELIABLE_QoS,
             [&](const lf_msgs_ros::msg::Tag::SharedPtr msg){
-                LogicalTime t;
-                t.advance_to(reactor::Tag(reactor::TimePoint(std::chrono::nanoseconds(msg->time_point)), mstep_t(msg->microstep)));
-                lf_logger_.debug() << "Releasing " << t;
-                publisher_time_barrier_.release_tag(t);
+                reactor::Tag tag(reactor::TimePoint(std::chrono::nanoseconds(msg->time_point)), mstep_t(msg->microstep));
+                lf_logger_.debug() << "Got tag from release topic " << tag;
+                publisher_time_barrier_release(tag);
             });
         }
 
@@ -198,19 +215,15 @@ class ROS2SubEndpointDelayed : public ROS2SubEndpoint<UserType, WrappedType> {
             // unwrapping the message using an aliasing constructor
             std::shared_ptr<UserType> inner_ptr(wrapped_msg, &wrapped_msg->message);
             reactor::Tag tag(reactor::TimePoint(std::chrono::nanoseconds(wrapped_msg->tag.time_point)), mstep_t(wrapped_msg->tag.microstep));
-            this->lf_logger_.debug() << "scheduling at delayed tag " <<tag.delay(this->min_delay());
-            reactor::LogicalTime t;
-            t.advance_to(tag);
-            this->lf_logger_.debug() << t;
-            this->lf_logger_.debug() << this->environment()->scheduler()->logical_time();
-            // TODO: make sure publisher time barrier is actually behind t, how bout lock?
-            // sometimes get_elapsed_time() will get seemingly random values (but only if without logging=debug)
-            this->publisher_time_barrier_.release_tag(t);
-
+            this->lf_logger_.debug() << "Got tag from wrapped message " << tag;
+            this->publisher_time_barrier_release(tag);
+            reactor::Tag delayed_tag = tag.delay(this->min_delay());
+            
+            this->lf_logger_.debug() << "scheduling at delayed tag " << delayed_tag;
             if constexpr(detail::is_trivial<UserType>())
-                this->schedule_at(ImmutableValuePtr<UserType>(*inner_ptr.get()), tag.delay(this->min_delay()));
+                this->schedule_at(ImmutableValuePtr<UserType>(*inner_ptr.get()), delayed_tag);
             else 
-                this->schedule_at(ImmutableValuePtr<UserType>(std::move(inner_ptr)), tag.delay(this->min_delay()));
+                this->schedule_at(ImmutableValuePtr<UserType>(std::move(inner_ptr)), delayed_tag);
             
         }
 
@@ -218,17 +231,7 @@ class ROS2SubEndpointDelayed : public ROS2SubEndpoint<UserType, WrappedType> {
                            const std::function<bool(void)>& abort_waiting) override final {
             // need to subtract delay to not get stuck waiting for the same tag in pub and sub
             reactor::Tag publisher_tag = tag.subtract(this->min_delay());
-            this->lf_logger_.debug() <<"Trying to acquire tag " << tag << " at local " << this->environment()->scheduler()->logical_time();
-            if (this->publisher_time_barrier_.try_acquire_tag(publisher_tag)) {
-                this->lf_logger_.debug() << "Tag already done";
-                return true;
-            }
-            this->lf_logger_.debug() << "Requesting empty event at tag " << tag;
-            lf_msgs_ros::msg::Tag t;
-            t.microstep = publisher_tag.micro_step();
-            t.time_point = publisher_tag.time_point().time_since_epoch().count();
-            this->empty_event_pub_->publish(std::move(t));
-            return this->publisher_time_barrier_.acquire_tag(publisher_tag, lock, abort_waiting);
+            return this->ROS2SubEndpoint<UserType, WrappedType>::acquire_tag(publisher_tag, lock, abort_waiting);
         }
      
     public:
