@@ -21,10 +21,12 @@ class DownstreamEndpoint : public Action<UserType> {
         virtual void schedule_this(InternalMessageType) = 0;
 
     public:
-        DownstreamEndpoint(const std::string& name, Reactor* container, bool is_logical, Duration min_delay = Duration::zero())
-        : Action<UserType>(name, container, is_logical, min_delay) {}
-        DownstreamEndpoint(const std::string& name, Environment* environment, bool is_logical, Duration min_delay = Duration::zero())
-        : Action<UserType>(name, environment, is_logical, min_delay) {}
+        // Actions is_logical needs to be false for actions to be scheduled asynchronously
+        // see schedule, schedule_at impl
+        DownstreamEndpoint(const std::string& name, Reactor* container, Duration min_delay = Duration::zero())
+        : Action<UserType>(name, container, false, min_delay) {}
+        DownstreamEndpoint(const std::string& name, Environment* environment, Duration min_delay = Duration::zero())
+        : Action<UserType>(name, environment, false, min_delay) {}
  
         void add_port(Port<UserType>* port) {
             [[maybe_unused]] bool result = ports_.insert(port).second;

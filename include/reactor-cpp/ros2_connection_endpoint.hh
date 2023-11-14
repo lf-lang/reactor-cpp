@@ -135,7 +135,6 @@ class ROS2SubEndpoint : public DownstreamEndpoint<UserType, std::shared_ptr<Wrap
             else 
                 this->schedule_at(ImmutableValuePtr<UserType>(std::move(inner_ptr)), tag);
             publisher_time_barrier_.release_tag(t);
-            this->environment()->scheduler()->notify();
         }
 
         virtual bool acquire_tag(const Tag& tag, std::unique_lock<std::mutex>& lock,
@@ -162,7 +161,6 @@ class ROS2SubEndpoint : public DownstreamEndpoint<UserType, std::shared_ptr<Wrap
                 t.advance_to(reactor::Tag(reactor::TimePoint(std::chrono::nanoseconds(msg->time_point)), mstep_t(msg->microstep)));
                 lf_logger_.debug() << "Releasing " << t;
                 publisher_time_barrier_.release_tag(t);
-                this->environment()->scheduler()->notify();
             });
         }
 
@@ -171,7 +169,7 @@ class ROS2SubEndpoint : public DownstreamEndpoint<UserType, std::shared_ptr<Wrap
         }
 
         ROS2SubEndpoint(const std::string& topic_name, const std::string& name, Environment* environment, const Duration& delay) 
-            : DownstreamEndpoint<UserType, std::shared_ptr<WrappedType>>(name, environment, true, delay),
+            : DownstreamEndpoint<UserType, std::shared_ptr<WrappedType>>(name, environment, delay),
             publisher_time_barrier_(environment->scheduler()),
             lf_logger_(this->fqn())
         {
@@ -200,11 +198,7 @@ class ROS2SubEndpointDelayed : public ROS2SubEndpoint<UserType, WrappedType> {
             // unwrapping the message using an aliasing constructor
             std::shared_ptr<UserType> inner_ptr(wrapped_msg, &wrapped_msg->message);
             reactor::Tag tag(reactor::TimePoint(std::chrono::nanoseconds(wrapped_msg->tag.time_point)), mstep_t(wrapped_msg->tag.microstep));
-            this->lf_logger_.debug() << "scheduling at DELAYED" <<tag.delay(this->min_delay());
-            if constexpr(detail::is_trivial<UserType>())
-                this->schedule_at(ImmutableValuePtr<UserType>(*inner_ptr.get()), tag.delay(this->min_delay()));
-            else 
-                this->schedule_at(ImmutableValuePtr<UserType>(std::move(inner_ptr)), tag.delay(this->min_delay()));
+            this->lf_logger_.debug() << "scheduling at delayed tag " <<tag.delay(this->min_delay());
             reactor::LogicalTime t;
             t.advance_to(tag);
             this->lf_logger_.debug() << t;
@@ -212,7 +206,12 @@ class ROS2SubEndpointDelayed : public ROS2SubEndpoint<UserType, WrappedType> {
             // TODO: make sure publisher time barrier is actually behind t, how bout lock?
             // sometimes get_elapsed_time() will get seemingly random values (but only if without logging=debug)
             this->publisher_time_barrier_.release_tag(t);
-            this->environment()->scheduler()->notify();
+
+            if constexpr(detail::is_trivial<UserType>())
+                this->schedule_at(ImmutableValuePtr<UserType>(*inner_ptr.get()), tag.delay(this->min_delay()));
+            else 
+                this->schedule_at(ImmutableValuePtr<UserType>(std::move(inner_ptr)), tag.delay(this->min_delay()));
+            
         }
 
         virtual bool acquire_tag(const Tag& tag, std::unique_lock<std::mutex>& lock,
@@ -283,7 +282,7 @@ class ROS2SubEndpointPhysical : public DownstreamEndpoint<UserType, std::shared_
         }
 
         ROS2SubEndpointPhysical(const std::string& topic_name, const std::string& name, Environment* environment, const Duration& delay) 
-        : DownstreamEndpoint<UserType, std::shared_ptr<WrappedType>>(name, environment, false, delay){
+        : DownstreamEndpoint<UserType, std::shared_ptr<WrappedType>>(name, environment, delay){
             std::function<void(std::shared_ptr<WrappedType>)> f = 
                 std::bind(&ROS2SubEndpointPhysical::schedule_this, this, std::placeholders::_1);
             sub_ = lf_node->create_subscription<WrappedType>(topic_name, RELIABLE_QoS,
@@ -307,7 +306,7 @@ class ROS2SubEndpointPhysicalDelayed : public ROS2SubEndpointPhysical<UserType, 
             else 
                 this->schedule_at(ImmutableValuePtr<UserType>(std::move(inner_ptr)), t.delay(this->min_delay()));
         }
-    
+        // TODO: maybe subtract delay from tag in acquire tag?
     
     public: 
         ROS2SubEndpointPhysicalDelayed(const std::string& topic_name, const std::string& name, Environment* environment, const Duration& delay) 
