@@ -137,8 +137,12 @@ class ROS2SubEndpoint : public DownstreamEndpoint<UserType, std::shared_ptr<Wrap
             }
         }
 
-        void schedule_this_at_tag(const std::shared_ptr<UserType>&& msg, const reactor::Tag& tag) {
-
+        void schedule_this_at_tag(std::shared_ptr<UserType>&& msg, const reactor::Tag& tag) {
+            lf_logger_.debug() << "Scheduling this at " << tag;
+            if constexpr(detail::is_trivial<UserType>())
+                this->schedule_at(ImmutableValuePtr<UserType>(*msg.get()), tag);
+            else 
+                this->schedule_at(ImmutableValuePtr<UserType>(std::move(msg)), tag);
         }
         
 
@@ -146,13 +150,10 @@ class ROS2SubEndpoint : public DownstreamEndpoint<UserType, std::shared_ptr<Wrap
             // unwrapping the message using an aliasing constructor
             std::shared_ptr<UserType> inner_ptr(wrapped_msg, &wrapped_msg->message);
             reactor::Tag tag(reactor::TimePoint(std::chrono::nanoseconds(wrapped_msg->tag.time_point)), mstep_t(wrapped_msg->tag.microstep));
-            
-            lf_logger_.debug() << "Got tag from wrapped message " << tag;
-            if constexpr(detail::is_trivial<UserType>())
-                this->schedule_at(ImmutableValuePtr<UserType>(*inner_ptr.get()), tag);
-            else 
-                this->schedule_at(ImmutableValuePtr<UserType>(std::move(inner_ptr)), tag);
             publisher_time_barrier_release(tag);
+            lf_logger_.debug() << "Got tag from wrapped message " << tag;
+            schedule_this_at_tag(std::move(inner_ptr), tag);
+            
         }
 
         virtual bool acquire_tag(const Tag& tag, std::unique_lock<std::mutex>& lock,
@@ -218,12 +219,8 @@ class ROS2SubEndpointDelayed : public ROS2SubEndpoint<UserType, WrappedType> {
             this->lf_logger_.debug() << "Got tag from wrapped message " << tag;
             this->publisher_time_barrier_release(tag);
             reactor::Tag delayed_tag = tag.delay(this->min_delay());
-            
-            this->lf_logger_.debug() << "scheduling at delayed tag " << delayed_tag;
-            if constexpr(detail::is_trivial<UserType>())
-                this->schedule_at(ImmutableValuePtr<UserType>(*inner_ptr.get()), delayed_tag);
-            else 
-                this->schedule_at(ImmutableValuePtr<UserType>(std::move(inner_ptr)), delayed_tag);
+            this->lf_logger_.debug() << "delayed schedule tag " << tag << " to " << delayed_tag;
+            this->schedule_this_at_tag(std::move(inner_ptr), delayed_tag);
             
         }
 
