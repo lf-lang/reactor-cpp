@@ -71,16 +71,11 @@ void Timer::cleanup() noexcept {
 ShutdownTrigger::ShutdownTrigger(const std::string& name, Reactor* container)
     : Timer(name, container, Duration::zero(), container->environment()->timeout()) {}
 
-void ShutdownTrigger::setup() noexcept {
-  BaseAction::setup();
-  environment()->sync_shutdown();
-}
+void ShutdownTrigger::setup() noexcept { BaseAction::setup(); }
 
 void ShutdownTrigger::shutdown() {
-  if (!is_present()) {
-    Tag tag = Tag::from_logical_time(environment()->logical_time()).delay();
-    environment()->scheduler()->schedule_sync(this, tag);
-  }
+  Tag tag = Tag::from_logical_time(environment()->logical_time()).delay();
+  environment()->scheduler()->schedule_sync(this, tag);
 }
 
 auto Action<void>::schedule_at(const Tag& tag) -> bool {

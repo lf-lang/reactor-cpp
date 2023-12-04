@@ -55,12 +55,17 @@ private:
 
   Scheduler scheduler_;
   Phase phase_{Phase::Construction};
-  Tag start_tag_{};
 
+  /// Timeout as given in the constructor
   const Duration timeout_{};
 
   Graph<BasePort> graph_{};
   Graph<BasePort> optimized_graph_{};
+
+  /// The start tag as determined during startup()
+  Tag start_tag_{};
+  /// The timeout tag as determined during startup()
+  Tag timeout_tag_{};
 
   void build_dependency_graph(Reactor* reactor);
   void calculate_indexes();
@@ -83,7 +88,7 @@ public:
 
   template <class T> void draw_connection(Port<T>* source, Port<T>* sink, ConnectionProperties properties) {
     if (top_environment_ == nullptr || top_environment_ == this) {
-      log::Debug() << "drawing connection: " << source << " --> " << sink;
+      log::Debug() << "drawing connection: " << source->fqn() << " --> " << sink->fqn();
       graph_.add_edge(source, sink, properties);
     } else {
       top_environment_->draw_connection(source, sink, properties);
@@ -117,6 +122,7 @@ public:
   [[nodiscard]] auto logical_time() const noexcept -> const LogicalTime& { return scheduler_.logical_time(); }
   [[nodiscard]] auto start_tag() const noexcept -> const Tag& { return start_tag_; }
   [[nodiscard]] auto timeout() const noexcept -> const Duration& { return timeout_; }
+  [[nodiscard]] auto timeout_tag() const noexcept -> const Tag& { return timeout_tag_; }
 
   static auto physical_time() noexcept -> TimePoint { return get_physical_time(); }
 

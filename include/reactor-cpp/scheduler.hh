@@ -161,6 +161,8 @@ private:
   std::vector<ReleaseTagCallback> release_tag_callbacks_{};
   void release_current_tag();
 
+  void cleanup_after_tag();
+
   void schedule() noexcept;
   auto schedule_ready_reactions() -> bool;
   void next();
