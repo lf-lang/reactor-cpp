@@ -9,6 +9,7 @@
 #ifndef REACTOR_CPP_GRAPH_HH
 #define REACTOR_CPP_GRAPH_HH
 
+#include <algorithm>
 #include <iostream>
 #include <map>
 #include <optional>
