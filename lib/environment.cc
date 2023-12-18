@@ -63,8 +63,20 @@ void Environment::register_input_action(BaseAction* action) {
 }
 
 void Environment::optimize() {
-  // no optimizations
-  optimized_graph_ = graph_;
+#if GRAPH_OPTIMIZATIONS
+  constexpr bool enable_optimizations = true;
+#else
+  constexpr bool enable_optimizations = false;
+#endif
+  log::Debug() << "Opimizations:" << enable_optimizations;
+  if constexpr (enable_optimizations) {
+    log::Debug() << graph_.to_mermaid();
+    graph_.optimize(optimized_graph_);
+    log::Debug() << optimized_graph_.to_mermaid();
+  } else {
+    // no optimizations
+    optimized_graph_ = graph_;
+  }
 }
 
 void recursive_assemble(Reactor* container) { // NOLINT
@@ -96,6 +108,7 @@ void Environment::assemble() { // NOLINT
     this->optimize();
 
     log::Debug() << "instantiating port graph declaration";
+
     log::Debug() << "graph: ";
     log::Debug() << optimized_graph_;
 
@@ -142,6 +155,13 @@ void Environment::assemble() { // NOLINT
       }
     }
   }
+
+  log::Debug() << "Building the Dependency-Graph";
+  for (auto* reactor : top_level_reactors_) {
+    build_dependency_graph(reactor);
+  }
+
+  calculate_indexes();
 }
 
 void Environment::build_dependency_graph(Reactor* reactor) { // NOLINT
