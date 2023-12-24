@@ -134,6 +134,7 @@ class ROS2SubEndpoint : public DownstreamEndpoint<UserType, std::shared_ptr<Wrap
                 lf_logger_.debug() << "Releasing " << tag << " on publisher_time_barrier";
                 publisher_time_barrier_time_.advance_to(tag);
                 publisher_time_barrier_.release_tag(publisher_time_barrier_time_);
+                this->environment()->scheduler()->notify();
             }
         }
 
