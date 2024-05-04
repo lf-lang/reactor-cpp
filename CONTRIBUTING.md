@@ -4,11 +4,11 @@
 
 ## Programming Style
 
-The project is currently implemented in C++17 and follows primarly the cpp-core-guidlines.
-Please make sure you subbmitted code follows the .clang-tidy and .clang-format file.
+The project is currently implemented in C++17 and follows primarily the [C++ Core Guidelines](https://github.com/isocpp/CppCoreGuidelines)
+Please make sure your submitted code follows the .clang-tidy and .clang-format files.
 
 ### Testing
-There are CI Tests which automatically check your code. If you want to perform the tests manually take a look
+There are CI Tests that automatically check your code. If you want to perform the tests manually take a look
 at this [guide](https://github.com/lf-lang/lingua-franca/wiki/Regression-Tests).
 
 ## Building and Testing with Nix
@@ -33,7 +33,7 @@ at this [guide](https://github.com/lf-lang/lingua-franca/wiki/Regression-Tests).
     $ nix build .#packages.x86_64-linux.ActionDelay-gcc-wrapper-10-3-0 --override-input reactor-cpp github:lf-lang/reactor-cpp/<revision - branch>
 ```
 
-The important thing to note is that the `--override-input` flag can take literally any source. In this example it takes the `cpp-core-guidleines` branch 
+The important thing to note is that the `--override-input` flag can take literally any source. In this example, it takes the `cpp-core-guidleines` branch 
 but you maybe also want to use your fork then the argument would look like this `--override-input reactor-cpp github:revol-xut/reactor-cpp`.
 
 **Building and Running all Packages**
@@ -49,8 +49,7 @@ This will build and run every tests.
 ```
 
 **Local integration testing**
-
-Lets assume you have the following folder structure:
+Let's assume you have the following folder structure:
  - reactor-cpp/
  - lingua-franca/
     - build/your_lfc_build.tar.gz folder that contains your local build of lfc
@@ -84,7 +83,7 @@ Analyse your benchmark for cache misses.
 ```
 
 **Callgrind**
-Profile and analyse your benchmarks call chain.
+Profile and analyze your benchmarks call chain.
 ```
     nix build .\#packages.x86_64-linux.callgrind-SleepingBarber-gcc-wrapper-10-3-0
 ```
@@ -92,7 +91,7 @@ Profile and analyse your benchmarks call chain.
 
 
 ### Benchmarking
-If youre changes are performance critically it is adviced to run the test from [here](https://github.com/lf-lang/lingua-franca/wiki/Running-Benchmarks)
+If your changes are performance-critical it is advised to run the test from [here](https://github.com/lf-lang/lingua-franca/wiki/Running-Benchmarks)
 
 
 ## Git
