@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.9)
 
+set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--export-all-symbols")
+
 if (DEFINED LF_REACTOR_CPP_SUFFIX)
   # the build is triggered from Lingua Franca
   set(LIB_TARGET "reactor-cpp-${LF_REACTOR_CPP_SUFFIX}")

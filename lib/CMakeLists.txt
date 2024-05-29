@@ -22,7 +22,12 @@ else()
   set(REACTOR_CPP_INCLUDE "include")
 endif()
 
-add_library(${LIB_TARGET} SHARED ${SOURCE_FILES})
+if (DEFINED REACTOR_CPP_LINK_STATICALLY)
+  add_library(${LIB_TARGET} OBJECT ${SOURCE_FILES})
+  set_property(TARGET ${LIB_TARGET} PROPERTY POSITION_INDEPENDENT_CODE ON)
+else()
+  add_library(${LIB_TARGET} SHARED ${SOURCE_FILES})
+endif()
 target_include_directories(${LIB_TARGET} PUBLIC
   "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>"
   "$<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>"
