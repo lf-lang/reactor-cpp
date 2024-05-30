@@ -133,8 +133,12 @@ public:
   void set(MutableValuePtr<T>&& value_ptr) { set(ImmutableValuePtr<T>(std::forward<MutableValuePtr<T>>(value_ptr))); }
   void set(const T& value) { set(make_immutable_value<T>(value)); }
   void set(T&& value) { set(make_immutable_value<T>(std::forward<T>(value))); }
-  // Setting a port to nullptr is not permitted.
-  void set(std::nullptr_t) = delete;
+
+  // Setting a port to nullptr is not permitted. We use enable_if to only delete
+  // set() if it is actually called with nullptr. Without enable_if set(0) would
+  // be ambiguous as 0 can be implicitly casted to nullptr_t.
+  template <typename V, typename = std::enable_if_t<std::is_same_v<V, std::nullptr_t>>> void set(V) = delete;
+
   void startup() final {}
   void shutdown() final {}
 
