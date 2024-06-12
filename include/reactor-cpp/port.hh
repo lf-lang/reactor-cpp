@@ -15,6 +15,7 @@
 #include "assert.hh"
 #include "connection_properties.hh"
 #include "fwd.hh"
+#include "graph.hh"
 #include "multiport.hh"
 #include "reactor_element.hh"
 #include "value_ptr.hh"
@@ -23,7 +24,7 @@ namespace reactor {
 
 enum class PortType { Input, Output, Delay };
 
-class BasePort : public ReactorElement {
+class BasePort : public GraphElement, public ReactorElement { // NOLINT
 private:
   BasePort* inward_binding_{nullptr};
   std::set<BasePort*> outward_bindings_{};
@@ -71,6 +72,8 @@ protected:
   }
 
 public:
+  ~BasePort() noexcept override = default;
+
   void set_inward_binding(BasePort* port) noexcept { inward_binding_ = port; }
   void add_outward_binding(BasePort* port) noexcept {
     outward_bindings_.insert(port); // NOLINT
@@ -92,6 +95,7 @@ public:
   [[nodiscard]] inline auto has_outward_bindings() const noexcept -> bool { return !outward_bindings_.empty(); }
   [[nodiscard]] inline auto has_dependencies() const noexcept -> bool { return !dependencies_.empty(); }
   [[nodiscard]] inline auto has_anti_dependencies() const noexcept -> bool { return !anti_dependencies_.empty(); }
+  [[nodiscard]] inline auto has_triggers() const noexcept -> bool { return !triggers_.empty(); }
 
   [[nodiscard]] inline auto inward_binding() const noexcept -> BasePort* { return inward_binding_; }
   [[nodiscard]] inline auto outward_bindings() const noexcept -> const auto& { return outward_bindings_; }
@@ -100,6 +104,14 @@ public:
   [[nodiscard]] inline auto dependencies() const noexcept -> const auto& { return dependencies_; }
   [[nodiscard]] inline auto anti_dependencies() const noexcept -> const auto& { return anti_dependencies_; }
   [[nodiscard]] inline auto port_type() const noexcept -> PortType { return type_; }
+
+  [[nodiscard]] auto connected_to_downstream_actions() const noexcept -> bool final {
+    return has_dependencies() || has_triggers();
+  };
+  [[nodiscard]] auto connected_to_upstream_actions() const noexcept -> bool final { return has_anti_dependencies(); };
+  [[nodiscard]] auto rating() const noexcept -> std::size_t final {
+    return dependencies_.size() + triggers_.size() + ((set_callback_ != nullptr) ? 1 : 0);
+  }
 
   void register_set_callback(const PortCallback& callback);
   void register_clean_callback(const PortCallback& callback);
@@ -174,7 +186,7 @@ public:
   Input(const std::string& name, Reactor* container)
       : Port<T>(name, PortType::Input, container) {}
 
-  Input(Input&&) = default; // NOLINT(performance-noexcept-move-constructor)
+  Input(Input&&) noexcept = default; // NOLINT(performance-noexcept-move-constructor)
 };
 
 template <class T> class Output : public Port<T> { // NOLINT
@@ -182,7 +194,7 @@ public:
   Output(const std::string& name, Reactor* container)
       : Port<T>(name, PortType::Output, container) {}
 
-  Output(Output&&) = default; // NOLINT(performance-noexcept-move-constructor)
+  Output(Output&&) noexcept = default; // NOLINT(performance-noexcept-move-constructor)
 };
 
 } // namespace reactor

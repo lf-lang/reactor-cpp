@@ -30,6 +30,8 @@ void BasePort::register_dependency(Reaction* reaction, bool is_trigger) noexcept
              "Dependent output ports must belong to a contained reactor");
   }
 
+  log::Debug() << "registering dependency for : " << this->fqn() << " with reaction: " << reaction->fqn()
+               << " is trigger: " << is_trigger;
   [[maybe_unused]] bool result = dependencies_.insert(reaction).second;
   reactor_assert(result);
   if (is_trigger) {
