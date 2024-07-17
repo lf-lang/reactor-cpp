@@ -33,9 +33,7 @@ void assert_phase([[maybe_unused]] const ReactorElement* ptr, [[maybe_unused]] P
         }
         return "Unknown Phase: Value: " + std::to_string(extract_value(phase));
       };
-#ifdef __linux__
-      print_debug_backtrace();
-#endif
+      print_backtrace();
 
       // C++20 std::format
       throw ValidationError("Expected Phase: " + enum_value_to_name(phase) +

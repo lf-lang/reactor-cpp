@@ -17,11 +17,6 @@
 #include <stdexcept>
 #include <string>
 
-#ifdef __linux__
-#include <execinfo.h>
-#include <unistd.h>
-#endif
-
 #ifdef REACTOR_CPP_VALIDATE
 constexpr bool runtime_validation = true;
 #else
@@ -37,6 +32,33 @@ constexpr bool runtime_assertion = true;
 // NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
 #define reactor_assert(x) assert(x)
 
+#ifdef REACTOR_CPP_USE_BACKTRACE
+
+// NOLINTNEXTLINE
+#include REACTOR_CPP_BACKTRACE_HEADER
+#include <array>
+#include <iostream>
+
+namespace reactor {
+
+constexpr std::size_t MAX_TRACE_SIZE{16};
+
+inline void print_backtrace() {
+  std::array<void*, MAX_TRACE_SIZE> trace{nullptr};
+  int size = backtrace(trace.data(), MAX_TRACE_SIZE);
+  char** messages = backtrace_symbols(trace.data(), size);
+  for (int i{0}; i < size; i++) {
+    std::cerr << "[backtrace] " << messages[i] << '\n'; // NOLINT
+  }
+}
+
+} // namespace reactor
+#else
+namespace reactor {
+inline void print_backtrace() {}
+} // namespace reactor
+#endif // REACTOR_CPP_BACKTRACE_SUPPORT
+
 namespace reactor {
 
 class ValidationError : public std::runtime_error {
@@ -48,23 +70,10 @@ public:
       : std::runtime_error(build_message(msg)) {}
 };
 
-#ifdef __linux__
-constexpr std::size_t MAX_STACK_SIZE{10};
-
-inline void print_debug_backtrace() {
-  void* array[10]; // NOLINT
-  // get void*'s for all entries on the stack
-  int size = backtrace((void**)array, MAX_STACK_SIZE);
-  backtrace_symbols_fd((void**)array, size, STDERR_FILENO);
-}
-#endif
-
 constexpr inline void validate([[maybe_unused]] bool condition, [[maybe_unused]] const std::string_view message) {
   if constexpr (runtime_validation) { // NOLINT
     if (!condition) {
-#ifdef __linux__
-      print_debug_backtrace();
-#endif
+      print_backtrace();
       throw ValidationError(message);
     }
   }

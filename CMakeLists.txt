@@ -30,7 +30,10 @@ if (NOT DEFINED LF_REACTOR_CPP_SUFFIX)
   endif()
 endif()
 
-find_package (Threads)
+find_package(Threads)
+
+find_package(Backtrace)
+set(REACTOR_CPP_USE_BACKTRACE ${Backtrace_FOUND})
 
 set(DEFAULT_BUILD_TYPE "Release")
 if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
