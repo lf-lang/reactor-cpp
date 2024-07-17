@@ -36,6 +36,11 @@ else()
   target_compile_options(${LIB_TARGET} PRIVATE -Wall -Wextra -pedantic -Werror)
 endif()
 
+if(${Backtrace_FOUND})
+  target_include_directories(${LIB_TARGET} PRIVATE ${Backtrace_INCLUDE_DIRS})
+  target_link_libraries(${LIB_TARGET} ${Backtrace_LIBRARY})
+endif()
+
 target_link_libraries(${LIB_TARGET} ${CMAKE_THREAD_LIBS_INIT})
 if(REACTOR_CPP_TRACE)
   target_link_libraries(${LIB_TARGET} LTTng::UST)
