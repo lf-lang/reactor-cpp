@@ -59,13 +59,13 @@ private:
   /// Timeout as given in the constructor
   const Duration timeout_{};
 
+  Graph<BasePort> graph_{};
+  Graph<BasePort> optimized_graph_{};
+
   /// The start tag as determined during startup()
   Tag start_tag_{};
   /// The timeout tag as determined during startup()
   Tag timeout_tag_{};
-
-  Graph<BasePort*, ConnectionProperties> graph_{};
-  Graph<BasePort*, ConnectionProperties> optimized_graph_{};
 
   void build_dependency_graph(Reactor* reactor);
   void calculate_indexes();
@@ -98,7 +98,6 @@ public:
   void optimize();
 
   void register_reactor(Reactor* reactor);
-  void register_port(BasePort* port) noexcept;
   void register_input_action(BaseAction* action);
   void assemble();
   auto startup() -> std::thread;

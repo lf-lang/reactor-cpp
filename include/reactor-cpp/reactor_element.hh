@@ -37,7 +37,7 @@ public:
   virtual ~ReactorElement() = default;
 
   // not copyable, but movable
-  ReactorElement(const ReactorElement&) = delete;
+  ReactorElement(const ReactorElement&) = default;
   ReactorElement(ReactorElement&&) = default;
 
   [[nodiscard]] auto container() const noexcept -> Reactor* { return container_; }
