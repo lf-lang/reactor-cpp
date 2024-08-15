@@ -9,6 +9,7 @@
 #ifndef REACTOR_CPP_PORT_HH
 #define REACTOR_CPP_PORT_HH
 
+#include <cstdint>
 #include <set>
 #include <vector>
 
@@ -21,13 +22,13 @@
 
 namespace reactor {
 
-enum class PortType { Input, Output, Delay };
+enum class PortType : std::uint8_t { Input, Output, Delay };
 
 class BasePort : public ReactorElement {
 private:
   BasePort* inward_binding_{nullptr};
   std::set<BasePort*> outward_bindings_{};
-  const PortType type_;
+  PortType type_;
 
   std::set<Reaction*> dependencies_{};
   std::set<Reaction*> triggers_{};
@@ -58,13 +59,13 @@ protected:
     };
   }
 
-  inline void invoke_set_callback() noexcept {
+  void invoke_set_callback() noexcept {
     if (set_callback_ != nullptr) {
       set_callback_(*this);
     }
   }
 
-  inline void invoke_clean_callback() noexcept {
+  void invoke_clean_callback() noexcept {
     if (clean_callback_ != nullptr) {
       clean_callback_(*this);
     }
@@ -72,34 +73,32 @@ protected:
 
 public:
   void set_inward_binding(BasePort* port) noexcept { inward_binding_ = port; }
-  void add_outward_binding(BasePort* port) noexcept {
-    outward_bindings_.insert(port); // NOLINT
-  }
+  void add_outward_binding(BasePort* port) noexcept { outward_bindings_.insert(port); }
 
   virtual void instantiate_connection_to(const ConnectionProperties& properties,
                                          const std::vector<BasePort*>& downstreams) = 0;
 
-  [[nodiscard]] inline auto is_input() const noexcept -> bool { return type_ == PortType::Input; }
-  [[nodiscard]] inline auto is_output() const noexcept -> bool { return type_ == PortType::Output; }
-  [[nodiscard]] inline auto is_present() const noexcept -> bool {
+  [[nodiscard]] auto is_input() const noexcept -> bool { return type_ == PortType::Input; }
+  [[nodiscard]] auto is_output() const noexcept -> bool { return type_ == PortType::Output; }
+  [[nodiscard]] auto is_present() const noexcept -> bool {
     if (has_inward_binding()) {
       return inward_binding()->is_present();
     }
     return present_;
   };
 
-  [[nodiscard]] inline auto has_inward_binding() const noexcept -> bool { return inward_binding_ != nullptr; }
-  [[nodiscard]] inline auto has_outward_bindings() const noexcept -> bool { return !outward_bindings_.empty(); }
-  [[nodiscard]] inline auto has_dependencies() const noexcept -> bool { return !dependencies_.empty(); }
-  [[nodiscard]] inline auto has_anti_dependencies() const noexcept -> bool { return !anti_dependencies_.empty(); }
+  [[nodiscard]] auto has_inward_binding() const noexcept -> bool { return inward_binding_ != nullptr; }
+  [[nodiscard]] auto has_outward_bindings() const noexcept -> bool { return !outward_bindings_.empty(); }
+  [[nodiscard]] auto has_dependencies() const noexcept -> bool { return !dependencies_.empty(); }
+  [[nodiscard]] auto has_anti_dependencies() const noexcept -> bool { return !anti_dependencies_.empty(); }
 
-  [[nodiscard]] inline auto inward_binding() const noexcept -> BasePort* { return inward_binding_; }
-  [[nodiscard]] inline auto outward_bindings() const noexcept -> const auto& { return outward_bindings_; }
+  [[nodiscard]] auto inward_binding() const noexcept -> BasePort* { return inward_binding_; }
+  [[nodiscard]] auto outward_bindings() const noexcept -> const auto& { return outward_bindings_; }
 
-  [[nodiscard]] inline auto triggers() const noexcept -> const auto& { return triggers_; }
-  [[nodiscard]] inline auto dependencies() const noexcept -> const auto& { return dependencies_; }
-  [[nodiscard]] inline auto anti_dependencies() const noexcept -> const auto& { return anti_dependencies_; }
-  [[nodiscard]] inline auto port_type() const noexcept -> PortType { return type_; }
+  [[nodiscard]] auto triggers() const noexcept -> const auto& { return triggers_; }
+  [[nodiscard]] auto dependencies() const noexcept -> const auto& { return dependencies_; }
+  [[nodiscard]] auto anti_dependencies() const noexcept -> const auto& { return anti_dependencies_; }
+  [[nodiscard]] auto port_type() const noexcept -> PortType { return type_; }
 
   void register_set_callback(const PortCallback& callback);
   void register_clean_callback(const PortCallback& callback);
@@ -130,9 +129,9 @@ public:
   [[nodiscard]] auto typed_outward_bindings() const noexcept -> const std::set<Port<T>*>&;
 
   virtual void set(const ImmutableValuePtr<T>& value_ptr);
-  void set(MutableValuePtr<T>&& value_ptr) { set(ImmutableValuePtr<T>(std::forward<MutableValuePtr<T>>(value_ptr))); }
+  void set(MutableValuePtr<T>&& value_ptr) { set(ImmutableValuePtr<T>(std::move(value_ptr))); }
   void set(const T& value) { set(make_immutable_value<T>(value)); }
-  void set(T&& value) { set(make_immutable_value<T>(std::forward<T>(value))); }
+  void set(T&& value) { set(make_immutable_value<T>(std::move(value))); }
 
   // Setting a port to nullptr is not permitted. We use enable_if to only delete
   // set() if it is actually called with nullptr. Without enable_if set(0) would
@@ -169,20 +168,20 @@ public:
   void shutdown() final {}
 };
 
-template <class T> class Input : public Port<T> { // NOLINT
+template <class T> class Input : public Port<T> { // NOLINT(cppcoreguidelines-special-member-functions)
 public:
   Input(const std::string& name, Reactor* container)
       : Port<T>(name, PortType::Input, container) {}
 
-  Input(Input&&) = default; // NOLINT(performance-noexcept-move-constructor)
+  Input(Input&&) = default;
 };
 
-template <class T> class Output : public Port<T> { // NOLINT
+template <class T> class Output : public Port<T> { // NOLINT(cppcoreguidelines-special-member-functions)
 public:
   Output(const std::string& name, Reactor* container)
       : Port<T>(name, PortType::Output, container) {}
 
-  Output(Output&&) = default; // NOLINT(performance-noexcept-move-constructor)
+  Output(Output&&) = default;
 };
 
 } // namespace reactor

@@ -48,7 +48,7 @@ public:
 
   virtual void bind_downstream_ports(const std::vector<BasePort*>& ports) {
     // with C++23 we can use insert_rage here
-    for ([[maybe_unused]] auto* port : ports) { // NOLINT
+    for ([[maybe_unused]] auto* port : ports) {
       this->downstream_ports_.insert(static_cast<Port<T>*>(port));
     }
   }
@@ -65,10 +65,10 @@ protected:
   BaseDelayedConnection(const std::string& name, Environment* environment, bool is_logical, Duration delay)
       : Connection<T>(name, environment, is_logical, delay) {}
 
-  inline auto upstream_set_callback() noexcept -> PortCallback override {
+  auto upstream_set_callback() noexcept -> PortCallback override {
     return [this](const BasePort& port) {
       // We know that port must be of type Port<T>
-      auto& typed_port = reinterpret_cast<const Port<T>&>(port); // NOLINT
+      auto& typed_port = reinterpret_cast<const Port<T>&>(port); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
       if constexpr (std::is_same<T, void>::value) {
         this->schedule();
       } else {
@@ -110,7 +110,7 @@ private:
   LogicalTimeBarrier logical_time_barrier_;
 
 protected:
-  log::NamedLogger log_; // NOLINT
+  log::NamedLogger log_; // NOLINT(cppcoreguidelines-non-private-member-variables-in-classes)
 
   EnclaveConnection(const std::string& name, Environment* enclave, const Duration& delay)
       : BaseDelayedConnection<T>(name, enclave, false, delay)
@@ -123,16 +123,17 @@ public:
       , logical_time_barrier_(enclave->scheduler())
       , log_{this->fqn()} {};
 
-  inline auto upstream_set_callback() noexcept -> PortCallback override {
+  auto upstream_set_callback() noexcept -> PortCallback override {
     return [this](const BasePort& port) {
       // We know that port must be of type Port<T>
-      auto& typed_port = reinterpret_cast<const Port<T>&>(port); // NOLINT
+      // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+      auto& typed_port = reinterpret_cast<const Port<T>&>(port);
       const auto* scheduler = port.environment()->scheduler();
       // This callback will be called from a reaction executing in the context
       // of the upstream port. Hence, we can retrieve the current tag directly
       // without locking.
       auto tag = Tag::from_logical_time(scheduler->logical_time());
-      [[maybe_unused]] bool result{false}; // NOLINT value set is not used
+      [[maybe_unused]] bool result{false};
       if constexpr (std::is_same<T, void>::value) {
         result = this->schedule_at(tag);
       } else {
@@ -142,8 +143,8 @@ public:
     };
   }
 
-  inline auto acquire_tag(const Tag& tag, std::unique_lock<std::mutex>& lock,
-                          const std::function<bool(void)>& abort_waiting) -> bool override {
+  auto acquire_tag(const Tag& tag, std::unique_lock<std::mutex>& lock,
+                   const std::function<bool(void)>& abort_waiting) -> bool override {
     reactor_assert(lock.owns_lock());
     log_.debug() << "downstream tries to acquire tag " << tag;
 
@@ -189,8 +190,8 @@ public:
   DelayedEnclaveConnection(const std::string& name, Environment* enclave, Duration delay)
       : EnclaveConnection<T>(name, enclave, delay) {}
 
-  inline auto upstream_set_callback() noexcept -> PortCallback override {
-    return [&](const BasePort& port) { // NOLINT unused this
+  auto upstream_set_callback() noexcept -> PortCallback override {
+    return [&](const BasePort& port) {
       // This callback will be called from a reaction executing in the context
       // of the upstream port. Hence, we can retrieve the current tag directly
       // without locking.
@@ -200,7 +201,8 @@ public:
             Tag::from_logical_time(port.environment()->scheduler()->logical_time()).delay(this->min_delay()));
       } else {
         // We know that port must be of type Port<T>
-        auto& typed_port = reinterpret_cast<const Port<T>&>(port); // NOLINT
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+        auto& typed_port = reinterpret_cast<const Port<T>&>(port);
         this->schedule_at(
             std::move(typed_port.get()),
             Tag::from_logical_time(port.environment()->scheduler()->logical_time()).delay(this->min_delay()));
@@ -208,8 +210,8 @@ public:
     };
   }
 
-  inline auto acquire_tag(const Tag& tag, std::unique_lock<std::mutex>& lock,
-                          const std::function<bool(void)>& abort_waiting) -> bool override {
+  auto acquire_tag(const Tag& tag, std::unique_lock<std::mutex>& lock,
+                   const std::function<bool(void)>& abort_waiting) -> bool override {
     // Since this is a delayed connection, we can go back in time and need to
     // acquire the latest upstream tag that can create an event at the given
     // tag. We also need to consider that given a delay d and a tag g=(t, n),
@@ -225,10 +227,11 @@ public:
   PhysicalEnclaveConnection(const std::string& name, Environment* enclave)
       : EnclaveConnection<T>(name, enclave) {}
 
-  inline auto upstream_set_callback() noexcept -> PortCallback override {
+  auto upstream_set_callback() noexcept -> PortCallback override {
     return [this](const BasePort& port) {
       // We know that port must be of type Port<T>
-      auto& typed_port = reinterpret_cast<const Port<T>&>(port); // NOLINT
+      // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+      auto& typed_port = reinterpret_cast<const Port<T>&>(port);
       if constexpr (std::is_same<T, void>::value) {
         this->schedule();
       } else {
@@ -237,8 +240,8 @@ public:
     };
   }
 
-  inline auto acquire_tag(const Tag& tag, std::unique_lock<std::mutex>& lock,
-                          const std::function<bool(void)>& abort_waiting) -> bool override {
+  auto acquire_tag(const Tag& tag, std::unique_lock<std::mutex>& lock,
+                   const std::function<bool(void)>& abort_waiting) -> bool override {
     this->log_.debug() << "downstream tries to acquire tag " << tag;
     return PhysicalTimeBarrier::acquire_tag(tag, lock, this->environment()->scheduler(), abort_waiting);
   }

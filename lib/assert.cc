@@ -19,11 +19,10 @@ auto ValidationError::build_message(const std::string_view msg) noexcept -> std:
 }
 
 void assert_phase([[maybe_unused]] const ReactorElement* ptr, [[maybe_unused]] Phase phase) {
-  if constexpr (runtime_assertion) { // NOLINT
+  if constexpr (runtime_assertion) {
     if (ptr->environment()->phase() != phase) {
       auto enum_value_to_name = [](Phase phase) -> std::string {
         const std::map<Phase, std::string> conversation_map = {
-            // NOLINT
             {Phase::Construction, "Construction"}, {Phase::Assembly, "Assembly"},
             {Phase::Startup, "Startup"},           {Phase::Execution, "Execution"},
             {Phase::Shutdown, "Shutdown"},         {Phase::Deconstruction, "Deconstruction"}};

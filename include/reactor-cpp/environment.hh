@@ -27,15 +27,22 @@ constexpr unsigned int default_max_reaction_index = 0;
 constexpr bool default_run_forever = false;
 constexpr bool default_fast_fwd_execution = false;
 
-enum class Phase { Construction = 0, Assembly = 1, Startup = 2, Execution = 3, Shutdown = 4, Deconstruction = 5 };
+enum class Phase : std::uint8_t {
+  Construction = 0,
+  Assembly = 1,
+  Startup = 2,
+  Execution = 3,
+  Shutdown = 4,
+  Deconstruction = 5
+};
 
 class Environment {
 private:
   using Dependency = std::pair<Reaction*, Reaction*>;
 
-  const std::string name_{};
-  const log::NamedLogger log_;
-  const unsigned int num_workers_{default_number_worker};
+  std::string name_{};
+  log::NamedLogger log_;
+  unsigned int num_workers_{default_number_worker};
   unsigned int max_reaction_index_{default_max_reaction_index};
   bool run_forever_{default_run_forever};
   const bool fast_fwd_execution_{default_fast_fwd_execution};

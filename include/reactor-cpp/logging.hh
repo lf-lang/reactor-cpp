@@ -27,7 +27,7 @@ private:
   using Lock = std::unique_lock<std::mutex>;
 
   const std::string log_prefix_{};
-  inline static std::mutex mutex_{}; // NOLINT
+  inline static std::mutex mutex_{};
   Lock lock_{};
 
 public:
@@ -42,11 +42,12 @@ public:
   auto operator=(BaseLogger&&) -> BaseLogger& = delete;
 
   template <class T> auto operator<<(const T& msg) -> BaseLogger& {
+    // FIXME
     std::cerr << msg; // NOLINT
     return *this;
   }
 
-  ~BaseLogger() { std::cerr << std::endl; }
+  ~BaseLogger() { std::cerr << '\n'; }
 };
 
 template <> class BaseLogger<false> {
@@ -69,27 +70,27 @@ constexpr bool error_enabled = 1 <= REACTOR_CPP_LOG_LEVEL;
 
 struct Debug : BaseLogger<debug_enabled> {
   Debug()
-      : BaseLogger<debug_enabled>("[DEBUG] "){};
+      : BaseLogger<debug_enabled>("[DEBUG] ") {}
 };
 struct Info : BaseLogger<info_enabled> {
   Info()
-      : BaseLogger<info_enabled>("[INFO]  "){};
+      : BaseLogger<info_enabled>("[INFO]  ") {}
 };
 struct Warn : BaseLogger<warn_enabled> {
   Warn()
-      : BaseLogger<warn_enabled>("[WARN]  "){};
+      : BaseLogger<warn_enabled>("[WARN]  ") {}
 };
 struct Error : BaseLogger<error_enabled> {
   Error()
-      : BaseLogger<error_enabled>("[ERROR] "){};
+      : BaseLogger<error_enabled>("[ERROR] ") {}
 };
 
 class NamedLogger {
 private:
-  const std::string debug_prefix_{};
-  const std::string info_prefix_{};
-  const std::string warn_prefix_{};
-  const std::string error_prefix_{};
+  std::string debug_prefix_{};
+  std::string info_prefix_{};
+  std::string warn_prefix_{};
+  std::string error_prefix_{};
 
 public:
   NamedLogger(const std::string& name)

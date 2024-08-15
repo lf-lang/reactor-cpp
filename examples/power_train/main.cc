@@ -44,7 +44,7 @@ private:
   Reaction r1{"1", 1, this, [this]() { reaction_1(); }};
   Reaction r2{"2", 2, this, [this]() { reaction_2(); }};
 
-  void reaction_1(){};
+  void reaction_1() {};
   void reaction_2() {}
 
 public:

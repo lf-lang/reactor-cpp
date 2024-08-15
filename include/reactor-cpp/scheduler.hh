@@ -36,26 +36,30 @@ using ReleaseTagCallback = std::function<void(const LogicalTime&)>;
 class Scheduler;
 class Worker;
 
-class Worker { // NOLINT
+class Worker {
 private:
-  Scheduler& scheduler_;
-  const unsigned int identity_{0};
+  Scheduler* scheduler_;
+  unsigned int identity_{0};
   std::thread thread_{};
   log::NamedLogger log_;
 
-  // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
+  // NOLINTNEXTLINEecppcoreguidelines-avoid-non-const-global-variables)
   static thread_local const Worker* current_worker;
 
   void work() const;
   void execute_reaction(Reaction* reaction) const;
 
 public:
-  Worker(Scheduler& scheduler, unsigned int identity, const std::string& name)
+  Worker(Scheduler* scheduler, unsigned int identity, const std::string& name)
       : scheduler_{scheduler}
       , identity_{identity}
       , log_(name) {}
-  Worker(Worker&& worker); // NOLINT(performance-noexcept-move-constructor)
+  Worker(Worker&& worker) = default;
   Worker(const Worker& worker) = delete;
+  ~Worker() = default;
+
+  auto operator=(const Worker&) -> Worker& = delete;
+  auto operator=(Worker&&) -> Worker& = delete;
 
   void start_thread() { thread_ = std::thread(&Worker::work, this); }
   void join_thread() { thread_.join(); }
@@ -131,7 +135,7 @@ public:
   void discard_events_until_tag(const Tag& tag);
 };
 
-class Scheduler { // NOLINT
+class Scheduler {
 private:
   const bool using_workers_;
   LogicalTime logical_time_{};
@@ -174,29 +178,31 @@ private:
 public:
   explicit Scheduler(Environment* env);
   ~Scheduler();
+  Scheduler(const Scheduler&) = delete;
+  Scheduler(Scheduler&&) = delete;
+  auto operator=(const Scheduler&) -> Scheduler& = delete;
+  auto operator=(Scheduler&&) -> Scheduler& = delete;
 
   void schedule_sync(BaseAction* action, const Tag& tag);
   auto schedule_async(BaseAction* action, const Duration& delay) -> Tag;
   auto schedule_async_at(BaseAction* action, const Tag& tag) -> bool;
   auto schedule_empty_async_at(const Tag& tag) -> bool;
 
-  auto inline lock() noexcept -> std::unique_lock<std::mutex> {
-    return std::unique_lock<std::mutex>(scheduling_mutex_);
-  }
-  void inline notify() noexcept { cv_schedule_.notify_one(); }
-  void inline wait(std::unique_lock<std::mutex>& lock, const std::function<bool(void)>& predicate) noexcept {
+  auto lock() noexcept -> std::unique_lock<std::mutex> { return std::unique_lock<std::mutex>(scheduling_mutex_); }
+  void notify() noexcept { cv_schedule_.notify_one(); }
+  void wait(std::unique_lock<std::mutex>& lock, const std::function<bool(void)>& predicate) noexcept {
     reactor_assert(lock.owns_lock());
     cv_schedule_.wait(lock, predicate);
   };
-  auto inline wait_until(std::unique_lock<std::mutex>& lock, TimePoint time_point,
-                         const std::function<bool(void)>& predicate) noexcept -> bool {
+  auto wait_until(std::unique_lock<std::mutex>& lock, TimePoint time_point,
+                  const std::function<bool(void)>& predicate) noexcept -> bool {
     reactor_assert(lock.owns_lock());
     return cv_schedule_.wait_until(lock, time_point, predicate);
   };
 
   void set_port(BasePort* port);
 
-  [[nodiscard]] inline auto logical_time() const noexcept -> const auto& { return logical_time_; }
+  [[nodiscard]] auto logical_time() const noexcept -> const auto& { return logical_time_; }
 
   void start();
   void stop();

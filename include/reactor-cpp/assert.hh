@@ -34,7 +34,7 @@ constexpr bool runtime_assertion = true;
 
 #ifdef REACTOR_CPP_USE_BACKTRACE
 
-// NOLINTNEXTLINE
+// NOLINTNEXTLINE(llvm-include-order)
 #include REACTOR_CPP_BACKTRACE_HEADER
 #include <array>
 #include <iostream>
@@ -48,7 +48,8 @@ inline void print_backtrace() {
   int size = backtrace(trace.data(), MAX_TRACE_SIZE);
   char** messages = backtrace_symbols(trace.data(), size);
   for (int i{0}; i < size; i++) {
-    std::cerr << "[backtrace] " << messages[i] << '\n'; // NOLINT
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+    std::cerr << "[backtrace] " << messages[i] << '\n';
   }
 }
 
@@ -70,8 +71,8 @@ public:
       : std::runtime_error(build_message(msg)) {}
 };
 
-constexpr inline void validate([[maybe_unused]] bool condition, [[maybe_unused]] const std::string_view message) {
-  if constexpr (runtime_validation) { // NOLINT
+constexpr void validate([[maybe_unused]] bool condition, [[maybe_unused]] const std::string_view message) {
+  if constexpr (runtime_validation) {
     if (!condition) {
       print_backtrace();
       throw ValidationError(message);
@@ -79,8 +80,8 @@ constexpr inline void validate([[maybe_unused]] bool condition, [[maybe_unused]]
   }
 }
 
-template <typename E> constexpr auto extract_value(E enum_value) -> typename std::underlying_type<E>::type {
-  return static_cast<typename std::underlying_type<E>::type>(enum_value);
+template <typename E> constexpr auto extract_value(E enum_value) -> typename std::underlying_type_t<E> {
+  return static_cast<typename std::underlying_type_t<E>>(enum_value);
 }
 
 void assert_phase([[maybe_unused]] const ReactorElement* ptr, [[maybe_unused]] Phase phase);

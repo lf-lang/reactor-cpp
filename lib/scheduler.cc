@@ -28,20 +28,6 @@ namespace reactor {
 // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
 thread_local const Worker* Worker::current_worker = nullptr;
 
-Worker::Worker(Worker&& work) // NOLINT(performance-noexcept-move-constructor)
-    : scheduler_{work.scheduler_}
-    , identity_{work.identity_}
-    , log_{std::move(work.log_)} {
-  // Need to provide the move constructor in order to organize workers in a
-  // std::vector. However, moving is not save if the thread is already running,
-  // thus we throw an exception here if the worker is moved but the
-  // internal thread is already running.
-
-  if (work.thread_.joinable()) {
-    throw std::runtime_error{"Running workers cannot be moved!"};
-  }
-}
-
 void Worker::work() const {
   // initialize the current worker thread local variable
   current_worker = this;
@@ -50,12 +36,12 @@ void Worker::work() const {
 
   if (identity_ == 0) {
     log_.debug() << "do the initial scheduling";
-    scheduler_.schedule();
+    scheduler_->schedule();
   }
 
   while (true) {
     // wait for a ready reaction
-    auto* reaction = scheduler_.ready_queue_.pop();
+    auto* reaction = scheduler_->ready_queue_.pop();
 
     // receiving a nullptr indicates that the worker should terminate
     if (reaction == nullptr) {
@@ -66,10 +52,10 @@ void Worker::work() const {
     execute_reaction(reaction);
 
     // was this the very last reaction?
-    if (scheduler_.reactions_to_process_.fetch_sub(1, std::memory_order_acq_rel) == 1) {
+    if (scheduler_->reactions_to_process_.fetch_sub(1, std::memory_order_acq_rel) == 1) {
       // Yes, then schedule. The atomic decrement above ensures that only one
       // thread enters this block.
-      scheduler_.schedule();
+      scheduler_->schedule();
     }
     // continue otherwise
   }
@@ -80,9 +66,9 @@ void Worker::work() const {
 void Worker::execute_reaction(Reaction* reaction) const {
   log_.debug() << "execute reaction " << reaction->fqn();
 
-  tracepoint(reactor_cpp, reaction_execution_starts, identity_, reaction->fqn(), scheduler_.logical_time());
+  tracepoint(reactor_cpp, reaction_execution_starts, identity_, reaction->fqn(), scheduler_->logical_time());
   reaction->trigger();
-  tracepoint(reactor_cpp, reaction_execution_finishes, identity_, reaction->fqn(), scheduler_.logical_time());
+  tracepoint(reactor_cpp, reaction_execution_finishes, identity_, reaction->fqn(), scheduler_->logical_time());
 
   Statistics::increment_processed_reactions();
 }
@@ -193,7 +179,7 @@ auto EventQueue::insert_event_at(const Tag& tag) -> const ActionListPtr& {
 
 void EventQueue::return_action_list(ActionListPtr&& action_list) {
   reactor_assert(action_list != nullptr);
-  action_list_pool_.emplace_back(std::forward<ActionListPtr>(action_list));
+  action_list_pool_.emplace_back(std::move(action_list));
 }
 
 void EventQueue::discard_events_until_tag(const Tag& tag) {
@@ -234,7 +220,7 @@ auto Scheduler::schedule_ready_reactions() -> bool {
       std::sort(reactions.begin(), reactions.end());
       reactions.erase(std::unique(reactions.begin(), reactions.end()), reactions.end());
 
-      if constexpr (log::debug_enabled || tracing_enabled) { // NOLINT
+      if constexpr (log::debug_enabled || tracing_enabled) {
         for (auto* reaction : reactions) {
           log_.debug() << "Reaction " << reaction->fqn() << " is ready for execution";
           tracepoint(reactor_cpp, trigger_reaction, reaction->container()->fqn(), reaction->name(), logical_time_);
@@ -291,7 +277,7 @@ void Scheduler::start() {
   for (unsigned i = 0; i < num_workers; i++) {
     std::stringstream stream;
     stream << "Worker " << environment_->name() << " " << i;
-    workers_.emplace_back(*this, i, stream.str());
+    workers_.emplace_back(this, i, stream.str());
     workers_.back().start_thread();
   }
 
@@ -331,7 +317,7 @@ void Scheduler::cleanup_after_tag() {
   }
 }
 
-void Scheduler::next() { // NOLINT
+void Scheduler::next() { // NOLINT(readability-function-cognitive-complexity)
   // First, clean up after the last tag.
   cleanup_after_tag();
 

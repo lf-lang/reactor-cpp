@@ -59,13 +59,15 @@ void BasePort::register_antidependency(Reaction* reaction) noexcept {
 
 [[maybe_unused]] auto Port<void>::typed_outward_bindings() const noexcept -> const std::set<Port<void>*>& {
   // this is undefined behavior and should be changed
-  return reinterpret_cast<const std::set<Port<void>*>&>(outward_bindings()); // NOLINT C++20 std::bit_cast
+  // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+  return reinterpret_cast<const std::set<Port<void>*>&>(outward_bindings()); // use C++20 std::bit_cast
 }
 
 auto Port<void>::typed_inward_binding() const noexcept -> Port<void>* {
   // we can use a reinterpret cast here since we know that this port is always
   // connected with another Port<T>.
-  return reinterpret_cast<Port<void>*>(inward_binding()); // NOLINT
+  // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+  return reinterpret_cast<Port<void>*>(inward_binding());
 }
 
 void Port<void>::set() {

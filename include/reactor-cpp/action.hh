@@ -28,8 +28,8 @@ class BaseAction : public ReactorElement {
 private:
   std::set<Reaction*> triggers_{};
   std::set<Reaction*> schedulers_{};
-  const Duration min_delay_{0};
-  const bool logical_{true};
+  Duration min_delay_{0};
+  bool logical_{true};
   bool present_{false};
 
 protected:
@@ -58,12 +58,12 @@ protected:
   BaseAction(const std::string& name, Environment* environment, bool logical, Duration min_delay);
 
 public:
-  [[nodiscard]] auto inline triggers() const noexcept -> const auto& { return triggers_; }
-  [[nodiscard]] auto inline schedulers() const noexcept -> const auto& { return schedulers_; }
-  [[nodiscard]] auto inline is_logical() const noexcept -> bool { return logical_; }
-  [[nodiscard]] auto inline is_physical() const noexcept -> bool { return !logical_; }
-  [[nodiscard]] auto inline min_delay() const noexcept -> Duration { return min_delay_; }
-  [[nodiscard]] auto inline is_present() const noexcept -> bool { return present_; }
+  [[nodiscard]] auto triggers() const noexcept -> const auto& { return triggers_; }
+  [[nodiscard]] auto schedulers() const noexcept -> const auto& { return schedulers_; }
+  [[nodiscard]] auto is_logical() const noexcept -> bool { return logical_; }
+  [[nodiscard]] auto is_physical() const noexcept -> bool { return !logical_; }
+  [[nodiscard]] auto min_delay() const noexcept -> Duration { return min_delay_; }
+  [[nodiscard]] auto is_present() const noexcept -> bool { return present_; }
 
   friend class Reaction;
   friend class Scheduler;
@@ -108,7 +108,7 @@ public:
   auto schedule_at(const ImmutableValuePtr<T>& value_ptr, const Tag& tag) -> bool;
 
   template <class Dur = Duration> void schedule(MutableValuePtr<T>&& value_ptr, Dur delay = Dur::zero()) {
-    schedule(ImmutableValuePtr<T>(std::forward<MutableValuePtr<T>>(value_ptr)), delay);
+    schedule(ImmutableValuePtr<T>(std::move(value_ptr)), delay);
   }
 
   template <class Dur = Duration> void schedule(const T& value, Dur delay = Dur::zero()) {
@@ -116,7 +116,7 @@ public:
   }
 
   template <class Dur = Duration> void schedule(T&& value, Dur delay = Dur::zero()) {
-    schedule(make_immutable_value<T>(std::forward<T>(value)), delay);
+    schedule(make_immutable_value<T>(std::move(value)), delay);
   }
 
   // Scheduling an action with nullptr value is not permitted.
@@ -153,8 +153,8 @@ public:
 
 class Timer : public BaseAction {
 private:
-  const Duration offset_{0};
-  const Duration period_{0};
+  Duration offset_{0};
+  Duration period_{0};
 
   void cleanup() noexcept final;
 

@@ -18,7 +18,7 @@
 
 namespace reactor {
 
-class Reaction : public ReactorElement { // NOLINT
+class Reaction : public ReactorElement { // NOLINT(cppcoreguidelines-special-member-functions)
 private:
   std::set<BaseAction*> action_triggers_;
   std::set<BaseAction*> scheduable_actions_;
