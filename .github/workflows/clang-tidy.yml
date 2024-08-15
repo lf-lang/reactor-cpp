@@ -1,0 +1,20 @@
+name: check clang-tidy
+
+# You can be more specific, but it currently only works on pull requests
+on: [pull_request]
+
+jobs:
+  clang-tidy:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: configure
+        run: |
+          mkdir build
+          cd build
+          cmake ..
+      - name: build the library
+        run: cmake --build build
+      - name: build examples
+        run:
+          cmake --build build --target examples
