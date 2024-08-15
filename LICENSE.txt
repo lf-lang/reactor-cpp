@@ -1,5 +1,6 @@
 ISC License
 
+Copyright (c) 2024, Xronos, Inc.
 Copyright (c) 2019, TU Dresden
 
 Permission to use, copy, modify, and/or distribute this software for any
