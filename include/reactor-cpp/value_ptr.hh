@@ -355,7 +355,7 @@ public:
    * class:`ImmutableValuePtr`, the value is deleted.
    * @endrst
    */
-  auto operator=(ImmutableValuePtr&& ptr) -> ImmutableValuePtr& = default;
+  auto operator=(ImmutableValuePtr&& ptr) noexcept -> ImmutableValuePtr& = default;
 
   /**
    * Retrieve a raw pointer to the managed value.
