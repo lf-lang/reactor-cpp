@@ -25,9 +25,9 @@ public:
     r_terminate.declare_trigger(&sa);
   }
 
-  static void hello() { std::cout << "Hello World!" << std::endl; }
+  static void hello() { std::cout << "Hello World!\n"; }
 
-  static void terminate() { std::cout << "Good Bye!" << std::endl; }
+  static void terminate() { std::cout << "Good Bye!\n"; }
 };
 
 auto main() -> int {
