@@ -29,7 +29,9 @@ template <class T> [[maybe_unused]] auto Port<T>::typed_outward_bindings() const
   // HACK this cast is ugly but should be safe as long as we only allow to
   // bind with Port<T>*. The alternative would be to copy the entire set and
   // cast each element individually, which is also ugly...
-  return reinterpret_cast<const std::set<Port<T>*>&>(outward_bindings()); // NOLINT C++20 std::bit_cast
+  // TODO USE C++20 std::bit_cast
+  // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+  return reinterpret_cast<const std::set<Port<T>*>&>(outward_bindings());
 }
 
 template <class T> auto Port<T>::typed_inward_binding() const noexcept -> Port<T>* {
@@ -78,13 +80,12 @@ void Port<T>::instantiate_connection_to(const ConnectionProperties& properties,
                                                          this->container(), properties.delay_);
   }
   if (properties.type_ == ConnectionType::Enclaved) {
-    connection = // NOLINT
+    connection =
         std::make_unique<EnclaveConnection<T>>(this->name() + "_enclave_connection_" + std::to_string(index), enclave);
   }
   if (properties.type_ == ConnectionType::DelayedEnclaved) {
-    connection = // NOLINT
-        std::make_unique<DelayedEnclaveConnection<T>>(
-            this->name() + "_delayed_enclave_connection_" + std::to_string(index), enclave, properties.delay_);
+    connection = std::make_unique<DelayedEnclaveConnection<T>>(
+        this->name() + "_delayed_enclave_connection_" + std::to_string(index), enclave, properties.delay_);
   }
   if (properties.type_ == ConnectionType::PhysicalEnclaved) {
     connection = std::make_unique<PhysicalEnclaveConnection<T>>(

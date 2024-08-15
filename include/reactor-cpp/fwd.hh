@@ -9,6 +9,7 @@
 #ifndef REACTOR_CPP_FWD_HH
 #define REACTOR_CPP_FWD_HH
 
+#include <cstdint>
 #include <functional>
 
 namespace reactor {
@@ -16,7 +17,7 @@ namespace reactor {
 class BaseAction;
 class BasePort;
 class Environment;
-enum class Phase;
+enum class Phase : std::uint8_t;
 class Reaction;
 class Reactor;
 class ReactorElement;

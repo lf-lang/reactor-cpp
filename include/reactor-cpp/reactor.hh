@@ -19,7 +19,8 @@
 #include "reactor_element.hh"
 
 namespace reactor {
-class Reactor : public ReactorElement { // NOLINT
+class Reactor : public ReactorElement { // NOLINT(cppcoreguidelines-special-member-functions)
+
 private:
   std::set<BaseAction*> actions_{};
   std::set<BasePort*> inputs_{};
@@ -40,12 +41,12 @@ public:
   ~Reactor() override = default;
 
   void register_connection(std::unique_ptr<BaseAction>&& connection);
-  [[nodiscard]] auto inline actions() const noexcept -> const auto& { return actions_; }
-  [[nodiscard]] auto inline inputs() const noexcept -> const auto& { return inputs_; }
-  [[nodiscard]] auto inline outputs() const noexcept -> const auto& { return outputs_; }
-  [[nodiscard]] auto inline reactions() const noexcept -> const auto& { return reactions_; }
-  [[nodiscard]] auto inline reactors() const noexcept -> const auto& { return reactors_; }
-  [[nodiscard]] auto inline number_of_connections() const noexcept -> std::size_t { return connections_.size(); }
+  [[nodiscard]] auto actions() const noexcept -> const auto& { return actions_; }
+  [[nodiscard]] auto inputs() const noexcept -> const auto& { return inputs_; }
+  [[nodiscard]] auto outputs() const noexcept -> const auto& { return outputs_; }
+  [[nodiscard]] auto reactions() const noexcept -> const auto& { return reactions_; }
+  [[nodiscard]] auto reactors() const noexcept -> const auto& { return reactors_; }
+  [[nodiscard]] auto number_of_connections() const noexcept -> std::size_t { return connections_.size(); }
 
   void startup() final;
   void shutdown() final;

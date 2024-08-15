@@ -11,10 +11,20 @@
 
 #include "fwd.hh"
 #include "logical_time.hh"
+#include <cstdint>
 
 namespace reactor {
 
-enum ConnectionType { Normal, Delayed, Enclaved, Physical, DelayedEnclaved, PhysicalEnclaved, Plugin, Invalid };
+enum ConnectionType : std::uint8_t {
+  Normal,
+  Delayed,
+  Enclaved,
+  Physical,
+  DelayedEnclaved,
+  PhysicalEnclaved,
+  Plugin,
+  Invalid
+};
 struct ConnectionProperties {
   ConnectionType type_ = ConnectionType::Normal;
   Duration delay_{0};

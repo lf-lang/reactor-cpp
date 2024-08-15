@@ -30,7 +30,7 @@ template <class T, bool is_trivial> class MutableValuePtr {};
 constexpr std::size_t SIZE_THRESHOLD = 64;
 
 template <class T> constexpr auto is_trivial() -> bool {
-  return std::is_default_constructible<T>::value && std::is_trivially_copyable<T>::value && sizeof(T) <= SIZE_THRESHOLD;
+  return std::is_default_constructible_v<T> && std::is_trivially_copyable_v<T> && sizeof(T) <= SIZE_THRESHOLD;
 }
 
 } // namespace detail
@@ -217,7 +217,7 @@ public:
    * Provides access to members of the associated value via ``->``. The
    * behavior is undefined if ``get() == nullptr``.
    */
-  auto operator->() const -> T* { return get(); } // NOLINT
+  auto operator->() const -> T* { return get(); }
 
   // Give ImmutableValuePtr access to the private constructor. This is required
   // for creating a MutableValuePtr from an ImmutableValuePtr in
@@ -251,7 +251,7 @@ public:
 template <class T> class ImmutableValuePtr<T, false> {
 public:
   /// A type alias that adds ``const`` to ``T``
-  using const_T = typename std::add_const<T>::type;
+  using const_T = std::add_const_t<T>;
 
 private:
   /// The internal shared smart pointer that this class builds upon.
@@ -318,7 +318,7 @@ public:
    * @endrst
    */
   explicit ImmutableValuePtr(MutableValuePtr<T, false>&& ptr)
-      : internal_ptr(std::move(ptr.internal_ptr)) {}
+      : internal_ptr(std::move(std::move(ptr).internal_ptr)) {}
 
   /**
    * Assignment operator from ``nullptr``.
@@ -343,10 +343,8 @@ public:
    * class:`ImmutableValuePtr`, the value is deleted.
    * @endrst
    */
-  auto operator=(const ImmutableValuePtr& ptr) -> ImmutableValuePtr& { // NOLINT(cert-oop54-cpp)
-    this->internal_ptr = ptr.internal_ptr;
-    return *this;
-  }
+  auto operator=(const ImmutableValuePtr& ptr) -> ImmutableValuePtr& = default;
+
   /**
    * @rst
    * Move assignment operator from another :class:`ImmutableValuePtr`.
@@ -357,10 +355,7 @@ public:
    * class:`ImmutableValuePtr`, the value is deleted.
    * @endrst
    */
-  auto operator=(ImmutableValuePtr&& ptr) noexcept -> ImmutableValuePtr& {
-    this->internal_ptr = std::move(ptr.internal_ptr);
-    return *this;
-  }
+  auto operator=(ImmutableValuePtr&& ptr) -> ImmutableValuePtr& = default;
 
   /**
    * Retrieve a raw pointer to the managed value.
@@ -467,14 +462,13 @@ public:
   // Give the factory function make_mutable_value() access to the private
   // constructor
   template <class U, class... Args>
-  // NOLINTNEXTLINE(readability-redundant-declaration)
   friend auto reactor::make_mutable_value(Args&&... args) -> reactor::MutableValuePtr<U>;
 };
 
 template <class T> class ImmutableValuePtr<T, true> {
 public:
   /// A type alias that adds ``const`` to ``T``
-  using const_T = typename std::add_const<T>::type;
+  using const_T = typename std::add_const_t<T>;
 
 private:
   T value_{};
@@ -491,9 +485,12 @@ public:
   ImmutableValuePtr(ImmutableValuePtr&& ptr) noexcept = default;
 
   explicit constexpr ImmutableValuePtr(std::nullptr_t) {}
+  // NOLINTNEXTLINE(cppcoreguidelines-rvalue-reference-param-not-moved)
   explicit ImmutableValuePtr(MutableValuePtr<T, true>&& ptr)
-      : value_(ptr.value_)
-      , valid_(ptr.valid_) {}
+      : value_(std::move(ptr.value_))
+      , valid_(ptr.valid_) {
+    ptr.valid_ = false;
+  }
 
   auto operator=(std::nullptr_t) -> ImmutableValuePtr& {
     this->valid_ = false;
@@ -514,30 +511,29 @@ public:
   // Give the factory function make_mutable_value() access to the private
   // constructor
   template <class U, class... Args>
-  // NOLINTNEXTLINE(readability-redundant-declaration)
   friend auto reactor::make_immutable_value(Args&&... args) -> reactor::ImmutableValuePtr<U>;
 };
 
 // Comparison operators
 
 template <class T, class U, bool is_trivial>
-auto operator==(const MutableValuePtr<T, is_trivial>& ptr1, const MutableValuePtr<U, is_trivial>& ptr2) noexcept
-    -> bool {
+auto operator==(const MutableValuePtr<T, is_trivial>& ptr1,
+                const MutableValuePtr<U, is_trivial>& ptr2) noexcept -> bool {
   return ptr1.get() == ptr2.get();
 }
 template <class T, class U, bool is_trivial>
-auto operator==(const ImmutableValuePtr<T, is_trivial>& ptr1, const ImmutableValuePtr<U, is_trivial>& ptr2) noexcept
-    -> bool {
+auto operator==(const ImmutableValuePtr<T, is_trivial>& ptr1,
+                const ImmutableValuePtr<U, is_trivial>& ptr2) noexcept -> bool {
   return ptr1.get() == ptr2.get();
 }
 template <class T, class U, bool is_trivial>
-auto operator==(const ImmutableValuePtr<T, is_trivial>& ptr1, const MutableValuePtr<U, is_trivial>& ptr2) noexcept
-    -> bool {
+auto operator==(const ImmutableValuePtr<T, is_trivial>& ptr1,
+                const MutableValuePtr<U, is_trivial>& ptr2) noexcept -> bool {
   return ptr1.get() == ptr2.get();
 }
 template <class T, class U, bool is_trivial>
-auto operator==(const MutableValuePtr<T, is_trivial>& ptr1, const ImmutableValuePtr<U, is_trivial>& ptr2) noexcept
-    -> bool {
+auto operator==(const MutableValuePtr<T, is_trivial>& ptr1,
+                const ImmutableValuePtr<U, is_trivial>& ptr2) noexcept -> bool {
   return ptr1.get() == ptr2.get();
 }
 template <class T, bool is_trivial>
@@ -558,8 +554,8 @@ auto operator==(std::nullptr_t, const ImmutableValuePtr<T, is_trivial>& ptr1) no
 }
 
 template <class T, class U, bool is_trivial>
-auto operator!=(const MutableValuePtr<T, is_trivial>& ptr1, const MutableValuePtr<U, is_trivial>& ptr2) noexcept
-    -> bool {
+auto operator!=(const MutableValuePtr<T, is_trivial>& ptr1,
+                const MutableValuePtr<U, is_trivial>& ptr2) noexcept -> bool {
   return ptr1.get() != ptr2.get();
 }
 

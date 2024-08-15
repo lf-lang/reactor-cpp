@@ -22,7 +22,7 @@ ReactorElement::ReactorElement(const std::string& name, ReactorElement::Type typ
     : name_(name)
     , container_(container) {
   reactor_assert(container != nullptr);
-  this->environment_ = container->environment(); // NOLINT container can be NULL
+  this->environment_ = container->environment();
   reactor_assert(this->environment_ != nullptr);
   validate(this->environment_->phase() == Phase::Construction ||
                (type == Type::Action && this->environment_->phase() == Phase::Assembly),
@@ -32,23 +32,28 @@ ReactorElement::ReactorElement(const std::string& name, ReactorElement::Type typ
   // completely constructed objects. Technically, the casts here return
   // invalid pointers as the objects they point to do not yet
   // exists. However, we are good as long as we only store the pointer and do
-  // not dereference it before construction is completeted.
+  // not dereference it before construction is completed.
   // It works, but maybe there is some nicer way of doing this...
   switch (type) {
   case Type::Action:
-    container->register_action(reinterpret_cast<BaseAction*>(this)); // NOLINT
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+    container->register_action(reinterpret_cast<BaseAction*>(this));
     break;
   case Type::Input:
-    container->register_input(reinterpret_cast<BasePort*>(this)); // NOLINT
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+    container->register_input(reinterpret_cast<BasePort*>(this));
     break;
   case Type::Output:
-    container->register_output(reinterpret_cast<BasePort*>(this)); // NOLINT
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+    container->register_output(reinterpret_cast<BasePort*>(this));
     break;
   case Type::Reaction:
-    container->register_reaction(reinterpret_cast<Reaction*>(this)); // NOLINT
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+    container->register_reaction(reinterpret_cast<Reaction*>(this));
     break;
   case Type::Reactor:
-    container->register_reactor(reinterpret_cast<Reactor*>(this)); // NOLINT
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+    container->register_reactor(reinterpret_cast<Reactor*>(this));
     break;
   default:
     throw std::runtime_error("unexpected type");
