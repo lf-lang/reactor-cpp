@@ -26,12 +26,12 @@ public:
 
   void print_count() {
     const auto& value = *(counter.get());
-    std::cout << "Count: " << value << std::endl;
+    std::cout << "Count: " << value << '\n';
     counter.schedule(value + 1, 1s);
   }
 
   void init() {
-    std::cout << "Hello World!" << std::endl;
+    std::cout << "Hello World!\n";
     counter.schedule(0, 1s);
   }
 };

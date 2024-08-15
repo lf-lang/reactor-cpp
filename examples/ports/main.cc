@@ -38,7 +38,7 @@ public:
   Output<int> count{"count", this};     // NOLINT
 
   void assemble() override {
-    std::cout << "assemble Counter" << std::endl << std::flush;
+    std::cout << "assemble Counter\n";
     r_trigger.declare_trigger(&trigger);
     r_trigger.declare_antidependency(&count);
   }
@@ -60,11 +60,11 @@ public:
       : Reactor(name, env) {}
 
   void assemble() override {
-    std::cout << "assemble Printer" << std::endl << std::flush;
+    std::cout << "assemble Printer\n";
     r_value.declare_trigger(&value);
   }
 
-  void on_value() { std::cout << this->name() << ": " << *value.get() << std::endl; }
+  void on_value() { std::cout << this->name() << ": " << *value.get() << '\n'; }
 };
 
 class Adder : public Reactor {
@@ -88,7 +88,7 @@ public:
   void add() {
     if (i1.is_present() && i2.is_present()) {
       sum.set(*i1.get() + *i2.get());
-      std::cout << "setting sum" << std::endl;
+      std::cout << "setting sum\n";
     }
   }
 };
@@ -120,10 +120,10 @@ auto main() -> int {
   env.draw_connection(add.sum, p_add.forward, ConnectionProperties{ConnectionType::Delayed, 10s, nullptr});
   env.draw_connection(p_add.forward, p_add.value, ConnectionProperties{ConnectionType::Delayed, 5s, nullptr});
 
-  std::cout << "assemble" << std::endl << std::flush;
+  std::cout << "assemble\n";
   env.assemble();
 
-  std::cout << "optimize" << std::endl << std::flush;
+  std::cout << "optimize\n";
   auto thread = env.startup();
   thread.join();
 
