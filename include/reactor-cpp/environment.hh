@@ -112,14 +112,7 @@ public:
   void sync_shutdown();
   void async_shutdown();
 
-  // Debugging methods
   void export_dependency_graph(const std::string& path);
-  void dump_to_yaml(const std::string& path);
-
-  static void dump_trigger_to_yaml(std::ofstream& yaml, const BaseAction& trigger);
-  static void dump_instance_to_yaml(std::ofstream& yaml, const Reactor& reactor);
-  static void dump_port_to_yaml(std::ofstream& yaml, const BasePort& port);
-  static void dump_reaction_to_yaml(std::ofstream& yaml, const Reaction& reaction);
 
   [[nodiscard]] auto top_level_reactors() const noexcept -> const auto& { return top_level_reactors_; }
   [[nodiscard]] auto phase() const noexcept -> Phase { return phase_; }
