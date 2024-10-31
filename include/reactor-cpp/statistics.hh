@@ -23,7 +23,7 @@ private:
 #else
   constexpr static bool enabled_{false};
 #endif
-
+  // NOLINTBEGIN(cppcoreguidelines-avoid-non-const-global-variables)
   inline static std::atomic_size_t reactor_instances_{0};
   inline static std::atomic_size_t connections_{0};
   inline static std::atomic_size_t reactions_{0};
@@ -34,6 +34,7 @@ private:
   inline static std::atomic_size_t triggered_actions_{0};
   inline static std::atomic_size_t set_ports_{0};
   inline static std::atomic_size_t scheduled_actions_{0};
+  // NOLINTEND(cppcoreguidelines-avoid-non-const-global-variables)
 
   static void increment(std::atomic_size_t& counter) {
     if constexpr (enabled_) {
