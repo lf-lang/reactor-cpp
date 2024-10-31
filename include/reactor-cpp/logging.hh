@@ -27,7 +27,10 @@ private:
   using Lock = std::unique_lock<std::mutex>;
 
   const std::string log_prefix_{};
+
+  // NOLINTNEXTLINE (cppcoreguidelines-avoid-non-const-global-variables)
   inline static std::mutex mutex_{};
+
   Lock lock_{};
 
 public:

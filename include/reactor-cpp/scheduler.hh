@@ -43,7 +43,7 @@ private:
   std::thread thread_{};
   log::NamedLogger log_;
 
-  // NOLINTNEXTLINEecppcoreguidelines-avoid-non-const-global-variables)
+  // NOLINTNEXTLINE (cppcoreguidelines-avoid-non-const-global-variables)
   static thread_local const Worker* current_worker;
 
   void work() const;

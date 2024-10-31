@@ -18,6 +18,7 @@
 namespace reactor {
 
 class PhysicalTimeBarrier {
+  // NOLINTNEXTLINE (cppcoreguidelines-avoid-non-const-global-variables)
   inline static std::atomic<Duration> last_observed_physical_time_{Duration::zero()};
 
 public:
