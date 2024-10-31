@@ -7,7 +7,9 @@ set(SOURCE_FILES
     reaction.cc
     reactor.cc
     scheduler.cc
+        scops.cc
     time.cc
+    transaction.cc
     multiport.cc
     reactor_element.cc
     )

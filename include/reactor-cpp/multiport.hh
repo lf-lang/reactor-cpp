@@ -23,14 +23,14 @@ namespace reactor {
 
 class BaseMultiport { // NOLINT cppcoreguidelines-special-member-functions,-warnings-as-errors
 private:
-  std::atomic<std::size_t> size_{0};
+  std::atomic<std::size_t> present_ports_size_{0};
   std::vector<std::size_t> present_ports_{};
 
   // record that the port with the given index has been set
   void set_present(std::size_t index);
 
   // reset the list of set port indexes
-  void reset() noexcept { size_.store(0, std::memory_order_relaxed); }
+  void reset() noexcept { present_ports_size_.store(0, std::memory_order_relaxed); }
 
   [[nodiscard]] auto get_set_callback(std::size_t index) noexcept -> PortCallback;
   const PortCallback clean_callback_{[this]([[maybe_unused]] const BasePort& port) { this->reset(); }};
@@ -39,7 +39,7 @@ private:
 
 protected:
   [[nodiscard]] auto present_ports() const -> const auto& { return present_ports_; }
-  [[nodiscard]] auto present_ports_size() const -> auto { return size_.load(); }
+  [[nodiscard]] auto present_ports_size() const -> auto { return present_ports_size_.load(); }
 
   void present_ports_reserve(size_t n) { present_ports_.reserve(n); }
 
@@ -50,11 +50,15 @@ public:
   ~BaseMultiport() = default;
 };
 
+template <class T>
+class MutationChangeMultiportSize;
+
 template <class T, class A = std::allocator<T>>
 class Multiport : public BaseMultiport { // NOLINT cppcoreguidelines-special-member-functions
 protected:
   std::vector<T> ports_{}; // NOLINT cppcoreguidelines-non-private-member-variables-in-classes
 
+  friend MutationChangeMultiportSize<T>;
 public:
   using value_type = typename A::value_type;
   using size_type = typename A::size_type;

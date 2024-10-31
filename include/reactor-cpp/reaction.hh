@@ -27,6 +27,7 @@ private:
   std::set<BasePort*> dependencies_;
 
   const int priority_;
+  const bool mutation_;
   unsigned int index_{};
 
   std::function<void(void)> body_{nullptr};
@@ -37,7 +38,7 @@ private:
   void set_deadline_impl(Duration deadline, const std::function<void(void)>& handler);
 
 public:
-  Reaction(const std::string& name, int priority, Reactor* container, std::function<void(void)> body);
+  Reaction(const std::string& name, int priority, bool mutation, Reactor* container, std::function<void(void)> body);
 
   ~Reaction() override = default;
 

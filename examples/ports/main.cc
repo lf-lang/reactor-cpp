@@ -85,7 +85,7 @@ public:
     r_add.declare_antidependency(&sum);
   }
 
-  void add() {
+  void add(Adder* self) {
     if (i1.is_present() && i2.is_present()) {
       sum.set(*i1.get() + *i2.get());
       std::cout << "setting sum\n";

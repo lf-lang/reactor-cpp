@@ -30,7 +30,6 @@ private:
 
   // NOLINTNEXTLINE (cppcoreguidelines-avoid-non-const-global-variables)
   inline static std::mutex mutex_{};
-
   Lock lock_{};
 
 public:
