@@ -140,7 +140,7 @@ class Engine : public Reactor {
 public:
   // ports
   Input<void> torque{"torque", this}; // NOLINT
-
+  Multiport<int> control_input;
 private:
   // reactions_
   Reaction r1{"1", 1, this, [this]() { reaction_1(); }};
@@ -180,3 +180,12 @@ auto main() -> int {
 
   return 0;
 }
+
+class ReactionScope : public MutableScope<Engine> {
+  void reaction_0() {
+    MutationChangeMultiportSize<int> change_multiport_width{&this->self_->control_input, 6};
+    this->add_to_transaction(&change_multiport_width);
+
+    this->commit_transaction();
+  }
+};

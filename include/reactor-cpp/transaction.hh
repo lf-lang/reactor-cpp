@@ -24,8 +24,9 @@ enum MutationResult {
 
 class Mutation {
 public:
+  virtual ~Mutation() = default;
   virtual auto run() -> MutationResult = 0 ;
-
+  virtual auto rollback() -> MutationResult = 0;
 };
 
 template<class T>
@@ -33,12 +34,14 @@ class MutationChangeMultiportSize : public Mutation {
 private:
   Multiport<T>* multiport_ = nullptr;
   std::size_t desired_size_ = 0;
+  std::size_t size_before_application_ = 0;
 public:
   MutationChangeMultiportSize(Multiport<T>* multiport, std::size_t size);
-  ~MutationChangeMultiportSize() = default;
-  void run() override;
-};
+  ~MutationChangeMultiportSize() override = default;
 
+  auto run() -> MutationResult override;
+  auto rollback() -> MutationResult override;
+};
 
 class Transaction {
 private:
@@ -47,9 +50,8 @@ private:
   std::vector<Mutation*> mutations_{};
 
 public:
-  void reset();
+  void push_back(Mutation* mutation);
   auto execute() -> MutationResult;
-
 };
 }
 #endif // REACTOR_CPP_TRANSACTION_HH

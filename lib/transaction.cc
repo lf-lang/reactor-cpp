@@ -8,9 +8,17 @@ reactor::MutationChangeMultiportSize<T>::MutationChangeMultiportSize(Multiport<T
 }
 
 template<class T>
-void reactor::MutationChangeMultiportSize<T>::run() {
+auto reactor::MutationChangeMultiportSize<T>::run() -> MutationResult {
   multiport_->ports_.resize(desired_size_);
+
+  return Success;
 }
+
+template <class T>
+auto reactor::MutationChangeMultiportSize<T>::rollback() -> MutationResult {
+  return Success;
+}
+
 
 auto reactor::Transaction::execute() -> MutationResult {
   for (auto *mutation : mutations_) {
@@ -20,6 +28,6 @@ auto reactor::Transaction::execute() -> MutationResult {
   return Success;
 }
 
-void reactor::Transaction::reset() {
-    mutations_.clear();
+void reactor::Transaction::push_back(reactor::Mutation* mutation) {
+  mutations_.push_back(mutation);
 }

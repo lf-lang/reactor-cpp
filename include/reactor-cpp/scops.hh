@@ -43,9 +43,8 @@ public:
   explicit MutableScope(reactor::Reactor* reactor) : Scope(reactor), self_(reactor), env_(reactor->environment()) {}
   ~MutableScope() = default;
 
-  void begin_transaction();
-  void end_transaction();
-  void mutate(const std::unique_ptr<Mutation>&& mutation);
+  void commit_transaction();
+  void add_to_transaction(Mutation* mutation);
 
 };
 
