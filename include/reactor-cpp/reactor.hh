@@ -14,7 +14,6 @@
 #include <string>
 
 #include "action.hh"
-#include "environment.hh"
 #include "logical_time.hh"
 #include "reactor_element.hh"
 
@@ -23,10 +22,10 @@ class Reactor : public ReactorElement { // NOLINT(cppcoreguidelines-special-memb
 
 private:
   std::set<BaseAction*> actions_{};
-  std::set<BasePort*> inputs_{};
+  std::vector<BasePort*> inputs_{};
   std::set<BasePort*> outputs_{};
   std::set<Reaction*> reactions_{};
-  std::set<Reactor*> reactors_{};
+  std::vector<Reactor*> reactors_{};
   std::set<std::unique_ptr<BaseAction>> connections_{};
 
   void register_action(BaseAction* action);
@@ -38,6 +37,7 @@ private:
 public:
   Reactor(const std::string& name, Reactor* container);
   Reactor(const std::string& name, Environment* environment);
+  Reactor() = delete;
   ~Reactor() override = default;
 
   void register_connection(std::unique_ptr<BaseAction>&& connection);
@@ -59,6 +59,9 @@ public:
   [[nodiscard]] auto get_tag() const noexcept -> Tag;
   [[nodiscard]] auto get_elapsed_logical_time() const noexcept -> Duration;
   [[nodiscard]] auto get_elapsed_physical_time() const noexcept -> Duration;
+
+  void remove_inputs(BasePort* base_port);
+  void remove_child_reactor(const Reactor* base_reactor);
 
   friend ReactorElement;
 };

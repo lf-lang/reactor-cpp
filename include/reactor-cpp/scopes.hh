@@ -10,17 +10,18 @@
 #define REACTOR_CPP_SCOPS_HH
 
 #include "transaction.hh"
-#include "time.hh"
+#include "logical_time.hh"
+#include "reactor.hh"
+#include "environment.hh"
 
 namespace reactor {
-class Reactor;
 
 class Scope {
 private:
-  reactor::Reactor* reactor;
+  Reactor* reactor;
 
 public:
-  Scope(reactor::Reactor* reactor)
+  Scope(Reactor* reactor)
       : reactor(reactor) {}
 
   auto get_physical_time() const -> reactor::TimePoint { return reactor->get_physical_time(); }
@@ -33,14 +34,13 @@ public:
   void request_stop() const { return environment()->sync_shutdown(); }
 };
 
-template<class HostReactor>
 class MutableScope : public Scope {
 public:
-  HostReactor* self_ = nullptr;
-  Environment* env_ = nullptr;
   Transaction transaction_;
+  Reactor* reactor_;
+  Environment* env_ = nullptr;
 
-  explicit MutableScope(reactor::Reactor* reactor) : Scope(reactor), self_(reactor), env_(reactor->environment()) {}
+  explicit MutableScope(Reactor* reactor) : Scope(reactor), transaction_(reactor), reactor_(reactor), env_(reactor->environment()) {}
   ~MutableScope() = default;
 
   void commit_transaction();

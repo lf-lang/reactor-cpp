@@ -12,8 +12,8 @@ private:
   LogicalAction<int> counter{"counter", this};
 
   // reactions_
-  Reaction r_init{"r_init", 1, this, [this]() { init(); }};
-  Reaction r_counter{"r_counter", 2, this, [this]() { print_count(); }};
+  Reaction r_init{"r_init", 1, false, this, [this]() { this->init(); }};
+  Reaction r_counter{"r_counter", 2, false, this, [this]() { this->print_count(); }};
 
 public:
   explicit Count(Environment* env)

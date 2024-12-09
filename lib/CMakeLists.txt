@@ -7,15 +7,18 @@ set(SOURCE_FILES
     reaction.cc
     reactor.cc
     scheduler.cc
-        scops.cc
+    scopes.cc
     time.cc
     transaction.cc
     multiport.cc
     reactor_element.cc
+    mutation/multiport.cc
+    mutation/bank.cc
+    mutation/connection.cc
     )
 
 if(REACTOR_CPP_TRACE)
-  set(SOURCE_FILES ${SOURCE_FILES} trace.cc )
+  set(SOURCE_FILES ${SOURCE_FILES} trace.cc)
 endif()
 
 if (DEFINED LF_REACTOR_CPP_SUFFIX)
@@ -24,7 +27,7 @@ else()
   set(REACTOR_CPP_INCLUDE "include")
 endif()
 
-add_library(${LIB_TARGET} SHARED ${SOURCE_FILES})
+add_library(${LIB_TARGET} STATIC ${SOURCE_FILES})
 target_include_directories(${LIB_TARGET} PUBLIC
   "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>"
   "$<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>"

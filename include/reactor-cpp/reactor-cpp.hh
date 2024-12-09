@@ -21,6 +21,6 @@
 #include "reaction.hh"
 #include "reactor.hh"
 #include "time.hh"
-#include "scops.hh"
+#include "scopes.hh"
 
 #endif // REACTOR_CPP_REACTOR_CPP_HH

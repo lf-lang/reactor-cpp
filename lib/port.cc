@@ -20,7 +20,7 @@ void BasePort::register_dependency(Reaction* reaction, bool is_trigger) noexcept
   reactor_assert(reaction != nullptr);
   reactor_assert(this->environment() == reaction->environment());
   validate(!this->has_outward_bindings(), "Dependencies may no be declared on ports with an outward binding!");
-  assert_phase(this, Phase::Assembly);
+  //assert_phase(this, Phase::Assembly);
 
   if (this->is_input()) {
     validate(this->container() == reaction->container(), "Dependent input ports must belong to the same reactor as the "
@@ -42,7 +42,7 @@ void BasePort::register_antidependency(Reaction* reaction) noexcept {
   reactor_assert(reaction != nullptr);
   reactor_assert(this->environment() == reaction->environment());
   validate(!this->has_inward_binding(), "Antidependencies may no be declared on ports with an inward binding!");
-  assert_phase(this, Phase::Assembly);
+  //TODO: assert_phase(this, Phase::Assembly);
 
   if (this->is_output()) {
     validate(this->container() == reaction->container(),

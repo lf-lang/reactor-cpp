@@ -32,8 +32,9 @@ enum class Phase : std::uint8_t {
   Assembly = 1,
   Startup = 2,
   Execution = 3,
-  Shutdown = 4,
-  Deconstruction = 5
+  Mutation = 4,
+  Shutdown = 5,
+  Deconstruction = 6,
 };
 
 class Environment {
@@ -74,23 +75,51 @@ private:
   Graph<BasePort*, ConnectionProperties> graph_{};
   Graph<BasePort*, ConnectionProperties> optimized_graph_{};
 
-  void build_dependency_graph(Reactor* reactor);
-  void calculate_indexes();
 
   std::mutex shutdown_mutex_{};
 
   auto startup(const TimePoint& start_time) -> std::thread;
 
 public:
+  //TODO: fix visebility
+  void calculate_indexes();
+  void build_dependency_graph(Reactor* reactor);
+
+
   explicit Environment(unsigned int num_workers, bool fast_fwd_execution = default_fast_fwd_execution,
                        const Duration& timeout = Duration::max());
   explicit Environment(const std::string& name, Environment* containing_environment);
 
   auto name() -> const std::string& { return name_; }
 
+  void start_mutation() {
+    phase_ = Phase::Mutation;
+  }
+
+  void stop_mutation() {
+    phase_ = Phase::Execution;
+  }
+
   // this method draw a connection between two graph elements with some properties
   template <class T> void draw_connection(Port<T>& source, Port<T>& sink, ConnectionProperties properties) {
     this->draw_connection(&source, &sink, properties);
+  }
+
+  template <class T> void remove_connection(Port<T>* source, Port<T>* sink) {
+    if (top_environment_ == nullptr || top_environment_ == this) {
+      log::Debug() << "remove connection: " << source->fqn() << " -/-> " << sink->fqn();
+      auto properties = graph_.remove_edge(source, sink);
+    } else {
+      return top_environment_->remove_connection(source, sink);
+
+    }
+  }
+
+  void remove_top_level_reactor(Reactor* reactor) {
+    auto elements_erased = top_level_reactors_.erase(reactor);
+    if (elements_erased == 0) {
+      std::cout << "no elements erased" << std::endl;
+    }
   }
 
   template <class T> void draw_connection(Port<T>* source, Port<T>* sink, ConnectionProperties properties) {
@@ -114,7 +143,7 @@ public:
 
   void export_dependency_graph(const std::string& path);
 
-  [[nodiscard]] auto top_level_reactors() const noexcept -> const auto& { return top_level_reactors_; }
+  [[nodiscard]] auto top_level_reactors() noexcept -> auto& { return top_level_reactors_; }
   [[nodiscard]] auto phase() const noexcept -> Phase { return phase_; }
   [[nodiscard]] auto scheduler() const noexcept -> const Scheduler* { return &scheduler_; }
 

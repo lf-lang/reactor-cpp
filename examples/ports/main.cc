@@ -51,7 +51,7 @@ public:
 
 class Printer : public Reactor {
 private:
-  Reaction r_value{"r_value", 1, this, [this]() { on_value(); }};
+  Reaction r_value{"r_value", 1, this, [this]() { this->on_value(); }};
 
 public:
   Input<int> value{"value", this};     // NOLINT
@@ -69,7 +69,7 @@ public:
 
 class Adder : public Reactor {
 private:
-  Reaction r_add{"r_add", 1, this, [this]() { add(); }};
+  Reaction r_add{"r_add", 1, this, [this]() { this->add(); }};
 
 public:
   Input<int> i1{"i1", this};    // NOLINT
@@ -85,7 +85,7 @@ public:
     r_add.declare_antidependency(&sum);
   }
 
-  void add(Adder* self) {
+  void add() {
     if (i1.is_present() && i2.is_present()) {
       sum.set(*i1.get() + *i2.get());
       std::cout << "setting sum\n";

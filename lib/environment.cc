@@ -47,7 +47,7 @@ Environment::Environment(const std::string& name, Environment* containing_enviro
 
 void Environment::register_reactor(Reactor* reactor) {
   reactor_assert(reactor != nullptr);
-  validate(this->phase() == Phase::Construction, "Reactors may only be registered during construction phase!");
+  validate(this->phase() == Phase::Construction || this->phase() == Phase::Mutation, "Reactors may only be registered during construction phase!");
   validate(reactor->is_top_level(), "The environment may only contain top level reactors!");
   [[maybe_unused]] bool result = top_level_reactors_.insert(reactor).second;
   reactor_assert(result);
@@ -157,14 +157,23 @@ void Environment::build_dependency_graph(Reactor* reactor) {
     validate(result.second, "priorities must be unique for all reactions_ of the same reactor");
   }
 
+  dependencies_.clear(); //TODO: fix
+
   // connect all reactions_ this reaction depends on
   for (auto* reaction : reactor->reactions()) {
-    for (auto* dependency : reaction->dependencies()) {
-      auto* source = dependency;
-      while (source->has_inward_binding()) {
-        source = source->inward_binding();
+    std::set<BasePort*> dependencies = reaction->dependencies();
+    for (auto* dependency : dependencies) {
+        if (dependency <= (BasePort*)0x100) {
+          std::cout << "FUCK" << std::endl;
+        }
+      while (dependency->has_inward_binding()) {
+        if (dependency <= (BasePort*)0x100) {
+          std::cout << "FUCK" << std::endl;
+        }
+        dependency = dependency->inward_binding();
       }
-      for (auto* antidependency : source->anti_dependencies()) {
+      std::cout << "anti deps of: " << dependency->fqn() << "(" << dependency << ")" << std::endl;
+      for (auto* antidependency : dependency->anti_dependencies()) {
         dependencies_.emplace_back(reaction, antidependency);
       }
     }

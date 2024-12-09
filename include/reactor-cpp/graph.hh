@@ -58,6 +58,20 @@ public:
     }
   }
 
+  auto remove_edge(E source, E destinations) noexcept -> std::optional<P> {
+    if (graph_.find(source) == std::end(graph_)) {
+      return std::nullopt;
+    } else {
+      auto conns = std::find_if(std::begin(graph_[source]), std::end(graph_[source]), [destinations](auto val) {
+        return val.second == destinations;
+      });
+
+      if (conns != std::end(graph_[source])) {
+        graph_[source].erase(conns);
+      }
+    }
+  }
+
   // this groups connections by same source and properties
   [[nodiscard]] auto get_edges() const noexcept -> std::map<map_key, std::vector<E>, map_key_compare> {
     std::map<map_key, std::vector<E>, map_key_compare> all_edges{};

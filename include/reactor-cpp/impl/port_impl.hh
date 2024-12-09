@@ -9,10 +9,11 @@
 #ifndef REACTOR_CPP_IMPL_PORT_IMPL_HH
 #define REACTOR_CPP_IMPL_PORT_IMPL_HH
 
-#include "reactor-cpp/assert.hh"
-#include "reactor-cpp/environment.hh"
 #include "reactor-cpp/port.hh"
 #include "reactor-cpp/reactor.hh"
+#include "reactor-cpp/assert.hh"
+#include "reactor-cpp/environment.hh"
+
 
 namespace reactor {
 
