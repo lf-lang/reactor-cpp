@@ -11,7 +11,6 @@ reactor::MutationChangeOutputMultiportSize<T>::MutationChangeOutputMultiportSize
 
 template<class T>
 void reactor::MutationChangeOutputMultiportSize<T>::change_size(std::size_t new_size) {
-  multiport_->reserve(new_size);
   auto current_size = multiport_->size();
   std::cout << "scaling from: " << current_size << " to " << new_size << std::endl;
 
@@ -21,10 +20,17 @@ void reactor::MutationChangeOutputMultiportSize<T>::change_size(std::size_t new_
     for (auto i = 0; i < current_size - new_size; i++) {
       //TODO: consider saving the ports here here
 
-      std::string port_name_ = multiport_->name() + "_" + std::to_string(current_size + i - 1);
+      std::string port_name_ = multiport_->name() + "_" + std::to_string(current_size - i - 1);
       multiport_->pop_back();
       auto base_port = Output<T>{port_name_, reactor_};
       reactor_->remove_inputs(&base_port);
+    }
+
+    for (auto* anti_dep : anti_dependencies_) {
+        anti_dep->clear_antidependencies();
+        for (auto i = 0; i < new_size; i++) {
+            anti_dep->declare_antidependency(&multiport_->operator[](i));
+        }
     }
   } else {
     // upscale
@@ -32,11 +38,15 @@ void reactor::MutationChangeOutputMultiportSize<T>::change_size(std::size_t new_
     for (auto i = 0; i < new_size - current_size; i++) {
       std::string port_name_ = multiport_->name() + "_" + std::to_string(current_size + i);
       multiport_->emplace_back(port_name_, reactor_);
-      BasePort* port = &(multiport_->operator[](current_size + i));
-      for (auto* anti_dep : anti_dependencies_) {
-        anti_dep->declare_antidependency(port);
-      }
     }
+
+    for (auto* anti_dep : anti_dependencies_) {
+        anti_dep->clear_antidependencies();
+        for (auto i = 0; i < new_size; i++) {
+            anti_dep->declare_antidependency(&multiport_->operator[](i));
+        }
+    }
+
 
   }
 }

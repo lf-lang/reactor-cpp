@@ -21,7 +21,6 @@ class Environment;
 
 class Transaction {
 private:
-  Reactor* parent_ = nullptr;
   Environment* environment_ = nullptr;
   std::vector<Mutation*> mutations_{};
 
@@ -30,7 +29,7 @@ public:
   ~Transaction() = default;
 
   void push_back(Mutation* mutation);
-  auto execute() -> MutationResult;
+  auto execute(bool recalculate = false) -> MutationResult;
 };
 }
 #endif // REACTOR_CPP_TRANSACTION_HH

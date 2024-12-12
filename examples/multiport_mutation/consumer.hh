@@ -18,8 +18,8 @@ private:
 
     [[maybe_unused]] const Inner& __lf_inner = *this;
 
-    void reaction_1([[maybe_unused]] const Input<unsigned>& scale) {
-      std::cout << "consumer: " << index_ << " received value!" << std::endl;
+    void reaction_1([[maybe_unused]] const Input<unsigned>& in) {
+      std::cout << "consumer: " << index_ << " received value:" << *in.get() << std::endl;
     }
 
     friend Consumer;

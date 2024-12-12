@@ -21,9 +21,9 @@ void reactor::MutationChangeBankSize<T>::change_size(std::size_t new_size) {
 
     for (auto i = 0; i < current_size - new_size; i++) {
       //TODO: consider saving the ports here here
-      Reactor* last = (*bank_->end()).get();
-      reactor_->environment()->remove_top_level_reactor(last);
+      std::unique_ptr<Reactor> lastElement = std::move(bank_->back());
       bank_->pop_back();
+      reactor_->environment()->remove_top_level_reactor(lastElement.get());
     }
   } else {
     // upscale

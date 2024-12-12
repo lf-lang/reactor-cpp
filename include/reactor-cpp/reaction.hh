@@ -27,7 +27,6 @@ private:
   std::set<BasePort*> dependencies_;
 
   const int priority_ = -1;
-  const bool mutation_;
   unsigned int index_ = -1;
 
   std::function<void(void)> body_{nullptr};
@@ -53,6 +52,7 @@ public:
   [[nodiscard]] auto port_triggers() const noexcept -> const auto& { return port_trigger_; }
 
   [[maybe_unused]] [[nodiscard]] auto antidependencies() const noexcept -> const auto& { return antidependencies_; }
+  [[maybe_unused]] void clear_antidependencies() noexcept { antidependencies_.clear(); }
 
   [[nodiscard]] auto dependencies() const noexcept -> const auto& { return dependencies_; }
 

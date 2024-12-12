@@ -16,10 +16,11 @@ private:
   Reaction r_timer{"r_timer", 1, this, [this]() { __lf_inner.reaction_1(this->value);}};
 
   class Inner: public Scope {
+    unsigned itr = 0;
     [[maybe_unused]] const Inner& __lf_inner = *this;
     void reaction_1([[maybe_unused]] Output<unsigned>& out) {
-      std::cout << "producing value" << std::endl;
-      out.set(42);
+      std::cout << "producing value:" << itr << std::endl;
+      out.set(itr++);
     }
     explicit Inner(Reactor* reactor) : Scope(reactor) {}
 

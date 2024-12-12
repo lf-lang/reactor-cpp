@@ -54,7 +54,14 @@ public:
       std::vector<std::pair<P, E>> edges{std::make_pair(properties, destination)};
       graph_[source] = edges;
     } else {
-      graph_[source].emplace_back(properties, destination);
+        auto &edges = graph_[source];
+        auto duplicate = std::find_if(edges.begin(), edges.end(),
+                                       [&](const std::pair<P, E>& edge) {
+                                        return edge.first == properties && edge.second == destination;
+                                       });
+        if (duplicate == edges.end()) {
+            graph_[source].emplace_back(properties, destination);
+        }
     }
   }
 

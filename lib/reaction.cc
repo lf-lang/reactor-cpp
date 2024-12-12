@@ -20,7 +20,6 @@ namespace reactor {
 Reaction::Reaction(const std::string& name, int priority, Reactor* container, std::function<void(void)> body)
     : ReactorElement(name, ReactorElement::Type::Reaction, container)
     , priority_(priority)
-    , mutation_(false)
     , body_(std::move(std::move(body)))
 {
   reactor_assert(priority != 0);

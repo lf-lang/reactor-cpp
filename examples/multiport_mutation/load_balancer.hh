@@ -24,9 +24,9 @@ private:
       if (rand() % 30 == 0) {
         scale_action.schedule(rand() % 20 + 1);
       }
-
-      std::cout << "multiport size: " << outbound.size() << std::endl;
-      outbound[rand() % outbound.size()].set(inbound.get());
+      unsigned sel = rand() % outbound.size();
+      std::cout << "Sending out to:" << sel << std::endl;
+      outbound[sel].set(inbound.get());
     }
 
     void reaction_2(ModifableMultiport<Output<unsigned>>&outbound, [[maybe_unused]] const LogicalAction<unsigned>& scale, Output<unsigned>& scale_bank) {
@@ -74,6 +74,7 @@ public:
     }
     process.declare_trigger(&inbound);
     scale.declare_trigger(&scale_action);
+    scale.declare_antidependency(&scale_bank);
   }
 };
 

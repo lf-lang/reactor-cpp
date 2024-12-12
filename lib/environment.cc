@@ -144,6 +144,11 @@ void Environment::assemble() { // NOLINT(readability-function-cognitive-complexi
   }
 }
 
+void Environment::clear_dependency_graph() {
+    dependencies_.clear();
+    reactions_.clear();
+}
+
 void Environment::build_dependency_graph(Reactor* reactor) {
   // obtain dependencies from each contained reactor
   for (auto* sub_reactor : reactor->reactors()) {
@@ -157,23 +162,14 @@ void Environment::build_dependency_graph(Reactor* reactor) {
     validate(result.second, "priorities must be unique for all reactions_ of the same reactor");
   }
 
-  dependencies_.clear(); //TODO: fix
-
   // connect all reactions_ this reaction depends on
   for (auto* reaction : reactor->reactions()) {
-    std::set<BasePort*> dependencies = reaction->dependencies();
-    for (auto* dependency : dependencies) {
-        if (dependency <= (BasePort*)0x100) {
-          std::cout << "FUCK" << std::endl;
-        }
-      while (dependency->has_inward_binding()) {
-        if (dependency <= (BasePort*)0x100) {
-          std::cout << "FUCK" << std::endl;
-        }
-        dependency = dependency->inward_binding();
+    for (auto* dependency : reaction->dependencies()) {
+      auto* source = dependency;
+      while (source->has_inward_binding()) {
+        source = source->inward_binding();
       }
-      std::cout << "anti deps of: " << dependency->fqn() << "(" << dependency << ")" << std::endl;
-      for (auto* antidependency : dependency->anti_dependencies()) {
+      for (auto* antidependency : source->anti_dependencies()) {
         dependencies_.emplace_back(reaction, antidependency);
       }
     }

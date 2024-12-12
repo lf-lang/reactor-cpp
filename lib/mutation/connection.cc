@@ -17,12 +17,6 @@ template <class A, class B> auto reactor::MutationAddConnection<A, B>::run() -> 
   source_->add_outward_binding(sink_);
   std::cout << "from: " << source_->fqn() << "(" << source_ << ")"
                        << " --> to: " << sink_->fqn() << "(" << sink_ << ")" << std::endl;
-
-  for (const auto* reactor : reactor_->environment()->top_level_reactors()) {
-    reactor_->environment()->build_dependency_graph((Reactor*)reactor);
-  }
-
-  reactor_->environment()->calculate_indexes();
   return Success;
 }
 

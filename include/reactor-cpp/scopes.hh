@@ -43,7 +43,7 @@ public:
   explicit MutableScope(Reactor* reactor) : Scope(reactor), transaction_(reactor), reactor_(reactor), env_(reactor->environment()) {}
   ~MutableScope() = default;
 
-  void commit_transaction();
+  void commit_transaction(bool recalculate = false);
   void add_to_transaction(Mutation* mutation);
 
 };

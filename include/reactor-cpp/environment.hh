@@ -84,6 +84,7 @@ public:
   //TODO: fix visebility
   void calculate_indexes();
   void build_dependency_graph(Reactor* reactor);
+  void clear_dependency_graph();
 
 
   explicit Environment(unsigned int num_workers, bool fast_fwd_execution = default_fast_fwd_execution,

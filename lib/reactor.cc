@@ -47,6 +47,7 @@ void Reactor::register_input(BasePort* port) {
 }
 
 void Reactor::register_output(BasePort* port) {
+  (void)port;
   reactor_assert(port != nullptr);
   reactor::validate(this->environment()->phase() == Phase::Construction || this->environment()->phase() == Phase::Mutation,
                     "Ports can only be registered during construction phase!");

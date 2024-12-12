@@ -47,12 +47,12 @@ public:
         }
       } else {
         std::cout << "load_balancer size:" << load_balancer.size() << " bank size: " << reactor_bank.size() << std::endl;
-        for (auto i = 0; i < new_size - old_size; i++) {
-            std::cout << "add connection: " << i + old_size << std::endl;
-            MutationAddConnection<Output<unsigned>, Input<unsigned>> add_conn{&load_balancer[i + old_size], &reactor_bank[i + old_size].get()->in, reactor_};
+        for (auto i = 0; i < new_size; i++) {
+            std::cout << "add connection: " << i << std::endl;
+            MutationAddConnection<Output<unsigned>, Input<unsigned>> add_conn{&load_balancer[i], &reactor_bank[i].get()->in, reactor_};
             add_to_transaction(&add_conn);
-            commit_transaction();
         }
+        commit_transaction(true);
       }
 
       std::cout << "new bank size:" << reactor_bank.size() << std::endl;
@@ -90,7 +90,7 @@ public:
 
 auto main() -> int {
   //srand(time(nullptr));
-  Environment env{4};
+  Environment env{4, true};
   auto deployment = std::make_unique<Deployment>("c1", &env);
   env.optimize();
   env.assemble();
