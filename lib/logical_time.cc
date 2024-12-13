@@ -45,8 +45,8 @@ auto Tag::subtract(Duration offset) const noexcept -> Tag {
 
 auto Tag::decrement() const noexcept -> Tag {
   if (micro_step_ == 0) {
-    //FIXME: return {time_point_ - Duration{1}, std::numeric_limits<mstep_t>::max()};
-    return {time_point_  - Duration{1}, 0};
+    // FIXME: return {time_point_ - Duration{1}, std::numeric_limits<mstep_t>::max()};
+    return {time_point_ - Duration{1}, 0};
   }
   return {time_point_, micro_step_ - 1};
 }

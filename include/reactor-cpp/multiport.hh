@@ -48,17 +48,14 @@ protected:
 
   void register_port(BasePort& port, size_t idx);
 
-
 public:
-  explicit BaseMultiport(const std::string& name) : multiport_name_(name) {};
+  explicit BaseMultiport(const std::string& name)
+      : multiport_name_(name){};
   ~BaseMultiport() = default;
-  auto name() const -> std::string {
-    return multiport_name_;
-  }
+  auto name() const -> std::string { return multiport_name_; }
 };
 
-template <class T>
-class MutationChangeMultiportSize;
+template <class T> class MutationChangeMultiportSize;
 
 template <class T, class A = std::allocator<T>>
 class Multiport : public BaseMultiport { // NOLINT cppcoreguidelines-special-member-functions
@@ -66,6 +63,7 @@ protected:
   std::vector<T> ports_{}; // NOLINT cppcoreguidelines-non-private-member-variables-in-classes
 
   friend MutationChangeMultiportSize<T>;
+
 public:
   using value_type = typename A::value_type;
   using size_type = typename A::size_type;
@@ -73,7 +71,8 @@ public:
   using iterator = typename std::vector<T>::iterator;
   using const_iterator = typename std::vector<T>::const_iterator;
 
-  explicit Multiport(const std::string& name) noexcept : BaseMultiport(name) {};
+  explicit Multiport(const std::string& name) noexcept
+      : BaseMultiport(name){};
   ~Multiport() noexcept = default;
 
   auto operator==(const Multiport& other) const noexcept -> bool {
@@ -106,7 +105,8 @@ public:
 
 template <class T, class A = std::allocator<T>> class ModifableMultiport : public Multiport<T, A> {
 public:
-  ModifableMultiport(const std::string& name) : Multiport<T, A>(name) {}
+  ModifableMultiport(const std::string& name)
+      : Multiport<T, A>(name) {}
 
   void reserve(std::size_t size) noexcept {
     this->ports_.reserve(size);

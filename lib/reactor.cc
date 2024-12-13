@@ -38,22 +38,24 @@ void Reactor::register_action([[maybe_unused]] BaseAction* action) {
 
 void Reactor::register_input(BasePort* port) {
   reactor_assert(port != nullptr);
-  reactor::validate(this->environment()->phase() == Phase::Construction || this->environment()->phase() == Phase::Mutation,
+  reactor::validate(this->environment()->phase() == Phase::Construction ||
+                        this->environment()->phase() == Phase::Mutation,
                     "Ports can only be registered during construction phase!");
   //[[maybe_unused]] bool result = inputs_.insert(port).second;
   inputs_.push_back(port);
-  //reactor_assert(result);
+  // reactor_assert(result);
   Statistics::increment_ports();
 }
 
 void Reactor::register_output(BasePort* port) {
   (void)port;
   reactor_assert(port != nullptr);
-  reactor::validate(this->environment()->phase() == Phase::Construction || this->environment()->phase() == Phase::Mutation,
+  reactor::validate(this->environment()->phase() == Phase::Construction ||
+                        this->environment()->phase() == Phase::Mutation,
                     "Ports can only be registered during construction phase!");
   //[[maybe_unused]] bool result = inputs_.insert(port).second;
-  //std::cout << "reactor port count:" << inputs_.size() << std::endl;
-  //TODO: reactor_assert(result);
+  // std::cout << "reactor port count:" << inputs_.size() << std::endl;
+  // TODO: reactor_assert(result);
   Statistics::increment_ports();
 }
 
@@ -78,7 +80,7 @@ void Reactor::register_reactor([[maybe_unused]] Reactor* reactor) {
   }
 
   //[[maybe_unused]] bool result = reactors_.insert(reactor).second;
-  //reactor_assert(result);
+  // reactor_assert(result);
   Statistics::increment_reactor_instances();
 }
 
@@ -153,17 +155,17 @@ auto Reactor::get_elapsed_physical_time() const noexcept -> Duration {
 }
 
 void Reactor::remove_inputs(BasePort* base_port) {
-    auto index = std::find_if(std::begin(inputs_), std::end(inputs_), [base_port](const BasePort* other) { return *other == *base_port;});
+  auto index = std::find_if(std::begin(inputs_), std::end(inputs_),
+                            [base_port](const BasePort* other) { return *other == *base_port; });
 
-    if (index != std::end(inputs_)) {
-      inputs_.erase(index);
-    }
-  };
+  if (index != std::end(inputs_)) {
+    inputs_.erase(index);
+  }
+};
 
 void Reactor::remove_child_reactor(const Reactor* base_reactor) {
-  auto index = std::find_if(std::begin(reactors_), std::end(reactors_), [base_reactor](const Reactor* other) {
-    return base_reactor == other;
-  });
+  auto index = std::find_if(std::begin(reactors_), std::end(reactors_),
+                            [base_reactor](const Reactor* other) { return base_reactor == other; });
 
   if (index != std::end(reactors_)) {
     reactors_.erase(index);

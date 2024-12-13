@@ -20,8 +20,7 @@ namespace reactor {
 Reaction::Reaction(const std::string& name, int priority, Reactor* container, std::function<void(void)> body)
     : ReactorElement(name, ReactorElement::Type::Reaction, container)
     , priority_(priority)
-    , body_(std::move(std::move(body)))
-{
+    , body_(std::move(std::move(body))) {
   reactor_assert(priority != 0);
 }
 
@@ -52,7 +51,7 @@ void Reaction::declare_schedulable_action(BaseAction* action) {
 void Reaction::declare_trigger(BasePort* port) {
   reactor_assert(port != nullptr);
   reactor_assert(this->environment() == port->environment());
-  //assert_phase(this, Phase::Assembly);
+  // assert_phase(this, Phase::Assembly);
 
   if (port->is_input()) {
     validate(this->container() == port->container(),
@@ -91,7 +90,7 @@ void Reaction::declare_dependency(BasePort* port) {
 void Reaction::declare_antidependency(BasePort* port) {
   reactor_assert(port != nullptr);
   reactor_assert(this->environment() == port->environment());
-  //assert_phase(this, Phase::Assembly);
+  // assert_phase(this, Phase::Assembly);
 
   if (port->is_output()) {
     validate(this->container() == port->container(), "Antidependent output ports must belong to the same reactor as "
@@ -127,7 +126,8 @@ void Reaction::set_deadline_impl(Duration deadline, const std::function<void(voi
 }
 
 void Reaction::set_index(unsigned index) {
-  validate(this->environment()->phase() == Phase::Assembly || this->environment()->phase() == Phase::Mutation, "Reaction indexes may only be set during assembly phase!");
+  validate(this->environment()->phase() == Phase::Assembly || this->environment()->phase() == Phase::Mutation,
+           "Reaction indexes may only be set during assembly phase!");
   this->index_ = index;
 }
 

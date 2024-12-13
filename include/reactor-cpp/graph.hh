@@ -54,14 +54,13 @@ public:
       std::vector<std::pair<P, E>> edges{std::make_pair(properties, destination)};
       graph_[source] = edges;
     } else {
-        auto &edges = graph_[source];
-        auto duplicate = std::find_if(edges.begin(), edges.end(),
-                                       [&](const std::pair<P, E>& edge) {
-                                        return edge.first == properties && edge.second == destination;
-                                       });
-        if (duplicate == edges.end()) {
-            graph_[source].emplace_back(properties, destination);
-        }
+      auto& edges = graph_[source];
+      auto duplicate = std::find_if(edges.begin(), edges.end(), [&](const std::pair<P, E>& edge) {
+        return edge.first == properties && edge.second == destination;
+      });
+      if (duplicate == edges.end()) {
+        graph_[source].emplace_back(properties, destination);
+      }
     }
   }
 
@@ -69,9 +68,8 @@ public:
     if (graph_.find(source) == std::end(graph_)) {
       return std::nullopt;
     } else {
-      auto conns = std::find_if(std::begin(graph_[source]), std::end(graph_[source]), [destinations](auto val) {
-        return val.second == destinations;
-      });
+      auto conns = std::find_if(std::begin(graph_[source]), std::end(graph_[source]),
+                                [destinations](auto val) { return val.second == destinations; });
 
       if (conns != std::end(graph_[source])) {
         graph_[source].erase(conns);

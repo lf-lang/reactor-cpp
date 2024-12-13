@@ -13,10 +13,10 @@ enum MutationResult {
 class Mutation {
 public:
   virtual ~Mutation() = default;
-  virtual auto run() -> MutationResult = 0 ;
+  virtual auto run() -> MutationResult = 0;
   virtual auto rollback() -> MutationResult = 0;
 };
 
-}
+} // namespace reactor
 
-#endif //MUTATIONS_HH
+#endif // MUTATIONS_HH

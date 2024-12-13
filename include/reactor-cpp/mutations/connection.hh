@@ -11,8 +11,7 @@ namespace reactor {
 class Reactor;
 class Environment;
 
-template<class A, class B>
-class MutationAddConnection : public Mutation {
+template <class A, class B> class MutationAddConnection : public Mutation {
 private:
   A* source_;
   B* sink_;
@@ -21,13 +20,17 @@ private:
 
 public:
   MutationAddConnection(A* source, B* sink, Reactor* reactor);
-  MutationAddConnection(const MutationAddConnection& other) : source_(other.source_), sink_(other.sink_), connection_(other.connection_), reactor_(other.reactor_) {}
+  MutationAddConnection(const MutationAddConnection& other)
+      : source_(other.source_)
+      , sink_(other.sink_)
+      , connection_(other.connection_)
+      , reactor_(other.reactor_) {}
   MutationAddConnection() = default;
   ~MutationAddConnection() override = default;
 
   auto run() -> MutationResult override;
   auto rollback() -> MutationResult override;
 };
-}
+} // namespace reactor
 
-#endif //MUTATION_CONNECTION_HH
+#endif // MUTATION_CONNECTION_HH

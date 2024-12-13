@@ -1,18 +1,18 @@
 /*
-* Copyright (C) 2024 TU Dresden
-* All rights reserved.
-*
-* Authors:
-*   Tassilo Tanneberger
-*/
+ * Copyright (C) 2024 TU Dresden
+ * All rights reserved.
+ *
+ * Authors:
+ *   Tassilo Tanneberger
+ */
 
 #ifndef REACTOR_CPP_SCOPS_HH
 #define REACTOR_CPP_SCOPS_HH
 
-#include "transaction.hh"
+#include "environment.hh"
 #include "logical_time.hh"
 #include "reactor.hh"
-#include "environment.hh"
+#include "transaction.hh"
 
 namespace reactor {
 
@@ -40,14 +40,17 @@ public:
   Reactor* reactor_;
   Environment* env_ = nullptr;
 
-  explicit MutableScope(Reactor* reactor) : Scope(reactor), transaction_(reactor), reactor_(reactor), env_(reactor->environment()) {}
+  explicit MutableScope(Reactor* reactor)
+      : Scope(reactor)
+      , transaction_(reactor)
+      , reactor_(reactor)
+      , env_(reactor->environment()) {}
   ~MutableScope() = default;
 
   void commit_transaction(bool recalculate = false);
   void add_to_transaction(const std::shared_ptr<Mutation>& mutation);
-
 };
 
-}
+} // namespace reactor
 
 #endif // REACTOR_CPP_SCOPS_HH

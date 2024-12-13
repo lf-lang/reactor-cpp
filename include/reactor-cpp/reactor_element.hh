@@ -52,9 +52,10 @@ public:
   virtual void startup() = 0;
   virtual void shutdown() = 0;
 
-  auto operator==(const ReactorElement& other) const  -> bool {
-    //std::cout << other.name() << "==" << name_ << std::endl;
-    return name_ == other.name(); // && container_ == other.container() && environment_ == other.environment(); // && fqn_ == other.fqn()
+  auto operator==(const ReactorElement& other) const -> bool {
+    // std::cout << other.name() << "==" << name_ << std::endl;
+    return name_ == other.name(); // && container_ == other.container() && environment_ == other.environment(); // &&
+                                  // fqn_ == other.fqn()
   }
 };
 } // namespace reactor

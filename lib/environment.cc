@@ -47,7 +47,8 @@ Environment::Environment(const std::string& name, Environment* containing_enviro
 
 void Environment::register_reactor(Reactor* reactor) {
   reactor_assert(reactor != nullptr);
-  validate(this->phase() == Phase::Construction || this->phase() == Phase::Mutation, "Reactors may only be registered during construction phase!");
+  validate(this->phase() == Phase::Construction || this->phase() == Phase::Mutation,
+           "Reactors may only be registered during construction phase!");
   validate(reactor->is_top_level(), "The environment may only contain top level reactors!");
   [[maybe_unused]] bool result = top_level_reactors_.insert(reactor).second;
   reactor_assert(result);
@@ -145,8 +146,8 @@ void Environment::assemble() { // NOLINT(readability-function-cognitive-complexi
 }
 
 void Environment::clear_dependency_graph() {
-    dependencies_.clear();
-    reactions_.clear();
+  dependencies_.clear();
+  reactions_.clear();
 }
 
 void Environment::build_dependency_graph(Reactor* reactor) {

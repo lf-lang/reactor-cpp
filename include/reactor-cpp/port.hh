@@ -22,8 +22,7 @@
 
 namespace reactor {
 
-template<class T>
-class MutationChangeMultiportSize;
+template <class T> class MutationChangeMultiportSize;
 
 enum class PortType : std::uint8_t { Input, Output, Delay };
 
@@ -77,7 +76,8 @@ public:
   void register_antidependency(Reaction* reaction) noexcept;
   void set_inward_binding(BasePort* port) noexcept {
     if (port != nullptr) {
-      std::cout << port->fqn() << "(" << port << ")" << " --> " << this->fqn() << "(" << this << ")" << std::endl;
+      std::cout << port->fqn() << "(" << port << ")"
+                << " --> " << this->fqn() << "(" << this << ")" << std::endl;
     }
 
     inward_binding_ = port;
@@ -106,7 +106,7 @@ public:
 
   [[nodiscard]] auto triggers() const noexcept -> const auto& { return triggers_; }
   [[nodiscard]] auto dependencies() const noexcept -> const auto& { return dependencies_; }
-  [[nodiscard]] auto anti_dependencies() noexcept -> auto& { return anti_dependencies_; } //TODO: make it const again
+  [[nodiscard]] auto anti_dependencies() noexcept -> auto& { return anti_dependencies_; } // TODO: make it const again
   [[nodiscard]] auto port_type() const noexcept -> PortType { return type_; }
 
   void register_set_callback(const PortCallback& callback);
@@ -115,7 +115,6 @@ public:
   friend class Reaction;
   friend class Scheduler;
 };
-
 
 inline auto operator==(const BasePort& a, const BasePort& b) -> bool {
   bool equal = ((const ReactorElement&)a) == ((const ReactorElement&)b);
@@ -190,9 +189,7 @@ public:
 
   Input(Input&&) = default;
 
-  ~Input() {
-    std::cout << "Input port gets deallocated:" << this->fqn() << std::endl;
-  }
+  ~Input() { std::cout << "Input port gets deallocated:" << this->fqn() << std::endl; }
 };
 
 template <class T> class Output : public Port<T> { // NOLINT(cppcoreguidelines-special-member-functions)
@@ -202,9 +199,7 @@ public:
 
   Output(Output&&) noexcept = default;
 
-  ~Output() {
-    std::cout << "Output port gets deallocated: " << this->fqn() << std::endl;
-  }
+  ~Output() { std::cout << "Output port gets deallocated: " << this->fqn() << std::endl; }
 };
 
 } // namespace reactor

@@ -75,17 +75,15 @@ private:
   Graph<BasePort*, ConnectionProperties> graph_{};
   Graph<BasePort*, ConnectionProperties> optimized_graph_{};
 
-
   std::mutex shutdown_mutex_{};
 
   auto startup(const TimePoint& start_time) -> std::thread;
 
 public:
-  //TODO: fix visebility
+  // TODO: fix visebility
   void calculate_indexes();
   void build_dependency_graph(Reactor* reactor);
   void clear_dependency_graph();
-
 
   explicit Environment(unsigned int num_workers, bool fast_fwd_execution = default_fast_fwd_execution,
                        const Duration& timeout = Duration::max());
@@ -93,13 +91,9 @@ public:
 
   auto name() -> const std::string& { return name_; }
 
-  void start_mutation() {
-    phase_ = Phase::Mutation;
-  }
+  void start_mutation() { phase_ = Phase::Mutation; }
 
-  void stop_mutation() {
-    phase_ = Phase::Execution;
-  }
+  void stop_mutation() { phase_ = Phase::Execution; }
 
   // this method draw a connection between two graph elements with some properties
   template <class T> void draw_connection(Port<T>& source, Port<T>& sink, ConnectionProperties properties) {
@@ -112,7 +106,6 @@ public:
       auto properties = graph_.remove_edge(source, sink);
     } else {
       return top_environment_->remove_connection(source, sink);
-
     }
   }
 

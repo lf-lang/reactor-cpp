@@ -1,24 +1,23 @@
 /*
-* Copyright (C) 2024 TU Dresden
-* All rights reserved.
-*
-* Authors:
-*   Tassilo Tanneberger
+ * Copyright (C) 2024 TU Dresden
+ * All rights reserved.
+ *
+ * Authors:
+ *   Tassilo Tanneberger
  */
 
 #ifndef REACTOR_CPP_TRANSACTION_HH
 #define REACTOR_CPP_TRANSACTION_HH
 
-#include <vector>
 #include <memory>
+#include <vector>
 
 #include "mutations.hh"
-//#include "reactor.hh"
+// #include "reactor.hh"
 
 namespace reactor {
 class Reactor;
 class Environment;
-
 
 class Transaction {
 private:
@@ -32,5 +31,5 @@ public:
   void push_back(const std::shared_ptr<Mutation>& mutation);
   auto execute(bool recalculate = false) -> MutationResult;
 };
-}
+} // namespace reactor
 #endif // REACTOR_CPP_TRANSACTION_HH

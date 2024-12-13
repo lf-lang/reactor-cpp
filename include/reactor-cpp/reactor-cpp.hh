@@ -20,7 +20,7 @@
 #include "port.hh"
 #include "reaction.hh"
 #include "reactor.hh"
-#include "time.hh"
 #include "scopes.hh"
+#include "time.hh"
 
 #endif // REACTOR_CPP_REACTOR_CPP_HH
