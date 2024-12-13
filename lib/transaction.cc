@@ -10,7 +10,7 @@
 auto reactor::Transaction::execute(bool recalculate) -> MutationResult {
 
    this->environment_->start_mutation();
-   for (auto *mutation : mutations_) {
+   for (auto mutation : mutations_) {
      mutation->run();
    }
 
@@ -24,10 +24,11 @@ auto reactor::Transaction::execute(bool recalculate) -> MutationResult {
    }
 
    this->environment_->stop_mutation();
+
    mutations_.clear();
-    return Success;
+   return Success;
 }
 
-void reactor::Transaction::push_back(reactor::Mutation* mutation) {
+void reactor::Transaction::push_back(const std::shared_ptr<reactor::Mutation>& mutation) {
     mutations_.push_back(mutation);
 }

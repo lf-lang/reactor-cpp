@@ -44,7 +44,7 @@ public:
   ~MutableScope() = default;
 
   void commit_transaction(bool recalculate = false);
-  void add_to_transaction(Mutation* mutation);
+  void add_to_transaction(const std::shared_ptr<Mutation>& mutation);
 
 };
 

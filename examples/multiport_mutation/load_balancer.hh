@@ -35,9 +35,9 @@ private:
 
       auto antideps = (outbound[0]).anti_dependencies();
 
-      MutationChangeOutputMultiportSize change_size{temp, this->reactor_, antideps, new_size};
+      auto change_size = std::make_shared<MutationChangeOutputMultiportSize<unsigned>>(temp, this->reactor_, antideps, new_size);
 
-      add_to_transaction(&change_size);
+      add_to_transaction(change_size);
 
       commit_transaction();
 

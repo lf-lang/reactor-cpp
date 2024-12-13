@@ -33,9 +33,9 @@ public:
         std::string __lf_inst_name = "consumer_" + std::to_string(index);
         return std::make_unique<Consumer>(__lf_inst_name, reactor->environment(), index);
       };
-      MutationChangeBankSize change_size{&reactor_bank, this->reactor_, new_size, lambda};
+      auto change_size = std::make_shared<MutationChangeBankSize<std::unique_ptr<Consumer>>>(&reactor_bank, this->reactor_, new_size, lambda);
 
-      add_to_transaction(&change_size);
+      add_to_transaction(change_size);
 
       // old topology
       commit_transaction();
@@ -48,9 +48,8 @@ public:
       } else {
         std::cout << "load_balancer size:" << load_balancer.size() << " bank size: " << reactor_bank.size() << std::endl;
         for (auto i = 0; i < new_size; i++) {
-            std::cout << "add connection: " << i << std::endl;
-            MutationAddConnection<Output<unsigned>, Input<unsigned>> add_conn{&load_balancer[i], &reactor_bank[i].get()->in, reactor_};
-            add_to_transaction(&add_conn);
+            auto add_conn = std::make_shared<MutationAddConnection<Output<unsigned>, Input<unsigned>>>(&load_balancer[i], &reactor_bank[i].get()->in, reactor_);
+            add_to_transaction(add_conn);
         }
         commit_transaction(true);
       }

@@ -15,8 +15,8 @@ template <class A, class B> auto reactor::MutationAddConnection<A, B>::run() -> 
   reactor_->environment()->draw_connection(source_, sink_, ConnectionProperties{});
   sink_->set_inward_binding(source_);
   source_->add_outward_binding(sink_);
-  std::cout << "from: " << source_->fqn() << "(" << source_ << ")"
-                       << " --> to: " << sink_->fqn() << "(" << sink_ << ")" << std::endl;
+  //std::cout << "from: " << source_->fqn() << "(" << source_ << ")"
+  //                     << " --> to: " << sink_->fqn() << "(" << sink_ << ")" << std::endl;
   return Success;
 }
 

@@ -2,7 +2,7 @@
 
 #include "reactor-cpp/scopes.hh"
 
-void reactor::MutableScope::add_to_transaction(Mutation* mutation) {
+void reactor::MutableScope::add_to_transaction(const std::shared_ptr<Mutation>& mutation) {
   transaction_.push_back(mutation);
 }
 

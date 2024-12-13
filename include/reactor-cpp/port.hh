@@ -106,7 +106,7 @@ public:
 
   [[nodiscard]] auto triggers() const noexcept -> const auto& { return triggers_; }
   [[nodiscard]] auto dependencies() const noexcept -> const auto& { return dependencies_; }
-  [[nodiscard]] auto anti_dependencies() const noexcept -> const auto& { return anti_dependencies_; }
+  [[nodiscard]] auto anti_dependencies() noexcept -> auto& { return anti_dependencies_; } //TODO: make it const again
   [[nodiscard]] auto port_type() const noexcept -> PortType { return type_; }
 
   void register_set_callback(const PortCallback& callback);

@@ -12,8 +12,6 @@ reactor::MutationChangeOutputMultiportSize<T>::MutationChangeOutputMultiportSize
 template<class T>
 void reactor::MutationChangeOutputMultiportSize<T>::change_size(std::size_t new_size) {
   auto current_size = multiport_->size();
-  std::cout << "scaling from: " << current_size << " to " << new_size << std::endl;
-
   if (current_size >= new_size) {
     // downscale
 
@@ -29,6 +27,8 @@ void reactor::MutationChangeOutputMultiportSize<T>::change_size(std::size_t new_
     for (auto* anti_dep : anti_dependencies_) {
         anti_dep->clear_antidependencies();
         for (auto i = 0; i < new_size; i++) {
+
+            multiport_->operator[](i).anti_dependencies().clear();
             anti_dep->declare_antidependency(&multiport_->operator[](i));
         }
     }
@@ -40,12 +40,12 @@ void reactor::MutationChangeOutputMultiportSize<T>::change_size(std::size_t new_
       multiport_->emplace_back(port_name_, reactor_);
     }
 
-    for (auto* anti_dep : anti_dependencies_) {
+    /*for (auto* anti_dep : anti_dependencies_) {
         anti_dep->clear_antidependencies();
         for (auto i = 0; i < new_size; i++) {
             anti_dep->declare_antidependency(&multiport_->operator[](i));
         }
-    }
+    }*/
 
 
   }

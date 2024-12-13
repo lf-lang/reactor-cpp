@@ -91,7 +91,7 @@ void Reaction::declare_dependency(BasePort* port) {
 void Reaction::declare_antidependency(BasePort* port) {
   reactor_assert(port != nullptr);
   reactor_assert(this->environment() == port->environment());
-  assert_phase(this, Phase::Assembly);
+  //assert_phase(this, Phase::Assembly);
 
   if (port->is_output()) {
     validate(this->container() == port->container(), "Antidependent output ports must belong to the same reactor as "
