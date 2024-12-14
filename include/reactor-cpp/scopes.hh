@@ -6,8 +6,8 @@
  *   Tassilo Tanneberger
  */
 
-#ifndef REACTOR_CPP_SCOPS_HH
-#define REACTOR_CPP_SCOPS_HH
+#ifndef REACTOR_CPP_SCOPES_HH
+#define REACTOR_CPP_SCOPES_HH
 
 #include "environment.hh"
 #include "logical_time.hh"
@@ -18,20 +18,24 @@ namespace reactor {
 
 class Scope {
 private:
-  Reactor* reactor;
+  Reactor* reactor_;
 
 public:
-  Scope(Reactor* reactor)
-      : reactor(reactor) {}
+  explicit Scope(Reactor* reactor)
+      : reactor_(reactor) {}
 
-  auto get_physical_time() const -> reactor::TimePoint { return reactor->get_physical_time(); }
-  auto get_tag() const -> reactor::Tag { return reactor->get_tag(); }
-  auto get_logical_time() const -> reactor::TimePoint { return reactor->get_logical_time(); }
-  auto get_microstep() const -> reactor::mstep_t { return reactor->get_microstep(); }
-  auto get_elapsed_logical_time() const -> reactor::Duration { return reactor->get_elapsed_logical_time(); }
-  auto get_elapsed_physical_time() const -> reactor::Duration { return reactor->get_elapsed_physical_time(); }
-  auto environment() const -> reactor::Environment* { return reactor->environment(); }
-  void request_stop() const { return environment()->sync_shutdown(); }
+  [[nodiscard]] static auto get_physical_time() noexcept -> TimePoint { return Reactor::get_physical_time(); }
+  [[nodiscard]] auto get_tag() const noexcept -> Tag { return reactor_->get_tag(); }
+  [[nodiscard]] auto get_logical_time() const noexcept -> TimePoint { return reactor_->get_logical_time(); }
+  [[nodiscard]] auto get_microstep() const noexcept -> mstep_t { return reactor_->get_microstep(); }
+  [[nodiscard]] auto get_elapsed_logical_time() const noexcept -> Duration {
+    return reactor_->get_elapsed_logical_time();
+  }
+  [[nodiscard]] auto get_elapsed_physical_time() const noexcept -> Duration {
+    return reactor_->get_elapsed_physical_time();
+  }
+  [[nodiscard]] auto environment() const noexcept -> Environment* { return reactor_->environment(); }
+  void request_stop() const { environment()->sync_shutdown(); }
 };
 
 class MutableScope : public Scope {
@@ -45,7 +49,19 @@ public:
       , transaction_(reactor)
       , reactor_(reactor)
       , env_(reactor->environment()) {}
+  MutableScope(const MutableScope& other)
+      : Scope(other.reactor_)
+      , transaction_(other.transaction_)
+      , reactor_(other.reactor_)
+      , env_(other.env_) {}
+  MutableScope(MutableScope&& other) noexcept
+      : Scope(other.reactor_)
+      , transaction_(std::move(other.transaction_))
+      , reactor_(other.reactor_)
+      , env_(other.env_) {}
   ~MutableScope() = default;
+  auto operator=(const MutableScope& other) -> MutableScope& = default;
+  auto operator=(MutableScope&& other) -> MutableScope& = default;
 
   void commit_transaction(bool recalculate = false);
   void add_to_transaction(const std::shared_ptr<Mutation>& mutation);
@@ -53,4 +69,4 @@ public:
 
 } // namespace reactor
 
-#endif // REACTOR_CPP_SCOPS_HH
+#endif // REACTOR_CPP_SCOPES_HH

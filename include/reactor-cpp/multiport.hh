@@ -14,6 +14,7 @@
 #include <cstddef>
 #include <iostream>
 #include <type_traits>
+#include <utility>
 #include <vector>
 
 #include "assert.hh"
@@ -49,10 +50,10 @@ protected:
   void register_port(BasePort& port, size_t idx);
 
 public:
-  explicit BaseMultiport(const std::string& name)
-      : multiport_name_(name){};
+  explicit BaseMultiport(std::string name)
+      : multiport_name_(std::move(name)){};
   ~BaseMultiport() = default;
-  auto name() const -> std::string { return multiport_name_; }
+  [[nodiscard]] auto name() const -> std::string { return multiport_name_; }
 };
 
 template <class T> class MutationChangeMultiportSize;
@@ -82,14 +83,14 @@ public:
   auto operator[](std::size_t index) noexcept -> T& { return ports_[index]; }
   auto operator[](std::size_t index) const noexcept -> const T& { return ports_[index]; }
 
-  auto begin() noexcept -> iterator { return ports_.begin(); };
-  auto begin() const noexcept -> const_iterator { return ports_.begin(); };
-  auto cbegin() const noexcept -> const_iterator { return ports_.cbegin(); };
-  auto end() noexcept -> iterator { return ports_.end(); };
-  auto end() const noexcept -> const_iterator { return ports_.end(); };
-  auto cend() const noexcept -> const_iterator { return ports_.cend(); };
+  [[nodiscard]] auto begin() noexcept -> iterator { return ports_.begin(); };
+  [[nodiscard]] auto begin() const noexcept -> const_iterator { return ports_.begin(); };
+  [[nodiscard]] auto cbegin() const noexcept -> const_iterator { return ports_.cbegin(); };
+  [[nodiscard]] auto end() noexcept -> iterator { return ports_.end(); };
+  [[nodiscard]] auto end() const noexcept -> const_iterator { return ports_.end(); };
+  [[nodiscard]] auto cend() const noexcept -> const_iterator { return ports_.cend(); };
 
-  auto size() const noexcept -> size_type { return ports_.size(); };
+  [[nodiscard]] auto size() const noexcept -> size_type { return ports_.size(); };
   [[nodiscard]] auto empty() const noexcept -> bool { return ports_.empty(); };
 
   [[nodiscard]] auto present_indices_unsorted() const noexcept -> std::vector<std::size_t> {

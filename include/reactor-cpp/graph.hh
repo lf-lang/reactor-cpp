@@ -9,6 +9,7 @@
 #ifndef REACTOR_CPP_GRAPH_HH
 #define REACTOR_CPP_GRAPH_HH
 
+#include <algorithm>
 #include <iostream>
 #include <map>
 #include <optional>
@@ -64,16 +65,15 @@ public:
     }
   }
 
-  auto remove_edge(E source, E destinations) noexcept -> std::optional<P> {
+  auto remove_edge(E source, E destinations) noexcept {
     if (graph_.find(source) == std::end(graph_)) {
-      return std::nullopt;
-    } else {
-      auto conns = std::find_if(std::begin(graph_[source]), std::end(graph_[source]),
-                                [destinations](auto val) { return val.second == destinations; });
+      return;
+    }
+    auto conns = std::find_if(std::begin(graph_[source]), std::end(graph_[source]),
+                              [destinations](auto val) { return val.second == destinations; });
 
-      if (conns != std::end(graph_[source])) {
-        graph_[source].erase(conns);
-      }
+    if (conns != std::end(graph_[source])) {
+      graph_[source].erase(conns);
     }
   }
 

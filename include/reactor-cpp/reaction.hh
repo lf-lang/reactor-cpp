@@ -27,7 +27,7 @@ private:
   std::set<BasePort*> dependencies_;
 
   const int priority_ = -1;
-  unsigned int index_ = -1;
+  int index_ = -1;
 
   std::function<void(void)> body_{nullptr};
 
@@ -63,7 +63,7 @@ public:
   void startup() final {}
   void shutdown() final {}
   void trigger();
-  void set_index(unsigned index);
+  void set_index(int index);
 
   template <class Dur> void set_deadline(Dur deadline, const std::function<void(void)>& handler) {
     set_deadline_impl(std::chrono::duration_cast<Duration>(deadline), handler);

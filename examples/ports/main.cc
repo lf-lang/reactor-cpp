@@ -5,7 +5,7 @@
 using namespace reactor;
 using namespace std::chrono_literals;
 
-class Trigger : public Reactor {
+class Trigger final : public Reactor {
 private:
   Timer timer;
   Reaction r_timer{"r_timer", 1, this, [this]() { on_timer(); }};
@@ -25,7 +25,7 @@ public:
   void on_timer() { trigger.set(); }
 };
 
-class Counter : public Reactor {
+class Counter final : public Reactor {
 private:
   int value_{0};
   Reaction r_trigger{"r_trigger", 1, this, [this]() { on_trigger(); }};
@@ -49,7 +49,7 @@ public:
   }
 };
 
-class Printer : public Reactor {
+class Printer final : public Reactor {
 private:
   Reaction r_value{"r_value", 1, this, [this]() { this->on_value(); }};
 
@@ -67,7 +67,7 @@ public:
   void on_value() { std::cout << this->name() << ": " << *value.get() << '\n'; }
 };
 
-class Adder : public Reactor {
+class Adder final : public Reactor {
 private:
   Reaction r_add{"r_add", 1, this, [this]() { this->add(); }};
 

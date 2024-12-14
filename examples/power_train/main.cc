@@ -4,7 +4,7 @@
 
 using namespace reactor;
 
-class LeftPedal : public Reactor {
+class LeftPedal final : public Reactor {
 public:
   // ports
   Output<void> angle{"angle", this};   // NOLINT
@@ -30,7 +30,7 @@ public:
   }
 };
 
-class RightPedal : public Reactor {
+class RightPedal final : public Reactor {
 public:
   // ports
   Output<void> angle{"angle", this}; // NOLINT
@@ -60,7 +60,7 @@ public:
   }
 };
 
-class BrakeControl : public Reactor {
+class BrakeControl final : public Reactor {
 public:
   // ports
   Input<void> angle{"angle", this};  // NOLINT
@@ -81,7 +81,7 @@ public:
   }
 };
 
-class EngineControl : public Reactor {
+class EngineControl final : public Reactor {
 public:
   // ports
   Input<void> angle{"angle", this};    // NOLINT
@@ -118,7 +118,7 @@ public:
   }
 };
 
-class Brake : public Reactor {
+class Brake final : public Reactor {
 public:
   // ports
   Input<void> force{"force", this}; // NOLINT
@@ -136,11 +136,11 @@ public:
   void assemble() override { r1.declare_trigger(&force); }
 };
 
-class Engine : public Reactor {
+class Engine final : public Reactor {
 public:
   // ports
   Input<void> torque{"torque", this}; // NOLINT
-  Multiport<int> control_input;
+
 private:
   // reactions_
   Reaction r1{"1", 1, this, [this]() { reaction_1(); }};
@@ -180,12 +180,3 @@ auto main() -> int {
 
   return 0;
 }
-
-class ReactionScope : public MutableScope<Engine> {
-  void reaction_0() {
-    MutationChangeMultiportSize<int> change_multiport_width{&this->self_->control_input, 6};
-    this->add_to_transaction(&change_multiport_width);
-
-    this->commit_transaction();
-  }
-};

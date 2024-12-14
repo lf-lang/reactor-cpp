@@ -103,16 +103,16 @@ public:
   template <class T> void remove_connection(Port<T>* source, Port<T>* sink) {
     if (top_environment_ == nullptr || top_environment_ == this) {
       log::Debug() << "remove connection: " << source->fqn() << " -/-> " << sink->fqn();
-      auto properties = graph_.remove_edge(source, sink);
+      graph_.remove_edge(source, sink);
     } else {
-      return top_environment_->remove_connection(source, sink);
+      top_environment_->remove_connection(source, sink);
     }
   }
 
   void remove_top_level_reactor(Reactor* reactor) {
     auto elements_erased = top_level_reactors_.erase(reactor);
     if (elements_erased == 0) {
-      std::cout << "no elements erased" << std::endl;
+      std::cout << "no elements erased" << '\n';
     }
   }
 

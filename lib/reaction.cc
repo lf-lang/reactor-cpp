@@ -125,7 +125,7 @@ void Reaction::set_deadline_impl(Duration deadline, const std::function<void(voi
   this->deadline_handler_ = handler;
 }
 
-void Reaction::set_index(unsigned index) {
+void Reaction::set_index(int index) {
   validate(this->environment()->phase() == Phase::Assembly || this->environment()->phase() == Phase::Mutation,
            "Reaction indexes may only be set during assembly phase!");
   this->index_ = index;

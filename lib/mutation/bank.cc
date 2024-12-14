@@ -6,12 +6,13 @@
 #include "reactor-cpp/action.hh"
 
 template <class T>
-reactor::MutationChangeBankSize<T>::MutationChangeBankSize(std::vector<T>* bank, Reactor* reactor, std::size_t size,
-                                                           std::function<T(Reactor*, std::size_t)> create_lambda)
+reactor::MutationChangeBankSize<T>::MutationChangeBankSize(
+    std::vector<T>* bank, Reactor* reactor, std::size_t size,
+    std::function<T(Reactor* parent_reactor, std::size_t index)> create_lambda)
     : bank_(bank)
     , reactor_(reactor)
     , desired_size_(size)
-    , create_lambda_(create_lambda) {}
+    , create_lambda_(std::move(create_lambda)) {}
 
 template <class T> void reactor::MutationChangeBankSize<T>::change_size(std::size_t new_size) {
   bank_->reserve(new_size);
@@ -34,7 +35,7 @@ template <class T> void reactor::MutationChangeBankSize<T>::change_size(std::siz
       bank_->push_back(create_lambda_(reactor_, current_size + i));
       (*bank_)[bank_->size() - 1]->assemble();
     }
-    std::cout << "created new reactors" << std::endl;
+    std::cout << "created new reactors" << '\n';
   }
 }
 template <class T> auto reactor::MutationChangeBankSize<T>::run() -> MutationResult {

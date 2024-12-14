@@ -2,8 +2,8 @@
 // Created by tanneberger on 11/11/24.
 //
 
-#ifndef MUTATION_MULTIPORT_HH
-#define MUTATION_MULTIPORT_HH
+#ifndef REACTOR_CPP_MUTATIONS_MULTIPORT_HH
+#define REACTOR_CPP_MUTATIONS_MULTIPORT_HH
 
 #include <vector>
 
@@ -23,7 +23,7 @@ private:
   std::size_t size_before_application_ = 0;
   Reactor* reactor_{};
 
-  void change_size(std::size_t);
+  void change_size(std::size_t new_size);
 
 public:
   MutationChangeOutputMultiportSize(ModifableMultiport<Output<T>>* multiport, Reactor* reactor,
@@ -33,11 +33,17 @@ public:
       : multiport_(other.multiport_)
       , desired_size_(other.desired_size_)
       , size_before_application_(other.size_before_application_) {}
+  MutationChangeOutputMultiportSize(MutationChangeOutputMultiportSize&& other) noexcept
+      : multiport_(other.multiport_)
+      , desired_size_(other.desired_size_)
+      , size_before_application_(other.size_before_application_) {}
   ~MutationChangeOutputMultiportSize() override = default;
+  auto operator=(const MutationChangeOutputMultiportSize& other) -> MutationChangeOutputMultiportSize& = default;
+  auto operator=(MutationChangeOutputMultiportSize&& other) -> MutationChangeOutputMultiportSize& = default;
 
   auto run() -> MutationResult override;
   auto rollback() -> MutationResult override;
 };
 } // namespace reactor
 
-#endif // MUTATION_MULTIPORT_HH
+#endif // REACTOR_CPP_MUTATIONS_MULTIPORT_HH

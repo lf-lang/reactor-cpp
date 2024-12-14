@@ -77,7 +77,7 @@ public:
   void set_inward_binding(BasePort* port) noexcept {
     if (port != nullptr) {
       std::cout << port->fqn() << "(" << port << ")"
-                << " --> " << this->fqn() << "(" << this << ")" << std::endl;
+                << " --> " << this->fqn() << "(" << this << ")" << '\n';
     }
 
     inward_binding_ = port;
@@ -115,11 +115,6 @@ public:
   friend class Reaction;
   friend class Scheduler;
 };
-
-inline auto operator==(const BasePort& a, const BasePort& b) -> bool {
-  bool equal = ((const ReactorElement&)a) == ((const ReactorElement&)b);
-  return equal;
-}
 
 template <class T> class Port : public BasePort {
 private:
@@ -189,7 +184,7 @@ public:
 
   Input(Input&&) = default;
 
-  ~Input() { std::cout << "Input port gets deallocated:" << this->fqn() << std::endl; }
+  ~Input() override { std::cout << "Input port gets deallocated:" << this->fqn() << "\n"; }
 };
 
 template <class T> class Output : public Port<T> { // NOLINT(cppcoreguidelines-special-member-functions)
@@ -199,7 +194,7 @@ public:
 
   Output(Output&&) noexcept = default;
 
-  ~Output() { std::cout << "Output port gets deallocated: " << this->fqn() << std::endl; }
+  ~Output() override { std::cout << "Output port gets deallocated: " << this->fqn() << "\n"; }
 };
 
 } // namespace reactor

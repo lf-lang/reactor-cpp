@@ -10,14 +10,14 @@ reactor::Transaction::Transaction(Reactor* parent)
 auto reactor::Transaction::execute(bool recalculate) -> MutationResult {
 
   this->environment_->start_mutation();
-  for (auto mutation : mutations_) {
+  for (const auto& mutation : mutations_) {
     mutation->run();
   }
 
   if (recalculate) {
     this->environment_->clear_dependency_graph();
-    for (const auto* reactor : this->environment_->top_level_reactors()) {
-      this->environment_->build_dependency_graph((Reactor*)reactor);
+    for (auto* reactor : this->environment_->top_level_reactors()) {
+      this->environment_->build_dependency_graph(reactor);
     }
 
     this->environment_->calculate_indexes();

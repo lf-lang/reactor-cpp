@@ -1,3 +1,0 @@
-add_executable(unit_tests_mutations main.cc)
-target_link_libraries(unit_tests_mutations reactor-cpp)
-add_dependencies(examples unit_tests_mutations)

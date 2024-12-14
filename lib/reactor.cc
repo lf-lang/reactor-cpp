@@ -76,7 +76,7 @@ void Reactor::register_reactor([[maybe_unused]] Reactor* reactor) {
   if (std::find(std::begin(reactors_), std::end(reactors_), reactor) == std::end(reactors_)) {
     reactors_.push_back(reactor);
   } else {
-    std::cout << "duplicate insertion!" << std::endl;
+    std::cout << "duplicate insertion!" << '\n';
   }
 
   //[[maybe_unused]] bool result = reactors_.insert(reactor).second;
@@ -164,8 +164,8 @@ void Reactor::remove_inputs(BasePort* base_port) {
 };
 
 void Reactor::remove_child_reactor(const Reactor* base_reactor) {
-  auto index = std::find_if(std::begin(reactors_), std::end(reactors_),
-                            [base_reactor](const Reactor* other) { return base_reactor == other; });
+  const auto index = std::find_if(std::begin(reactors_), std::end(reactors_),
+                                  [base_reactor](const Reactor* other) { return base_reactor == other; });
 
   if (index != std::end(reactors_)) {
     reactors_.erase(index);

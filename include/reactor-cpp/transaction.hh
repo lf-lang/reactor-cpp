@@ -26,6 +26,10 @@ private:
 
 public:
   explicit Transaction(Reactor* parent);
+  Transaction(const Transaction& other) = default;
+  Transaction(Transaction&& other) = default;
+  auto operator=(const Transaction& other) -> Transaction& = default;
+  auto operator=(Transaction&& other) -> Transaction& = default;
   ~Transaction() = default;
 
   void push_back(const std::shared_ptr<Mutation>& mutation);
