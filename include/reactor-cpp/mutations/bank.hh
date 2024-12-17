@@ -30,13 +30,13 @@ public:
       , desired_size_(other.desired_size_)
       , size_before_application_(other.size_before_application_)
       , reactor_(other.reactor_)
-      , create_lambda_(other.create_lambda_){};
+      , create_lambda_(other.create_lambda_) {}
   MutationChangeBankSize(MutationChangeBankSize&& other) noexcept
       : bank_(other.bank_)
       , desired_size_(other.desired_size_)
       , size_before_application_(other.size_before_application_)
       , reactor_(other.reactor_)
-      , create_lambda_(other.create_lambda_){};
+      , create_lambda_(other.create_lambda_) {}
   explicit MutationChangeBankSize(std::vector<T>* bank, Reactor* reactor, std::size_t size,
                                   std::function<T(Reactor* parent_reactor, std::size_t index)> create_lambda);
   ~MutationChangeBankSize() override = default;

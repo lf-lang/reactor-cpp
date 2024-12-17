@@ -76,8 +76,7 @@ public:
   void register_antidependency(Reaction* reaction) noexcept;
   void set_inward_binding(BasePort* port) noexcept {
     if (port != nullptr) {
-      std::cout << port->fqn() << "(" << port << ")"
-                << " --> " << this->fqn() << "(" << this << ")" << '\n';
+      std::cout << port->fqn() << "(" << port << ")" << " --> " << this->fqn() << "(" << this << ")" << '\n';
     }
 
     inward_binding_ = port;

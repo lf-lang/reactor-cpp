@@ -51,7 +51,7 @@ protected:
 
 public:
   explicit BaseMultiport(std::string name)
-      : multiport_name_(std::move(name)){};
+      : multiport_name_(std::move(name)) {}
   ~BaseMultiport() = default;
   [[nodiscard]] auto name() const -> std::string { return multiport_name_; }
 };
@@ -73,7 +73,7 @@ public:
   using const_iterator = typename std::vector<T>::const_iterator;
 
   explicit Multiport(const std::string& name) noexcept
-      : BaseMultiport(name){};
+      : BaseMultiport(name) {}
   ~Multiport() noexcept = default;
 
   auto operator==(const Multiport& other) const noexcept -> bool {
