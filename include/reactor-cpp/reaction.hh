@@ -26,8 +26,8 @@ private:
   std::set<BasePort*> antidependencies_;
   std::set<BasePort*> dependencies_;
 
-  const int priority_;
-  unsigned int index_{};
+  const int priority_ = -1;
+  int index_ = -1;
 
   std::function<void(void)> body_{nullptr};
 
@@ -52,6 +52,7 @@ public:
   [[nodiscard]] auto port_triggers() const noexcept -> const auto& { return port_trigger_; }
 
   [[maybe_unused]] [[nodiscard]] auto antidependencies() const noexcept -> const auto& { return antidependencies_; }
+  [[maybe_unused]] void clear_antidependencies() noexcept { antidependencies_.clear(); }
 
   [[nodiscard]] auto dependencies() const noexcept -> const auto& { return dependencies_; }
 
@@ -62,7 +63,7 @@ public:
   void startup() final {}
   void shutdown() final {}
   void trigger();
-  void set_index(unsigned index);
+  void set_index(int index);
 
   template <class Dur> void set_deadline(Dur deadline, const std::function<void(void)>& handler) {
     set_deadline_impl(std::chrono::duration_cast<Duration>(deadline), handler);

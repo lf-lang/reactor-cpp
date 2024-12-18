@@ -22,6 +22,8 @@
 
 namespace reactor {
 
+template <class T> class MutationChangeMultiportSize;
+
 enum class PortType : std::uint8_t { Input, Output, Delay };
 
 class BasePort : public ReactorElement {
@@ -44,8 +46,6 @@ protected:
       : ReactorElement(name, match_port_enum(type), container)
       , type_(type) {}
 
-  void register_dependency(Reaction* reaction, bool is_trigger) noexcept;
-  void register_antidependency(Reaction* reaction) noexcept;
   virtual void cleanup() = 0;
 
   static auto match_port_enum(PortType type) noexcept -> ReactorElement::Type {
@@ -72,7 +72,15 @@ protected:
   }
 
 public:
-  void set_inward_binding(BasePort* port) noexcept { inward_binding_ = port; }
+  void register_dependency(Reaction* reaction, bool is_trigger) noexcept;
+  void register_antidependency(Reaction* reaction) noexcept;
+  void set_inward_binding(BasePort* port) noexcept {
+    if (port != nullptr) {
+      std::cout << port->fqn() << "(" << port << ")" << " --> " << this->fqn() << "(" << this << ")" << '\n';
+    }
+
+    inward_binding_ = port;
+  }
   void add_outward_binding(BasePort* port) noexcept { outward_bindings_.insert(port); }
 
   virtual void instantiate_connection_to(const ConnectionProperties& properties,
@@ -97,7 +105,7 @@ public:
 
   [[nodiscard]] auto triggers() const noexcept -> const auto& { return triggers_; }
   [[nodiscard]] auto dependencies() const noexcept -> const auto& { return dependencies_; }
-  [[nodiscard]] auto anti_dependencies() const noexcept -> const auto& { return anti_dependencies_; }
+  [[nodiscard]] auto anti_dependencies() noexcept -> auto& { return anti_dependencies_; } // TODO: make it const again
   [[nodiscard]] auto port_type() const noexcept -> PortType { return type_; }
 
   void register_set_callback(const PortCallback& callback);
@@ -173,7 +181,9 @@ public:
   Input(const std::string& name, Reactor* container)
       : Port<T>(name, PortType::Input, container) {}
 
-  Input(Input&&) noexcept = default;
+  Input(Input&&) = default;
+
+  ~Input() override { std::cout << "Input port gets deallocated:" << this->fqn() << "\n"; }
 };
 
 template <class T> class Output : public Port<T> { // NOLINT(cppcoreguidelines-special-member-functions)
@@ -182,6 +192,8 @@ public:
       : Port<T>(name, PortType::Output, container) {}
 
   Output(Output&&) noexcept = default;
+
+  ~Output() override { std::cout << "Output port gets deallocated: " << this->fqn() << "\n"; }
 };
 
 } // namespace reactor

@@ -10,13 +10,10 @@
 #define REACTOR_CPP_LOGGING_HH
 
 #include "reactor-cpp/config.hh"
-#include "reactor-cpp/time.hh"
-#include <chrono>
 #include <iostream>
 #include <memory>
 #include <mutex>
 #include <string>
-#include <utility>
 
 namespace reactor::log {
 
@@ -30,7 +27,6 @@ private:
 
   // NOLINTNEXTLINE (cppcoreguidelines-avoid-non-const-global-variables)
   inline static std::mutex mutex_{};
-
   Lock lock_{};
 
 public:

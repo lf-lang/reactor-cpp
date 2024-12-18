@@ -21,7 +21,7 @@ auto reactor::BaseMultiport::get_set_callback(std::size_t index) noexcept -> rea
 }
 
 void reactor::BaseMultiport::set_present(std::size_t index) {
-  auto calculated_index = size_.fetch_add(1, std::memory_order_relaxed);
+  auto calculated_index = present_ports_size_.fetch_add(1, std::memory_order_relaxed);
 
   reactor_assert(calculated_index < present_ports_.size());
 

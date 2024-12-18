@@ -10,5 +10,6 @@ jobs:
       - uses: actions/checkout@v4
       - name: Analyze
         run: |
+          clang-format --version
           clang-format --dry-run --Werror -style=file $(find ./ -name '*.cc' -print)
           clang-format --dry-run --Werror -style=file $(find ./ -name '*.hh' -print)
