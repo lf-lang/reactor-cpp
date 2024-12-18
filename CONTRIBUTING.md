@@ -91,7 +91,7 @@ Profile and analyze your benchmarks call chain.
 
 
 ### Benchmarking
-If your changes are performance-critical it is advised to run the test from [here](https://github.com/lf-lang/lingua-franca/wiki/Running-Benchmarks)
+If your changes are performance-critical it is advised to run the test from [here](https://www.lf-lang.org/docs/developer/running-benchmarks)
 
 
 ## Git
