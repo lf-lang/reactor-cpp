@@ -9,7 +9,7 @@ Please make sure your submitted code follows the .clang-tidy and .clang-format f
 
 ### Testing
 There are CI Tests that automatically check your code. If you want to perform the tests manually take a look
-at this [guide](https://github.com/lf-lang/lingua-franca/wiki/Regression-Tests).
+at this [guide](https://www.lf-lang.org/docs/developer/regression-tests).
 
 ## Building and Testing with Nix
 
