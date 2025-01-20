@@ -14,7 +14,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-24.04, windows-latest, macos-latest]
 
     steps:
     - uses: actions/checkout@v4
@@ -35,7 +35,7 @@ jobs:
         cmake -DREACTOR_CPP_TRACE=ON ..
         cd ..
         cmake --build build --target examples
-      if: matrix.os == 'ubuntu-latest'
+      if: matrix.os == 'ubuntu-24.04'
 
   lf-tests-pull-request:
     uses: lf-lang/lingua-franca/.github/workflows/cpp-tests.yml@master
