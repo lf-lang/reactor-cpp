@@ -31,14 +31,16 @@ private:
 
   void register_action(BaseAction* action);
   void register_input(BasePort* port);
+  void unregister_input(BasePort* port);
   void register_output(BasePort* port);
+  void unregister_output(BasePort* port);
   void register_reaction(Reaction* reaction);
   void register_reactor(Reactor* reactor);
 
 public:
   Reactor(const std::string& name, Reactor* container);
   Reactor(const std::string& name, Environment* environment);
-  ~Reactor() override = default;
+  ~Reactor() override;
 
   void register_connection(std::unique_ptr<BaseAction>&& connection);
   [[nodiscard]] auto actions() const noexcept -> const auto& { return actions_; }

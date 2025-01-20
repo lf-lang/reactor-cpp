@@ -29,7 +29,6 @@ void reactor::BaseMultiport::set_present(std::size_t index) {
 }
 
 void reactor::BaseMultiport::register_port(BasePort& port, size_t idx) {
-  // need to add one new slot t the present list
   reactor_assert(this->present_ports_.size() == idx);
   this->present_ports_.emplace_back(0);
 

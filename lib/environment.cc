@@ -47,10 +47,20 @@ Environment::Environment(const std::string& name, Environment* containing_enviro
 
 void Environment::register_reactor(Reactor* reactor) {
   reactor_assert(reactor != nullptr);
-  validate(this->phase() == Phase::Construction, "Reactors may only be registered during construction phase!");
+  validate(this->phase() == Phase::Construction || this->phase() == Phase::Mutation,
+           "Reactors may only be registered during construction phase!");
   validate(reactor->is_top_level(), "The environment may only contain top level reactors!");
   [[maybe_unused]] bool result = top_level_reactors_.insert(reactor).second;
   reactor_assert(result);
+}
+
+void Environment::unregister_reactor(Reactor* reactor) {
+  reactor_assert(reactor != nullptr);
+  validate(this->phase() == Phase::Construction || this->phase() == Phase::Mutation,
+           "Reactors may only be unregistered during construction phase!");
+  validate(reactor->is_top_level(), "The environment may only contain top level reactors!");
+  [[maybe_unused]] std::size_t result = top_level_reactors_.erase(reactor);
+  reactor_assert(result > 0);
 }
 
 void Environment::register_input_action(BaseAction* action) {

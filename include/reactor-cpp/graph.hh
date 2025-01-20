@@ -114,6 +114,20 @@ public:
     return tree;
   }
 
+  auto remove_edge(E source, E destinations) noexcept {
+    if (graph_.find(source) == std::end(graph_)) {
+      return;
+    }
+    auto conns = std::find_if(std::begin(graph_[source]), std::end(graph_[source]),
+                              [destinations](auto val) { return val.second == destinations; });
+
+    if (conns != std::end(graph_[source])) {
+      graph_[source].erase(conns);
+    } else {
+      std::cout << "for some reason nothing got deleted! WARNING" << std::endl;
+    }
+  }
+  /*
   [[nodiscard]] auto get_destinations(E source) const noexcept -> std::vector<std::pair<P, E>> {
     return graph_[source];
   }
@@ -124,7 +138,7 @@ public:
         return source;
       }
     }
-  }
+  }*/
 
   friend auto operator<<(std::ostream& outstream, const Graph& graph) -> std::ostream& {
     for (auto const& [source, destinations] : graph.graph_) {

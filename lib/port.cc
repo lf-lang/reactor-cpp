@@ -20,7 +20,8 @@ void BasePort::register_dependency(Reaction* reaction, bool is_trigger) noexcept
   reactor_assert(reaction != nullptr);
   reactor_assert(this->environment() == reaction->environment());
   validate(!this->has_outward_bindings(), "Dependencies may no be declared on ports with an outward binding!");
-  assert_phase(this, Phase::Assembly);
+  validate(this->environment()->phase() == Phase::Assembly || this->environment()->phase() == Phase::Mutation,
+           "Dependencies for Ports can only be declared during assembly or muttion phase");
 
   if (this->is_input()) {
     validate(this->container() == reaction->container(), "Dependent input ports must belong to the same reactor as the "

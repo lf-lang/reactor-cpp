@@ -42,6 +42,12 @@ private:
     }
   }
 
+  static void decrement(std::atomic_size_t& counter) {
+    if constexpr (enabled_) {
+      counter.fetch_sub(1, std::memory_order_release);
+    }
+  }
+
 public:
   static void increment_reactor_instances() { increment(reactor_instances_); }
   static void increment_connections() { increment(connections_); }
@@ -53,6 +59,8 @@ public:
   static void increment_triggered_actions() { increment(triggered_actions_); }
   static void increment_set_ports() { increment(set_ports_); }
   static void increment_scheduled_actions() { increment(scheduled_actions_); }
+
+  static void decrement_ports() { decrement(ports_); }
 
   static auto reactor_instances() { return reactor_instances_.load(std::memory_order_acquire); }
   static auto connections() { return connections_.load(std::memory_order_acquire); }

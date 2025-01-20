@@ -24,6 +24,8 @@ Reactor::Reactor(const std::string& name, Environment* environment)
   environment->register_reactor(this);
 }
 
+Reactor::~Reactor() { environment()->unregister_reactor(this); }
+
 void Reactor::register_action([[maybe_unused]] BaseAction* action) {
   reactor_assert(action != nullptr);
   reactor::validate(this->environment()->phase() == Phase::Construction ||
@@ -36,26 +38,48 @@ void Reactor::register_action([[maybe_unused]] BaseAction* action) {
 
 void Reactor::register_input(BasePort* port) {
   reactor_assert(port != nullptr);
-  reactor::validate(this->environment()->phase() == Phase::Construction,
+  reactor::validate(this->environment()->phase() == Phase::Construction ||
+                        this->environment()->phase() == Phase::Mutation,
                     "Ports can only be registered during construction phase!");
   [[maybe_unused]] bool result = inputs_.insert(port).second;
   reactor_assert(result);
   Statistics::increment_ports();
 }
 
+void Reactor::unregister_input(BasePort* port) {
+  reactor_assert(port != nullptr);
+  reactor::validate(this->environment()->phase() == Phase::Construction ||
+                        this->environment()->phase() == Phase::Mutation,
+                    "Ports can only be registered during construction phase!");
+  std::size_t number_of_elements = inputs_.erase(port);
+  reactor_assert(number_of_elements > 0);
+  Statistics::decrement_ports();
+}
+
 void Reactor::register_output(BasePort* port) {
   reactor_assert(port != nullptr);
-  reactor::validate(this->environment()->phase() == Phase::Construction,
+  reactor::validate(this->environment()->phase() == Phase::Construction ||
+                        this->environment()->phase() == Phase::Mutation,
                     "Ports can only be registered during construction phase!");
-  [[maybe_unused]] bool result = inputs_.insert(port).second;
+  [[maybe_unused]] bool result = outputs_.insert(port).second;
   reactor_assert(result);
   Statistics::increment_ports();
+}
+
+void Reactor::unregister_output(BasePort* port) {
+  reactor_assert(port != nullptr);
+  reactor::validate(this->environment()->phase() == Phase::Construction ||
+                        this->environment()->phase() == Phase::Mutation,
+                    "Ports can only be registered during construction phase!");
+  outputs_.erase(port);
+  // reactor_assert(number_of_elements > 0);
+  Statistics::decrement_ports();
 }
 
 void Reactor::register_reaction([[maybe_unused]] Reaction* reaction) {
   reactor_assert(reaction != nullptr);
 
-  validate(this->environment()->phase() == Phase::Construction,
+  validate(this->environment()->phase() == Phase::Construction || this->environment()->phase() == Phase::Mutation,
            "Reactions can only be registered during construction phase!");
   [[maybe_unused]] bool result = reactions_.insert(reaction).second;
   reactor_assert(result);
@@ -64,7 +88,7 @@ void Reactor::register_reaction([[maybe_unused]] Reaction* reaction) {
 
 void Reactor::register_reactor([[maybe_unused]] Reactor* reactor) {
   reactor_assert(reactor != nullptr);
-  validate(this->environment()->phase() == Phase::Construction,
+  validate(this->environment()->phase() == Phase::Construction || this->environment()->phase() == Phase::Mutation,
            "Reactions can only be registered during construction phase!");
   [[maybe_unused]] bool result = reactors_.insert(reactor).second;
   reactor_assert(result);
