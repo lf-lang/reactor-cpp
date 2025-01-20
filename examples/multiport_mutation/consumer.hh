@@ -15,7 +15,7 @@ class Consumer final : public Reactor { // NOLINT
     std::size_t index_ = 0;
 
     void reaction_1(const Input<unsigned>& in) const {
-      std::cout << "consumer: " << index_ << " received value:" << *in.get() << '\n';
+      // std::cout << "consumer: " << index_ << " received value:" << *in.get() << '\n';
     }
 
     friend Consumer;
@@ -34,9 +34,7 @@ public:
 
   Input<unsigned> in{"in", this}; // NOLINT
 
-  void assemble() override {
-    handle.declare_trigger(&in);
-  }
+  void assemble() override { handle.declare_trigger(&in); }
 };
 
 #endif // CONSUMER_HH

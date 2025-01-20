@@ -24,7 +24,7 @@ Reactor::Reactor(const std::string& name, Environment* environment)
   environment->register_reactor(this);
 }
 
-Reactor::~Reactor() { environment()->unregister_reactor(this); }
+Reactor::~Reactor() = default;
 
 void Reactor::register_action([[maybe_unused]] BaseAction* action) {
   reactor_assert(action != nullptr);
@@ -34,6 +34,15 @@ void Reactor::register_action([[maybe_unused]] BaseAction* action) {
   [[maybe_unused]] bool result = actions_.insert(action).second;
   reactor_assert(result);
   Statistics::increment_actions();
+}
+
+void Reactor::unregister_action([[maybe_unused]] BaseAction* action) {
+  reactor_assert(action != nullptr);
+  reactor::validate(this->environment()->phase() == Phase::Construction ||
+                        this->environment()->phase() == Phase::Assembly,
+                    "Actions can only be registered during construction phase!");
+  actions_.erase(action);
+  Statistics::decrement_actions();
 }
 
 void Reactor::register_input(BasePort* port) {
@@ -86,6 +95,15 @@ void Reactor::register_reaction([[maybe_unused]] Reaction* reaction) {
   Statistics::increment_reactions();
 }
 
+void Reactor::unregister_reaction([[maybe_unused]] Reaction* reaction) {
+  reactor_assert(reaction != nullptr);
+
+  validate(this->environment()->phase() == Phase::Construction || this->environment()->phase() == Phase::Mutation,
+           "Reactions can only be registered during construction phase!");
+  reactions_.erase(reaction);
+  Statistics::decrement_reactions();
+}
+
 void Reactor::register_reactor([[maybe_unused]] Reactor* reactor) {
   reactor_assert(reactor != nullptr);
   validate(this->environment()->phase() == Phase::Construction || this->environment()->phase() == Phase::Mutation,
@@ -93,6 +111,14 @@ void Reactor::register_reactor([[maybe_unused]] Reactor* reactor) {
   [[maybe_unused]] bool result = reactors_.insert(reactor).second;
   reactor_assert(result);
   Statistics::increment_reactor_instances();
+}
+
+void Reactor::unregister_reactor([[maybe_unused]] Reactor* reactor) {
+  reactor_assert(reactor != nullptr);
+  validate(this->environment()->phase() == Phase::Construction || this->environment()->phase() == Phase::Mutation,
+           "Reactions can only be registered during construction phase!");
+  reactors_.erase(reactor);
+  Statistics::decrement_reactor_instances();
 }
 
 void Reactor::register_connection([[maybe_unused]] std::unique_ptr<BaseAction>&& connection) {

@@ -31,11 +31,15 @@ private:
 
   void register_action(BaseAction* action);
   void register_input(BasePort* port);
-  void unregister_input(BasePort* port);
   void register_output(BasePort* port);
-  void unregister_output(BasePort* port);
   void register_reaction(Reaction* reaction);
   void register_reactor(Reactor* reactor);
+
+  void unregister_action(BaseAction* action);
+  void unregister_input(BasePort* port);
+  void unregister_output(BasePort* port);
+  void unregister_reaction(Reaction* reaction);
+  void unregister_reactor(Reactor* reactor);
 
 public:
   Reactor(const std::string& name, Reactor* container);

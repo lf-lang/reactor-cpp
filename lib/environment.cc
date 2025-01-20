@@ -59,8 +59,7 @@ void Environment::unregister_reactor(Reactor* reactor) {
   validate(this->phase() == Phase::Construction || this->phase() == Phase::Mutation,
            "Reactors may only be unregistered during construction phase!");
   validate(reactor->is_top_level(), "The environment may only contain top level reactors!");
-  [[maybe_unused]] std::size_t result = top_level_reactors_.erase(reactor);
-  reactor_assert(result > 0);
+  top_level_reactors_.erase(reactor);
 }
 
 void Environment::register_input_action(BaseAction* action) {

@@ -16,15 +16,14 @@ class LoadBalancer final : public Reactor { // NOLINT
     // reaction bodies
     static void reaction_1(const Input<unsigned>& inbound, Output<unsigned>& scale_bank,
                            Multiport<Output<unsigned>>& outbound) {
-      if (std::rand() % 15 == 0) {                   // NOLINT
+      if (std::rand() % 15 == 0) {            // NOLINT
         scale_bank.set(std::rand() % 20 + 1); // NOLINT
       }
       const unsigned sel = std::rand() % outbound.size(); // NOLINT
-      std::cout << "Sending out to:" << sel << '\n';
+      // std::cout << "Sending out to:" << sel << '\n';
       outbound[sel].set(inbound.get());
       outbound[std::min(4ul, outbound.size() - 1)].set(inbound.get());
     }
-
 
     friend LoadBalancer;
   };
@@ -44,10 +43,10 @@ public:
   }
   ~LoadBalancer() override = default;
 
-  ModifableMultiport<Output<unsigned>> out{"out", this};          // NOLINT
+  ModifableMultiport<Output<unsigned>> out{"out", this}; // NOLINT
   std::size_t out_size_ = 0;
-  Input<unsigned> inbound{"inbound", this};                 // NOLINT
-  Output<unsigned> scale_bank{"scale_bank", this};          // NOLINT
+  Input<unsigned> inbound{"inbound", this};        // NOLINT
+  Output<unsigned> scale_bank{"scale_bank", this}; // NOLINT
 
   void assemble() override {
     std::cout << "assemble LoadBalancer\n";

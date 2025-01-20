@@ -54,12 +54,17 @@ public:
   static void increment_reactions() { increment(reactions_); }
   static void increment_actions() { increment(actions_); }
   static void increment_ports() { increment(ports_); }
+
   static void increment_processed_events() { increment(processed_events_); }
   static void increment_processed_reactions() { increment(processed_reactions_); }
   static void increment_triggered_actions() { increment(triggered_actions_); }
   static void increment_set_ports() { increment(set_ports_); }
   static void increment_scheduled_actions() { increment(scheduled_actions_); }
 
+  static void decrement_reactor_instances() { decrement(reactor_instances_); }
+  static void decrement_connections() { decrement(connections_); }
+  static void decrement_reactions() { decrement(reactions_); }
+  static void decrement_actions() { decrement(actions_); }
   static void decrement_ports() { decrement(ports_); }
 
   static auto reactor_instances() { return reactor_instances_.load(std::memory_order_acquire); }

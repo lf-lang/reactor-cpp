@@ -93,7 +93,7 @@ ReactorElement::~ReactorElement() {
   switch (type_) {
   case Type::Action:
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-    // container->register_action(reinterpret_cast<BaseAction*>(this));
+    container_->unregister_action(reinterpret_cast<BaseAction*>(this));
     break;
   case Type::Input:
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
@@ -105,11 +105,15 @@ ReactorElement::~ReactorElement() {
     break;
   case Type::Reaction:
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-    // container->register_reaction(reinterpret_cast<Reaction*>(this));
+    container_->unregister_reaction(reinterpret_cast<Reaction*>(this));
     break;
   case Type::Reactor:
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-    // container->register_reactor(reinterpret_cast<Reactor*>(this));
+    if (container_ == nullptr) {
+      environment_->unregister_reactor(reinterpret_cast<Reactor*>(this));
+    } else {
+      container_->unregister_reactor(reinterpret_cast<Reactor*>(this));
+    }
     break;
   default:
     break;

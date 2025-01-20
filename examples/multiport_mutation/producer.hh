@@ -15,7 +15,7 @@ private:
     unsigned int counter_ = 0;
 
     void reaction_1([[maybe_unused]] Output<unsigned>& out) {
-      std::cout << "producing value:" << counter_ << "\n";
+      // std::cout << "producing value:" << counter_ << "\n";
       out.set(counter_++);
     }
 

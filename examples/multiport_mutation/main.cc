@@ -4,9 +4,9 @@
 #include <reactor-cpp/mutations/bank.hh>
 #include <reactor-cpp/mutations/connection.hh>
 
-#include "./multiport_to_bank.hh"
 #include "./consumer.hh"
 #include "./load_balancer.hh"
+#include "./multiport_to_bank.hh"
 #include "./producer.hh"
 #include <reactor-cpp/reactor-cpp.hh>
 
@@ -18,7 +18,6 @@ class Deployment final : public Reactor { // NOLINT
 
   Reaction scale_bank{"scale_bank", 1, this,
                       [this]() { this->_inner.reaction_1(this->scale, this->consumers_, load_balancer_->out); }};
-
 
   class Inner : public MutableScope {
     int state = 0;
@@ -35,15 +34,9 @@ class Deployment final : public Reactor { // NOLINT
         return std::make_unique<Consumer>(_lf_inst_name, env, index);
       };
 
-      std::function get_input_port = [](const std::unique_ptr<Consumer>& consumer) {
-        return &consumer->in;
-      };
-      auto rescale = std::make_shared<ResizeMultiportToBank<unsigned, Consumer>>(
-        &load_balancer,
-        &reactor_bank,
-        get_input_port,
-        lambda,
-        new_size);
+      std::function get_input_port = [](const std::unique_ptr<Consumer>& consumer) { return &consumer->in; };
+      auto rescale = std::make_shared<ResizeMultiportToBank<unsigned, Consumer>>(&load_balancer, &reactor_bank,
+                                                                                 get_input_port, lambda, new_size);
 
       add_to_transaction(rescale);
 
@@ -53,7 +46,7 @@ class Deployment final : public Reactor { // NOLINT
     friend LoadBalancer;
   };
 
-Inner _inner;
+  Inner _inner;
 
 public:
   Deployment(const std::string& name, Environment* env)
