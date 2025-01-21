@@ -29,20 +29,20 @@ class Deployment final : public Reactor { // NOLINT
     int state = 0;
 
   public:
-    Inner(Reactor* reactor)
+    explicit Inner(Reactor* reactor)
         : MutableScope(reactor) {}
     void reaction_1(const Input<unsigned>& scale, std::vector<std::unique_ptr<Consumer>>& reactor_bank,
                     ModifableMultiport<Output<unsigned>>& load_balancer) {
       std::size_t new_size = *scale.get();
-      std::size_t old_size = reactor_bank.size();
+
       std::function lambda = [](Environment* env, std::size_t index) {
         std::string _lf_inst_name = "consumer_" + std::to_string(index);
         return std::make_unique<Consumer>(_lf_inst_name, env, index);
       };
 
       std::function get_input_port = [](const std::unique_ptr<Consumer>& consumer) { return &consumer->in; };
-      auto rescale = std::make_shared<ResizeMultiportToBank<unsigned, Consumer>>(&load_balancer, &reactor_bank,
-                                                                                 get_input_port, lambda, new_size);
+      const auto rescale = std::make_shared<ResizeMultiportToBank<unsigned, Consumer>>(
+          &load_balancer, &reactor_bank, get_input_port, lambda, new_size);
 
       add_to_transaction(rescale);
 

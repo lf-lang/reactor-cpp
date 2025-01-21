@@ -24,8 +24,8 @@ namespace reactor {
 
 class BaseMultiport { // NOLINT cppcoreguidelines-special-member-functions,-warnings-as-errors
 protected:
-  std::atomic<std::size_t> size_{0};
-  std::vector<std::size_t> present_ports_{};
+  std::atomic<std::size_t> size_{0};         // NOLINT cppcoreguidelines-non-private-member-variables-in-classes
+  std::vector<std::size_t> present_ports_{}; // NOLINT cppcoreguidelines-non-private-member-variables-in-classes
 
 private:
   std::string name_{};
@@ -53,11 +53,11 @@ protected:
 public:
   BaseMultiport(std::string name, Reactor* container)
       : name_(std::move(name))
-      , container_(container) {};
+      , container_(container) {}
   ~BaseMultiport() = default;
 
   [[nodiscard]] auto name() const noexcept -> const std::string& { return name_; }
-  auto container() const noexcept -> Reactor* { return container_; }
+  [[nodiscard]] auto container() const noexcept -> Reactor* { return container_; }
 };
 
 template <class T, class A = std::allocator<T>>
@@ -79,7 +79,7 @@ public:
   using const_iterator = typename std::vector<T>::const_iterator;
 
   Multiport(const std::string& name, Reactor* container) noexcept
-      : BaseMultiport(name, container) {};
+      : BaseMultiport(name, container) {}
   ~Multiport() noexcept = default;
 
   auto operator==(const Multiport& other) const noexcept -> bool {

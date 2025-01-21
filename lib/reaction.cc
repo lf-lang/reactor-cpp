@@ -17,7 +17,7 @@
 
 namespace reactor {
 
-Reaction::Reaction(const std::string& name, int priority, Reactor* container, std::function<void(void)> body)
+Reaction::Reaction(const std::string& name, const int priority, Reactor* container, std::function<void(void)> body)
     : ReactorElement(name, ReactorElement::Type::Reaction, container)
     , priority_(priority)
     , body_(std::move(std::move(body))) {
@@ -31,7 +31,7 @@ void Reaction::declare_trigger(BaseAction* action) {
   validate(this->container() == action->container(), "Action triggers must belong to the same reactor as the triggered "
                                                      "reaction");
 
-  [[maybe_unused]] bool result = action_triggers_.insert(action).second;
+  [[maybe_unused]] const bool result = action_triggers_.insert(action).second;
   reactor_assert(result);
   action->register_trigger(this);
 }
@@ -43,7 +43,7 @@ void Reaction::declare_schedulable_action(BaseAction* action) {
   validate(this->container() == action->container(), "Scheduable actions must belong to the same reactor as the "
                                                      "triggered reaction");
 
-  [[maybe_unused]] bool result = scheduable_actions_.insert(action).second;
+  [[maybe_unused]] const bool result = scheduable_actions_.insert(action).second;
   reactor_assert(result);
   action->register_scheduler(this);
 }
@@ -83,7 +83,7 @@ void Reaction::declare_dependency(BasePort* port) {
              "Dependent output ports must belong to a contained reactor");
   }
 
-  [[maybe_unused]] bool result = dependencies_.insert(port).second;
+  [[maybe_unused]] const bool result = dependencies_.insert(port).second;
   reactor_assert(result);
   port->register_dependency(this, false);
 }
@@ -101,16 +101,15 @@ void Reaction::declare_antidependency(BasePort* port) {
              "Antidependent input ports must belong to a contained reactor");
   }
 
-  [[maybe_unused]] bool result = antidependencies_.insert(port).second;
+  [[maybe_unused]] const bool result = antidependencies_.insert(port).second;
   reactor_assert(result);
   port->register_antidependency(this);
 }
 
-void Reaction::trigger() {
+void Reaction::trigger() const {
   if (has_deadline()) {
     reactor_assert(deadline_handler_ != nullptr);
-    auto lag = Reactor::get_physical_time() - container()->get_logical_time();
-    if (lag > deadline_) {
+    if (const auto lag = Reactor::get_physical_time() - container()->get_logical_time(); lag > deadline_) {
       deadline_handler_();
       return;
     }
@@ -119,7 +118,7 @@ void Reaction::trigger() {
   body_();
 }
 
-void Reaction::set_deadline_impl(Duration deadline, const std::function<void(void)>& handler) {
+void Reaction::set_deadline_impl(const Duration deadline, const std::function<void(void)>& handler) {
   reactor_assert(!has_deadline());
   reactor_assert(handler != nullptr);
   this->deadline_ = deadline;

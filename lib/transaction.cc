@@ -14,7 +14,7 @@ reactor::Transaction::Transaction(Reactor* parent)
     : environment_(parent->environment())
     , parent_(parent) {}
 
-auto reactor::Transaction::execute(bool recalculate) -> MutationResult {
+auto reactor::Transaction::execute(const bool recalculate) -> MutationResult {
   this->environment_->start_mutation();
 
   std::size_t index = 0;

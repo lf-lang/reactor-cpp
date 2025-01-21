@@ -6,8 +6,8 @@
  *   Tassilo Tanneberger
  */
 
-#ifndef MULTIPORT_MUTATION_PRODUCER_HH // NOLINT
-#define MULTIPORT_MUTATION_PRODUCER_HH // NOLINT
+#ifndef MULTIPORT_MUTATION_PRODUCER_HH
+#define MULTIPORT_MUTATION_PRODUCER_HH
 
 #include <reactor-cpp/reactor-cpp.hh>
 

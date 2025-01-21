@@ -5,7 +5,7 @@
 using namespace reactor;
 using namespace std::chrono_literals;
 
-class Count : public Reactor {
+class Count final : public Reactor {
 private:
   // actions
   Timer timer{"timer", this};

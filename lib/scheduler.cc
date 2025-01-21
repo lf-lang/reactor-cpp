@@ -104,7 +104,7 @@ auto ReadyQueue::pop() -> Reaction* {
     // FIXME: Protect against underflow?
   }
 
-  auto pos = old_size - 1;
+  const auto pos = old_size - 1;
   return queue_[pos];
 }
 
@@ -115,8 +115,8 @@ void ReadyQueue::fill_up(std::vector<Reaction*>& ready_reactions) {
 
   // update the atomic size counter and release the semaphore to wake up
   // waiting worker threads
-  auto new_size = static_cast<std::ptrdiff_t>(queue_.size());
-  auto old_size = size_.exchange(new_size, std::memory_order_acq_rel);
+  const auto new_size = static_cast<std::ptrdiff_t>(queue_.size());
+  const auto old_size = size_.exchange(new_size, std::memory_order_acq_rel);
 
   // calculate how many workers to wake up. -old_size indicates the number of
   // workers who started waiting since the last update.
@@ -128,11 +128,10 @@ void ReadyQueue::fill_up(std::vector<Reaction*>& ready_reactions) {
   // one worker running running, new_size - running_workers indicates the
   // number of additional workers needed to process all reactions.
   waiting_workers_ += -old_size;
-  std::ptrdiff_t running_workers{num_workers_ - waiting_workers_};
-  auto workers_to_wakeup = std::min(waiting_workers_, new_size - running_workers);
+  const std::ptrdiff_t running_workers{num_workers_ - waiting_workers_};
 
   // wakeup other workers_
-  if (workers_to_wakeup > 0) {
+  if (auto workers_to_wakeup = std::min(waiting_workers_, new_size - running_workers); workers_to_wakeup > 0) {
     waiting_workers_ -= workers_to_wakeup;
     log_.debug() << "Wakeup " << workers_to_wakeup << " workers";
     sem_.release(static_cast<int>(workers_to_wakeup));
@@ -158,8 +157,7 @@ auto EventQueue::extract_next_event() -> ActionListPtr {
 auto EventQueue::insert_event_at(const Tag& tag) -> const ActionListPtr& {
   auto shared_lock = std::shared_lock<std::shared_mutex>(mutex_);
 
-  auto event_it = event_queue_.find(tag);
-  if (event_it == event_queue_.end()) {
+  if (const auto event_it = event_queue_.find(tag); event_it == event_queue_.end()) {
     shared_lock.unlock();
     {
       auto unique_lock = std::unique_lock<std::shared_mutex>(mutex_);
@@ -344,8 +342,8 @@ void Scheduler::next() { // NOLINT(readability-function-cognitive-complexity)
       if (stop_) {
         continue_execution_ = false;
         log_.debug() << "Shutting down the scheduler";
-        Tag t_next = Tag::from_logical_time(logical_time_).delay();
-        if (!event_queue_.empty() && t_next == event_queue_.next_tag()) {
+        if (Tag t_next = Tag::from_logical_time(logical_time_).delay();
+            !event_queue_.empty() && t_next == event_queue_.next_tag()) {
           log_.debug() << "Trigger the last round of reactions including all "
                           "shutdown reactions";
           triggered_actions_ = event_queue_.extract_next_event();
@@ -359,7 +357,7 @@ void Scheduler::next() { // NOLINT(readability-function-cognitive-complexity)
         // synchronize with physical time if not in fast forward mode
         if (!environment_->fast_fwd_execution()) {
           log_.debug() << "acquire tag " << t_next << " from physical time barrier";
-          bool result = PhysicalTimeBarrier::acquire_tag(
+          const bool result = PhysicalTimeBarrier::acquire_tag(
               t_next, lock, this, [&t_next, this]() { return t_next != event_queue_.next_tag(); });
           // If acquire tag returns false, then a new event was inserted into the queue and we need to start over
           if (!result) {
@@ -372,7 +370,7 @@ void Scheduler::next() { // NOLINT(readability-function-cognitive-complexity)
         bool result{true};
         for (auto* action : environment_->input_actions_) {
           log_.debug() << "acquire tag " << t_next << " from input action " << action->fqn();
-          bool inner_result =
+          const bool inner_result =
               action->acquire_tag(t_next, lock, [&t_next, this]() { return t_next != event_queue_.next_tag(); });
           // If the wait was aborted or if the next tag changed in the meantime,
           // we need to break from the loop and continue with the main loop.

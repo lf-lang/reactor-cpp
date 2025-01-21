@@ -11,8 +11,6 @@
 #define REACTOR_CPP_REACTOR_ELEMENT_HH
 
 #include <cstdint>
-#include <memory>
-#include <set>
 #include <sstream>
 #include <string>
 

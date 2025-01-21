@@ -18,7 +18,7 @@
 
 namespace reactor {
 
-ReactorElement::ReactorElement(const std::string& name, ReactorElement::Type type, Reactor* container)
+ReactorElement::ReactorElement(const std::string& name, const ReactorElement::Type type, Reactor* container)
     : name_(name)
     , container_(container)
     , type_(type) {
@@ -65,7 +65,7 @@ ReactorElement::ReactorElement(const std::string& name, ReactorElement::Type typ
   fqn_ = string_stream.str();
 }
 
-ReactorElement::ReactorElement(const std::string& name, ReactorElement::Type type, Environment* environment)
+ReactorElement::ReactorElement(const std::string& name, const ReactorElement::Type type, Environment* environment)
     : name_(name)
     , fqn_(name)
     , environment_(environment)
@@ -108,10 +108,11 @@ ReactorElement::~ReactorElement() {
     container_->unregister_reaction(reinterpret_cast<Reaction*>(this));
     break;
   case Type::Reactor:
-    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
     if (container_ == nullptr) {
+      // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
       environment_->unregister_reactor(reinterpret_cast<Reactor*>(this));
     } else {
+      // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
       container_->unregister_reactor(reinterpret_cast<Reactor*>(this));
     }
     break;

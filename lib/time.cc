@@ -25,12 +25,12 @@ constexpr std::size_t NANOSECOND_DIGITS{9};
 
 inline namespace operators {
 
-auto operator<<(std::ostream& os, TimePoint tp) -> std::ostream& {
+auto operator<<(std::ostream& os, const TimePoint tp) -> std::ostream& {
   std::array<char, TIME_TO_STR_BUFFER_SIZE> buf{};
-  time_t time =
+  const time_t time =
       std::chrono::system_clock::to_time_t(std::chrono::time_point_cast<std::chrono::system_clock::duration>(tp));
-  auto res = std::strftime(buf.data(), sizeof(buf), "%Y-%m-%d %H:%M:%S", std::localtime(&time));
-  auto epoch = std::chrono::duration_cast<Duration>(tp.time_since_epoch());
+  const auto res = std::strftime(buf.data(), sizeof(buf), "%Y-%m-%d %H:%M:%S", std::localtime(&time));
+  const auto epoch = std::chrono::duration_cast<Duration>(tp.time_since_epoch());
 
   if (res != 0) {
     os << buf.data() << '.' << std::setw(NANOSECOND_DIGITS) << std::setfill('0')
@@ -42,19 +42,19 @@ auto operator<<(std::ostream& os, TimePoint tp) -> std::ostream& {
   return os;
 }
 
-auto operator<<(std::ostream& os, std::chrono::seconds dur) -> std::ostream& {
+auto operator<<(std::ostream& os, const std::chrono::seconds dur) -> std::ostream& {
   os << dur.count() << " secs";
   return os;
 }
-auto operator<<(std::ostream& os, std::chrono::milliseconds dur) -> std::ostream& {
+auto operator<<(std::ostream& os, const std::chrono::milliseconds dur) -> std::ostream& {
   os << dur.count() << " msecs";
   return os;
 }
-auto operator<<(std::ostream& os, std::chrono::microseconds dur) -> std::ostream& {
+auto operator<<(std::ostream& os, const std::chrono::microseconds dur) -> std::ostream& {
   os << dur.count() << " usecs";
   return os;
 }
-auto operator<<(std::ostream& os, std::chrono::nanoseconds dur) -> std::ostream& {
+auto operator<<(std::ostream& os, const std::chrono::nanoseconds dur) -> std::ostream& {
   os << dur.count() << " nsecs";
   return os;
 }

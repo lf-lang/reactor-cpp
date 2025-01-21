@@ -9,7 +9,6 @@
 #ifndef REACTOR_CPP_SEMAPHORE_HH
 #define REACTOR_CPP_SEMAPHORE_HH
 
-#include <atomic>
 #include <condition_variable>
 #include <mutex>
 

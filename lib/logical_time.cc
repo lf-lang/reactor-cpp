@@ -28,7 +28,7 @@ auto Tag::from_logical_time(const LogicalTime& logical_time) noexcept -> Tag {
   return {logical_time.time_point(), logical_time.micro_step()};
 }
 
-auto Tag::delay(Duration offset) const noexcept -> Tag {
+auto Tag::delay(const Duration offset) const noexcept -> Tag {
   if (offset == Duration::zero()) {
     validate(this->micro_step_ != std::numeric_limits<mstep_t>::max(), "Microstep overflow detected!");
     return {this->time_point_, this->micro_step_ + 1};
@@ -36,7 +36,7 @@ auto Tag::delay(Duration offset) const noexcept -> Tag {
   return {this->time_point_ + offset, 0};
 }
 
-auto Tag::subtract(Duration offset) const noexcept -> Tag {
+auto Tag::subtract(const Duration offset) const noexcept -> Tag {
   if (offset == Duration::zero()) {
     return decrement();
   }

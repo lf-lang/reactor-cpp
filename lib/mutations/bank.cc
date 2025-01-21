@@ -11,7 +11,7 @@
 
 template <class T>
 reactor::MutationChangeBankSize<T>::MutationChangeBankSize(
-    std::vector<T>* bank, Environment* env, std::size_t size,
+    std::vector<T>* bank, Environment* env, const std::size_t size,
     std::function<T(Environment* env, std::size_t index)> create_lambda)
     : bank_(bank)
     , desired_size_(size)

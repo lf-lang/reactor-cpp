@@ -9,8 +9,6 @@
 #ifndef REACTOR_CPP_MUTATIONS_MULTIPORT_HH
 #define REACTOR_CPP_MUTATIONS_MULTIPORT_HH
 
-#include <vector>
-
 #include "../multiport.hh"
 #include "../mutations.hh"
 #include "../port.hh"

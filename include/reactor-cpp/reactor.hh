@@ -10,7 +10,6 @@
 #define REACTOR_CPP_REACTOR_HH
 
 #include <set>
-#include <sstream>
 #include <string>
 
 #include "action.hh"

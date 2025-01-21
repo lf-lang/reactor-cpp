@@ -16,7 +16,7 @@
 
 namespace reactor {
 
-void BasePort::register_dependency(Reaction* reaction, bool is_trigger) noexcept {
+void BasePort::register_dependency(Reaction* reaction, const bool is_trigger) noexcept {
   reactor_assert(reaction != nullptr);
   reactor_assert(this->environment() == reaction->environment());
   validate(!this->has_outward_bindings(), "Dependencies may no be declared on ports with an outward binding!");
@@ -54,7 +54,7 @@ void BasePort::register_antidependency(Reaction* reaction) noexcept {
              "Antidependent input ports must belong to a contained reactor");
   }
 
-  [[maybe_unused]] bool result = anti_dependencies_.insert(reaction).second;
+  [[maybe_unused]] const bool result = anti_dependencies_.insert(reaction).second;
   reactor_assert(result);
 }
 
@@ -92,7 +92,7 @@ void Port<void>::instantiate_connection_to(const ConnectionProperties& propertie
   reactor_assert(properties.type_ != ConnectionType::Normal);
 
   Environment* enclave = downstream[0]->environment();
-  auto index = this->container()->number_of_connections();
+  const auto index = this->container()->number_of_connections();
 
   if (properties.type_ == ConnectionType::Delayed) {
     connection = std::make_unique<DelayedConnection<void>>(

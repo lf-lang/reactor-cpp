@@ -123,22 +123,8 @@ public:
 
     if (conns != std::end(graph_[source])) {
       graph_[source].erase(conns);
-    } else {
-      std::cout << "for some reason nothing got deleted! WARNING" << std::endl;
     }
   }
-  /*
-  [[nodiscard]] auto get_destinations(E source) const noexcept -> std::vector<std::pair<P, E>> {
-    return graph_[source];
-  }
-
-  [[nodiscard]] auto get_upstream(E vertex) const noexcept -> std::optional<E> {
-    for (const auto& [source, sinks] : graph_) {
-      if (sinks.second.contains(vertex)) {
-        return source;
-      }
-    }
-  }*/
 
   friend auto operator<<(std::ostream& outstream, const Graph& graph) -> std::ostream& {
     for (auto const& [source, destinations] : graph.graph_) {

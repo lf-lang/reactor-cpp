@@ -17,7 +17,6 @@
 #include "logical_time.hh"
 #include "port.hh"
 #include "reaction.hh"
-#include "reactor.hh"
 #include "time.hh"
 #include "time_barrier.hh"
 
@@ -69,7 +68,7 @@ protected:
     return [this](const BasePort& port) {
       // We know that port must be of type Port<T>
       auto& typed_port = reinterpret_cast<const Port<T>&>(port); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
-      if constexpr (std::is_same<T, void>::value) {
+      if constexpr (std::is_same_v<T, void>) {
         this->schedule();
       } else {
         this->schedule(std::move(typed_port.get()));
@@ -81,7 +80,7 @@ public:
   void setup() noexcept override {
     Action<T>::setup();
 
-    if constexpr (std::is_same<T, void>::value) {
+    if constexpr (std::is_same_v<T, void>) {
       for (auto port : this->downstream_ports()) {
         port->set();
       }
@@ -134,7 +133,7 @@ public:
       // without locking.
       auto tag = Tag::from_logical_time(scheduler->logical_time());
       [[maybe_unused]] bool result{false};
-      if constexpr (std::is_same<T, void>::value) {
+      if constexpr (std::is_same_v<T, void>) {
         result = this->schedule_at(tag);
       } else {
         result = this->schedule_at(std::move(typed_port.get()), tag);

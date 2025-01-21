@@ -18,8 +18,6 @@
 #include <memory>
 #include <type_traits>
 
-#include "reactor-cpp/logging.hh"
-
 namespace reactor {
 
 namespace detail {
@@ -459,8 +457,7 @@ public:
   // get_mutable_copy()
   friend class ImmutableValuePtr<T, true>;
 
-  // Give the factory function make_mutable_value() access to the private
-  // constructor
+  // Give the factory function make_mutable_value() access to the private constructor
   template <class U, class... Args>
   friend auto reactor::make_mutable_value(Args&&... args) -> reactor::MutableValuePtr<U>;
 };
@@ -468,7 +465,7 @@ public:
 template <class T> class ImmutableValuePtr<T, true> {
 public:
   /// A type alias that adds ``const`` to ``T``
-  using const_T = typename std::add_const_t<T>;
+  using const_T = std::add_const_t<T>;
 
 private:
   T value_{};

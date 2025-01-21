@@ -6,8 +6,8 @@
  *   Tassilo Tanneberger
  */
 
-#ifndef CONSUMER_HH // NOLINT
-#define CONSUMER_HH // NOLINT
+#ifndef MULTIPORT_MUTATION_CONSUMER_HH
+#define MULTIPORT_MUTATION_CONSUMER_HH
 
 #include <reactor-cpp/reactor-cpp.hh>
 #include <reactor-cpp/scopes.hh>
@@ -45,4 +45,4 @@ public:
   void assemble() override { handle.declare_trigger(&in); }
 };
 
-#endif // CONSUMER_HH
+#endif // MULTIPORT_MUTATION_CONSUMER_HH

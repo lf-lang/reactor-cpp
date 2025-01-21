@@ -9,7 +9,6 @@
 #ifndef REACTOR_CPP_TIME_BARRIER_HH
 #define REACTOR_CPP_TIME_BARRIER_HH
 
-#include "fwd.hh"
 #include "logical_time.hh"
 #include "scheduler.hh"
 #include "time.hh"

@@ -6,8 +6,8 @@
  *   Tassilo Tanneberger
  */
 
-#ifndef MULTIPORT_MUTATION_LOAD_BALANCER_HH // NOLINT
-#define MULTIPORT_MUTATION_LOAD_BALANCER_HH // NOLINT
+#ifndef MULTIPORT_MUTATION_LOAD_BALANCER_HH
+#define MULTIPORT_MUTATION_LOAD_BALANCER_HH
 
 #include <reactor-cpp/mutations/multiport.hh>
 #include <reactor-cpp/reactor-cpp.hh>

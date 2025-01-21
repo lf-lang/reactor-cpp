@@ -76,7 +76,7 @@ private:
   Graph<BasePort*, ConnectionProperties> graph_{};
   Graph<BasePort*, ConnectionProperties> optimized_graph_{};
 
-  void build_dependency_graph(Reactor* reactor);
+  void build_dependency_graph(const Reactor* reactor);
   void calculate_indexes();
 
   std::mutex shutdown_mutex_{};
