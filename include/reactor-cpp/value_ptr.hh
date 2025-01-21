@@ -517,23 +517,23 @@ public:
 // Comparison operators
 
 template <class T, class U, bool is_trivial>
-auto operator==(const MutableValuePtr<T, is_trivial>& ptr1, const MutableValuePtr<U, is_trivial>& ptr2) noexcept
-    -> bool {
+auto operator==(const MutableValuePtr<T, is_trivial>& ptr1,
+                const MutableValuePtr<U, is_trivial>& ptr2) noexcept -> bool {
   return ptr1.get() == ptr2.get();
 }
 template <class T, class U, bool is_trivial>
-auto operator==(const ImmutableValuePtr<T, is_trivial>& ptr1, const ImmutableValuePtr<U, is_trivial>& ptr2) noexcept
-    -> bool {
+auto operator==(const ImmutableValuePtr<T, is_trivial>& ptr1,
+                const ImmutableValuePtr<U, is_trivial>& ptr2) noexcept -> bool {
   return ptr1.get() == ptr2.get();
 }
 template <class T, class U, bool is_trivial>
-auto operator==(const ImmutableValuePtr<T, is_trivial>& ptr1, const MutableValuePtr<U, is_trivial>& ptr2) noexcept
-    -> bool {
+auto operator==(const ImmutableValuePtr<T, is_trivial>& ptr1,
+                const MutableValuePtr<U, is_trivial>& ptr2) noexcept -> bool {
   return ptr1.get() == ptr2.get();
 }
 template <class T, class U, bool is_trivial>
-auto operator==(const MutableValuePtr<T, is_trivial>& ptr1, const ImmutableValuePtr<U, is_trivial>& ptr2) noexcept
-    -> bool {
+auto operator==(const MutableValuePtr<T, is_trivial>& ptr1,
+                const ImmutableValuePtr<U, is_trivial>& ptr2) noexcept -> bool {
   return ptr1.get() == ptr2.get();
 }
 template <class T, bool is_trivial>
@@ -554,8 +554,8 @@ auto operator==(std::nullptr_t, const ImmutableValuePtr<T, is_trivial>& ptr1) no
 }
 
 template <class T, class U, bool is_trivial>
-auto operator!=(const MutableValuePtr<T, is_trivial>& ptr1, const MutableValuePtr<U, is_trivial>& ptr2) noexcept
-    -> bool {
+auto operator!=(const MutableValuePtr<T, is_trivial>& ptr1,
+                const MutableValuePtr<U, is_trivial>& ptr2) noexcept -> bool {
   return ptr1.get() != ptr2.get();
 }
 
