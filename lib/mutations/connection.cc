@@ -1,7 +1,13 @@
+/*
+ * Copyright (C) 2025 TU Dresden
+ * All rights reserved.
+ *
+ * Authors:
+ *   Tassilo Tanneberger
+ */
+
 #include "reactor-cpp/mutations/connection.hh"
 #include "reactor-cpp/reactor.hh"
-
-#include <reactor-cpp/port.hh>
 
 template <class A, class B>
 reactor::MutationAddConnection<A, B>::MutationAddConnection(A* source, B* sink, Environment* env, bool add_connection)

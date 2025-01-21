@@ -1,14 +1,20 @@
+/*
+ * Copyright (C) 2025 TU Dresden
+ * All rights reserved.
+ *
+ * Authors:
+ *   Tassilo Tanneberger
+ */
+
 #include <iostream>
 #include <memory>
 
-#include <reactor-cpp/mutations/bank.hh>
-#include <reactor-cpp/mutations/connection.hh>
+#include <reactor-cpp/reactor-cpp.hh>
 
 #include "./consumer.hh"
 #include "./load_balancer.hh"
 #include "./multiport_to_bank.hh"
 #include "./producer.hh"
-#include <reactor-cpp/reactor-cpp.hh>
 
 class Deployment final : public Reactor { // NOLINT
 

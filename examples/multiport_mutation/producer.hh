@@ -1,5 +1,13 @@
-#ifndef PRODUCER_HH // NOLINT
-#define PRODUCER_HH // NOLINT
+/*
+ * Copyright (C) 2025 TU Dresden
+ * All rights reserved.
+ *
+ * Authors:
+ *   Tassilo Tanneberger
+ */
+
+#ifndef MULTIPORT_MUTATION_PRODUCER_HH // NOLINT
+#define MULTIPORT_MUTATION_PRODUCER_HH // NOLINT
 
 #include <reactor-cpp/reactor-cpp.hh>
 
@@ -44,4 +52,4 @@ public:
   }
 };
 
-#endif // PRODUCER_HH
+#endif // MULTIPORT_MUTATION_PRODUCER_HH

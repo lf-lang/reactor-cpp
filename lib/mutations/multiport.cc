@@ -1,9 +1,12 @@
-//
-// Created by tanneberger on 11/11/24.
-//
+/*
+ * Copyright (C) 2025 TU Dresden
+ * All rights reserved.
+ *
+ * Authors:
+ *   Tassilo Tanneberger
+ */
 
 #include "reactor-cpp/mutations/multiport.hh"
-#include "reactor-cpp/reaction.hh"
 
 template <class T>
 reactor::MutationChangeOutputMultiportSize<T>::MutationChangeOutputMultiportSize(
@@ -14,11 +17,11 @@ reactor::MutationChangeOutputMultiportSize<T>::MutationChangeOutputMultiportSize
 template <class T> void reactor::MutationChangeOutputMultiportSize<T>::change_size(std::size_t new_size) {
   auto current_size = multiport_->size();
   if (current_size >= new_size) {
-    // downscale
+    // down-size
     multiport_->resize(new_size);
 
   } else {
-    // upscale
+    // up-size
     multiport_->reserve(new_size);
     for (auto i = 0; i < new_size - current_size; i++) {
       std::string port_name_ = multiport_->name() + "_" + std::to_string(current_size + i);

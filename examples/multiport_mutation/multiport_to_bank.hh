@@ -1,9 +1,13 @@
-//
-// Created by tanneberger on 1/13/25.
-//
+/*
+ * Copyright (C) 2025 TU Dresden
+ * All rights reserved.
+ *
+ * Authors:
+ *   Tassilo Tanneberger
+ */
 
-#ifndef MULTIPORT_TO_BANK_HH
-#define MULTIPORT_TO_BANK_HH
+#ifndef MULTIPORT_MUTATION_MULTIPORT_TO_BANK_HH
+#define MULTIPORT_MUTATION_MULTIPORT_TO_BANK_HH
 
 #include <reactor-cpp/multiport.hh>
 #include <reactor-cpp/mutations.hh>
@@ -88,4 +92,4 @@ public:
 };
 } // namespace reactor
 
-#endif // MULTIPORT_TO_BANK_HH
+#endif // MULTIPORT_MUTATION_MULTIPORT_TO_BANK_HH

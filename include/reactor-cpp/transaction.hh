@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 TU Dresden
+ * Copyright (C) 2025 TU Dresden
  * All rights reserved.
  *
  * Authors:
@@ -13,7 +13,6 @@
 #include <vector>
 
 #include "mutations.hh"
-// #include "reactor.hh"
 
 namespace reactor {
 class Reactor;

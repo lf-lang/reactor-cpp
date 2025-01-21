@@ -1,6 +1,10 @@
-//
-// Created by tanneberger on 11/11/24.
-//
+/*
+ * Copyright (C) 2025 TU Dresden
+ * All rights reserved.
+ *
+ * Authors:
+ *   Tassilo Tanneberger
+ */
 
 #ifndef REACTOR_CPP_MUTATIONS_MULTIPORT_HH
 #define REACTOR_CPP_MUTATIONS_MULTIPORT_HH
