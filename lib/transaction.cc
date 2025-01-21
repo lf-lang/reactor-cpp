@@ -1,4 +1,10 @@
-
+/*
+ * Copyright (C) 2019 TU Dresden
+ * All rights reserved.
+ *
+ * Authors:
+ *   Tassilo Tanneberger
+ */
 
 #include "reactor-cpp/transaction.hh"
 #include "reactor-cpp/environment.hh"
@@ -9,27 +15,29 @@ reactor::Transaction::Transaction(Reactor* parent)
     , parent_(parent) {}
 
 auto reactor::Transaction::execute(bool recalculate) -> MutationResult {
-
   this->environment_->start_mutation();
+
+  std::size_t index = 0;
   for (const auto& mutation : mutations_) {
-    mutation->run();
+    if (mutation->run() != Success) {
+      break;
+    }
+
+    index++;
+  }
+
+  if (index != mutations_.size()) {
+    for (std::size_t i = 0; i < index; i++) {
+      mutations_[index - i]->rollback();
+    }
   }
 
   if (recalculate) {
-    // parent_->remove_dependency_graph();
-    // this->environment_->clear_dependency_graph();
-    // this->environment_->build_dependency_graph(this->parent_);
-
-    // this->environment_
-    // for (auto* reactor : this->environment_->top_level_reactors()) {
-    //   this->environment_->build_dependency_graph(reactor);
-    // }
-
     this->environment_->calculate_indexes();
   }
 
   this->environment_->stop_mutation();
-  this->environment_->export_dependency_graph("./test.dot");
+
   mutations_.clear();
   return Success;
 }
