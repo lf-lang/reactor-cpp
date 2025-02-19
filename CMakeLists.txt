@@ -62,6 +62,8 @@ configure_file(include/reactor-cpp/config.hh.in include/reactor-cpp/config.hh @O
 include(GNUInstallDirs)
 
 add_subdirectory(lib)
+add_subdirectory(reactor-sdk)
+
 if(NOT DEFINED LF_REACTOR_CPP_SUFFIX)
   add_subdirectory(examples)
 endif()
@@ -70,4 +72,14 @@ if (DEFINED LF_REACTOR_CPP_SUFFIX)
   install(DIRECTORY include/ DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${LIB_TARGET}")
 else()
   install(DIRECTORY include/ DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
+endif()
+
+if(NOT TARGET uninstall)
+  configure_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/cmake_uninstall.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
+    IMMEDIATE @ONLY)
+
+  add_custom_target(uninstall
+    COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)
 endif()

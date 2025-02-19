@@ -55,8 +55,9 @@ void Reactor::register_output(BasePort* port) {
 void Reactor::register_reaction([[maybe_unused]] Reaction* reaction) {
   reactor_assert(reaction != nullptr);
 
-  validate(this->environment()->phase() == Phase::Construction,
-           "Reactions can only be registered during construction phase!");
+  validate((this->environment()->phase() == Phase::Construction) ||
+            (this->environment()->phase() == Phase::Assembly),
+           "Reactions can only be registered during construction or assembly phase!");
   [[maybe_unused]] bool result = reactions_.insert(reaction).second;
   reactor_assert(result);
   Statistics::increment_reactions();
