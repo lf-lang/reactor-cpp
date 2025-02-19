@@ -67,6 +67,26 @@ void Environment::optimize() {
   optimized_graph_ = graph_;
 }
 
+void recursive_construct(Reactor* container) {
+  container->construct();
+  for (auto* reactor : container->reactors()) {
+    recursive_construct(reactor);
+  }
+}
+
+void Environment::construct() {
+    // phase_ = Phase::Assembly;
+
+    log::Info() << "Start Contruction of reactors";
+    for (auto* reactor : top_level_reactors_) {
+        recursive_construct(reactor);
+    }
+
+    for (auto* env : contained_environments_) {
+        env->construct();
+    }
+}
+
 void recursive_assemble(Reactor* container) {
   container->assemble();
   for (auto* reactor : container->reactors()) {
@@ -80,7 +100,7 @@ void Environment::assemble() { // NOLINT(readability-function-cognitive-complexi
   // constructing all the reactors
   // this mainly tell the reactors that they should connect their ports and actions not ports and ports
 
-  log::Debug() << "start assembly of reactors";
+  log::Info() << "start assembly of reactors";
   for (auto* reactor : top_level_reactors_) {
     recursive_assemble(reactor);
   }
@@ -112,6 +132,8 @@ void Environment::assemble() { // NOLINT(readability-function-cognitive-complexi
           source_port->add_outward_binding(destination_port);
           log::Debug() << "from: " << source_port->fqn() << "(" << source_port << ")"
                        << " --> to: " << destination_port->fqn() << "(" << destination_port << ")";
+          reactor::validate(source_port != destination_port,
+                            "Self wiring detected; from " + source_port->fqn() + " --> " + destination_port->fqn());
         }
       } else {
         if (properties.type_ == ConnectionType::Enclaved || properties.type_ == ConnectionType::PhysicalEnclaved ||
@@ -221,6 +243,8 @@ void Environment::export_dependency_graph(const std::string& path) {
   std::ofstream dot;
   dot.open(path);
 
+  dependency_graph_and_indexes();
+
   // sort all reactions_ by their index
   std::map<unsigned int, std::vector<Reaction*>> reactions_by_index;
   for (auto* reaction : reactions_) {
@@ -317,7 +341,7 @@ auto Environment::startup() -> std::thread {
   return startup(get_physical_time());
 }
 
-auto Environment::startup(const TimePoint& start_time) -> std::thread {
+void Environment::dependency_graph_and_indexes() {
   validate(this->phase() == Phase::Assembly, "startup() may only be called during assembly phase!");
 
   log::Debug() << "Building the Dependency-Graph";
@@ -327,7 +351,17 @@ auto Environment::startup(const TimePoint& start_time) -> std::thread {
 
   calculate_indexes();
 
-  log_.debug() << "Starting the execution";
+  phase_ = Phase::Indexing;
+}
+
+auto Environment::startup(const TimePoint& start_time) -> std::thread {
+  if (phase_ == Phase::Assembly) {
+    dependency_graph_and_indexes();
+  }
+
+  validate(this->phase() == Phase::Indexing, "startup() may only be called during Indexing phase!");
+
+  log_.info() << "Starting the execution";
   phase_ = Phase::Startup;
 
   this->start_tag_ = Tag::from_physical_time(start_time);

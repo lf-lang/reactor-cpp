@@ -152,7 +152,7 @@ public:
 };
 
 class Timer : public BaseAction {
-private:
+protected:
   Duration offset_{0};
   Duration period_{0};
 

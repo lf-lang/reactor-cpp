@@ -47,7 +47,7 @@ void Reactor::register_output(BasePort* port) {
   reactor_assert(port != nullptr);
   reactor::validate(this->environment()->phase() == Phase::Construction,
                     "Ports can only be registered during construction phase!");
-  [[maybe_unused]] bool result = inputs_.insert(port).second;
+  [[maybe_unused]] bool result = outputs_.insert(port).second;
   reactor_assert(result);
   Statistics::increment_ports();
 }

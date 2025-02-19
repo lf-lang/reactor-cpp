@@ -52,6 +52,7 @@ public:
   void shutdown() final;
 
   virtual void assemble() = 0;
+  virtual void construct() {}
 
   [[nodiscard]] static auto get_physical_time() noexcept -> TimePoint;
   [[nodiscard]] auto get_logical_time() const noexcept -> TimePoint;

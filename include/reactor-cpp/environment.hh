@@ -30,10 +30,11 @@ constexpr bool default_fast_fwd_execution = false;
 enum class Phase : std::uint8_t {
   Construction = 0,
   Assembly = 1,
-  Startup = 2,
-  Execution = 3,
-  Shutdown = 4,
-  Deconstruction = 5
+  Indexing = 2,
+  Startup = 3,
+  Execution = 4,
+  Shutdown = 5,
+  Deconstruction = 6
 };
 
 class Environment {
@@ -107,7 +108,9 @@ public:
   void register_reactor(Reactor* reactor);
   void register_port(BasePort* port) noexcept;
   void register_input_action(BaseAction* action);
+  void construct();
   void assemble();
+  void dependency_graph_and_indexes();
   auto startup() -> std::thread;
   void sync_shutdown();
   void async_shutdown();
