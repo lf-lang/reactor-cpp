@@ -75,9 +75,7 @@ void recursive_construct(Reactor* container) {
 }
 
 void Environment::construct() {
-    // phase_ = Phase::Assembly;
-
-    log::Info() << "Start Contruction of reactors";
+    log::Debug() << "Start Contruction of reactors";
     for (auto* reactor : top_level_reactors_) {
         recursive_construct(reactor);
     }
@@ -100,7 +98,7 @@ void Environment::assemble() { // NOLINT(readability-function-cognitive-complexi
   // constructing all the reactors
   // this mainly tell the reactors that they should connect their ports and actions not ports and ports
 
-  log::Info() << "start assembly of reactors";
+  log::Debug() << "start assembly of reactors";
   for (auto* reactor : top_level_reactors_) {
     recursive_assemble(reactor);
   }
@@ -361,7 +359,7 @@ auto Environment::startup(const TimePoint& start_time) -> std::thread {
 
   validate(this->phase() == Phase::Indexing, "startup() may only be called during Indexing phase!");
 
-  log_.info() << "Starting the execution";
+  log_.debug() << "Starting the execution";
   phase_ = Phase::Startup;
 
   this->start_tag_ = Tag::from_physical_time(start_time);
