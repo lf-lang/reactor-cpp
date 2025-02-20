@@ -3,6 +3,7 @@
 using namespace std;
 
 #include "reactor-cpp/reactor-cpp.hh"
+#include "time_parser.hh"
 #include "Misc.hh"
 #include "ReactorBank.hh"
 #include "MultiportInput.hh"

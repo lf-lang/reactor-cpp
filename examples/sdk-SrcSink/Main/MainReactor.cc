@@ -36,14 +36,4 @@ void MainReactor::assembling() {
                 "Starting up reaction\n" << "Bank:" << bank_index << " name:" << parameters.alias.value << " fqn:" << fqn() << " n_sinks:" << parameters.n_sinks.value << endl;
             }
     );
-
-    reaction("reaction_2").
-        triggers(&snk[0].rsp).
-        effects().
-        function(
-            [&](Output<int>& rsp) {
-                cout << "(" << get_elapsed_logical_time() << ", " << get_microstep() << "), physical_time: " << get_elapsed_physical_time() << " " <<
-                "Response\n" << "Bank:" << bank_index << " value:" << *rsp.get() << endl;
-            }
-    );
 }
