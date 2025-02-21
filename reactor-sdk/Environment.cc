@@ -2,6 +2,7 @@
 #include <unordered_map>
 #include <map>
 #include "reactor-sdk/Environment.hh"
+#include "reactor-sdk/Reactor.hh"
 
 using namespace std;
 
@@ -48,6 +49,68 @@ void Environment::run()
 
     if (visualize) {
         this->export_dependency_graph("graph.dot");
+        std::set<std::string> types;
+        std::set<std::string> homog_map_entries;
+        std::set<std::string> hetero_map_entries;
+        for (auto *reactor : top_tier_reactors) {
+            reactor->populate_params (types, homog_map_entries, hetero_map_entries);
+        }
+        std::string type_str = "";
+        bool first = true;
+        for (auto &type : types) {
+            type_str += first ? type : (", " + type);
+            first = false;
+        }
+        std::cout << "TYPE_STR:" << type_str << std::endl;
+
+        std::string homog_entry_str = "";
+        first = true;
+        for (auto &entry : homog_map_entries) {
+            homog_entry_str += first ? ("\t\t" + entry) : (",\n\t\t" + entry);
+            first = false;
+        }
+        std::cout << "HOMOG_ENTRY_STR:" << homog_entry_str << std::endl;
+
+        std::string hetero_entry_str = "";
+        first = true;
+        for (auto &entry : hetero_map_entries) {
+            hetero_entry_str += first ? ("\t\t" + entry) : (",\n\t\t" + entry);
+            first = false;
+        }
+        std::cout << "HETERO_ENTRY_STR:" << hetero_entry_str << std::endl;
+
+        std::string header_file_str =    std::string("#pragma once\n") +
+                                        "#include <reactor-sdk/reactor-sdk.hh>\n" +
+                                        "#include <map>\n" +
+                                        "#include <variant>\n" +
+                                        "#include <string>\n\n" +
+                                        "using namespace sdk;\n\n" +
+                                        "struct UserParameters : public ConfigParameter<" + type_str + "> {\n" +
+                                        "\tConfigParameter<" + type_str + ">::ParametersMap homogeneous_config();\n" +
+                                        "\tConfigParameter<" + type_str + ">::ParametersMap heterogeneous_config();\n" +
+                                        "};\n" +
+                                        "extern UserParameters cfg_parameters;";
+
+        std::ofstream header("Config.hh");
+        if (!header) {
+            cout << "ERROR: Failed to open header file\n";
+        } else {
+            header << header_file_str;
+        }
+
+        std::string source_file_str =   std::string("#include \"Config-a.hh\"\n\n") +
+                                        "UserParameters cfg_parameters;\n\n" +
+                                        "ConfigParameter<" + type_str + ">::ParametersMap UserParameters::homogeneous_config() {\n" +
+                                        "\treturn {\n" + homog_entry_str + "\n\t};\n}\n\n" +
+                                        "ConfigParameter<" + type_str + ">::ParametersMap UserParameters::heterogeneous_config() {\n" +
+                                        "\treturn {\n" + hetero_entry_str + "\n\t};\n}";
+
+        std::ofstream source("Config.cc");
+        if (!source) {
+            cout << "ERROR: Failed to open source file\n";
+        } else {
+            source << source_file_str;
+        }
     }
     auto thread = this->startup();
     thread.join();

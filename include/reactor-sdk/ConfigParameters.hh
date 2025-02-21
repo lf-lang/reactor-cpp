@@ -6,6 +6,15 @@
 namespace sdk
 {
 
+template <typename T, typename = void>
+struct is_comparable : std::false_type {};
+
+template <typename T>
+struct is_comparable<
+    T,
+    std::void_t<decltype(std::declval<T>() < std::declval<T>())>
+> : std::true_type {};
+
 extern std::map<std::string, std::string> type_convert;
 template <typename T>
 struct ParameterMetadata;
@@ -18,11 +27,11 @@ protected:
 
 public:
     virtual ~ConfigParameterBase() = default;
-    virtual void pull_config_parameter(const std::string &key, void *user_param, const std::type_info& ti) = 0;
+    virtual int pull_config_parameter(const bool &is_heterogeneous, const std::string &key, void *user_param, const std::type_info& ti) = 0;
 
     template<typename T>
-    void PullConfigParameter(const std::string &key, ParameterMetadata<T>* user_param) {
-        pull_config_parameter(key, static_cast<void*>(user_param), typeid(T));
+    int PullConfigParameter(const bool &is_heterogeneous, const std::string &key, ParameterMetadata<T>* user_param) {
+        return pull_config_parameter(is_heterogeneous, key, static_cast<void*>(user_param), typeid(T));
     }
     friend class Environment;
 };
@@ -42,24 +51,28 @@ public:
 
     virtual ParametersMap homogeneous_config() = 0;
     virtual ParametersMap heterogeneous_config() = 0;
-    void pull_config_parameter(const std::string &key, void *user_param, const std::type_info& ti) override {
-        auto itr_system = hetero_param_map.find(key);
-        if (itr_system != hetero_param_map.end()) {
-            auto v_it = hetero_invalid_keys.find(key);
-            if (v_it != hetero_invalid_keys.end()) {
-                hetero_invalid_keys.erase(v_it);
+    int pull_config_parameter(const bool &is_heterogeneous, const std::string &key, void *user_param, const std::type_info& ti) override {
+        std::map<std::string, ParameterValue> *param_map = is_heterogeneous ? &hetero_param_map : &homoge_param_map;
+        std::set<std::string> *invalid_keys = is_heterogeneous ? &hetero_invalid_keys : &homoge_invalid_keys;
+        auto itr_system = param_map->find(key);
+        if (itr_system != param_map->end()) {
+            auto v_it = invalid_keys->find(key);
+            if (v_it != invalid_keys->end()) {
+                invalid_keys->erase(v_it);
             }
-            std::visit([user_param, &ti, key](auto&& system_param) {
+            std::visit([is_heterogeneous, user_param, &ti, key](auto&& system_param) {
                 using ContainerType = std::decay_t<decltype(system_param.values)>;
                 using U = typename ContainerType::value_type;
 
                 if (ti == typeid(U)) {
                     ParameterMetadata<U>* param = static_cast<ParameterMetadata<U>*>(user_param);
-                    if ((system_param.values[0] < param->min_value) ||
-                        (system_param.values[0] > param->max_value)) {
-                        reactor::log::Error() << "Error: Range mismatch for parameter name: " << key << " value:" << system_param.values[0] <<
-                            " min_value:" << param->min_value << " max_value:" << param->max_value;
-                        std::exit(EXIT_FAILURE);
+                    if constexpr (is_comparable<U>::value && !std::is_same<U, std::string>::value) {
+                        if ((system_param.values[0] < param->min_value) ||
+                            (system_param.values[0] > param->max_value)) {
+                            reactor::log::Error() << "Error: " << ((is_heterogeneous) ? "Heterogeneous Map" : "Homogeneous Map") << " -- Range mismatch for parameter name: " << key << " value:" << system_param.values[0] <<
+                                " min_value:" << param->min_value << " max_value:" << param->max_value;
+                            std::exit(EXIT_FAILURE);
+                        }
                     }
                     param->value = system_param.values[0];
 
@@ -70,7 +83,9 @@ public:
                     std::exit(EXIT_FAILURE);
                 }
             }, itr_system->second);
+            return 0;
         }
+        return -1;
     }
 
 protected:
@@ -94,9 +109,13 @@ protected:
 
     int validate() override {
         for (const auto &key : hetero_invalid_keys) {
-            reactor::log::Error() << "Invalid key:" << key << "\n";
+            reactor::log::Error() << "Heterogeneous Invalid key:" << key << "\n";
         }
-        return hetero_invalid_keys.size();
+
+        for (const auto &key : homoge_invalid_keys) {
+            reactor::log::Error() << "Homogeneous Invalid key:" << key << "\n";
+        }
+        return (hetero_invalid_keys.size() + homoge_invalid_keys.size());
     }
 
     void display() override {

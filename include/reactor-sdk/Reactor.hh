@@ -87,12 +87,15 @@ protected:
     reactor::ShutdownTrigger shutdown{"shutdown", this};
 
 private:
+    size_t bank_index_ = 0;
     SystemParameterBase *p_param = nullptr;
-    Environment *env;
+    Environment *env{nullptr};
+    Reactor *parent{nullptr};
     std::string current_reaction_name;
     std::unordered_map<std::string, std::shared_ptr<BaseTrigger>> reaction_map;
     int priority = 1;
     std::set<Reactor*> child_reactors;
+    std::string homog_name = "";
 
     void add_child(Reactor* reactor);
     void add_to_reaction_map (std::string &name, std::shared_ptr<BaseTrigger> reaction);
@@ -112,18 +115,24 @@ private:
                 "Reaction function parameters must match the declared input and output types.");
     }
 
+    void populate_params(std::set<std::string> &types, std::set<std::string> &homog_map_entries, std::set<std::string> &hetero_map_entries);
+
 public:
-    size_t bank_index = 0;
+    const size_t &bank_index = bank_index_;
 
     Reactor(const std::string &name, Environment *env);
-
     Reactor(const std::string &name, Reactor *container);
+
+    static std::string BankName(const std::string& name);
+    static std::string HomogName(const std::string& name);
 
     void set_param (SystemParameterBase *param) { p_param = param; }
 
     Environment *get_env() { return env; }
 
     Reactor &reaction (const std::string name);
+
+    auto homog_fqn() const noexcept -> const std::string& { return homog_name; }
 
     template <typename... Inputs>
     ReactionInput<std::tuple<Inputs...>> &operator()(Inputs&&... inputs)
@@ -161,6 +170,11 @@ public:
 
     template <typename Fn, typename InputTuple, typename OutputTuple>
     friend class Reaction;
+
+    template <typename ReactorType>
+    friend class ReactorBank;
+
+    friend class Environment;
 };
 
 } // namespace sdk

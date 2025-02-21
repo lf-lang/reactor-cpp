@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Reactor.hh"
+
 namespace sdk
 {
 
@@ -424,15 +426,31 @@ private:
 template <typename ReactorType>
 class ReactorBank {
 public:
-    ReactorBank() = default;
+    ReactorBank(const std::string &_name, Environment *env)
+        : name(_name), e_parent(env) {}
+
+    ReactorBank(const std::string &_name, Reactor *container)
+        : name(_name), r_parent(container) {}
 
     void reserve(std::size_t size) noexcept {
         reactors.reserve(size);
     }
 
+    void create_reactor() {
+        assert (e_parent || r_parent);
+        std::string bank_name = name + "\r\n" + std::to_string(index);
+        if (e_parent) {
+            reactors.emplace_back(std::make_unique<ReactorType>(bank_name, e_parent));
+        } else {
+            reactors.emplace_back(std::make_unique<ReactorType>(bank_name, r_parent));
+        }
+        reactors.back()->bank_index_ = index++;
+    }
+
     template <class... Args> void emplace_back(Args&&... args) noexcept {
         reactors.emplace_back(std::forward<Args>(args)...);
-        reactors.back()->bank_index = index++;
+        reactors.back()->bank_index_ = index++;
+        reactors.back()->homog_name = reactors.back()->parent ? (reactors.back()->parent->homog_name + "." + name) : name;
     }
 
     template <typename T>
@@ -658,6 +676,9 @@ public:
 private:
     std::vector<std::unique_ptr<ReactorType>> reactors;
     size_t index = 0;
+    std::string name = "";
+    Reactor *r_parent{nullptr};
+    Environment *e_parent{nullptr};
 };
 
     

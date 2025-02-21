@@ -1,0 +1,44 @@
+digraph {
+rankdir=LR;
+subgraph {
+rank=same;
+Main_reaction_1 [label="Main.reaction_1"];
+Main_Source_reaction_1 [label="Main.Source.reaction_1"];
+Main_Sink_0_startup_reaction [label="Main.Sink_0.startup_reaction"];
+Main_Sink_1_startup_reaction [label="Main.Sink_1.startup_reaction"];
+Main_Sink_2_startup_reaction [label="Main.Sink_2.startup_reaction"];
+Main_Sink_3_startup_reaction [label="Main.Sink_3.startup_reaction"];
+}
+subgraph {
+rank=same;
+Main_Source_reaction_2 [label="Main.Source.reaction_2"];
+}
+subgraph {
+rank=same;
+Main_Sink_0_process_request [label="Main.Sink_0.process_request"];
+Main_Sink_1_process_request [label="Main.Sink_1.process_request"];
+Main_Sink_2_process_request [label="Main.Sink_2.process_request"];
+Main_Sink_3_process_request [label="Main.Sink_3.process_request"];
+}
+subgraph {
+rank=same;
+Main_Source_reaction_3 [label="Main.Source.reaction_3"];
+}
+Main_reaction_1 -> Main_Source_reaction_2 [style=invis];
+Main_Source_reaction_2 -> Main_Sink_0_process_request [style=invis];
+Main_Sink_0_process_request -> Main_Source_reaction_3 [style=invis];
+Main_Source_reaction_3 -> Main_Sink_0_process_request
+Main_Source_reaction_3 -> Main_Sink_1_process_request
+Main_Source_reaction_3 -> Main_Sink_2_process_request
+Main_Source_reaction_3 -> Main_Sink_3_process_request
+Main_Source_reaction_2 -> Main_Source_reaction_1
+Main_Source_reaction_3 -> Main_Source_reaction_2
+Main_Sink_0_process_request -> Main_Source_reaction_2
+Main_Sink_0_process_request -> Main_Sink_0_startup_reaction
+Main_Sink_1_process_request -> Main_Source_reaction_2
+Main_Sink_1_process_request -> Main_Sink_1_startup_reaction
+Main_Sink_2_process_request -> Main_Source_reaction_2
+Main_Sink_2_process_request -> Main_Sink_2_startup_reaction
+Main_Sink_3_process_request -> Main_Source_reaction_2
+Main_Sink_3_process_request -> Main_Sink_3_startup_reaction
+}
