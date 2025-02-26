@@ -7,21 +7,8 @@ using namespace sdk;
 class SinkReactor : public Reactor {
 public:
     struct Parameters : public SystemParameter<string, int> {
-        ParameterMetadata<string> name = ParameterMetadata<string> {
-            .name = "Name",
-            .description = "Alternate name",
-            .min_value = "Sink",
-            .max_value = "Sink",
-            .value = "Sink"
-        };
-
-        ParameterMetadata<int> n_ports = ParameterMetadata<int> {
-            .name = "n_ports",
-            .description = "Size of multiports",
-            .min_value = 1,
-            .max_value = 10,
-            .value = 1
-        };
+        REACTOR_PARAMETER (string, name, "Alternate name", "Sink", "Sink", "Sink");
+        REACTOR_PARAMETER (int, n_ports, "Size of multiports", 1, 10, 1);
 
         Parameters(Reactor *container)
             :   SystemParameter<string, int>(container) {

@@ -6,9 +6,8 @@ void MainReactor::construction() {
 
     src = std::make_unique<SourceReactor>("Source", this);
 
-    for (int __lf_idx = 0; __lf_idx < parameters.n_sinks.value; __lf_idx++) {
-        std::string __lf_inst_name = "Sink_" + std::to_string(__lf_idx);
-        snk.emplace_back(std::make_unique<SinkReactor>(__lf_inst_name, this));
+    for (int i = 0; i < parameters.n_sinks.value; i++) {
+        snk.create_reactor();
     }
 }
 

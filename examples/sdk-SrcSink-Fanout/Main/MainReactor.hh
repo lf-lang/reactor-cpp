@@ -9,26 +9,12 @@ using namespace sdk;
 
 class MainReactor: public Reactor {
 public:
-    struct Parameters : public SystemParameter<string, int> {
-        ParameterMetadata<string> alias = ParameterMetadata<string> {
-            .name = "alias",
-            .description = "Alternate name",
-            .min_value = "another",
-            .max_value = "another",
-            .value = "another"
-        };
-
-        ParameterMetadata<int> log_level = ParameterMetadata<int> {
-            .name = "log_level",
-            .description = "Log level",
-            .min_value = 0,
-            .max_value = 1,
-            .value = 1
-        };
+    struct Parameters : public SystemParameter<string> {
+        REACTOR_PARAMETER (string, alias, "Alternate name", "another", "another", "Src-Sink-Fanout-Example");
 
         Parameters(Reactor *container)
-            :   SystemParameter<string, int>(container) {
-            register_parameters (alias, log_level);
+            :   SystemParameter<string>(container) {
+            register_parameters (alias);
         }
   };
 

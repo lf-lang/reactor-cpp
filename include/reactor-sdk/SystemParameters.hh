@@ -4,7 +4,7 @@
 #include <cxxabi.h>
 #include "SystemParameterBase.hh"
 #include "Environment.hh"
-
+#include "time_parser.hh"
 namespace sdk
 {
 
@@ -17,6 +17,10 @@ template <typename T>
 typename std::enable_if<std::is_arithmetic<T>::value, std::string>::type
 convertToString(const T& value) {
     return std::to_string(value);
+}
+
+inline std::string convertToString(const reactor::Duration& dur) {
+  return time_to_string (dur);
 }
 
 template <typename T>
@@ -78,19 +82,28 @@ public:
         print();
     }
 
-    void populate_params(std::set<std::string> &types, std::set<std::string> &homog_map_entries, std::set<std::string> &hetero_map_entries) {
+    void populate_params(std::set<std::string> &types, std::map<std::string, std::string> &homog_map_entries, std::map<std::string, std::string> &hetero_map_entries) {
         for (const auto& entry : param_map) {
             std::cout << "POPULATING: " << entry.first << ", alt_name:" << entry.second.alt_name << std::endl;            
 
             std::visit([&](auto&& param) {
                 bool result = types.insert(param->type_name).second;
                 std::cout << "type:" <<  param->type_name << (result ? " PUSHED" : " SKIPPED") << std::endl;
-                std::string homog_entry_str = "{ \"" + entry.second.alt_name + "\", ConfigParameterMetadata<" + param->type_name + "> {" + convertToString(param->value) + "} }";
-                std::string hetero_entry_str = "{ \"" + entry.first + "\", ConfigParameterMetadata<" + param->type_name + "> {" + convertToString(param->value) + "} }";
-                result = homog_map_entries.insert(homog_entry_str).second;
-                std::cout << "homog-entry:" <<  homog_entry_str << (result ? " PUSHED" : " SKIPPED") << std::endl;
-                result = hetero_map_entries.insert(hetero_entry_str).second;
-                std::cout << "hetero-entry:" <<  homog_entry_str << (result ? " PUSHED" : " SKIPPED") << std::endl;
+                if (homog_map_entries.find (entry.second.alt_name) == homog_map_entries.end()) {
+                    std::string homog_entry_str = "{ \"" + entry.second.alt_name + "\", ConfigParameterMetadata<" + param->type_name + "> {" + convertToString(param->value) + "} }";
+                    homog_map_entries[entry.second.alt_name] = homog_entry_str;
+                    std::cout << "homog-entry:" <<  homog_entry_str << " PUSHED" << std::endl;
+                } else {
+                    std::cout << "homog-entry:" <<  entry.second.alt_name << " SKIPPED" << std::endl;
+                }
+
+                if (hetero_map_entries.find (entry.first) == hetero_map_entries.end()) {
+                    std::string hetero_entry_str = "{ \"" + entry.first + "\", ConfigParameterMetadata<" + param->type_name + "> {" + convertToString(param->value) + "} }";
+                    hetero_map_entries[entry.first] = hetero_entry_str;
+                    std::cout << "hetero-entry:" <<  hetero_entry_str << " PUSHED" << std::endl;
+                } else {
+                    std::cout << "hetero-entry:" <<  entry.first << " SKIPPED" << std::endl;
+                }
             }, entry.second.param);
         }
     }

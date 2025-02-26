@@ -11,11 +11,11 @@ class Environment: public reactor::Environment {
 private:
     std::set<Reactor*> top_tier_reactors;
     ConfigParameterBase *config_parameters;
-    bool visualize = false;
+    bool cfg_gen = false;
     
 public:
     Environment(ConfigParameterBase *sys_param = nullptr, unsigned int num_workers = 1, bool fast_fwd_execution = true,
-                       const reactor::Duration& timeout = reactor::Duration::max(), bool visualize = false);
+                       const reactor::Duration& timeout = reactor::Duration::max(), bool cfg_gen = false);
 
     Environment(const Environment&) = delete;
     Environment& operator=(const Environment&) = delete;

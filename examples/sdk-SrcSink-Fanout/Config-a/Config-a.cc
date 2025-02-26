@@ -4,7 +4,7 @@ UserParameters cfg_parameters;
 
 ConfigParameter<int, uint32_t>::ParametersMap UserParameters::homogeneous_config() {
     return {
-            {"Main.Source.iterations", ConfigParameterMetadata<int> { 0 } }
+            {"Main.Source.iterations", ConfigParameterMetadata<int> { 5 } }
     };
 }
 
@@ -15,9 +15,3 @@ ConfigParameter<int, uint32_t>::ParametersMap UserParameters::heterogeneous_conf
 
     };
 }
-
-// UserParameters::filter_out () {
-//     if (cfg_map["T0.P0.L1.n_ervers"] != cfg_map["T0.P0.L2.n_ervers"]) {
-
-//     }
-// }

@@ -7,14 +7,7 @@ using namespace sdk;
 class SourceReactor : public Reactor {
 public:
     struct Parameters : public SystemParameter<int> {
-
-        ParameterMetadata<int> iterations = ParameterMetadata<int> {
-            .name = "iterations",
-            .description = "Number of iterations",
-            .min_value = 1,
-            .max_value = 100,
-            .value = 10
-        };
+        REACTOR_PARAMETER (int, iterations, "Number of iterations", 1, 100, 10);
 
         Parameters(Reactor *container)
             :   SystemParameter<int>(container) {

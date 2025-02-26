@@ -6,9 +6,8 @@ void MainReactor::construction() {
 
     slow = std::make_unique<NodeReactor>("slow", this);
 
-    for (int __lf_idx = 0; __lf_idx < parameters.n_fast.value; __lf_idx++) {
-        std::string __lf_inst_name = "fast_" + std::to_string(__lf_idx);
-        fast.emplace_back(std::make_unique<NodeReactor>(__lf_inst_name, this));
+    for (int i = 0; i < parameters.n_fast.value; i++) {
+        fast.create_reactor();
     }
 }
 

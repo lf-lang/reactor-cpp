@@ -9,13 +9,7 @@ using namespace sdk;
 class MainReactor: public Reactor {
 public:
     struct Parameters : public SystemParameter<int> {
-        ParameterMetadata<int> n_fast = ParameterMetadata<int> {
-            .name = "n_fast",
-            .description = "Number of fast nodes",
-            .min_value = 1,
-            .max_value = 10,
-            .value = 2
-        };
+        REACTOR_PARAMETER(int, n_fast, "Number of fast nodes", 1, 10, 2);
 
         Parameters(Reactor *container)
             :   SystemParameter<int>(container) {
@@ -25,7 +19,7 @@ public:
 private:
     Parameters parameters{this};
     std::unique_ptr<NodeReactor> slow;
-    ReactorBank<NodeReactor> fast;
+    ReactorBank<NodeReactor> fast{"fast", this};
 
 public:
     MainReactor(const std::string &name, Environment *env)

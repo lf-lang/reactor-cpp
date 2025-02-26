@@ -13,8 +13,6 @@ struct UserParameters : public ConfigParameter<int, Duration> {
     ConfigParameter<int, Duration>::ParametersMap heterogeneous_config();
 };
 
-// using ParametersMap = std::map<std::string, SystemParameterMetadata<std::variant<SystemParameterMetadata<ParameterValueType>...>>>;
-
 extern UserParameters cfg_parameters;
 
 #endif // USER_PARAMETERS_H

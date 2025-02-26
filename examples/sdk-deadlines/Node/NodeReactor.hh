@@ -7,21 +7,8 @@ using namespace sdk;
 class NodeReactor: public Reactor {
 public:
     struct Parameters : public SystemParameter<Duration> {
-        ParameterMetadata<Duration> period = ParameterMetadata<Duration> {
-            .name = "period",
-            .description = "Schedule and deadline period",
-            .min_value = 10ms,
-            .max_value = 10s,
-            .value = 500ms
-        };
-
-        ParameterMetadata<Duration> duration = ParameterMetadata<Duration> {
-            .name = "duration",
-            .description = "Sleep duration",
-            .min_value = 5ms,
-            .max_value = 5s,
-            .value = 10ms
-        };
+        REACTOR_PARAMETER(Duration, period, "Schedule and deadline period", 10ms, 10s, 500ms);
+        REACTOR_PARAMETER(Duration, duration, "Sleep duration", 5ms, 5s, 10ms);
 
         Parameters(Reactor *container)
             :   SystemParameter<Duration>(container) {

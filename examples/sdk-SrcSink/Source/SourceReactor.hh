@@ -7,22 +7,8 @@ using namespace sdk;
 class SourceReactor : public Reactor {
 public:
     struct Parameters : public SystemParameter<int> {
-
-        ParameterMetadata<int> iterations = ParameterMetadata<int> {
-            .name = "iterations",
-            .description = "Number of iterations",
-            .min_value = 1,
-            .max_value = 100,
-            .value = 10
-        };
-
-        ParameterMetadata<int> n_ports = ParameterMetadata<int> {
-            .name = "n_ports",
-            .description = "Size of multiports",
-            .min_value = 1,
-            .max_value = 10,
-            .value = 1
-        };
+        REACTOR_PARAMETER(int, iterations, "Number of iterations", 1, 100, 10);
+        REACTOR_PARAMETER(int, n_ports, "Size of multiports", 1, 10, 1);
 
         Parameters(Reactor *container)
             :   SystemParameter<int>(container) {

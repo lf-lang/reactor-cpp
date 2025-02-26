@@ -4,7 +4,6 @@ UserParameters cfg_parameters;
 
 ConfigParameter<int, Duration>::ParametersMap UserParameters::homogeneous_config() {
     return {
-            {"Main.Source.iterations", ConfigParameterMetadata<int> { 0 } }
     };
 }
 
@@ -17,9 +16,3 @@ ConfigParameter<int, Duration>::ParametersMap UserParameters::heterogeneous_conf
             {"Main.fast_0.duration", ConfigParameterMetadata<Duration> { 10ms } }
     };
 }
-
-// UserParameters::filter_out () {
-//     if (cfg_map["T0.P0.L1.n_ervers"] != cfg_map["T0.P0.L2.n_ervers"]) {
-
-//     }
-// }

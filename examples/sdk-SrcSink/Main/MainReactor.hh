@@ -10,33 +10,12 @@ using namespace sdk;
 class MainReactor: public Reactor {
 public:
     struct Parameters : public SystemParameter<string, int> {
-        ParameterMetadata<string> alias = ParameterMetadata<string> {
-            .name = "alias",
-            .description = "Alternate name",
-            .min_value = "another",
-            .max_value = "another",
-            .value = "another"
-        };
-
-        ParameterMetadata<int> n_sinks = ParameterMetadata<int> {
-            .name = "n_sinks",
-            .description = "Sink reactors bank width",
-            .min_value = 1,
-            .max_value = 10,
-            .value = 1
-        };
-
-        ParameterMetadata<int> log_level = ParameterMetadata<int> {
-            .name = "log_level",
-            .description = "Log level",
-            .min_value = 0,
-            .max_value = 1,
-            .value = 1
-        };
+        REACTOR_PARAMETER(string, alias, "Alternate name", "another", "another", "Src-Sink-Example");
+        REACTOR_PARAMETER(int, n_sinks, "Sink reactors bank width", 1, 10, 1);
 
         Parameters(Reactor *container)
             :   SystemParameter<string, int>(container) {
-            register_parameters (alias, n_sinks, log_level);
+            register_parameters (alias, n_sinks);
         }
   };
 
@@ -44,7 +23,7 @@ private:
     Parameters parameters{this};
 
     std::unique_ptr<SourceReactor> src;
-    ReactorBank<SinkReactor> snk;
+    ReactorBank<SinkReactor> snk{"Sink", this};
 
 public:
     MainReactor(const std::string &name, Environment *env)

@@ -63,7 +63,7 @@ void Reactor::assemble() {
     assembling();
 }
 
-void Reactor::populate_params(std::set<std::string> &types, std::set<std::string> &homog_map_entries, std::set<std::string> &hetero_map_entries) {
+void Reactor::populate_params(std::set<std::string> &types, std::map<std::string, std::string> &homog_map_entries, std::map<std::string, std::string> &hetero_map_entries) {
     if (p_param) {
         p_param->populate_params (types, homog_map_entries, hetero_map_entries);
     }

@@ -5,22 +5,9 @@ using namespace std;
 using namespace sdk;
 
 class ActionIsPresent : public Reactor {
-struct Parameters : public SystemParameter<Duration> {
-        ParameterMetadata<Duration> offset = ParameterMetadata<Duration> {
-            .name = "offset",
-            .description = "offset",
-            .min_value = 1ns,
-            .max_value = 10ns,
-            .value = 1ns
-        };
-
-        ParameterMetadata<Duration> period = ParameterMetadata<Duration> {
-            .name = "period",
-            .description = "period",
-            .min_value = 500ms,
-            .max_value = 1s,
-            .value = 500ms
-        };
+    struct Parameters : public SystemParameter<Duration> {
+        REACTOR_PARAMETER (Duration, offset, "offset", 1ns, 10ns, 1ns);
+        REACTOR_PARAMETER (Duration, period, "period", 500ms, 1s, 500ms);
 
         Parameters(Reactor *container)
             :   SystemParameter<Duration>(container) {
@@ -81,7 +68,7 @@ int main(int argc, char **argv) {
     unsigned workers = std::thread::hardware_concurrency();
     bool fast{false};
     reactor::Duration timeout = reactor::Duration::max();
-    bool visualize{false};
+    bool cfg_gen{false};
 
     // the timeout variable needs to be tested beyond fitting the Duration-type 
     options
@@ -90,7 +77,7 @@ int main(int argc, char **argv) {
         ("w,workers", "the number of worker threads used by the scheduler", cxxopts::value<unsigned>(workers)->default_value(std::to_string(workers)), "'unsigned'")
         ("o,timeout", "Time after which the execution is aborted.", cxxopts::value<reactor::Duration>(timeout)->default_value(time_to_string(timeout)), "'FLOAT UNIT'")
         ("f,fast", "Allow logical time to run faster than physical time.", cxxopts::value<bool>(fast)->default_value("false"))
-        ("v,visualize", "Generate graph.dot file of the topology.", cxxopts::value<bool>(visualize)->default_value("false"))
+        ("c,config-gen", "Generate configuration files for the topology.", cxxopts::value<bool>(cfg_gen)->default_value("false"))
         ("help", "Print help");
 
     cxxopts::ParseResult result{};
@@ -109,9 +96,9 @@ int main(int argc, char **argv) {
         return parse_error ? -1 : 0;
     }
 
-    std::cout << "parameters - workers:" << workers << " fast:" << (fast ? "True" : "False") << " timeout:" << timeout << " visualize:" << (visualize ? "True" : "False") << std::endl;
+    std::cout << "parameters - workers:" << workers << " fast:" << (fast ? "True" : "False") << " timeout:" << timeout << " cfg_gen:" << (cfg_gen ? "True" : "False") << std::endl;
 
-    Environment sim {nullptr, workers, fast, timeout, visualize};
+    Environment sim {nullptr, workers, fast, timeout, cfg_gen};
     auto action_delay = new ActionIsPresent("ActionIsPresent", &sim);
 
     sim.run();

@@ -1,6 +1,8 @@
 #include <fstream>
 #include <unordered_map>
 #include <map>
+#include <cstdlib>
+
 #include "reactor-sdk/Environment.hh"
 #include "reactor-sdk/Reactor.hh"
 
@@ -25,8 +27,8 @@ std::map<std::string, std::string> type_convert = {
 };
 
 Environment::Environment( ConfigParameterBase *cfg_param, unsigned int num_workers, bool fast_fwd_execution,
-                                        const reactor::Duration& timeout, bool visualize)
-    : reactor::Environment (num_workers, fast_fwd_execution, timeout), config_parameters(cfg_param), visualize(visualize) {
+                                        const reactor::Duration& timeout, bool _cfg_gen)
+    : reactor::Environment (num_workers, fast_fwd_execution, timeout), config_parameters(cfg_param), cfg_gen(_cfg_gen) {
 }
 
 
@@ -47,11 +49,16 @@ void Environment::run()
         }
     }
 
-    if (visualize) {
-        this->export_dependency_graph("graph.dot");
+    this->export_dependency_graph("graph.dot");
+    int ret = std::system("dot -Tpng graph.dot -o graph.png");
+    if (ret != 0) {
+        reactor::log::Error() << "Error: Failed to generate graph diagram from dot file";
+    }
+    
+    if (cfg_gen) {
         std::set<std::string> types;
-        std::set<std::string> homog_map_entries;
-        std::set<std::string> hetero_map_entries;
+        std::map<std::string, std::string> homog_map_entries;
+        std::map<std::string, std::string> hetero_map_entries;
         for (auto *reactor : top_tier_reactors) {
             reactor->populate_params (types, homog_map_entries, hetero_map_entries);
         }
@@ -66,7 +73,7 @@ void Environment::run()
         std::string homog_entry_str = "";
         first = true;
         for (auto &entry : homog_map_entries) {
-            homog_entry_str += first ? ("\t\t" + entry) : (",\n\t\t" + entry);
+            homog_entry_str += first ? ("\t\t" + entry.second) : (",\n\t\t" + entry.second);
             first = false;
         }
         std::cout << "HOMOG_ENTRY_STR:" << homog_entry_str << std::endl;
@@ -74,7 +81,7 @@ void Environment::run()
         std::string hetero_entry_str = "";
         first = true;
         for (auto &entry : hetero_map_entries) {
-            hetero_entry_str += first ? ("\t\t" + entry) : (",\n\t\t" + entry);
+            hetero_entry_str += first ? ("\t\t" + entry.second) : (",\n\t\t" + entry.second);
             first = false;
         }
         std::cout << "HETERO_ENTRY_STR:" << hetero_entry_str << std::endl;
@@ -91,26 +98,27 @@ void Environment::run()
                                         "};\n" +
                                         "extern UserParameters cfg_parameters;";
 
-        std::ofstream header("Config.hh");
+        std::ofstream header("GeneratedConfig.hh");
         if (!header) {
             cout << "ERROR: Failed to open header file\n";
         } else {
             header << header_file_str;
         }
 
-        std::string source_file_str =   std::string("#include \"Config-a.hh\"\n\n") +
+        std::string source_file_str =   std::string("#include \"GeneratedConfig.hh\"\n\n") +
                                         "UserParameters cfg_parameters;\n\n" +
                                         "ConfigParameter<" + type_str + ">::ParametersMap UserParameters::homogeneous_config() {\n" +
                                         "\treturn {\n" + homog_entry_str + "\n\t};\n}\n\n" +
                                         "ConfigParameter<" + type_str + ">::ParametersMap UserParameters::heterogeneous_config() {\n" +
                                         "\treturn {\n" + hetero_entry_str + "\n\t};\n}";
 
-        std::ofstream source("Config.cc");
+        std::ofstream source("GeneratedConfig.cc");
         if (!source) {
             cout << "ERROR: Failed to open source file\n";
         } else {
             source << source_file_str;
         }
+        return;
     }
     auto thread = this->startup();
     thread.join();

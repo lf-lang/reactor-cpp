@@ -58,7 +58,7 @@ inline std::string time_to_string(const reactor::Duration& dur) {
   }
 
   std::stringstream ss;
-  ss << dur.count() << " ns";
+  ss << dur.count() << "ns";
   return ss.str();
 }
 

@@ -115,7 +115,7 @@ private:
                 "Reaction function parameters must match the declared input and output types.");
     }
 
-    void populate_params(std::set<std::string> &types, std::set<std::string> &homog_map_entries, std::set<std::string> &hetero_map_entries);
+    void populate_params(std::set<std::string> &types, std::map<std::string, std::string> &homog_map_entries, std::map<std::string, std::string> &hetero_map_entries);
 
 public:
     const size_t &bank_index = bank_index_;
