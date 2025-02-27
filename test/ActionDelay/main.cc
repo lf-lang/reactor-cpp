@@ -21,6 +21,7 @@ public:
     void assembling() {
         reaction ("reaction_1").
             triggers(&y_in).
+            dependencies().
             effects(&act).
             function (
                 [&](Input<int> &y_in, LogicalAction<void> &act) {
@@ -31,6 +32,7 @@ public:
         
         reaction ("reaction_2").
             triggers(&act).
+            dependencies().
             effects(&y_out).
             function (
                 [&](LogicalAction<void> &act, Output<int> &y_out) {
@@ -54,6 +56,7 @@ public:
     void assembling() {
         reaction ("reaction_1").
             triggers(&startup).
+            dependencies().
             effects(&out).
             function (
                 [&](Startup &startup, Output<int> &out) {
@@ -77,6 +80,7 @@ public:
     void assembling() {
         reaction ("reaction_1").
             triggers(&in).
+            dependencies().
             effects().
             function (
                 [&](Input<int> &in) {

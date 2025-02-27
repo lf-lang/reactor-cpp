@@ -13,12 +13,14 @@ void SinkReactor::assembling() {
 
     reaction("startup_reaction").
         triggers(&startup).
+        dependencies().
         effects().
         function(pass_function(startup_reaction)
     );
 
     reaction("process_request").
         triggers(&req).
+        dependencies().
         effects(&rsp).
         function(pass_function(process_request)
     );

@@ -11,6 +11,7 @@ void SourceReactor::assembling() {
     cout << "Assembling Source iterations:" << parameters.iterations.value << "\n";
     reaction("reaction_1").
         triggers(&startup).
+        dependencies().
         effects(&sch).
         function(
             [&](Startup& startup, LogicalAction<int>& sched) {
@@ -25,6 +26,7 @@ void SourceReactor::assembling() {
 
     reaction("reaction_2").
         triggers(&sch).
+        dependencies().
         effects(&req).
         function(
             [&](LogicalAction<int>& sch, Output<int>& req) {
@@ -36,6 +38,7 @@ void SourceReactor::assembling() {
 
     reaction("reaction_3").
         triggers(&rsp).
+        dependencies().
         effects(&sch).
         function(
             [&](Input<int>& rsp, LogicalAction<int>& sch) {

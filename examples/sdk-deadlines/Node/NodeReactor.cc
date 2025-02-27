@@ -9,6 +9,7 @@ void NodeReactor::assembling() {
 
     reaction("reaction_1").
         triggers(&startup, &a).
+        dependencies().
         effects().
         function(
             [&](Startup& startup, LogicalAction<void> &a) {

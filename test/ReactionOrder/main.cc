@@ -4,25 +4,13 @@
 using namespace std;
 using namespace sdk;
 
-class ActionIsPresent : public Reactor {
-    struct Parameters : public SystemParameter<Duration> {
-        REACTOR_PARAMETER (Duration, offset, "offset", 1ns, 10ns, 1ns);
-        REACTOR_PARAMETER (Duration, period, "period", 500ms, 1s, 500ms);
-
-        Parameters(Reactor *container)
-            :   SystemParameter<Duration>(container) {
-            register_parameters (offset, period);
-        }
-    };
-private:
-    Parameters parameters{this};
-    LogicalAction<void> a{"a", this};
-    bool success = false;
-    Duration zero = 0ns;
+class Src : public Reactor {
 public:
-    ActionIsPresent(const std::string &name, Environment *env)
+    Output<unsigned> out{"out", this};
+
+    Src(const std::string &name, Environment *env)
         : Reactor(name, env) {}
-    ActionIsPresent(const std::string &name, Reactor *container)
+    Src(const std::string &name, Reactor *container)
         : Reactor(name, container) {}
     
     void construction() {
@@ -30,42 +18,61 @@ public:
 
     void assembling() {
         reaction ("reaction_1").
-            triggers(&startup, &a).
+            triggers(&startup).
             dependencies().
+            effects(&out).
+            function (
+                [&](Startup &startup, Output<unsigned> &out) {
+                    out.set(42);
+                }
+            );
+    }
+};
+
+class Sink : public Reactor {
+public:
+    Input<unsigned> in{"in", this};
+
+    Sink(const std::string &name, Environment *env)
+        : Reactor(name, env) {}
+    Sink(const std::string &name, Reactor *container)
+        : Reactor(name, container) {}
+
+    void construction() {
+    }
+
+    void assembling() {
+        reaction ("reaction_1").
+            triggers(&startup).
+            dependencies(&in).
             effects().
             function (
-                [&](Startup &startup, LogicalAction<void> &a) {
-                    if (!a.is_present()) {
-                        if (parameters.offset.value == zero) {
-                            std::cout << "Hello World!" << '\n';
-                            success = true;
-                        } else {
-                            a.schedule(parameters.offset.value);
-                        }
-                    } else {
-                        std::cout << "Hello World 2!" << '\n';
-                        success = true;
+                [&](Startup &startup, Input<unsigned> &in) {
+                    if (!in.is_present()) {
+                        reactor::log::Error() << "Received no value";
+                        exit(1);
+                    }
+                    if(*in.get() != 42) {
+                        reactor::log::Error() << "Received an unexpected value";
+                        exit(1);
                     }
                 }
             );
-        
+
         reaction ("reaction_2").
             triggers(&shutdown).
             dependencies().
             effects().
             function (
                 [&](Shutdown &shutdown) {
-                    if (!success) {
-                        std::cerr << "Failed to print 'Hello World!'" << '\n';
-                        exit(1);
-                    }
+                    reactor::log::Info() << "Success!";
                 }
             );
     }
 };
 
 int main(int argc, char **argv) {
-    cxxopts::Options options("ActionIsPresent", "Multiport source connecting to banked sink reactors");
+    cxxopts::Options options("ReactionOrder", "Multiport source connecting to banked sink reactors");
 
     unsigned workers = std::thread::hardware_concurrency();
     bool fast{false};
@@ -101,7 +108,10 @@ int main(int argc, char **argv) {
     std::cout << "parameters - workers:" << workers << " fast:" << (fast ? "True" : "False") << " timeout:" << timeout << " cfg_gen:" << (cfg_gen ? "True" : "False") << std::endl;
 
     Environment sim {nullptr, workers, fast, timeout, cfg_gen};
-    auto action_delay = new ActionIsPresent("ActionIsPresent", &sim);
+    
+    auto src = new Src("src", &sim);
+    auto sink = new Sink("sink", &sim);
+    src->out --> sink->in;
 
     sim.run();
     return 0;

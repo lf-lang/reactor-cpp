@@ -14,6 +14,7 @@ void SourceReactor::assembling() {
     cout << "Assembling Source n_ports:" << parameters.n_ports.value << "\n";
     reaction("reaction_1").
         triggers(&startup).
+        dependencies().
         effects(&sch).
         function(
             [&](Startup& startup, LogicalAction<int>& sched) {
@@ -28,6 +29,7 @@ void SourceReactor::assembling() {
 
     reaction("reaction_2").
         triggers(&sch).
+        dependencies().
         effects(&req).
         function(
             [&](LogicalAction<int>& sch, MultiportOutput<int>& req) {
@@ -41,6 +43,7 @@ void SourceReactor::assembling() {
 
     reaction("reaction_3").
         triggers(&rsp).
+        dependencies().
         effects(&sch).
         function(
                 [&](MultiportInput<int>& rsp, LogicalAction<int>& sch) {

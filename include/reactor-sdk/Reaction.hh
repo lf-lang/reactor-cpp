@@ -7,7 +7,7 @@
 namespace sdk
 {
 
-template <typename Fn, typename InputTuple, typename OutputTuple>
+template <typename Fn, typename InputTuple, typename DependencyTuple, typename OutputTuple>
 class Reaction;
 
 template <typename T, template <typename...> class Template>
@@ -25,31 +25,47 @@ inline constexpr bool is_specialization_v = is_specialization<T, Template>::valu
 
 
 
-template <typename InputTuple, typename OutputTuple>
+template <typename InputTuple, typename DependencyTuple, typename OutputTuple>
 class ReactionOutput: public BaseTrigger
 {
 private:
     InputTuple input_triggers;
+    DependencyTuple dependencies;
     OutputTuple output_triggers;
 
 public:
-    explicit ReactionOutput(std::string name, Reactor *parent, InputTuple inputs, OutputTuple outputs)
-        : BaseTrigger (name, parent), input_triggers(std::move(inputs)), output_triggers(std::move(outputs)) {}
+    explicit ReactionOutput(std::string name, Reactor *parent, InputTuple inputs, DependencyTuple deps, OutputTuple outputs)
+        : BaseTrigger (name, parent), input_triggers(std::move(inputs)), dependencies(std::move(deps)), output_triggers(std::move(outputs)) {}
     ~ReactionOutput() {}
 
     template <typename Fn>
-    void operator=(Fn func)
+    Reaction<Fn, InputTuple, DependencyTuple, OutputTuple> &function(Fn func)
     {
-        auto ReactionRef = std::make_shared<Reaction<Fn, InputTuple, OutputTuple>> (name, reactor, std::move(input_triggers), std::move(output_triggers), std::forward<Fn>(func));
-        ReactionRef->execute();
-    }
-
-    template <typename Fn>
-    Reaction<Fn, InputTuple, OutputTuple> &function(Fn func)
-    {
-        auto ReactionRef = std::make_shared<Reaction<Fn, InputTuple, OutputTuple>> (name, reactor, std::move(input_triggers), std::move(output_triggers), std::forward<Fn>(func));
+        auto ReactionRef = std::make_shared<Reaction<Fn, InputTuple, DependencyTuple, OutputTuple>> (name, reactor, std::move(input_triggers), std::move(dependencies), std::move(output_triggers), std::forward<Fn>(func));
         ReactionRef->execute();
         return *ReactionRef;
+    }
+};
+
+template <typename InputTuple, typename DependencyTuple>
+class ReactionDependency: public BaseTrigger
+{
+private:
+    InputTuple input_triggers;
+    DependencyTuple dependencies;
+
+public:
+    explicit ReactionDependency(std::string name, Reactor *parent, InputTuple inputs, DependencyTuple deps)
+        : BaseTrigger (name, parent), input_triggers(inputs), dependencies(std::move(deps)) {}
+    ~ReactionDependency() {}
+
+    template <typename... Outputs>
+    ReactionOutput<InputTuple, DependencyTuple, std::tuple<Outputs...>> &effects(Outputs&&... outputs)
+    {
+        auto output_tuple = std::make_tuple(outputs...);
+        auto ReactionOutputRef = std::make_shared<ReactionOutput<InputTuple, DependencyTuple, std::tuple<Outputs...>>> (name, reactor, std::move(input_triggers), std::move(dependencies), std::move(output_tuple));
+        next = ReactionOutputRef;
+        return *ReactionOutputRef;
     }
 };
 
@@ -64,29 +80,22 @@ public:
         : BaseTrigger (name, parent), input_triggers(std::move(inputs)) {}
     ~ReactionInput() {}
 
-    template <typename... Outputs>
-    ReactionOutput<InputTuple, std::tuple<Outputs...>> &operator>(std::tuple<Outputs...> &&outputs)
+    template <typename... Dependencies>
+    ReactionDependency<InputTuple, std::tuple<Dependencies...>> &dependencies(Dependencies&&... deps)
     {
-        auto ReactionOutputRef = std::make_shared<ReactionOutput<InputTuple, std::tuple<Outputs...>>> (name, reactor, std::move(input_triggers), std::move(outputs));
-        next = ReactionOutputRef;
-        return *ReactionOutputRef;
-    }
-
-    template <typename... Outputs>
-    ReactionOutput<InputTuple, std::tuple<Outputs...>> &effects(Outputs&&... outputs)
-    {
-        auto output_tuple = std::make_tuple(outputs...);
-        auto ReactionOutputRef = std::make_shared<ReactionOutput<InputTuple, std::tuple<Outputs...>>> (name, reactor, std::move(input_triggers), std::move(output_tuple));
-        next = ReactionOutputRef;
-        return *ReactionOutputRef;
+        auto deps_tuple = std::make_tuple(deps...);
+        auto ReactionDependenciesRef = std::make_shared<ReactionDependency<InputTuple, std::tuple<Dependencies...>>> (name, reactor, std::move(input_triggers), std::move(deps_tuple));
+        next = ReactionDependenciesRef;
+        return *ReactionDependenciesRef;
     }
 };
 
-template <typename Fn, typename InputTuple, typename OutputTuple>
+template <typename Fn, typename InputTuple, typename DependencyTuple, typename OutputTuple>
 class Reaction: public BaseTrigger
 {
 private:
     InputTuple input_triggers;
+    DependencyTuple dependencies;
     OutputTuple output_triggers;
     Fn user_function;
     std::unique_ptr<reactor::Reaction> reaction;
@@ -120,6 +129,31 @@ private:
                 (..., set_input_trigger(*reaction, std::forward<decltype(input)>(input)));
             },
             inputs);
+    }
+
+    template <typename Reaction, typename Trigger>
+    void set_dependency(Reaction &reaction, Trigger &&trigger)
+    {
+        if constexpr (is_specialization_v<std::remove_pointer_t<std::decay_t<Trigger>>, MultiportInput>)
+        {
+            for (auto& port : *trigger) {
+                reaction.declare_dependency(&port);
+            }
+        }
+        else {
+            reaction.declare_dependency(trigger);
+        }
+    }
+
+    template <typename Reaction, typename... Dependencies>
+    void set_dependencies(std::unique_ptr<Reaction> &reaction, const std::tuple<Dependencies...> &deps)
+    {
+        std::apply([this, &reaction](auto &&...dep)
+            {
+                (void)this;
+                (..., set_dependency(*reaction, std::forward<decltype(dep)>(dep)));
+            },
+            deps);
     }
 
     template <typename Reaction, typename Trigger>
@@ -160,14 +194,14 @@ private:
     }
 
 public:
-    Reaction(std::string name, Reactor *parent, InputTuple inputs, OutputTuple outputs, Fn func)
-        : BaseTrigger(name, parent), input_triggers(std::move(inputs)), output_triggers(std::move(outputs)),  user_function(std::forward<Fn>(func)) { /* std::cout << "Creating Reaction\n"; */ }
+    Reaction(std::string name, Reactor *parent, InputTuple inputs, DependencyTuple deps, OutputTuple outputs, Fn func)
+        : BaseTrigger(name, parent), input_triggers(std::move(inputs)), dependencies(std::move(deps)), output_triggers(std::move(outputs)), user_function(std::forward<Fn>(func)) { /* std::cout << "Creating Reaction\n"; */ }
     ~Reaction() {}
 
     void execute () {
         int priority = reactor->get_priority();
         reactor->add_to_reaction_map(name, shared_from_this());
-        reactor->validate_reaction (user_function, input_triggers, output_triggers);
+        reactor->validate_reaction (user_function, input_triggers, dependencies, output_triggers);
 
         auto reactor_func = [func = std::move(user_function), this]()
         {
@@ -180,12 +214,13 @@ public:
                     std::forward<decltype(tuple)>(tuple));
             };
 
-            apply_to_dereferenced(func, std::tuple_cat(this->input_triggers, this->output_triggers));
+            apply_to_dereferenced(func, std::tuple_cat(this->input_triggers, this->dependencies, this->output_triggers));
         };
 
         reaction = std::make_unique<reactor::Reaction>(name, priority, reactor, reactor_func);
 
         set_input_triggers(reaction, input_triggers);
+        set_dependencies(reaction, dependencies);
         set_output_triggers(reaction, output_triggers);
         
     }
@@ -193,7 +228,7 @@ public:
     template <typename Dfn>
     void deadline(reactor::Duration deadline_period, Dfn fn)
     {
-        reactor->validate_reaction (fn, input_triggers, output_triggers);
+        reactor->validate_reaction (fn, input_triggers, dependencies, output_triggers);
 
         auto deadline_func = [func = std::move(fn), this]()
         {
@@ -206,7 +241,7 @@ public:
                     std::forward<decltype(tuple)>(tuple));
             };
 
-            apply_to_dereferenced(func, std::tuple_cat(this->input_triggers, this->output_triggers));
+            apply_to_dereferenced(func, std::tuple_cat(this->input_triggers, this->dependencies, this->output_triggers));
         };
 
         reaction->set_deadline(deadline_period, deadline_func);

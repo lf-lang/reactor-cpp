@@ -31,6 +31,7 @@ public:
     void assembling() {
         reaction ("reaction_1").
             triggers(&t).
+            dependencies().
             effects(&y).
             function (
                 [&](Timer &t, Output<int> &y) {
@@ -71,6 +72,7 @@ public:
     void assembling() {
         reaction ("reaction_1").
             triggers(&x).
+            dependencies().
             effects().
             function (
                 [&](Input<int> &x) {
@@ -123,7 +125,7 @@ int main(int argc, char **argv) {
 
     unsigned workers = std::thread::hardware_concurrency();
     bool fast{false};
-    reactor::Duration timeout = reactor::Duration::max();
+    reactor::Duration timeout = 4s;
     bool cfg_gen{false};
 
     // the timeout variable needs to be tested beyond fitting the Duration-type 

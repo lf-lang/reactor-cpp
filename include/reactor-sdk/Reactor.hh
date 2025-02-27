@@ -12,7 +12,7 @@ namespace sdk
 template <typename InputTuple>
 class ReactionInput;
 
-template <typename Fn, typename InputTuple, typename OutputTuple>
+template <typename Fn, typename InputTuple, typename DependencyTuple, typename OutputTuple>
 class Reaction;
 
 template<typename T>
@@ -101,15 +101,17 @@ private:
     void add_to_reaction_map (std::string &name, std::shared_ptr<BaseTrigger> reaction);
     int get_priority() { return priority++;}
 
-    template <typename Fn, typename... InputTriggers, typename... OutputTriggers>
-    void validate_reaction(Fn func, std::tuple<InputTriggers...> inputs, std::tuple<OutputTriggers...> outputs) {
+    template <typename Fn, typename... InputTriggers, typename... Dependencies, typename... OutputTriggers>
+    void validate_reaction(Fn func, std::tuple<InputTriggers...> inputs, std::tuple<Dependencies...> deps, std::tuple<OutputTriggers...> outputs) {
         (void)func;
         (void)inputs;
+        (void)deps;
         (void)outputs;
         static_assert(
             std::is_invocable_v<
                 Fn,
                 typename trigger_value_type<InputTriggers>::type...,
+                typename trigger_value_type<Dependencies>::type...,
                 typename trigger_value_type<OutputTriggers>::type...
                 >,
                 "Reaction function parameters must match the declared input and output types.");
@@ -152,23 +154,13 @@ public:
         return *ReactionInputRef;
     }
 
-    template <typename Fn, typename... Inputs, typename... Outputs>
-    void reaction(  const std::string &name,
-                        std::tuple<Inputs...> &&inputs,
-                        std::tuple<Outputs...> &&outputs,
-                        Fn &&function)
-    {
-        auto ReactionRef =  std::make_shared<Reaction<Fn, std::tuple<Inputs...>, std::tuple<Outputs...>>>(name, this, std::move(inputs), std::move(outputs), std::forward<Fn>(function));
-        ReactionRef->execute();
-    }
-
     void request_stop() { environment()->sync_shutdown(); }
     virtual void construction() = 0;
     virtual void assembling() = 0;
     void construct() override;
     void assemble() override;
 
-    template <typename Fn, typename InputTuple, typename OutputTuple>
+    template <typename Fn, typename InputTuple, typename DependencyTuple, typename OutputTuple>
     friend class Reaction;
 
     template <typename ReactorType>

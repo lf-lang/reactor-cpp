@@ -19,8 +19,18 @@ convertToString(const T& value) {
     return std::to_string(value);
 }
 
+inline std::string time_to_string_(const reactor::Duration& dur) {
+  if (dur == reactor::Duration::max()) {
+    return "forever";
+  }
+
+  std::stringstream ss;
+  ss << dur.count() << "ns";
+  return ss.str();
+}
+
 inline std::string convertToString(const reactor::Duration& dur) {
-  return time_to_string (dur);
+  return time_to_string_ (dur);
 }
 
 template <typename T>

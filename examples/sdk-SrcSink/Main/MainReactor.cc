@@ -28,6 +28,7 @@ void MainReactor::assembling() {
 
     reaction("reaction_1").
         triggers(&startup).
+        dependencies().
         effects().
         function(
             [&](Startup& startup) {
