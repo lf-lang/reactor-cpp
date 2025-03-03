@@ -447,6 +447,17 @@ public:
         reactors.back()->bank_index_ = index++;
     }
 
+    template <class... Args> void create_reactor(Args&&... args) noexcept {
+        assert (e_parent || r_parent);
+        std::string bank_name = name + "\r\n" + std::to_string(index);
+        if (e_parent) {
+            reactors.emplace_back(std::make_unique<ReactorType>(bank_name, e_parent, std::forward<Args>(args)...));
+        } else {
+            reactors.emplace_back(std::make_unique<ReactorType>(bank_name, r_parent, std::forward<Args>(args)...));
+        }
+        reactors.back()->bank_index_ = index++;
+    }
+
     template <class... Args> void emplace_back(Args&&... args) noexcept {
         reactors.emplace_back(std::forward<Args>(args)...);
         reactors.back()->bank_index_ = index++;

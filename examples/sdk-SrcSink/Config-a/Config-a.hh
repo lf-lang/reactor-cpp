@@ -8,9 +8,9 @@
 
 using namespace sdk;
 
-struct UserParameters : public ConfigParameter<int, uint32_t> {
-    ConfigParameter<int, uint32_t>::ParametersMap homogeneous_config();
-    ConfigParameter<int, uint32_t>::ParametersMap heterogeneous_config();
+struct UserParameters : public ConfigParameter<int, uint32_t, string> {
+    ConfigParameter<int, uint32_t, string>::ParametersMap homogeneous_config();
+    ConfigParameter<int, uint32_t, string>::ParametersMap heterogeneous_config();
 };
 
 extern UserParameters cfg_parameters;

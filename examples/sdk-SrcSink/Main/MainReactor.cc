@@ -7,7 +7,7 @@ void MainReactor::construction() {
     src = std::make_unique<SourceReactor>("Source", this);
 
     for (int i = 0; i < parameters.n_sinks.value; i++) {
-        snk.create_reactor();
+        snk.create_reactor(SinkReactor::DefaultParameters{.name = "Default Sink Name"});
     }
 }
 
