@@ -2,7 +2,7 @@
 
 void MainReactor::construction() {
 
-    cout << "Construction Main n_sinks:" << parameters.n_sinks.value << "\n";
+    cout << "Construction Main n_sinks:" << parameters.n_sinks.value << " default n_sinks:" << parameters.defaults.n_sinks << "\n";
 
     src = std::make_unique<SourceReactor>("Source", this);
 
@@ -12,7 +12,7 @@ void MainReactor::construction() {
 }
 
 void MainReactor::assembling() {
-    cout << "Assembling Main n_sinks:" << parameters.n_sinks.value << "\n";
+    cout << "Assembling Main n_sinks:" << parameters.n_sinks.value << " default n_sinks:" << parameters.defaults.n_sinks << "\n";
 
     src->req --> snk.for_each(select_default(snk).req);
     // src->req --> snk.for_each(&SinkReactor::req);         // alternative

@@ -44,7 +44,7 @@ int main(int argc, char **argv) {
     std::cout << "parameters - workers:" << workers << " fast:" << (fast ? "True" : "False") << " timeout:" << timeout << " cfg_gen:" << (cfg_gen ? "True" : "False") << std::endl;
 
     Environment sim {&cfg_parameters, workers, fast, timeout, cfg_gen};
-    auto main = new MainReactor("Main", &sim);
+    auto main = new MainReactor("Main", &sim, MainReactor::DefaultParameters{.alias = "Test Param", .n_sinks = 3});
 
     sim.run();
     return 0;

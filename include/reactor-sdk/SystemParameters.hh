@@ -141,4 +141,12 @@ private:
     }
 };
 
+template <typename Defaults, typename... ParameterValueType>
+class SystemParameterWithDefault : public SystemParameter<ParameterValueType...> {
+public:
+    Defaults defaults;
+    SystemParameterWithDefault(Reactor *owner, Defaults &&param)
+    : SystemParameter<ParameterValueType...>(owner), defaults(std::forward<Defaults>(param)) {}
+};
+
 } // namespace sdk
