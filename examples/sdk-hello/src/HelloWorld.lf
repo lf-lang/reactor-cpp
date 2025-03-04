@@ -1,0 +1,19 @@
+target Cpp {
+    timeout: 4s
+}
+
+reactor Hello (bank_index: size_t = 0) {
+    timer Timer(1s, 2s)
+
+    reaction(Timer) {=
+        std::cout << "Bank:" << bank_index << " Hello World!\n";
+    =}
+        
+    reaction(shutdown) {=
+        std::cout << "Good Bye!\n";
+    =}
+}
+    
+main reactor {
+    hello = new Hello();
+}

@@ -281,7 +281,7 @@ void Environment::export_dependency_graph(const std::string& path) {
 
   dot.close();
 
-  log_.info() << "Reaction graph was written to " << path;
+  log_.debug() << "Reaction graph was written to " << path;
 }
 
 void Environment::calculate_indexes() {

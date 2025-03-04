@@ -1,0 +1,219 @@
+target Cpp {
+    fast: false,
+    // logging: debug
+}
+
+// lf_set_destructor(alloc_rsp, cache_entry_destructor);
+
+public preamble {=
+#include <stdint.h>
+=}
+
+reactor Relay (bank_index:size_t = 0, n_outputs:int = 1) {
+    input in_req:int;
+    output out_rsp:int;
+    output [n_outputs] out_req:int;
+    input [n_outputs] in_rsp:int;
+    
+    output all_workers_busy:bool;
+
+    state index:int = 0;
+    state busy:int* = 0;
+
+    reaction (startup) {=
+        std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
+                    << fqn() << " Startup\n";
+        busy = (int*) calloc (n_outputs, sizeof(int));
+    =}
+
+    reaction (in_req) -> all_workers_busy, out_req {=
+        for (int i = 0; i < n_outputs; ++i, index = (index + 1) % n_outputs) {
+            if (busy[index] == 0) {
+                out_req[index].set(*in_req.get());
+                std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
+                            << fqn() << " Sending task_id:" << *in_req.get() << " to worker:" << index << std::endl;
+                busy[index] = 1;
+                index = (index + 1) % n_outputs;
+                break;
+            }
+        }
+        int busy_count = 0;
+        for (int i = 0; i < n_outputs; ++i) {
+            busy_count = busy[i] ? (busy_count + 1) : busy_count;
+        }
+
+        if (busy_count == n_outputs) {
+            all_workers_busy.set(true);
+        }
+    =}
+
+    reaction (in_rsp) -> out_rsp {=
+        for (int i = 0; i < n_outputs; ++i) {
+            if (in_rsp[i].is_present()) {
+                std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
+                            << fqn() << " Receiving task_id:" << *in_rsp[i].get() << " from worker:" << i << std::endl;
+                busy[i] = 0;
+                out_rsp.set(*in_rsp[i].get());
+            }
+        }
+    =}
+
+    reaction (shutdown) {=
+        std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
+                    << fqn() << " Shutdown\n";
+    =}
+}
+
+reactor Worker (bank_index:size_t = 0, processing_delay:time = 2s) {
+    input req:int;
+    output rsp:int;
+
+    logical action sch_rsp(0):int;
+
+    reaction (startup) {=
+        std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
+                    << fqn() << " Startup\n";
+    =}
+
+    reaction (req) -> sch_rsp {=
+        auto req_ref = *req.get();
+        std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
+                    << fqn() << " Receiving task_id:" << req_ref << std::endl;
+        sch_rsp.schedule (req_ref, std::chrono::duration_cast<reactor::Duration>(std::chrono::nanoseconds(processing_delay)));
+    =}
+
+    reaction (sch_rsp) -> rsp {=
+        auto req_ref = *sch_rsp.get();
+        std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
+                    << fqn() << " Sending task_id:" << req_ref << std::endl;
+        rsp.set(req_ref);
+    =}
+
+    reaction (shutdown) {=
+        std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
+                    << fqn() << " Shutdown\n";
+    =}
+}
+
+
+reactor Pool (bank_index:size_t = 0, n_workers:int = 1) {
+    
+    input req:int;
+    output rsp:int;
+
+    output all_workers_busy:bool;
+
+    logical action sch_rsp(0):int;
+
+    workers = new [n_workers] Worker(processing_delay = 1s);
+    relay = new Relay(n_outputs = n_workers);
+
+    reaction (startup) {=
+        std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
+                    << fqn() << " Startup\n";
+    =}
+
+    reaction (shutdown) {=
+        std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
+                    << fqn() << " Shutdown\n";
+    =}
+
+    req -> relay.in_req;
+    relay.out_req -> workers.req;
+    workers.rsp -> relay.in_rsp;
+    relay.out_rsp -> rsp;
+
+    relay.all_workers_busy -> all_workers_busy;
+
+}
+
+reactor Tasks (bank_index:size_t = 0, n_tasks:int = 10, n_pools:int = 1) {
+
+    output[n_pools] req:int;
+    input[n_pools] rsp:int;
+
+    input[n_pools] hybernate:bool;
+
+    state req_itr:int = 0;
+    state rsp_itr:int = 0;
+    state busy:bool* = 0;
+    
+    logical action sch(0):int;
+
+    reaction (startup) -> sch {=
+        sch.schedule (-1, std::chrono::duration_cast<reactor::Duration>(std::chrono::nanoseconds(0)));
+        std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
+                    << fqn() << " Startup\n";
+        busy = (bool*) calloc (n_pools, sizeof(bool));
+    =}
+
+    reaction (sch) -> sch, req {=
+        auto index = *sch.get();
+        if (index < 0) {
+            for (int i = 0; i < n_pools; ++i) {
+                if (busy[i]) {
+                    std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
+                            << fqn() << " Busy Pool:" << i << std::endl;
+                    continue;
+                }
+                std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
+                            << fqn() << " Sending task_id:" << req_itr << " to pool:" << i << std::endl;
+                req[i].set (req_itr++);
+            }
+
+            int busy_count = 0;
+            for (int i = 0; i < n_pools; ++i) {
+                busy_count = busy[i] ? (busy_count + 1) : busy_count;
+            }
+
+            if (busy_count == n_pools) {
+                return;
+            }
+            sch.schedule (-1, std::chrono::duration_cast<reactor::Duration>(std::chrono::nanoseconds(0)));
+        } else {
+            std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
+                        << fqn() << " Sending task_id:" << req_itr << " to pool:" << index << std::endl;
+            req[index].set (req_itr++);
+        }
+    =}
+
+    reaction (rsp) -> sch {=
+        for (int i = 0; i < n_pools; ++i) {
+            if (rsp[i].is_present()) {
+                ++rsp_itr;
+                if (req_itr < n_tasks) {
+                    std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
+                                << fqn() << " Scheduling task_id:" << req_itr << " to pool:" << i << std::endl;
+                    sch.schedule (i, std::chrono::duration_cast<reactor::Duration>(std::chrono::nanoseconds(0)));
+                }
+            }
+        }
+        if (rsp_itr == n_tasks) {
+            std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
+                        << "Terminating Run\n";
+            request_stop();
+        }
+    =}
+
+    reaction (hybernate) {=
+        for (int i = 0; i < n_pools; ++i) {
+            if (hybernate[i].is_present()) {
+                busy[i] = *hybernate[i].get();
+            }
+        }
+    =}
+
+    reaction (shutdown) {=
+        std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
+                    << fqn() << " Shutdown\n";
+    =}
+}
+
+main reactor (n_tasks:int = 10, n_pools:int = 2, n_workers:int = 4) {
+    tasks = new Tasks(n_tasks = n_tasks, n_pools = n_pools);
+    pool = new [n_pools] Pool(n_workers = n_workers);
+
+    tasks.req -> pool.req;
+    pool.rsp -> tasks.rsp;
+    pool.all_workers_busy -> tasks.hybernate;
+}
