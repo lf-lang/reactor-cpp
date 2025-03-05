@@ -89,7 +89,7 @@ public:
     template <typename... Args>
     void register_parameters(Args&... args) {
         register_parameters_(reactor->fqn(), reactor->homog_fqn(), args...);
-        print();
+        // print();
     }
 
     void populate_params(std::set<std::string> &types, std::map<std::string, std::string> &homog_map_entries, std::map<std::string, std::string> &hetero_map_entries) {

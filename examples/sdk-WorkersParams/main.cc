@@ -346,6 +346,11 @@ public:
             effects(&req).
             function(
                 [&](LogicalAction<int> &sch, MultiportOutput<int> &req) {
+                    if (req_itr == n_tasks) {
+                        std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
+                                        << fqn() << " Tasks queue empty" << std::endl;
+                        return;
+                    }
                     auto index = *sch.get();
                     if (index < 0) {
                         for (int i = 0; i < n_pools; ++i) {
@@ -384,18 +389,20 @@ public:
                 [&](MultiportInput<int> &rsp, LogicalAction<int> &sch) {
                     for (int i = 0; i < n_pools; ++i) {
                         if (rsp[i].is_present()) {
+                            std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
+                                        << "Received response of task:" << *rsp[i].get() << "\n";
                             ++rsp_itr;
-                            if (req_itr < n_tasks) {
-                                std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
-                                            << fqn() << " Scheduling task_id:" << req_itr << " to pool:" << i << std::endl;
-                                sch.schedule (i, std::chrono::duration_cast<reactor::Duration>(std::chrono::nanoseconds(0)));
-                            }
+                            busy[i] = 0;
                         }
                     }
                     if (rsp_itr == n_tasks) {
                         std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
                                     << "Terminating Run\n";
                         request_stop();
+                    } else {
+                        std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
+                                    << fqn() << " Scheduling tasks\n";
+                        sch.schedule (-1, std::chrono::duration_cast<reactor::Duration>(std::chrono::nanoseconds(0)));
                     }
                 }
             );
