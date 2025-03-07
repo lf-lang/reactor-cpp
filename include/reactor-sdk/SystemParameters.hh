@@ -149,4 +149,24 @@ public:
     : SystemParameter<ParameterValueType...>(owner), defaults(std::forward<Defaults>(param)) {}
 };
 
+template <typename ReactorType, typename Defaults, typename... ParameterValueType>
+class SystemParameterWithReactorDefault : public SystemParameter<ParameterValueType...> {
+public:
+    ReactorType *owner_ = nullptr;
+    Defaults defaults;
+    SystemParameterWithReactorDefault(Reactor *owner, Defaults &&param)
+    : SystemParameter<ParameterValueType...>(owner), owner_((ReactorType*) owner), defaults(std::forward<Defaults>(param)) {}
+    ReactorType *reactor() { return owner_; }
+    Reactor &reaction (const std::string name) {
+        return owner_->reaction(name);
+    }
+
+    auto fqn() const noexcept -> const std::string& { return owner_->fqn(); }
+    auto get_elapsed_logical_time() const noexcept -> Duration { return owner_->get_elapsed_logical_time(); }
+    auto get_microstep() const noexcept -> reactor::mstep_t { return owner_->get_microstep(); }
+    auto get_elapsed_physical_time() const noexcept -> Duration { return owner_->get_elapsed_physical_time(); }
+
+    friend class Reactor;
+};
+
 } // namespace sdk

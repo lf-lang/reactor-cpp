@@ -143,17 +143,66 @@ public:
 private:
     LogicalAction<int> sch_rsp{"sch_rsp", this};
 
-    struct PublishParameters : public SystemParameterWithDefault<Parameters, Duration> {
+    struct PublishParameters : public SystemParameterWithReactorDefault<Worker, Parameters, Duration> {
         REACTOR_PARAMETER(Duration, processing_delay, "Worker's processing delay", 1ms, 2s, defaults.processing_delay);
 
         PublishParameters(Reactor *container, Parameters &&param)
-            :   SystemParameterWithDefault<Parameters, Duration>(container, std::forward<Parameters>(param)) {
+            :   SystemParameterWithReactorDefault<Worker, Parameters, Duration>(container, std::forward<Parameters>(param)) {
             register_parameters (processing_delay);
+        }
+
+        void assemble() override {
+            reaction("reaction_1").
+                triggers(&reactor()->startup).
+                dependencies().
+                effects().
+                function(
+                    [&](Startup& startup) {
+                        std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
+                        << fqn() << " Startup\n";
+                    }
+                );
+
+            reaction("reaction_2").
+                triggers(&reactor()->req).
+                dependencies().
+                effects(&reactor()->sch_rsp).
+                function(
+                    [&](Input<int> &req, LogicalAction<int> &sch_rsp) {
+                        auto req_ref = *req.get();
+                        std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
+                                    << fqn() << " Receiving task_id:" << req_ref << std::endl;
+                        sch_rsp.schedule (req_ref, std::chrono::duration_cast<reactor::Duration>(std::chrono::nanoseconds(processing_delay.value)));
+                    }
+                );
+
+            reaction("reaction_3").
+                triggers(&reactor()->sch_rsp).
+                dependencies().
+                effects(&reactor()->rsp).
+                function(
+                    [&](LogicalAction<int> &sch_rsp, Output<int> &rsp) {
+                        auto req_ref = *sch_rsp.get();
+                        std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
+                                    << fqn() << " Sending task_id:" << req_ref << std::endl;
+                        rsp.set(req_ref);
+                    }
+                );
+
+            reaction("reaction_4").
+                triggers(&reactor()->shutdown).
+                dependencies().
+                effects().
+                function(
+                    [&](Shutdown &shutdown) {
+                        std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
+                                    << fqn() << " Shutdown\n";
+                    }
+                );
         }
     };
 
     PublishParameters parameters;
-    const Duration &processing_delay = parameters.processing_delay.value;
 
 public:
     Worker(const std::string &name, Environment *env, Parameters &&param)
@@ -167,53 +216,53 @@ public:
     void construction() override {}
 
     void assembling() override {
-        reaction("reaction_1").
-            triggers(&startup).
-            dependencies().
-            effects().
-            function(
-                [&](Startup& startup) {
-                    std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
-                    << fqn() << " Startup\n";
-                }
-            );
+        // reaction("reaction_1").
+        //     triggers(&startup).
+        //     dependencies().
+        //     effects().
+        //     function(
+        //         [&](Startup& startup) {
+        //             std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
+        //             << fqn() << " Startup\n";
+        //         }
+        //     );
 
-        reaction("reaction_2").
-            triggers(&req).
-            dependencies().
-            effects(&sch_rsp).
-            function(
-                [&](Input<int> &req, LogicalAction<int> &sch_rsp) {
-                    auto req_ref = *req.get();
-                    std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
-                                << fqn() << " Receiving task_id:" << req_ref << std::endl;
-                    sch_rsp.schedule (req_ref, std::chrono::duration_cast<reactor::Duration>(std::chrono::nanoseconds(processing_delay)));
-                }
-            );
+        // reaction("reaction_2").
+        //     triggers(&req).
+        //     dependencies().
+        //     effects(&sch_rsp).
+        //     function(
+        //         [&](Input<int> &req, LogicalAction<int> &sch_rsp) {
+        //             auto req_ref = *req.get();
+        //             std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
+        //                         << fqn() << " Receiving task_id:" << req_ref << std::endl;
+        //             sch_rsp.schedule (req_ref, std::chrono::duration_cast<reactor::Duration>(std::chrono::nanoseconds(processing_delay)));
+        //         }
+        //     );
 
-        reaction("reaction_3").
-            triggers(&sch_rsp).
-            dependencies().
-            effects(&rsp).
-            function(
-                [&](LogicalAction<int> &sch_rsp, Output<int> &rsp) {
-                    auto req_ref = *sch_rsp.get();
-                    std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
-                                << fqn() << " Sending task_id:" << req_ref << std::endl;
-                    rsp.set(req_ref);
-                }
-            );
+        // reaction("reaction_3").
+        //     triggers(&sch_rsp).
+        //     dependencies().
+        //     effects(&rsp).
+        //     function(
+        //         [&](LogicalAction<int> &sch_rsp, Output<int> &rsp) {
+        //             auto req_ref = *sch_rsp.get();
+        //             std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
+        //                         << fqn() << " Sending task_id:" << req_ref << std::endl;
+        //             rsp.set(req_ref);
+        //         }
+        //     );
 
-        reaction("reaction_4").
-            triggers(&shutdown).
-            dependencies().
-            effects().
-            function(
-                [&](Shutdown &shutdown) {
-                    std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
-                                << fqn() << " Shutdown\n";
-                }
-            );
+        // reaction("reaction_4").
+        //     triggers(&shutdown).
+        //     dependencies().
+        //     effects().
+        //     function(
+        //         [&](Shutdown &shutdown) {
+        //             std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
+        //                         << fqn() << " Shutdown\n";
+        //         }
+        //     );
     }
 };
 
@@ -232,6 +281,8 @@ private:
             :   SystemParameterWithDefault<Parameters, int>(container, std::forward<Parameters>(param)) {
             register_parameters (n_workers);
         }
+
+        void assemble() override {}
     };
     PublishParameters parameters;
     const int &n_workers = parameters.n_workers.value;
@@ -455,6 +506,7 @@ private:
             :   SystemParameterWithDefault<Parameters, int>(container, std::forward<Parameters>(param)) {
             register_parameters (n_tasks, n_pools);
         }
+        void assemble() override {}
     };
     PublishParameters parameters;
     const int &n_tasks = parameters.n_tasks.value;

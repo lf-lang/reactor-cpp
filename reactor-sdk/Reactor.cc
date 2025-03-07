@@ -60,6 +60,9 @@ void Reactor::construct() {
     construction();
 }
 void Reactor::assemble() {
+    if (p_param) {
+        p_param->assemble();
+    }
     assembling();
 }
 
