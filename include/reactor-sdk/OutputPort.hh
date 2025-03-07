@@ -60,6 +60,11 @@ class Output : public reactor::Output<T> {
                 origin.connect(std::move(other_bank_ports));
             }
 
+            template <typename OtherReactorType>
+            void operator>>(ReactorBankInputPortOffset<OtherReactorType, T> &&other_bank_ports) {
+                origin.connect_fanout(std::move(other_bank_ports));
+            }
+
         private:
             Output& origin;
     };
@@ -77,6 +82,9 @@ class Output : public reactor::Output<T> {
 
     template <typename ReactorType>
     void connect(ReactorBankInputPortOffset<ReactorType, T> &&other_bank_ports);
+
+    template <typename ReactorType>
+    void connect_fanout(ReactorBankInputPortOffset<ReactorType, T> &&other_bank_ports);
 
 public:
     using value_type = T;

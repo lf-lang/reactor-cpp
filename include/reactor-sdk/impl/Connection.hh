@@ -93,12 +93,12 @@ void connect_fanout_(std::set<reactor::Port<T>*> &left_ports, std::set<reactor::
     if (left_ports.size() < right_ports.size()) {
         reactor::log::Warn() << "There are more right ports (" << right_ports.size() << ") than left ports (" << left_ports.size() << ")";
         display_ (left_ports, right_ports);
+        reactor::log::Warn() << "Fanning out left port to all right ports";
     } else if (left_ports.size() > right_ports.size()) {
         reactor::log::Warn() << "There are more left ports (" << left_ports.size() << ") than right ports (" << right_ports.size() << ")";
         display_ (left_ports, right_ports);
+        reactor::log::Warn() << "Fanning out left port to all right ports";
     }
-
-    reactor::log::Warn() << "Fanning out left port to all right ports";
 
     auto left_port_itr = left_ports.begin();
     for (auto *right_port : right_ports) {

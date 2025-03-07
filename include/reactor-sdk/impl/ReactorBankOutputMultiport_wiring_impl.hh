@@ -4,40 +4,23 @@ namespace sdk
 {
 template <typename ReactorType, typename T>
 void ReactorBankOutputMultiPort<ReactorType, T>::connect(MultiportInput<T>& input) {
-    auto reactor_itr = reactors.begin();
-    size_t left_ports = 0;
-    size_t right_ports = input.get_nports();
+    std::set<reactor::Port<T>*> left_ports;
+    std::set<reactor::Port<T>*> right_ports;
+    bool result = false;
 
     for (auto& p_left_reactor : reactors) {
         auto *left_reactor = p_left_reactor.get();
-        left_ports += (left_reactor->*member).get_nports();
-    }
-
-    if (left_ports < right_ports) {
-        reactor::log::Warn() << "There are more right ports than left ports. "
-                            << "Not all ports will be connected!";
-    } else if (left_ports > right_ports) {
-        reactor::log::Warn() << "There are more left ports than right ports. "
-                            << "Not all ports will be connected!";
-    }
-
-    auto right_port_itr = input.begin();
-
-    for (auto& p_left_reactor : reactors) {
-        auto *left_reactor = p_left_reactor.get();
-
-        if (right_port_itr == input.end()) {
-            break;
-        }
-
         for (auto &l_port : left_reactor->*member) {
-            l_port.environment()->draw_connection(l_port, *right_port_itr, reactor::ConnectionProperties{});
-            ++right_port_itr;
-            if (right_port_itr == input.end()) {
-                break;
-            }
+            result = left_ports.insert(&l_port).second;
+            reactor_assert(result);
         }
     }
+
+    for (auto &right_port : input) {
+        result = right_ports.insert(&right_port).second;
+        reactor_assert(result);
+    }
+    connect_ (left_ports, right_ports, reactor::ConnectionProperties{});
 }
 
 template <typename ReactorType, typename T>
@@ -136,44 +119,26 @@ void ReactorBankOutputMultiPort<ReactorType, T>::connect(ReactorBankInputMultiPo
 
 template <typename ReactorType, typename T>
 void ReactorBankOutputMultiPortOffset<ReactorType, T>::connect(MultiportInput<T>& input) {
-    auto reactor_itr = reactors.begin();
-    size_t left_ports = 0;
-    size_t right_ports = input.get_nports();
+    std::set<reactor::Port<T>*> left_ports;
+    std::set<reactor::Port<T>*> right_ports;
+    bool result = false;
 
     for (auto& p_left_reactor : reactors) {
         auto *left_reactor = p_left_reactor.get();
-        char* l_reactor_base = reinterpret_cast<char*>(left_reactor);
-        MultiportOutput<T>* l_port = reinterpret_cast<MultiportOutput<T>*>(l_reactor_base + offset);
-        left_ports += (*l_port).get_nports();
-    }
-
-    if (left_ports < right_ports) {
-        reactor::log::Warn() << "There are more right ports than left ports. "
-                            << "Not all ports will be connected!";
-    } else if (left_ports > right_ports) {
-        reactor::log::Warn() << "There are more left ports than right ports. "
-                            << "Not all ports will be connected!";
-    }
-
-    auto right_port_itr = input.begin();
-
-    for (auto& p_left_reactor : reactors) {
-        auto *left_reactor = p_left_reactor.get();
-
-        if (right_port_itr == input.end()) {
-            break;
-        }
 
         char* l_reactor_base = reinterpret_cast<char*>(left_reactor);
         MultiportOutput<T>* l_ports= reinterpret_cast<MultiportOutput<T>*>(l_reactor_base + offset);
         for (auto &l_port : *l_ports) {
-            l_port.environment()->draw_connection(l_port, *right_port_itr, reactor::ConnectionProperties{});
-            ++right_port_itr;
-            if (right_port_itr == input.end()) {
-                break;
-            }
+            result = left_ports.insert(&l_port).second;
+            reactor_assert(result);
         }
     }
+
+    for (auto &right_port : input) {
+        result = right_ports.insert(&right_port).second;
+        reactor_assert(result);
+    }
+    connect_ (left_ports, right_ports, reactor::ConnectionProperties{});
 }
 
 template <typename ReactorType, typename T>
