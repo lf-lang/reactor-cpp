@@ -70,7 +70,7 @@ public:
             dependencies().
             effects().
             function(
-                [&](Startup& startup) {
+                [this](Startup& startup) {
                     std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
                     << fqn() << " Startup\n";
                     busy = (int*) calloc (n_outputs, sizeof(int));
@@ -82,7 +82,7 @@ public:
             dependencies().
             effects(&all_workers_busy, &out_req).
             function(
-                [&](Input<int> &in_req, Output<bool> &all_workers_busy, MultiportOutput<int> &out_req) {
+                [this](Input<int> &in_req, Output<bool> &all_workers_busy, MultiportOutput<int> &out_req) {
                     for (int i = 0; i < n_outputs; ++i, index = (index + 1) % n_outputs) {
                         if (busy[index] == 0) {
                             out_req[index].set(*in_req.get());
@@ -109,7 +109,7 @@ public:
             dependencies().
             effects(&out_rsp).
             function(
-                [&](MultiportInput<int> &in_rsp, Output<int> &out_rsp) {
+                [this](MultiportInput<int> &in_rsp, Output<int> &out_rsp) {
                     for (int i = 0; i < n_outputs; ++i) {
                         if (in_rsp[i].is_present()) {
                             std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
@@ -126,7 +126,7 @@ public:
             dependencies().
             effects().
             function(
-                [&](Shutdown &shutdown) {
+                [this](Shutdown &shutdown) {
                     std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
                                 << fqn() << " Shutdown\n";
                 }
@@ -151,24 +151,24 @@ private:
             register_parameters (processing_delay);
         }
 
-        void assemble() override {
+        void define_reactions(Worker *reactor) override {
             reaction("reaction_1").
-                triggers(&reactor()->startup).
+                triggers(&reactor->startup).
                 dependencies().
                 effects().
                 function(
-                    [&](Startup& startup) {
+                    [this](Startup& startup) {
                         std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
                         << fqn() << " Startup\n";
                     }
                 );
 
             reaction("reaction_2").
-                triggers(&reactor()->req).
+                triggers(&reactor->req).
                 dependencies().
-                effects(&reactor()->sch_rsp).
+                effects(&reactor->sch_rsp).
                 function(
-                    [&](Input<int> &req, LogicalAction<int> &sch_rsp) {
+                    [this](Input<int> &req, LogicalAction<int> &sch_rsp) {
                         auto req_ref = *req.get();
                         std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
                                     << fqn() << " Receiving task_id:" << req_ref << std::endl;
@@ -177,11 +177,11 @@ private:
                 );
 
             reaction("reaction_3").
-                triggers(&reactor()->sch_rsp).
+                triggers(&reactor->sch_rsp).
                 dependencies().
-                effects(&reactor()->rsp).
+                effects(&reactor->rsp).
                 function(
-                    [&](LogicalAction<int> &sch_rsp, Output<int> &rsp) {
+                    [this](LogicalAction<int> &sch_rsp, Output<int> &rsp) {
                         auto req_ref = *sch_rsp.get();
                         std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
                                     << fqn() << " Sending task_id:" << req_ref << std::endl;
@@ -190,11 +190,11 @@ private:
                 );
 
             reaction("reaction_4").
-                triggers(&reactor()->shutdown).
+                triggers(&reactor->shutdown).
                 dependencies().
                 effects().
                 function(
-                    [&](Shutdown &shutdown) {
+                    [this](Shutdown &shutdown) {
                         std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
                                     << fqn() << " Shutdown\n";
                     }
@@ -221,7 +221,7 @@ public:
         //     dependencies().
         //     effects().
         //     function(
-        //         [&](Startup& startup) {
+        //         [this](Startup& startup) {
         //             std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
         //             << fqn() << " Startup\n";
         //         }
@@ -232,7 +232,7 @@ public:
         //     dependencies().
         //     effects(&sch_rsp).
         //     function(
-        //         [&](Input<int> &req, LogicalAction<int> &sch_rsp) {
+        //         [this](Input<int> &req, LogicalAction<int> &sch_rsp) {
         //             auto req_ref = *req.get();
         //             std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
         //                         << fqn() << " Receiving task_id:" << req_ref << std::endl;
@@ -245,7 +245,7 @@ public:
         //     dependencies().
         //     effects(&rsp).
         //     function(
-        //         [&](LogicalAction<int> &sch_rsp, Output<int> &rsp) {
+        //         [this](LogicalAction<int> &sch_rsp, Output<int> &rsp) {
         //             auto req_ref = *sch_rsp.get();
         //             std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
         //                         << fqn() << " Sending task_id:" << req_ref << std::endl;
@@ -258,7 +258,7 @@ public:
         //     dependencies().
         //     effects().
         //     function(
-        //         [&](Shutdown &shutdown) {
+        //         [this](Shutdown &shutdown) {
         //             std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
         //                         << fqn() << " Shutdown\n";
         //         }
@@ -317,7 +317,7 @@ public:
             dependencies().
             effects().
             function(
-                [&](Startup& startup) {
+                [this](Startup& startup) {
                     std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
                                 << fqn() << " Startup\n";
                 }
@@ -328,7 +328,7 @@ public:
             dependencies().
             effects().
             function(
-                [&](Shutdown &shutdown) {
+                [this](Shutdown &shutdown) {
                     std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
                                 << fqn() << " Shutdown\n";
                 }
@@ -383,7 +383,7 @@ public:
             dependencies().
             effects(&sch).
             function(
-                [&](Startup& startup, LogicalAction<int> &sch) {
+                [this](Startup& startup, LogicalAction<int> &sch) {
                     sch.schedule (-1, std::chrono::duration_cast<reactor::Duration>(std::chrono::nanoseconds(0)));
                     std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
                                 << fqn() << " Startup n_pools:" << n_pools << "\n";
@@ -396,7 +396,7 @@ public:
             dependencies().
             effects(&req).
             function(
-                [&](LogicalAction<int> &sch, MultiportOutput<int> &req) {
+                [this](LogicalAction<int> &sch, MultiportOutput<int> &req) {
                     if (req_itr == n_tasks) {
                         std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
                                         << fqn() << " Tasks queue empty" << std::endl;
@@ -437,7 +437,7 @@ public:
             dependencies().
             effects(&sch).
             function(
-                [&](MultiportInput<int> &rsp, LogicalAction<int> &sch) {
+                [this](MultiportInput<int> &rsp, LogicalAction<int> &sch) {
                     for (int i = 0; i < n_pools; ++i) {
                         if (rsp[i].is_present()) {
                             std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
@@ -463,7 +463,7 @@ public:
             dependencies().
             effects().
             function(
-                [&](MultiportInput<bool> &hybernate) {
+                [this](MultiportInput<bool> &hybernate) {
                     for (int i = 0; i < n_pools; ++i) {
                         if (hybernate[i].is_present()) {
                             busy[i] = *hybernate[i].get();
@@ -477,7 +477,7 @@ public:
             dependencies().
             effects().
             function(
-                [&](Shutdown &shutdown) {
+                [this](Shutdown &shutdown) {
                     std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
                                 << fqn() << " Shutdown\n";
                 }

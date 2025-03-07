@@ -41,6 +41,10 @@ public:
     template <typename Fn>
     Reaction<Fn, InputTuple, DependencyTuple, OutputTuple> &function(Fn func)
     {
+        if (sizeof(func) != sizeof(void*)) {
+            reactor::log::Error() << "Lambda function can only capture this";
+            exit(EXIT_FAILURE);
+        }
         auto ReactionRef = std::make_shared<Reaction<Fn, InputTuple, DependencyTuple, OutputTuple>> (name, reactor, std::move(input_triggers), std::move(dependencies), std::move(output_triggers), std::forward<Fn>(func));
         ReactionRef->execute();
         return *ReactionRef;

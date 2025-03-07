@@ -156,10 +156,15 @@ public:
     Defaults defaults;
     SystemParameterWithReactorDefault(Reactor *owner, Defaults &&param)
     : SystemParameter<ParameterValueType...>(owner), owner_((ReactorType*) owner), defaults(std::forward<Defaults>(param)) {}
-    ReactorType *reactor() { return owner_; }
     Reactor &reaction (const std::string name) {
         return owner_->reaction(name);
     }
+
+    void assemble() override {
+        define_reactions(owner_);
+    }
+
+    virtual void define_reactions(ReactorType *reactor) = 0;
 
     auto fqn() const noexcept -> const std::string& { return owner_->fqn(); }
     auto get_elapsed_logical_time() const noexcept -> Duration { return owner_->get_elapsed_logical_time(); }
