@@ -1,7 +1,7 @@
 #pragma once
 
 #include "reactor-cpp/reactor-cpp.hh"
-#include "BaseTrigger.hh"
+#include "ReactionBase.hh"
 #include "Reactor.hh"
 
 namespace sdk
@@ -26,7 +26,7 @@ inline constexpr bool is_specialization_v = is_specialization<T, Template>::valu
 
 
 template <typename InputTuple, typename DependencyTuple, typename OutputTuple>
-class ReactionOutput: public BaseTrigger
+class ReactionOutput: public ReactionBase
 {
 private:
     InputTuple input_triggers;
@@ -35,12 +35,16 @@ private:
 
 public:
     explicit ReactionOutput(std::string name, Reactor *parent, InputTuple inputs, DependencyTuple deps, OutputTuple outputs)
-        : BaseTrigger (name, parent), input_triggers(std::move(inputs)), dependencies(std::move(deps)), output_triggers(std::move(outputs)) {}
+        : ReactionBase (name, parent), input_triggers(std::move(inputs)), dependencies(std::move(deps)), output_triggers(std::move(outputs)) {}
     ~ReactionOutput() {}
 
     template <typename Fn>
     Reaction<Fn, InputTuple, DependencyTuple, OutputTuple> &function(Fn func)
     {
+        if (sizeof(func) != sizeof(void*)) {
+            reactor::log::Error() << "Reactor: " << reactor->fqn() << " Reaction: " << name << " Accesses variables outside of its scope";
+            exit(EXIT_FAILURE);
+        }
         auto ReactionRef = std::make_shared<Reaction<Fn, InputTuple, DependencyTuple, OutputTuple>> (name, reactor, std::move(input_triggers), std::move(dependencies), std::move(output_triggers), std::forward<Fn>(func));
         ReactionRef->execute();
         return *ReactionRef;
@@ -48,7 +52,7 @@ public:
 };
 
 template <typename InputTuple, typename DependencyTuple>
-class ReactionDependency: public BaseTrigger
+class ReactionDependency: public ReactionBase
 {
 private:
     InputTuple input_triggers;
@@ -56,7 +60,7 @@ private:
 
 public:
     explicit ReactionDependency(std::string name, Reactor *parent, InputTuple inputs, DependencyTuple deps)
-        : BaseTrigger (name, parent), input_triggers(inputs), dependencies(std::move(deps)) {}
+        : ReactionBase (name, parent), input_triggers(inputs), dependencies(std::move(deps)) {}
     ~ReactionDependency() {}
 
     template <typename... Outputs>
@@ -70,14 +74,14 @@ public:
 };
 
 template <typename InputTuple>
-class ReactionInput: public BaseTrigger
+class ReactionInput: public ReactionBase
 {
 private:
     InputTuple input_triggers;
 
 public:
     explicit ReactionInput(std::string name, Reactor *parent, InputTuple inputs)
-        : BaseTrigger (name, parent), input_triggers(std::move(inputs)) {}
+        : ReactionBase (name, parent), input_triggers(std::move(inputs)) {}
     ~ReactionInput() {}
 
     template <typename... Dependencies>
@@ -90,8 +94,27 @@ public:
     }
 };
 
+class ReactionName: public ReactionBase {
+public:
+    explicit ReactionName(std::string name, Reactor *parent)
+        : ReactionBase (name, parent) {}
+    ~ReactionName() = default;
+
+    template <typename... Inputs>
+    ReactionInput<std::tuple<Inputs...>> &triggers(Inputs&&... inputs)
+    {
+        auto input_tuple = std::make_tuple(inputs...);
+        auto ReactionInputRef = std::make_shared<ReactionInput<std::tuple<Inputs...>>> (name, reactor, std::move(input_tuple));
+        next = ReactionInputRef;
+        return *ReactionInputRef;
+    }
+
+    // template <typename ReactorType, typename ParameterType>
+    // friend class ReactionInternals;
+};
+
 template <typename Fn, typename InputTuple, typename DependencyTuple, typename OutputTuple>
-class Reaction: public BaseTrigger
+class Reaction: public ReactionBase
 {
 private:
     InputTuple input_triggers;
@@ -195,7 +218,7 @@ private:
 
 public:
     Reaction(std::string name, Reactor *parent, InputTuple inputs, DependencyTuple deps, OutputTuple outputs, Fn func)
-        : BaseTrigger(name, parent), input_triggers(std::move(inputs)), dependencies(std::move(deps)), output_triggers(std::move(outputs)), user_function(std::forward<Fn>(func)) { /* std::cout << "Creating Reaction\n"; */ }
+        : ReactionBase(name, parent), input_triggers(std::move(inputs)), dependencies(std::move(deps)), output_triggers(std::move(outputs)), user_function(std::forward<Fn>(func)) { /* std::cout << "Creating Reaction\n"; */ }
     ~Reaction() {}
 
     void execute () {
@@ -222,7 +245,6 @@ public:
         set_input_triggers(reaction, input_triggers);
         set_dependencies(reaction, dependencies);
         set_output_triggers(reaction, output_triggers);
-        
     }
 
     template <typename Dfn>
@@ -246,6 +268,36 @@ public:
 
         reaction->set_deadline(deadline_period, deadline_func);
     }
+};
+
+template <typename ReactorType, typename ParameterType>
+class ReactionInternals : public ReactionBase {
+    ReactorType *reactor_;
+
+protected:
+    const ParameterType &parameters;
+public:
+    ReactionInternals(Reactor *owner, ParameterType &param)
+        : ReactionBase("reaction-internals", owner), reactor_((ReactorType*) owner), parameters(param) {
+        reactor_->add_reaction_internals(this);
+    }
+
+    ReactionName &reaction (const std::string name) {
+        auto ReactionNameRef = std::make_shared<ReactionName>(name, reactor);
+        next = ReactionNameRef;
+        return *ReactionNameRef;
+    }
+
+    virtual void add_reactions(ReactorType *reactor) = 0;
+    virtual void assemble() override {
+        add_reactions(reactor_);
+    }
+
+    auto fqn() const noexcept -> const std::string& { return reactor_->fqn(); }
+    auto get_elapsed_logical_time() const noexcept -> Duration { return reactor_->get_elapsed_logical_time(); }
+    auto get_microstep() const noexcept -> reactor::mstep_t { return reactor_->get_microstep(); }
+    auto get_elapsed_physical_time() const noexcept -> Duration { return reactor_->get_elapsed_physical_time(); }
+    void request_stop() { reactor_->environment()->sync_shutdown(); }
 };
 
 } // namespace sdk

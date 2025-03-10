@@ -44,13 +44,8 @@ void Reactor::add_child(Reactor* reactor) {
     reactor_assert(result);
 }
 
-void Reactor::add_to_reaction_map (std::string &name, std::shared_ptr<BaseTrigger> reaction) {
+void Reactor::add_to_reaction_map (std::string &name, std::shared_ptr<ReactionBase> reaction) {
     reaction_map[name] = reaction;
-}
-
-Reactor &Reactor::reaction (const std::string name) {
-    current_reaction_name = name;
-    return *this;
 }
 
 void Reactor::construct() {
@@ -60,7 +55,10 @@ void Reactor::construct() {
     construction();
 }
 void Reactor::assemble() {
-    assembling();
+    if (reaction_internals_) {
+        reaction_internals_->assemble();
+    }
+    wiring();
 }
 
 void Reactor::populate_params(std::set<std::string> &types, std::map<std::string, std::string> &homog_map_entries, std::map<std::string, std::string> &hetero_map_entries) {

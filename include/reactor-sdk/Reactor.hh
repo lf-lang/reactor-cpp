@@ -2,7 +2,7 @@
 
 #include "reactor-cpp/reactor-cpp.hh"
 #include <string.h>
-#include "BaseTrigger.hh"
+#include "ReactionBase.hh"
 #include "SystemParameterBase.hh"
 #include "Environment.hh"
 
@@ -91,14 +91,14 @@ private:
     SystemParameterBase *p_param = nullptr;
     Environment *env{nullptr};
     Reactor *parent{nullptr};
-    std::string current_reaction_name;
-    std::unordered_map<std::string, std::shared_ptr<BaseTrigger>> reaction_map;
+    std::unordered_map<std::string, std::shared_ptr<ReactionBase>> reaction_map;
+    ReactionBase *reaction_internals_;
     int priority = 1;
     std::set<Reactor*> child_reactors;
     std::string homog_name = "";
 
     void add_child(Reactor* reactor);
-    void add_to_reaction_map (std::string &name, std::shared_ptr<BaseTrigger> reaction);
+    void add_to_reaction_map (std::string &name, std::shared_ptr<ReactionBase> reaction);
     int get_priority() { return priority++;}
 
     template <typename Fn, typename... InputTriggers, typename... Dependencies, typename... OutputTriggers>
@@ -125,6 +125,10 @@ public:
     Reactor(const std::string &name, Environment *env);
     Reactor(const std::string &name, Reactor *container);
 
+    void add_reaction_internals (ReactionBase* internals) {
+        reaction_internals_ = internals;
+    }
+
     static std::string BankName(const std::string& name);
     static std::string HomogName(const std::string& name);
 
@@ -132,31 +136,10 @@ public:
 
     Environment *get_env() { return env; }
 
-    Reactor &reaction (const std::string name);
-
     auto homog_fqn() const noexcept -> const std::string& { return homog_name; }
 
-    template <typename... Inputs>
-    ReactionInput<std::tuple<Inputs...>> &operator()(Inputs&&... inputs)
-    {
-        auto input_tuple = std::make_tuple(inputs...);
-        auto ReactionInputRef = std::make_shared<ReactionInput<std::tuple<Inputs...>>> (current_reaction_name, this, std::move(input_tuple));
-        reaction_map[current_reaction_name] = ReactionInputRef;
-        return *ReactionInputRef;
-    }
-
-    template <typename... Inputs>
-    ReactionInput<std::tuple<Inputs...>> &triggers(Inputs&&... inputs)
-    {
-        auto input_tuple = std::make_tuple(inputs...);
-        auto ReactionInputRef = std::make_shared<ReactionInput<std::tuple<Inputs...>>> (current_reaction_name, this, std::move(input_tuple));
-        reaction_map[current_reaction_name] = ReactionInputRef;
-        return *ReactionInputRef;
-    }
-
-    void request_stop() { environment()->sync_shutdown(); }
     virtual void construction() = 0;
-    virtual void assembling() = 0;
+    virtual void wiring() = 0;
     void construct() override;
     void assemble() override;
 

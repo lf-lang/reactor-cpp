@@ -40,9 +40,6 @@ public:
     };
 
 private:
-    int index = 0;
-    int *busy = 0;
-
     Parameters parameters;
     const int &n_outputs = parameters.n_outputs;
 
@@ -59,78 +56,94 @@ public:
     Relay(const std::string &name, Reactor *container, Parameters &&param)
     : Reactor(name, container), parameters{std::forward<Parameters>(param)} {}
 
+    class Internals : public ReactionInternals<Relay, Parameters> {
+        const int &n_outputs = parameters.n_outputs;
+
+        int index = 0;
+        int *busy = 0;
+
+        public:
+        Internals(Reactor *reactor, Parameters &params)
+            : ReactionInternals<Relay, Parameters>(reactor, params) {}
+        
+        void add_reactions(Relay *reactor) override {
+            reaction("reaction_1").
+                triggers(&reactor->startup).
+                dependencies().
+                effects().
+                function(
+                    [&](Startup& startup) {
+                        std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
+                        << fqn() << " Startup\n";
+                        busy = (int*) calloc (n_outputs, sizeof(int));
+                    }
+                );
+
+            reaction("reaction_2").
+                triggers(&reactor->in_req).
+                dependencies().
+                effects(&reactor->all_workers_busy, &reactor->out_req).
+                function(
+                    [&](Input<int> &in_req, Output<bool> &all_workers_busy, MultiportOutput<int> &out_req) {
+                        for (int i = 0; i < n_outputs; ++i, index = (index + 1) % n_outputs) {
+                            if (busy[index] == 0) {
+                                out_req[index].set(*in_req.get());
+                                std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
+                                            << fqn() << " Sending task_id:" << *in_req.get() << " to worker:" << index << std::endl;
+                                busy[index] = 1;
+                                index = (index + 1) % n_outputs;
+                                break;
+                            }
+                        }
+                        int busy_count = 0;
+                        for (int i = 0; i < n_outputs; ++i) {
+                            busy_count = busy[i] ? (busy_count + 1) : busy_count;
+                        }
+
+                        if (busy_count == n_outputs) {
+                            all_workers_busy.set(true);
+                        }
+                    }
+                );
+
+            reaction("reaction_3").
+                triggers(&reactor->in_rsp).
+                dependencies().
+                effects(&reactor->out_rsp).
+                function(
+                    [&](MultiportInput<int> &in_rsp, Output<int> &out_rsp) {
+                        for (int i = 0; i < n_outputs; ++i) {
+                            if (in_rsp[i].is_present()) {
+                                std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
+                                            << fqn() << " Receiving task_id:" << *in_rsp[i].get() << " from worker:" << i << std::endl;
+                                busy[i] = 0;
+                                out_rsp.set(*in_rsp[i].get());
+                            }
+                        }
+                    }
+                );
+
+            reaction("reaction_4").
+                triggers(&reactor->shutdown).
+                dependencies().
+                effects().
+                function(
+                    [&](Shutdown &shutdown) {
+                        std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
+                                    << fqn() << " Shutdown\n";
+                    }
+                );
+        }
+    };
+
+    Internals reaction_internals{this, parameters};
+
     void construction() override {
         out_req.set_width(n_outputs);
         in_rsp.set_width(n_outputs);
     }
 
-    void assembling() override {
-        reaction("reaction_1").
-            triggers(&startup).
-            dependencies().
-            effects().
-            function(
-                [&](Startup& startup) {
-                    std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
-                    << fqn() << " Startup\n";
-                    busy = (int*) calloc (n_outputs, sizeof(int));
-                }
-            );
-
-        reaction("reaction_2").
-            triggers(&in_req).
-            dependencies().
-            effects(&all_workers_busy, &out_req).
-            function(
-                [&](Input<int> &in_req, Output<bool> &all_workers_busy, MultiportOutput<int> &out_req) {
-                    for (int i = 0; i < n_outputs; ++i, index = (index + 1) % n_outputs) {
-                        if (busy[index] == 0) {
-                            out_req[index].set(*in_req.get());
-                            std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
-                                        << fqn() << " Sending task_id:" << *in_req.get() << " to worker:" << index << std::endl;
-                            busy[index] = 1;
-                            index = (index + 1) % n_outputs;
-                            break;
-                        }
-                    }
-                    int busy_count = 0;
-                    for (int i = 0; i < n_outputs; ++i) {
-                        busy_count = busy[i] ? (busy_count + 1) : busy_count;
-                    }
-
-                    if (busy_count == n_outputs) {
-                        all_workers_busy.set(true);
-                    }
-                }
-            );
-
-        reaction("reaction_3").
-            triggers(&in_rsp).
-            dependencies().
-            effects(&out_rsp).
-            function(
-                [&](MultiportInput<int> &in_rsp, Output<int> &out_rsp) {
-                    for (int i = 0; i < n_outputs; ++i) {
-                        if (in_rsp[i].is_present()) {
-                            std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
-                                        << fqn() << " Receiving task_id:" << *in_rsp[i].get() << " from worker:" << i << std::endl;
-                            busy[i] = 0;
-                            out_rsp.set(*in_rsp[i].get());
-                        }
-                    }
-                }
-            );
-
-        reaction("reaction_4").
-            triggers(&shutdown).
-            dependencies().
-            effects().
-            function(
-                [&](Shutdown &shutdown) {
-                    std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
-                                << fqn() << " Shutdown\n";
-                }
-            );
+    void wiring() override {
     }
 };
 
@@ -143,11 +156,11 @@ public:
 private:
     LogicalAction<int> sch_rsp{"sch_rsp", this};
 
-    struct PublishParameters : public SystemParameterWithDefault<Parameters, Duration> {
+    struct PublishParameters : public SystemParameters<Parameters, Duration> {
         REACTOR_PARAMETER(Duration, processing_delay, "Worker's processing delay", 1ms, 2s, defaults.processing_delay);
 
         PublishParameters(Reactor *container, Parameters &&param)
-            :   SystemParameterWithDefault<Parameters, Duration>(container, std::forward<Parameters>(param)) {
+            :   SystemParameters<Parameters, Duration>(container, std::forward<Parameters>(param)) {
             register_parameters (processing_delay);
         }
     };
@@ -164,56 +177,70 @@ public:
     Input<int> req{"req", this};
     Output<int> rsp{"rsp", this};
 
+    class Internals : public ReactionInternals<Worker, PublishParameters> {
+        const Duration &processing_delay = parameters.processing_delay.value;
+    public:
+        Internals(Reactor *reactor, PublishParameters &params)
+            : ReactionInternals<Worker, PublishParameters>(reactor, params) {}
+        
+        void add_reactions(Worker *reactor) override {
+            reaction("reaction_1").
+                triggers(&reactor->startup).
+                dependencies().
+                effects().
+                function(
+                    [&](Startup& startup) {
+                        std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
+                        << fqn() << " Startup\n";
+                    }
+                );
+
+            reaction("reaction_2").
+                triggers(&reactor->req).
+                dependencies().
+                effects(&reactor->sch_rsp).
+                function(
+                    [&](Input<int> &req, LogicalAction<int> &sch_rsp) {
+                        auto req_ref = *req.get();
+                        std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
+                                    << fqn() << " Receiving task_id:" << req_ref << std::endl;
+                        sch_rsp.schedule (req_ref, std::chrono::duration_cast<reactor::Duration>(std::chrono::nanoseconds(processing_delay)));
+                    }
+                );
+
+            reaction("reaction_3").
+                triggers(&reactor->sch_rsp).
+                dependencies().
+                effects(&reactor->rsp).
+                function(
+                    [&](LogicalAction<int> &sch_rsp, Output<int> &rsp) {
+                        auto req_ref = *sch_rsp.get();
+                        std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
+                                    << fqn() << " Sending task_id:" << req_ref << std::endl;
+                        rsp.set(req_ref);
+                    }
+                );
+
+            reaction("reaction_4").
+                triggers(&reactor->shutdown).
+                dependencies().
+                effects().
+                function(
+                    [&](Shutdown &shutdown) {
+                        std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
+                                    << fqn() << " Shutdown\n";
+                    }
+                );
+        }
+
+
+    };
+
+    Internals reaction_internals{this, parameters};
+
     void construction() override {}
 
-    void assembling() override {
-        reaction("reaction_1").
-            triggers(&startup).
-            dependencies().
-            effects().
-            function(
-                [&](Startup& startup) {
-                    std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
-                    << fqn() << " Startup\n";
-                }
-            );
-
-        reaction("reaction_2").
-            triggers(&req).
-            dependencies().
-            effects(&sch_rsp).
-            function(
-                [&](Input<int> &req, LogicalAction<int> &sch_rsp) {
-                    auto req_ref = *req.get();
-                    std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
-                                << fqn() << " Receiving task_id:" << req_ref << std::endl;
-                    sch_rsp.schedule (req_ref, std::chrono::duration_cast<reactor::Duration>(std::chrono::nanoseconds(processing_delay)));
-                }
-            );
-
-        reaction("reaction_3").
-            triggers(&sch_rsp).
-            dependencies().
-            effects(&rsp).
-            function(
-                [&](LogicalAction<int> &sch_rsp, Output<int> &rsp) {
-                    auto req_ref = *sch_rsp.get();
-                    std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
-                                << fqn() << " Sending task_id:" << req_ref << std::endl;
-                    rsp.set(req_ref);
-                }
-            );
-
-        reaction("reaction_4").
-            triggers(&shutdown).
-            dependencies().
-            effects().
-            function(
-                [&](Shutdown &shutdown) {
-                    std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
-                                << fqn() << " Shutdown\n";
-                }
-            );
+    void wiring() override {
     }
 };
 
@@ -225,11 +252,11 @@ public:
     };
 
 private:
-    struct PublishParameters : public SystemParameterWithDefault<Parameters, int> {
+    struct PublishParameters : public SystemParameters<Parameters, int> {
         REACTOR_PARAMETER(int, n_workers, "Number of workers in the pool", 1, 10, defaults.n_workers);
 
         PublishParameters(Reactor *container, Parameters &&param)
-            :   SystemParameterWithDefault<Parameters, int>(container, std::forward<Parameters>(param)) {
+            :   SystemParameters<Parameters, int>(container, std::forward<Parameters>(param)) {
             register_parameters (n_workers);
         }
     };
@@ -252,6 +279,41 @@ public:
 
     Output<bool> all_workers_busy{"all_workers_busy", this};
 
+    class Internals : public ReactionInternals<Pool, PublishParameters> {
+        const int &n_workers = parameters.n_workers.value;
+    public:
+        Internals(Reactor *reactor, PublishParameters &params)
+            : ReactionInternals<Pool, PublishParameters>(reactor, params) {}
+        
+        void add_reactions(Pool *reactor) override {
+            reaction("reaction_1").
+                triggers(&reactor->startup).
+                dependencies().
+                effects().
+                function(
+                    [&](Startup& startup) {
+                        std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
+                                    << fqn() << " Startup\n";
+                    }
+                );
+
+            reaction("reaction_2").
+                triggers(&reactor->shutdown).
+                dependencies().
+                effects().
+                function(
+                    [&](Shutdown &shutdown) {
+                        std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
+                                    << fqn() << " Shutdown\n";
+                    }
+                );
+        }
+
+
+    };
+
+    Internals reaction_internals{this, parameters};
+
     void construction() override {
         for (int i = 0; i < n_workers; ++i) {
             workers.create_reactor(Worker::Parameters{.processing_delay = 1s});
@@ -260,29 +322,7 @@ public:
 
     }
 
-    void assembling() override {
-        reaction("reaction_1").
-            triggers(&startup).
-            dependencies().
-            effects().
-            function(
-                [&](Startup& startup) {
-                    std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
-                                << fqn() << " Startup\n";
-                }
-            );
-
-        reaction("reaction_2").
-            triggers(&shutdown).
-            dependencies().
-            effects().
-            function(
-                [&](Shutdown &shutdown) {
-                    std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
-                                << fqn() << " Shutdown\n";
-                }
-            );
-
+    void wiring() override {
         req --> relay->in_req;
         relay->out_req --> workers.for_each(select_default(workers).req);
         workers.for_each(select_default(workers).rsp) --> relay->in_rsp;
@@ -300,10 +340,6 @@ public:
     };
 
 private:
-    int req_itr = 0;
-    int rsp_itr = 0;
-    bool *busy = 0;
-
     Parameters parameters;
     const int &n_tasks = parameters.n_tasks;
     const int &n_pools = parameters.n_pools;
@@ -320,117 +356,134 @@ public:
     MultiportInput<int> rsp{"rsp", this};
     MultiportInput<bool> hybernate{"hybernate", this};
 
+    class Internals : public ReactionInternals<Tasks, Parameters> {
+        const int &n_tasks = parameters.n_tasks;
+        const int &n_pools = parameters.n_pools;
+
+        int req_itr = 0;
+        int rsp_itr = 0;
+        bool *busy = 0;
+    public:
+        Internals(Reactor *reactor, Parameters &params)
+            : ReactionInternals<Tasks, Parameters>(reactor, params) {}
+        
+        void add_reactions(Tasks *reactor) override {
+            reaction("reaction_1").
+                triggers(&reactor->startup).
+                dependencies().
+                effects(&reactor->sch).
+                function(
+                    [&](Startup& startup, LogicalAction<int> &sch) {
+                        sch.schedule (-1, std::chrono::duration_cast<reactor::Duration>(std::chrono::nanoseconds(0)));
+                        std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
+                                    << fqn() << " Startup n_pools:" << n_pools << "\n";
+                        busy = (bool*) calloc (n_pools, sizeof(bool));
+                    }
+                );
+
+            reaction("reaction_2").
+                triggers(&reactor->sch).
+                dependencies().
+                effects(&reactor->req).
+                function(
+                    [&](LogicalAction<int> &sch, MultiportOutput<int> &req) {
+                        if (req_itr == n_tasks) {
+                            std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
+                                            << fqn() << " Tasks queue empty" << std::endl;
+                            return;
+                        }
+                        auto index = *sch.get();
+                        if (index < 0) {
+                            for (int i = 0; i < n_pools; ++i) {
+                                if (busy[i]) {
+                                    std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
+                                            << fqn() << " Busy Pool:" << i << std::endl;
+                                    continue;
+                                }
+                                std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
+                                            << fqn() << " Sending task_id:" << req_itr << " to pool:" << i << std::endl;
+                                req[i].set (req_itr++);
+                            }
+
+                            int busy_count = 0;
+                            for (int i = 0; i < n_pools; ++i) {
+                                busy_count = busy[i] ? (busy_count + 1) : busy_count;
+                            }
+
+                            if (busy_count == n_pools) {
+                                return;
+                            }
+                            sch.schedule (-1, std::chrono::duration_cast<reactor::Duration>(std::chrono::nanoseconds(0)));
+                        } else {
+                            std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
+                                        << fqn() << " Sending task_id:" << req_itr << " to pool:" << index << std::endl;
+                            req[index].set (req_itr++);
+                        }
+                    }
+                );
+
+                reaction("reaction_3").
+                triggers(&reactor->rsp).
+                dependencies().
+                effects(&reactor->sch).
+                function(
+                    [&](MultiportInput<int> &rsp, LogicalAction<int> &sch) {
+                        for (int i = 0; i < n_pools; ++i) {
+                            if (rsp[i].is_present()) {
+                                std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
+                                            << "Received response of task:" << *rsp[i].get() << "\n";
+                                ++rsp_itr;
+                                busy[i] = 0;
+                            }
+                        }
+                        if (rsp_itr == n_tasks) {
+                            std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
+                                        << "Terminating Run\n";
+                            request_stop();
+                        } else {
+                            std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
+                                        << fqn() << " Scheduling tasks\n";
+                            sch.schedule (-1, std::chrono::duration_cast<reactor::Duration>(std::chrono::nanoseconds(0)));
+                        }
+                    }
+                );
+
+            reaction("reaction_4").
+                triggers(&reactor->hybernate).
+                dependencies().
+                effects().
+                function(
+                    [&](MultiportInput<bool> &hybernate) {
+                        for (int i = 0; i < n_pools; ++i) {
+                            if (hybernate[i].is_present()) {
+                                busy[i] = *hybernate[i].get();
+                            }
+                        }
+                    }
+                );
+
+            reaction("reaction_5").
+                triggers(&reactor->shutdown).
+                dependencies().
+                effects().
+                function(
+                    [&](Shutdown &shutdown) {
+                        std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
+                                    << fqn() << " Shutdown\n";
+                    }
+                );
+        }
+    };
+
+    Internals reaction_internals{this, parameters};
+
     void construction() override {
         req.set_width (n_pools);
         rsp.set_width (n_pools);
         hybernate.set_width (n_pools);
     }
 
-    void assembling() override {
-        reaction("reaction_1").
-            triggers(&startup).
-            dependencies().
-            effects(&sch).
-            function(
-                [&](Startup& startup, LogicalAction<int> &sch) {
-                    sch.schedule (-1, std::chrono::duration_cast<reactor::Duration>(std::chrono::nanoseconds(0)));
-                    std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
-                                << fqn() << " Startup n_pools:" << n_pools << "\n";
-                    busy = (bool*) calloc (n_pools, sizeof(bool));
-                }
-            );
-
-        reaction("reaction_2").
-            triggers(&sch).
-            dependencies().
-            effects(&req).
-            function(
-                [&](LogicalAction<int> &sch, MultiportOutput<int> &req) {
-                    if (req_itr == n_tasks) {
-                        std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
-                                        << fqn() << " Tasks queue empty" << std::endl;
-                        return;
-                    }
-                    auto index = *sch.get();
-                    if (index < 0) {
-                        for (int i = 0; i < n_pools; ++i) {
-                            if (busy[i]) {
-                                std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
-                                        << fqn() << " Busy Pool:" << i << std::endl;
-                                continue;
-                            }
-                            std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
-                                        << fqn() << " Sending task_id:" << req_itr << " to pool:" << i << std::endl;
-                            req[i].set (req_itr++);
-                        }
-
-                        int busy_count = 0;
-                        for (int i = 0; i < n_pools; ++i) {
-                            busy_count = busy[i] ? (busy_count + 1) : busy_count;
-                        }
-
-                        if (busy_count == n_pools) {
-                            return;
-                        }
-                        sch.schedule (-1, std::chrono::duration_cast<reactor::Duration>(std::chrono::nanoseconds(0)));
-                    } else {
-                        std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
-                                    << fqn() << " Sending task_id:" << req_itr << " to pool:" << index << std::endl;
-                        req[index].set (req_itr++);
-                    }
-                }
-            );
-
-            reaction("reaction_3").
-            triggers(&rsp).
-            dependencies().
-            effects(&sch).
-            function(
-                [&](MultiportInput<int> &rsp, LogicalAction<int> &sch) {
-                    for (int i = 0; i < n_pools; ++i) {
-                        if (rsp[i].is_present()) {
-                            std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
-                                        << "Received response of task:" << *rsp[i].get() << "\n";
-                            ++rsp_itr;
-                            busy[i] = 0;
-                        }
-                    }
-                    if (rsp_itr == n_tasks) {
-                        std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
-                                    << "Terminating Run\n";
-                        request_stop();
-                    } else {
-                        std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
-                                    << fqn() << " Scheduling tasks\n";
-                        sch.schedule (-1, std::chrono::duration_cast<reactor::Duration>(std::chrono::nanoseconds(0)));
-                    }
-                }
-            );
-
-        reaction("reaction_4").
-            triggers(&hybernate).
-            dependencies().
-            effects().
-            function(
-                [&](MultiportInput<bool> &hybernate) {
-                    for (int i = 0; i < n_pools; ++i) {
-                        if (hybernate[i].is_present()) {
-                            busy[i] = *hybernate[i].get();
-                        }
-                    }
-                }
-            );
-
-        reaction("reaction_5").
-            triggers(&shutdown).
-            dependencies().
-            effects().
-            function(
-                [&](Shutdown &shutdown) {
-                    std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
-                                << fqn() << " Shutdown\n";
-                }
-            );
+    void wiring() override {
     }
 };
 
@@ -447,12 +500,12 @@ public:
     Main(const std::string &name, Reactor *container, Parameters &&param)
     : Reactor(name, container), parameters{this, std::forward<Parameters>(param)} {}
 private:
-    struct PublishParameters : public SystemParameterWithDefault<Parameters, int> {
+    struct PublishParameters : public SystemParameters<Parameters, int> {
         REACTOR_PARAMETER(int, n_tasks, "Number of tasks", 1, 100, defaults.n_tasks);
         REACTOR_PARAMETER(int, n_pools, "Number of pools", 1, 10, defaults.n_pools);
 
         PublishParameters(Reactor *container, Parameters &&param)
-            :   SystemParameterWithDefault<Parameters, int>(container, std::forward<Parameters>(param)) {
+            :   SystemParameters<Parameters, int>(container, std::forward<Parameters>(param)) {
             register_parameters (n_tasks, n_pools);
         }
     };
@@ -465,6 +518,7 @@ private:
     ReactorBank<Pool> pool{"pool", this};
 
 public:
+
     void construction() override {
         tasks = std::make_unique<Tasks>("tasks", this, Tasks::Parameters{.n_tasks = n_tasks, .n_pools = n_pools});
         for (int i = 0; i < n_pools; ++i) {
@@ -472,7 +526,7 @@ public:
         }
     }
 
-    void assembling() override {
+    void wiring() override {
         tasks->req --> pool.for_each(select_default(pool).req);
         pool.for_each(select_default(pool).rsp) --> tasks->rsp;
         pool.for_each(select_default(pool).all_workers_busy) --> tasks->hybernate;

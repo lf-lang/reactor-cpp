@@ -47,7 +47,7 @@ struct ParameterMetadata {
     ParameterMetadata<Type> variable_name = ParameterMetadata<Type>{ #variable_name, description, min_value, max_value, default_value, #Type }
 
 template <typename... ParameterValueType>
-class SystemParameter : public SystemParameterBase {
+class SystemParametersStandalone : public SystemParameterBase {
 public:
     using ParameterValue = std::variant<ParameterMetadata<ParameterValueType>*...>;
 
@@ -56,7 +56,7 @@ public:
         ParameterValue param;
     };
 
-    SystemParameter(Reactor *owner)
+    SystemParametersStandalone(Reactor *owner)
     : reactor(owner), env(owner->get_env()) {
         reactor->set_param (this);
     }
@@ -142,11 +142,11 @@ private:
 };
 
 template <typename Defaults, typename... ParameterValueType>
-class SystemParameterWithDefault : public SystemParameter<ParameterValueType...> {
+class SystemParameters : public SystemParametersStandalone<ParameterValueType...> {
 public:
     Defaults defaults;
-    SystemParameterWithDefault(Reactor *owner, Defaults &&param)
-    : SystemParameter<ParameterValueType...>(owner), defaults(std::forward<Defaults>(param)) {}
+    SystemParameters(Reactor *owner, Defaults &&param)
+    : SystemParametersStandalone<ParameterValueType...>(owner), defaults(std::forward<Defaults>(param)) {}
 };
 
 } // namespace sdk
