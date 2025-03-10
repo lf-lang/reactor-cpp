@@ -56,16 +56,12 @@ public:
     Relay(const std::string &name, Reactor *container, Parameters &&param)
     : Reactor(name, container), parameters{std::forward<Parameters>(param)} {}
 
-    class Internals : public ReactionInternals<Relay, Parameters> {
+    REACTION_SCOPE_START(Relay, Parameters)
         const int &n_outputs = parameters.n_outputs;
 
         int index = 0;
         int *busy = 0;
 
-        public:
-        Internals(Reactor *reactor, Parameters &params)
-            : ReactionInternals<Relay, Parameters>(reactor, params) {}
-        
         void add_reactions(Relay *reactor) override {
             reaction("reaction_1").
                 triggers(&reactor->startup).
@@ -134,9 +130,7 @@ public:
                     }
                 );
         }
-    };
-
-    Internals reaction_internals{this, parameters};
+    REACTION_SCOPE_END(this, parameters)
 
     void construction() override {
         out_req.set_width(n_outputs);

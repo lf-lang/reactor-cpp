@@ -300,4 +300,15 @@ public:
     void request_stop() { reactor_->environment()->sync_shutdown(); }
 };
 
+#define REACTION_SCOPE_START(ReactorType, ParamType) \
+class Internals : public ReactionInternals<ReactorType, ParamType> { \
+public: \
+    Internals(Reactor *reactor, ParamType &params) \
+        : ReactionInternals<ReactorType, ParamType>(reactor, params) {} \
+private:
+
+#define REACTION_SCOPE_END(reactor, param) \
+}; \
+Internals reaction_internals{reactor, param};
+
 } // namespace sdk
