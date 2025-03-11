@@ -41,10 +41,13 @@ public:
     template <typename Fn>
     Reaction<Fn, InputTuple, DependencyTuple, OutputTuple> &function(Fn func)
     {
-        if (sizeof(func) != sizeof(void*)) {
+        if constexpr (std::is_bind_expression<Fn>::value) {
+        }
+        else if (sizeof(func) != sizeof(void*)) {
             reactor::log::Error() << "Reactor: " << reactor->fqn() << " Reaction: " << name << " Accesses variables outside of its scope";
             exit(EXIT_FAILURE);
         }
+
         auto ReactionRef = std::make_shared<Reaction<Fn, InputTuple, DependencyTuple, OutputTuple>> (name, reactor, std::move(input_triggers), std::move(dependencies), std::move(output_triggers), std::forward<Fn>(func));
         ReactionRef->execute();
         return *ReactionRef;
@@ -276,6 +279,7 @@ class ReactionInternals : public ReactionBase {
 
 protected:
     const ParameterType &parameters;
+    const size_t &bank_index = reactor_->bank_index;
 public:
     ReactionInternals(Reactor *owner, ParameterType &param)
         : ReactionBase("reaction-internals", owner), reactor_((ReactorType*) owner), parameters(param) {

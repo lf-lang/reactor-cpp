@@ -11,6 +11,6 @@ void MainReactor::construction() {
     }
 }
 
-void MainReactor::assembling() {
-    std::cout << "Assembling Main n_sinks:" << parameters.n_fast.value << "\n";
+void MainReactor::wiring() {
+    std::cout << "Wiring Main n_sinks:" << parameters.n_fast.value << "\n";
 }

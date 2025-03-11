@@ -8,11 +8,11 @@ using namespace sdk;
 
 class MainReactor: public Reactor {
 public:
-    struct Parameters : public SystemParameter<int> {
+    struct Parameters : public SystemParametersStandalone<int> {
         REACTOR_PARAMETER(int, n_fast, "Number of fast nodes", 1, 10, 2);
 
         Parameters(Reactor *container)
-            :   SystemParameter<int>(container) {
+            :   SystemParametersStandalone<int>(container) {
             register_parameters (n_fast);
         }
     };
@@ -28,7 +28,7 @@ public:
     : Reactor(name, container) {}
   
     void construction() override;
-    void assembling() override;
+    void wiring() override;
 };
 
         

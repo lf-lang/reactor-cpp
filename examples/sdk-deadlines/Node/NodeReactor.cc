@@ -4,11 +4,13 @@ void NodeReactor::construction() {
     std::cout << "Construction:" << fqn() << " period:" << parameters.period.value << " duration:" << parameters.duration.value << "\n";
 }
 
-void NodeReactor::assembling() {
+void NodeReactor::wiring() {
     std::cout << "Assembling Node\n";
+}
 
+void NodeReactor::Internals::add_reactions(NodeReactor *reactor) {
     reaction("reaction_1").
-        triggers(&startup, &a).
+        triggers(&reactor->startup, &reactor->a).
         dependencies().
         effects().
         function(
