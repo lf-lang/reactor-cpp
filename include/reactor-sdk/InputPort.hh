@@ -23,6 +23,16 @@ class Input : public reactor::Input<T> {
                 origin.connect_fanout (input);
             }
 
+            template <typename OtherReactorType>
+            void operator>(ReactorBankInputPortOffset<OtherReactorType, T> &&other_bank_ports) {
+                origin.connect(std::move(other_bank_ports));
+            }
+
+            template <typename OtherReactorType>
+            void operator>>(ReactorBankInputPortOffset<OtherReactorType, T> &&other_bank_ports) {
+                origin.connect_fanout(std::move(other_bank_ports));
+            }
+
         private:
             Input& origin;
     };
@@ -30,6 +40,12 @@ class Input : public reactor::Input<T> {
     void connect(Input<T>& input);
     void connect(MultiportInput<T>& input);
     void connect_fanout(MultiportInput<T>& input);
+
+    template <typename ReactorType>
+    void connect(ReactorBankInputPortOffset<ReactorType, T> &&other_bank_ports);
+
+    template <typename ReactorType>
+    void connect_fanout(ReactorBankInputPortOffset<ReactorType, T> &&other_bank_ports);
 
 public:
     using value_type = T;
