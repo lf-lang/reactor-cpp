@@ -14,14 +14,14 @@ void NodeReactor::Internals::add_reactions(NodeReactor *reactor) {
         dependencies().
         effects().
         function(
-            [&](Startup& startup, LogicalAction<void> &a) {
+            [this](Startup& startup, LogicalAction<void> &a) {
                 reactor::log::Info() << "(" << get_elapsed_logical_time() << ", " << get_microstep() << "), physical_time: " << get_elapsed_physical_time() << " " << fqn() << " reaction executes.";
                 std::this_thread::sleep_for(parameters.duration.value);
                 reactor::log::Info() << "(" << get_elapsed_logical_time() << ", " << get_microstep() << "), physical_time: " << get_elapsed_physical_time() << " " << fqn() << " reaction done.";
                 a.schedule(parameters.period.value);
             }
         ).deadline (parameters.period.value, 
-            [&](Startup& startup, LogicalAction<void> &a) {
+            [this](Startup& startup, LogicalAction<void> &a) {
                 reactor::log::Error() << "(" << get_elapsed_logical_time() << ", " << get_microstep() << "), physical_time: " << get_elapsed_physical_time() << " " << fqn() << " deadline was violated!";
                 exit(1);
             }

@@ -273,6 +273,38 @@ public:
     }
 };
 
+template <typename ReactorType>
+class ReactionInternalsParameterless : public ReactionBase {
+    ReactorType *reactor_;
+protected:
+    const size_t &bank_index = reactor_->bank_index;
+public:
+    ReactionInternalsParameterless(Reactor *owner)
+        : ReactionBase("reaction-internals-parameterless", owner), reactor_((ReactorType*) owner) {
+        reactor_->add_reaction_internals(this);
+    }
+
+    ReactionName &reaction (const std::string name) {
+        auto ReactionNameRef = std::make_shared<ReactionName>(name, reactor);
+        next = ReactionNameRef;
+        return *ReactionNameRef;
+    }
+
+    virtual void add_reactions(ReactorType *reactor) = 0;
+    virtual void assemble() override {
+        add_reactions(reactor_);
+    }
+
+    auto fqn() const noexcept -> const std::string& { return reactor_->fqn(); }
+    auto get_elapsed_logical_time() const noexcept -> Duration { return reactor_->get_elapsed_logical_time(); }
+    auto get_microstep() const noexcept -> reactor::mstep_t { return reactor_->get_microstep(); }
+    auto get_elapsed_physical_time() const noexcept -> Duration { return reactor_->get_elapsed_physical_time(); }
+    auto get_physical_time() noexcept -> reactor::TimePoint { return reactor_->get_physical_time(); }
+    auto get_logical_time() const noexcept -> reactor::TimePoint { return reactor_->get_logical_time(); }
+    auto get_tag() const noexcept -> reactor::Tag { return reactor_->get_tag(); }
+    void request_stop() { reactor_->environment()->sync_shutdown(); }
+};
+
 template <typename ReactorType, typename ParameterType>
 class ReactionInternals : public ReactionBase {
     ReactorType *reactor_;
@@ -301,6 +333,9 @@ public:
     auto get_elapsed_logical_time() const noexcept -> Duration { return reactor_->get_elapsed_logical_time(); }
     auto get_microstep() const noexcept -> reactor::mstep_t { return reactor_->get_microstep(); }
     auto get_elapsed_physical_time() const noexcept -> Duration { return reactor_->get_elapsed_physical_time(); }
+    auto get_physical_time() noexcept -> reactor::TimePoint { return reactor_->get_physical_time(); }
+    auto get_logical_time() const noexcept -> reactor::TimePoint { return reactor_->get_logical_time(); }
+    auto get_tag() const noexcept -> reactor::Tag { return reactor_->get_tag(); }
     void request_stop() { reactor_->environment()->sync_shutdown(); }
 };
 
@@ -314,5 +349,18 @@ private:
 #define REACTION_SCOPE_END(reactor, param) \
 }; \
 Internals reaction_internals{reactor, param};
+
+#define REACTION_SCOPE_START_NO_PARAMS(ReactorType) \
+class Internals : public ReactionInternalsParameterless<ReactorType> { \
+public: \
+    Internals(Reactor *reactor) \
+        : ReactionInternalsParameterless<ReactorType>(reactor) {} \
+private:
+
+#define REACTION_SCOPE_END_NO_PARAMS(reactor) \
+}; \
+Internals reaction_internals{reactor};
+
+#define REACTION_SCOPE(ReactorType) ReactorType::Internals
 
 } // namespace sdk

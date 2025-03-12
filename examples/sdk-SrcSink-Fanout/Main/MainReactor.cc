@@ -8,18 +8,20 @@ void MainReactor::construction() {
     snk = std::make_unique<SinkReactor>("Sink", this);
 }
 
-void MainReactor::assembling() {
-    cout << "Assembling Main\n";
+void MainReactor::wiring() {
+    cout << "Wiring Main\n";
 
     src->req -->> snk->req;
     snk->rsp --> src->rsp;
+}
 
+void REACTION_SCOPE(MainReactor)::add_reactions(MainReactor *reactor) {
     reaction("reaction_1").
-        triggers(&startup).
+        triggers(&reactor->startup).
         dependencies().
         effects().
         function(
-            [&](Startup& startup) {
+            [this](Startup& startup) {
                 cout << "(" << get_elapsed_logical_time() << ", " << get_microstep() << "), physical_time: " << get_elapsed_physical_time() << " " <<
                 "Starting up reaction\n" << "Bank:" << bank_index << " name:" << parameters.alias.value << " fqn:" << fqn() << endl;
             }

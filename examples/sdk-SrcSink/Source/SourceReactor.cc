@@ -10,14 +10,17 @@ void SourceReactor::construction() {
     rsp.set_width (parameters.n_ports.value);
 }
 
-void SourceReactor::assembling() {
-    cout << "Assembling Source n_ports:" << parameters.n_ports.value << "\n";
+void SourceReactor::wiring() {
+    cout << "Wiring Source n_ports:" << parameters.n_ports.value << "\n";
+}
+
+void REACTION_SCOPE(SourceReactor)::add_reactions(SourceReactor *reactor) {
     reaction("reaction_1").
-        triggers(&startup).
+        triggers(&reactor->startup).
         dependencies().
-        effects(&sch).
+        effects(&reactor->sch).
         function(
-            [&](Startup& startup, LogicalAction<int>& sched) {
+            [this](Startup& startup, LogicalAction<int>& sched) {
                 cout << "(" << get_elapsed_logical_time() << ", " << get_microstep() << "), physical_time: " << get_elapsed_physical_time() << " " <<
                 "Starting up reaction\n" << "Bank:" << bank_index << " name:" << name << " fqn:" << fqn() << " iterations:" << parameters.iterations.value << endl;
                 if (itr < parameters.iterations.value) {
@@ -28,11 +31,11 @@ void SourceReactor::assembling() {
         );
 
     reaction("reaction_2").
-        triggers(&sch).
+        triggers(&reactor->sch).
         dependencies().
-        effects(&req).
+        effects(&reactor->req).
         function(
-            [&](LogicalAction<int>& sch, MultiportOutput<int>& req) {
+            [this](LogicalAction<int>& sch, MultiportOutput<int>& req) {
                 for (int i = 0; i < parameters.n_ports.value; ++i) {
                     cout << "(" << get_elapsed_logical_time() << ", " << get_microstep() << "), physical_time: " << get_elapsed_physical_time() << " " <<
                     "Scheduling iteration:" << *sch.get() << " out_port:" << i << endl;
@@ -42,11 +45,11 @@ void SourceReactor::assembling() {
         );
 
     reaction("reaction_3").
-        triggers(&rsp).
+        triggers(&reactor->rsp).
         dependencies().
-        effects(&sch).
+        effects(&reactor->sch).
         function(
-                [&](MultiportInput<int>& rsp, LogicalAction<int>& sch) {
+                [this](MultiportInput<int>& rsp, LogicalAction<int>& sch) {
                     for (int i = 0; i < parameters.n_ports.value; ++i) {
                         if (rsp[i].is_present()) {
                             cout << "(" << get_elapsed_logical_time() << ", " << get_microstep() << "), physical_time: " << get_elapsed_physical_time() << " " <<

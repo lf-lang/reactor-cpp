@@ -9,29 +9,39 @@ using namespace sdk;
 
 class MainReactor: public Reactor {
 public:
-    struct Parameters : public SystemParameter<string> {
-        REACTOR_PARAMETER (string, alias, "Alternate name", "another", "another", "Src-Sink-Fanout-Example");
+    struct Parameters {
+        string alias = "Src-Sink-Fanout-Example";
+    };
+private:
+    struct PublishParameters : public SystemParameters<Parameters, string> {
+        REACTOR_PARAMETER(string, alias, "Alternate name", "another", "another", defaults.alias);
 
-        Parameters(Reactor *container)
-            :   SystemParameter<string>(container) {
+        PublishParameters(Reactor *container, Parameters &&param)
+            :   SystemParameters<Parameters, string>(container, std::forward<Parameters>(param)) {
             register_parameters (alias);
         }
-  };
+    };
+    PublishParameters parameters;
 
-private:
-    Parameters parameters{this};
+    REACTION_SCOPE_START(MainReactor, PublishParameters)
+        void add_reactions(MainReactor *reactor);
+    REACTION_SCOPE_END(this, parameters)
 
     std::unique_ptr<SourceReactor> src;
     std::unique_ptr<SinkReactor> snk;
 
 public:
     MainReactor(const std::string &name, Environment *env)
-    : Reactor(name, env) {}
+    : Reactor(name, env), parameters{this, Parameters{}} {}
     MainReactor(const std::string &name, Reactor *container)
-    : Reactor(name, container) {}
+    : Reactor(name, container), parameters{this, Parameters{}} {}
+
+    MainReactor(const std::string &name, Environment *env, Parameters && param)
+    : Reactor(name, env), parameters{this, std::forward<Parameters>(param)} {}
+    MainReactor(const std::string &name, Reactor *container, Parameters && param)
+    : Reactor(name, container), parameters{this, std::forward<Parameters>(param)} {}
   
     void construction() override;
-    void assembling() override;
+    void wiring() override;
 };
-
         

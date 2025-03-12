@@ -5,6 +5,19 @@ using namespace std;
 using namespace sdk;
 
 class Src : public Reactor {
+    REACTION_SCOPE_START_NO_PARAMS(Src)
+        void add_reactions (Src *reactor) {
+            reaction ("reaction_1").
+                triggers(&reactor->startup).
+                dependencies().
+                effects(&reactor->out).
+                function (
+                    [this](Startup &startup, Output<unsigned> &out) {
+                        out.set(42);
+                    }
+                );
+        }
+    REACTION_SCOPE_END_NO_PARAMS(this)
 public:
     Output<unsigned> out{"out", this};
 
@@ -13,23 +26,41 @@ public:
     Src(const std::string &name, Reactor *container)
         : Reactor(name, container) {}
     
-    void construction() {
-    }
-
-    void assembling() {
-        reaction ("reaction_1").
-            triggers(&startup).
-            dependencies().
-            effects(&out).
-            function (
-                [&](Startup &startup, Output<unsigned> &out) {
-                    out.set(42);
-                }
-            );
-    }
+    void construction() {}
+    void wiring() {}
 };
 
 class Sink : public Reactor {
+    REACTION_SCOPE_START_NO_PARAMS(Sink)
+        void add_reactions (Sink *reactor) {
+            reaction ("reaction_1").
+                triggers(&reactor->startup).
+                dependencies(&reactor->in).
+                effects().
+                function (
+                    [this](Startup &startup, Input<unsigned> &in) {
+                        if (!in.is_present()) {
+                            reactor::log::Error() << "Received no value";
+                            exit(1);
+                        }
+                        if(*in.get() != 42) {
+                            reactor::log::Error() << "Received an unexpected value";
+                            exit(1);
+                        }
+                    }
+                );
+
+            reaction ("reaction_2").
+                triggers(&reactor->shutdown).
+                dependencies().
+                effects().
+                function (
+                    [this](Shutdown &shutdown) {
+                        reactor::log::Info() << "Success!";
+                    }
+                );
+        }
+    REACTION_SCOPE_END_NO_PARAMS(this)
 public:
     Input<unsigned> in{"in", this};
 
@@ -38,37 +69,8 @@ public:
     Sink(const std::string &name, Reactor *container)
         : Reactor(name, container) {}
 
-    void construction() {
-    }
-
-    void assembling() {
-        reaction ("reaction_1").
-            triggers(&startup).
-            dependencies(&in).
-            effects().
-            function (
-                [&](Startup &startup, Input<unsigned> &in) {
-                    if (!in.is_present()) {
-                        reactor::log::Error() << "Received no value";
-                        exit(1);
-                    }
-                    if(*in.get() != 42) {
-                        reactor::log::Error() << "Received an unexpected value";
-                        exit(1);
-                    }
-                }
-            );
-
-        reaction ("reaction_2").
-            triggers(&shutdown).
-            dependencies().
-            effects().
-            function (
-                [&](Shutdown &shutdown) {
-                    reactor::log::Info() << "Success!";
-                }
-            );
-    }
+    void construction() {}
+    void wiring() {}
 };
 
 int main(int argc, char **argv) {

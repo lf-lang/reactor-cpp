@@ -11,22 +11,20 @@ private:
 
     Timer timer{"timer", this};
 
-    void hello(Timer& timer) { std::cout << "Bank:" << bank_index << " Hello World!\n"; }
-    // void terminate(Shutdown& shutdown) { std::cout << "Good Bye!\n"; }
-
     REACTION_SCOPE_START(Hello, Parameters)
 
         void terminate(Shutdown& shutdown) {
             std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
                         << fqn() << " Good Bye!\n";
         }
+
         void add_reactions (Hello *reactor) {
             reaction("reaction_1").
                 triggers(&reactor->timer).
                 dependencies().
                 effects().
                 function(
-                    [&](Timer& timer) {
+                    [this](Timer& timer) {
                         std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
                         << fqn() << " Bank:" << bank_index << " Hello World!\n";
                     }

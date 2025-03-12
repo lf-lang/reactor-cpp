@@ -5,8 +5,34 @@ using namespace std;
 using namespace sdk;
 
 class GeneratedDelay : public Reactor {
-    int y_state = 0;
     LogicalAction<void> act{"act", this, 100ms};
+
+    REACTION_SCOPE_START_NO_PARAMS(GeneratedDelay)
+        int y_state = 0;
+
+        void add_reactions (GeneratedDelay *reactor) {
+            reaction ("reaction_1").
+                triggers(&reactor->y_in).
+                dependencies().
+                effects(&reactor->act).
+                function (
+                    [this](Input<int> &y_in, LogicalAction<void> &act) {
+                        y_state = *y_in.get();
+                        act.schedule();
+                    }
+                );
+            
+            reaction ("reaction_2").
+                triggers(&reactor->act).
+                dependencies().
+                effects(&reactor->y_out).
+                function (
+                    [this](LogicalAction<void> &act, Output<int> &y_out) {
+                        y_out.set(y_state);
+                    }
+                );
+        }
+    REACTION_SCOPE_END_NO_PARAMS(this)
 public:
     GeneratedDelay(const std::string &name, Environment *env)
         : Reactor(name, env) {}
@@ -18,31 +44,23 @@ public:
 
     void construction() {}
 
-    void assembling() {
-        reaction ("reaction_1").
-            triggers(&y_in).
-            dependencies().
-            effects(&act).
-            function (
-                [&](Input<int> &y_in, LogicalAction<void> &act) {
-                    y_state = *y_in.get();
-                    act.schedule();
-                }
-            );
-        
-        reaction ("reaction_2").
-            triggers(&act).
-            dependencies().
-            effects(&y_out).
-            function (
-                [&](LogicalAction<void> &act, Output<int> &y_out) {
-                    y_out.set(y_state);
-                }
-            );
-    }
+    void wiring() {}
 };
 
 class Source : public Reactor {
+    REACTION_SCOPE_START_NO_PARAMS(Source)
+        void add_reactions (Source *reactor) {
+            reaction ("reaction_1").
+                triggers(&reactor->startup).
+                dependencies().
+                effects(&reactor->out).
+                function (
+                    [this](Startup &startup, Output<int> &out) {
+                        out.set(1);
+                    }
+                );
+        }
+    REACTION_SCOPE_END_NO_PARAMS(this)
 public:
     Source(const std::string &name, Environment *env)
         : Reactor(name, env) {}
@@ -52,21 +70,34 @@ public:
     Output<int> out{"out", this};
 
     void construction() {}
-
-    void assembling() {
-        reaction ("reaction_1").
-            triggers(&startup).
-            dependencies().
-            effects(&out).
-            function (
-                [&](Startup &startup, Output<int> &out) {
-                    out.set(1);
-                }
-            );
-    }
+    void wiring() {}
 };
 
 class Sink : public Reactor {
+    REACTION_SCOPE_START_NO_PARAMS(Sink)
+        void add_reactions (Sink *reactor) {
+            reaction ("reaction_1").
+                triggers(&reactor->in).
+                dependencies().
+                effects().
+                function (
+                    [this](Input<int> &in) {
+                        auto elapsed_logical = get_elapsed_logical_time();
+                        auto logical = get_logical_time();
+                        auto physical = get_physical_time();
+                        std::cout << "logical time: " << logical << '\n';
+                        std::cout << "physical time: " << physical << '\n';
+                        std::cout << "elapsed logical time: " << elapsed_logical << '\n';
+                        if (elapsed_logical != 100ms) {
+                        std::cerr << "ERROR: Expected 100 msecs but got " << elapsed_logical << '\n';
+                        exit(1);
+                        } else {
+                        std::cout << "SUCCESS. Elapsed logical time is 100 msec.\n";
+                        }
+                    }
+                );
+        }
+    REACTION_SCOPE_END_NO_PARAMS(this)
 public:
     Sink(const std::string &name, Environment *env)
         : Reactor(name, env) {}
@@ -76,29 +107,7 @@ public:
     Input<int> in{"in", this};
 
     void construction() {}
-
-    void assembling() {
-        reaction ("reaction_1").
-            triggers(&in).
-            dependencies().
-            effects().
-            function (
-                [&](Input<int> &in) {
-                    auto elapsed_logical = get_elapsed_logical_time();
-                    auto logical = get_logical_time();
-                    auto physical = get_physical_time();
-                    std::cout << "logical time: " << logical << '\n';
-                    std::cout << "physical time: " << physical << '\n';
-                    std::cout << "elapsed logical time: " << elapsed_logical << '\n';
-                    if (elapsed_logical != 100ms) {
-                    std::cerr << "ERROR: Expected 100 msecs but got " << elapsed_logical << '\n';
-                    exit(1);
-                    } else {
-                    std::cout << "SUCCESS. Elapsed logical time is 100 msec.\n";
-                    }
-                }
-            );
-    }
+    void wiring() {}
 };
 
 class ActionDelay : public Reactor {
@@ -117,7 +126,7 @@ public:
         g = std::make_unique<GeneratedDelay>("GeneratedDelay", this);
     }
 
-    void assembling() {
+    void wiring() {
         source->out --> g->y_in;
         g->y_out --> sink->in;
     }

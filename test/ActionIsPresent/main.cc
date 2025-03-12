@@ -5,63 +5,65 @@ using namespace std;
 using namespace sdk;
 
 class ActionIsPresent : public Reactor {
-    struct Parameters : public SystemParameter<Duration> {
+    struct Parameters : public SystemParametersStandalone<Duration> {
         REACTOR_PARAMETER (Duration, offset, "offset", 1ns, 10ns, 1ns);
         REACTOR_PARAMETER (Duration, period, "period", 500ms, 1s, 500ms);
 
         Parameters(Reactor *container)
-            :   SystemParameter<Duration>(container) {
+            :   SystemParametersStandalone<Duration>(container) {
             register_parameters (offset, period);
         }
     };
-private:
     Parameters parameters{this};
+
+    REACTION_SCOPE_START(ActionIsPresent, Parameters)
+        bool success = false;
+        Duration zero = 0ns;
+        void add_reactions(ActionIsPresent *reactor) {
+            reaction ("reaction_1").
+                triggers(&reactor->startup, &reactor->a).
+                dependencies().
+                effects().
+                function (
+                    [this](Startup &startup, LogicalAction<void> &a) {
+                        if (!a.is_present()) {
+                            if (parameters.offset.value == zero) {
+                                std::cout << "Hello World!" << '\n';
+                                success = true;
+                            } else {
+                                a.schedule(parameters.offset.value);
+                            }
+                        } else {
+                            std::cout << "Hello World 2!" << '\n';
+                            success = true;
+                        }
+                    }
+                );
+            
+            reaction ("reaction_2").
+                triggers(&reactor->shutdown).
+                dependencies().
+                effects().
+                function (
+                    [this](Shutdown &shutdown) {
+                        if (!success) {
+                            std::cerr << "Failed to print 'Hello World!'" << '\n';
+                            exit(1);
+                        }
+                    }
+                );
+        }
+    REACTION_SCOPE_END(this, parameters)
+
     LogicalAction<void> a{"a", this};
-    bool success = false;
-    Duration zero = 0ns;
 public:
     ActionIsPresent(const std::string &name, Environment *env)
         : Reactor(name, env) {}
     ActionIsPresent(const std::string &name, Reactor *container)
         : Reactor(name, container) {}
     
-    void construction() {
-    }
-
-    void assembling() {
-        reaction ("reaction_1").
-            triggers(&startup, &a).
-            dependencies().
-            effects().
-            function (
-                [&](Startup &startup, LogicalAction<void> &a) {
-                    if (!a.is_present()) {
-                        if (parameters.offset.value == zero) {
-                            std::cout << "Hello World!" << '\n';
-                            success = true;
-                        } else {
-                            a.schedule(parameters.offset.value);
-                        }
-                    } else {
-                        std::cout << "Hello World 2!" << '\n';
-                        success = true;
-                    }
-                }
-            );
-        
-        reaction ("reaction_2").
-            triggers(&shutdown).
-            dependencies().
-            effects().
-            function (
-                [&](Shutdown &shutdown) {
-                    if (!success) {
-                        std::cerr << "Failed to print 'Hello World!'" << '\n';
-                        exit(1);
-                    }
-                }
-            );
-    }
+    void construction() {}
+    void wiring() {}
 };
 
 int main(int argc, char **argv) {

@@ -7,14 +7,17 @@ void SourceReactor::construction() {
     cout << "Construction Source iterations:" << parameters.iterations.value << "\n";
 }
 
-void SourceReactor::assembling() {
-    cout << "Assembling Source iterations:" << parameters.iterations.value << "\n";
+void SourceReactor::wiring() {
+    cout << "Wiring Source iterations:" << parameters.iterations.value << "\n";
+}
+
+void REACTION_SCOPE(SourceReactor)::add_reactions(SourceReactor *reactor) {
     reaction("reaction_1").
-        triggers(&startup).
+        triggers(&reactor->startup).
         dependencies().
-        effects(&sch).
+        effects(&reactor->sch).
         function(
-            [&](Startup& startup, LogicalAction<int>& sched) {
+            [this](Startup& startup, LogicalAction<int>& sched) {
                 cout << "(" << get_elapsed_logical_time() << ", " << get_microstep() << "), physical_time: " << get_elapsed_physical_time() << " " <<
                 "Starting up reaction\n" << "Bank:" << bank_index << " name:" << name << " fqn:" << fqn() << " iterations:" << parameters.iterations.value << endl;
                 if (itr < parameters.iterations.value) {
@@ -25,11 +28,11 @@ void SourceReactor::assembling() {
         );
 
     reaction("reaction_2").
-        triggers(&sch).
+        triggers(&reactor->sch).
         dependencies().
-        effects(&req).
+        effects(&reactor->req).
         function(
-            [&](LogicalAction<int>& sch, Output<int>& req) {
+            [this](LogicalAction<int>& sch, Output<int>& req) {
                 cout << "(" << get_elapsed_logical_time() << ", " << get_microstep() << "), physical_time: " << get_elapsed_physical_time() << " " <<
                 "Scheduling iteration:" << *sch.get() << endl;
                 req.set (*sch.get());
@@ -37,11 +40,11 @@ void SourceReactor::assembling() {
         );
 
     reaction("reaction_3").
-        triggers(&rsp).
+        triggers(&reactor->rsp).
         dependencies().
-        effects(&sch).
+        effects(&reactor->sch).
         function(
-            [&](Input<int>& rsp, LogicalAction<int>& sch) {
+            [this](Input<int>& rsp, LogicalAction<int>& sch) {
                 if (rsp.is_present()) {
                     cout << "(" << get_elapsed_logical_time() << ", " << get_microstep() << "), physical_time: " << get_elapsed_physical_time() << " " <<
                     "Recevied response:" << *rsp.get() << endl;

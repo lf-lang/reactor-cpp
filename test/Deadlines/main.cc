@@ -5,17 +5,39 @@ using namespace std;
 using namespace sdk;
 
 class Source : public Reactor {
-    struct Parameters : public SystemParameter<Duration> {
+    struct Parameters : public SystemParametersStandalone<Duration> {
         REACTOR_PARAMETER (Duration, period, "period", 1s, 5s, 2s);
 
         Parameters(Reactor *container)
-            :   SystemParameter<Duration>(container) {
+            :   SystemParametersStandalone<Duration>(container) {
             register_parameters (period);
         }
     };
     Parameters parameters{this};
+
+    REACTION_SCOPE_START(Source, Parameters)
+        int count = 0;
+        void add_reactions(Source *reactor) {
+            reaction ("reaction_1").
+                triggers(&reactor->t).
+                dependencies().
+                effects(&reactor->y).
+                function (
+                    [this](Timer &t, Output<int> &y) {
+                        if (count % 2 == 1) {
+                            // The count variable is odd.
+                            // Take time to cause a deadline violation.
+                            std::this_thread::sleep_for(400ms);
+                        }
+                        std::cout << "Source sends: " << count << std::endl;
+                        y.set(count);
+                        count++;
+                    }
+                );
+        }
+    REACTION_SCOPE_END(this, parameters)
+
     Timer t{"t", this};
-    int count = 0;
 public:
     Source(const std::string &name, Environment *env)
         : Reactor(name, env) {}
@@ -28,37 +50,53 @@ public:
         t.set_timer (parameters.period.value, 0ns);
     }
 
-    void assembling() {
-        reaction ("reaction_1").
-            triggers(&t).
-            dependencies().
-            effects(&y).
-            function (
-                [&](Timer &t, Output<int> &y) {
-                    if (count % 2 == 1) {
-                        // The count variable is odd.
-                        // Take time to cause a deadline violation.
-                        std::this_thread::sleep_for(400ms);
-                    }
-                    std::cout << "Source sends: " << count << std::endl;
-                    y.set(count);
-                    count++;
-                }
-            );
-    }
+    void wiring() {}
 };
 
 class Destination : public Reactor {
-    struct Parameters : public SystemParameter<Duration> {
+    struct Parameters : public SystemParametersStandalone<Duration> {
         REACTOR_PARAMETER (Duration, timeout, "timeout", 100ms, 1s, 200ms);
 
         Parameters(Reactor *container)
-            :   SystemParameter<Duration>(container) {
+            :   SystemParametersStandalone<Duration>(container) {
             register_parameters (timeout);
         }
     };
     Parameters parameters{this};
-    int count = 0;
+
+    REACTION_SCOPE_START(Destination, Parameters)
+        int count = 0;
+        void add_reactions(Destination *reactor) {
+            reaction ("reaction_1").
+                triggers(&reactor->x).
+                dependencies().
+                effects().
+                function (
+                    [this](Input<int> &x) {
+                        std::cout << "Destination receives: " << *x.get() << std::endl;
+                        if (count % 2 == 1) {
+                            // The count variable is odd, so the deadline should have been
+                            // violated
+                            std::cerr << "ERROR: Failed to detect deadline." << std::endl;
+                            exit(1);
+                        }
+                        count++;
+                    }
+                ).deadline (parameters.timeout.value,
+                    [this](Input<int> &x) {
+                        std::cout << "Destination deadline handler receives: "
+                            << *x.get() << std::endl;
+                        if (count % 2 == 0) {
+                            // The count variable is even, so the deadline should not have
+                            // been violated.
+                            std::cerr << "ERROR: Deadline handler invoked without deadline "
+                                    << "violation." << std::endl;
+                            exit(2);
+                        }
+                        count++;
+                    });
+        }
+    REACTION_SCOPE_END(this, parameters)
 public:
     Destination(const std::string &name, Environment *env)
         : Reactor(name, env) {}
@@ -69,35 +107,7 @@ public:
 
     void construction() {}
 
-    void assembling() {
-        reaction ("reaction_1").
-            triggers(&x).
-            dependencies().
-            effects().
-            function (
-                [&](Input<int> &x) {
-                    std::cout << "Destination receives: " << *x.get() << std::endl;
-                    if (count % 2 == 1) {
-                        // The count variable is odd, so the deadline should have been
-                        // violated
-                        std::cerr << "ERROR: Failed to detect deadline." << std::endl;
-                        exit(1);
-                    }
-                    count++;
-                }
-            ).deadline (parameters.timeout.value,
-                [&](Input<int> &x) {
-                    std::cout << "Destination deadline handler receives: "
-                        << *x.get() << std::endl;
-                    if (count % 2 == 0) {
-                        // The count variable is even, so the deadline should not have
-                        // been violated.
-                        std::cerr << "ERROR: Deadline handler invoked without deadline "
-                                << "violation." << std::endl;
-                        exit(2);
-                    }
-                    count++;
-                });
+    void wiring() {
     }
 };
 
@@ -115,7 +125,7 @@ public:
         d = std::make_unique<Destination>("Destination", this);
     }
 
-    void assembling() {
+    void wiring() {
         s->y --> d->x;
     }
 };
