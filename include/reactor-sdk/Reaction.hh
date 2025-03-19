@@ -113,9 +113,6 @@ public:
         next = ReactionInputRef;
         return *ReactionInputRef;
     }
-
-    // template <typename ReactorType, typename ParameterType>
-    // friend class ReactionChamber;
 };
 
 template <typename Fn, typename InputTuple, typename DependencyTuple, typename OutputTuple>
@@ -220,9 +217,6 @@ private:
             },
             outputs);
     }
-
-    template <typename Reaction>
-    void set_output_triggers(std::unique_ptr<Reaction>& reaction, const std::tuple<>& outputs) {}
 
 public:
     Reaction(std::string name, Reactor *parent, InputTuple inputs, DependencyTuple deps, OutputTuple outputs, Fn func)
