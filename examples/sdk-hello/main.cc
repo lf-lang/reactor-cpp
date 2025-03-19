@@ -11,7 +11,11 @@ private:
 
     Timer timer{"timer", this};
 
-    REACTION_SCOPE_START(Hello, Parameters)
+    class Chamber : public ReactionChamber<Hello, Parameters> {
+    public:
+        Chamber(Reactor *reactor, Parameters &params)
+            : ReactionChamber<Hello, Parameters>(reactor, params) {}
+    private:
 
         void terminate(Shutdown& shutdown) {
             std::cout   << "(" << get_elapsed_logical_time().count() << ", " << get_microstep() << ") physical_time:" << get_elapsed_physical_time().count()
@@ -36,8 +40,8 @@ private:
                 effects().
                 function(pass_function(terminate));
         }
-
-    REACTION_SCOPE_END(this, parameters)
+    };
+    Chamber reaction_chamber{this, parameters};
 
 public:
     Hello(const std::string &name, Environment *env)

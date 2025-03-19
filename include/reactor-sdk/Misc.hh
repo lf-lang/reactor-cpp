@@ -13,7 +13,8 @@ using LogicalAction = reactor::LogicalAction<T>;
 using Startup = reactor::StartupTrigger;
 using Shutdown = reactor::ShutdownTrigger;
 
-using Duration = std::chrono::nanoseconds;
+using Duration = reactor::Duration;
+using TimePoint = reactor::TimePoint;
 
 #define select_default(obj) &obj[0]
 
@@ -77,5 +78,30 @@ public:
     Timer(Timer&&) noexcept = default;
 };
 
+inline auto operator<<(std::ostream& os, Duration dur) -> std::ostream& {
+  os << dur.count() << " nsecs";
+  return os;
+}
+
+constexpr std::size_t TIME_TO_STR_BUFFER_SIZE_{20};
+constexpr std::size_t NANOSECONDS_IN_ONE_SECOND_{1'000'000'000UL};
+constexpr std::size_t NANOSECOND_DIGITS_{9};
+
+inline auto operator<<(std::ostream& os, TimePoint tp) -> std::ostream& {
+  std::array<char, TIME_TO_STR_BUFFER_SIZE_> buf{};
+  time_t time =
+      std::chrono::system_clock::to_time_t(std::chrono::time_point_cast<std::chrono::system_clock::duration>(tp));
+  auto res = std::strftime(buf.data(), sizeof(buf), "%Y-%m-%d %H:%M:%S", std::localtime(&time));
+  auto epoch = std::chrono::duration_cast<Duration>(tp.time_since_epoch());
+
+  if (res != 0) {
+    os << buf.data() << '.' << std::setw(NANOSECOND_DIGITS_) << std::setfill('0')
+       << epoch.count() % NANOSECONDS_IN_ONE_SECOND_;
+  } else {
+    os << "[INVALID TIME]";
+  }
+
+  return os;
+}
 
 } // namespace sdk

@@ -160,13 +160,11 @@ private:
     };
 
     PublishParameters parameters;
-    const Duration &processing_delay = parameters.processing_delay.value;
-
-    class Internals : public ReactionInternals<Worker, PublishParameters> {
+    class Chamber : public ReactionChamber<Worker, PublishParameters> {
         const Duration &processing_delay = parameters.processing_delay.value;
     public:
-        Internals(Reactor *reactor, PublishParameters &params)
-            : ReactionInternals<Worker, PublishParameters>(reactor, params) {}
+        Chamber(Reactor *reactor, PublishParameters &params)
+            : ReactionChamber<Worker, PublishParameters>(reactor, params) {}
         
         void add_reactions(Worker *reactor) override {
             reaction("reaction_1").
@@ -220,7 +218,7 @@ private:
 
 
     };
-    Internals reaction_internals{this, parameters};
+    Chamber reaction_chamber{this, parameters};
 
 public:
     Worker(const std::string &name, Environment *env, Parameters &&param)
@@ -260,11 +258,10 @@ private:
     ReactorBank<Worker> workers{"workers", this};
     std::unique_ptr<Relay> relay;
 
-    class Internals : public ReactionInternals<Pool, PublishParameters> {
-        const int &n_workers = parameters.n_workers.value;
+    class Chamber : public ReactionChamber<Pool, PublishParameters> {
     public:
-        Internals(Reactor *reactor, PublishParameters &params)
-            : ReactionInternals<Pool, PublishParameters>(reactor, params) {}
+        Chamber(Reactor *reactor, PublishParameters &params)
+            : ReactionChamber<Pool, PublishParameters>(reactor, params) {}
         
         void add_reactions(Pool *reactor) override {
             reaction("reaction_1").
@@ -293,7 +290,7 @@ private:
 
     };
 
-    Internals reaction_internals{this, parameters};
+    Chamber reaction_chamber{this, parameters};
 
 public:
     Pool(const std::string &name, Environment *env, Parameters &&param)
@@ -333,12 +330,11 @@ public:
 
 private:
     Parameters parameters;
-    const int &n_tasks = parameters.n_tasks;
     const int &n_pools = parameters.n_pools;
     
     LogicalAction<int> sch{"sch", this};
 
-    class Internals : public ReactionInternals<Tasks, Parameters> {
+    class Chamber : public ReactionChamber<Tasks, Parameters> {
         const int &n_tasks = parameters.n_tasks;
         const int &n_pools = parameters.n_pools;
 
@@ -346,8 +342,8 @@ private:
         int rsp_itr = 0;
         bool *busy = 0;
     public:
-        Internals(Reactor *reactor, Parameters &params)
-            : ReactionInternals<Tasks, Parameters>(reactor, params) {}
+        Chamber(Reactor *reactor, Parameters &params)
+            : ReactionChamber<Tasks, Parameters>(reactor, params) {}
         
         void add_reactions(Tasks *reactor) override {
             reaction("reaction_1").
@@ -457,7 +453,7 @@ private:
         }
     };
 
-    Internals reaction_internals{this, parameters};
+    Chamber reaction_chamber{this, parameters};
 
 public:
     Tasks(const std::string &name, Environment *env, Parameters &&param)

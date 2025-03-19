@@ -23,7 +23,9 @@ struct is_specialization<Template<Args...>, Template> : std::true_type
 template <typename T, template <typename...> class Template>
 inline constexpr bool is_specialization_v = is_specialization<T, Template>::value;
 
-
+// fix for gcc < 13
+template <typename T>
+constexpr bool templated_false = false;
 
 template <typename InputTuple, typename DependencyTuple, typename OutputTuple>
 class ReactionOutput: public ReactionBase
@@ -113,7 +115,7 @@ public:
     }
 
     // template <typename ReactorType, typename ParameterType>
-    // friend class ReactionInternals;
+    // friend class ReactionChamber;
 };
 
 template <typename Fn, typename InputTuple, typename DependencyTuple, typename OutputTuple>
@@ -204,7 +206,7 @@ private:
         }
         else
         {
-            static_assert(false, "Unsupported trigger type");
+            static_assert(templated_false<Trigger>, "Unsupported trigger type");
         }
     }
 
@@ -218,6 +220,9 @@ private:
             },
             outputs);
     }
+
+    template <typename Reaction>
+    void set_output_triggers(std::unique_ptr<Reaction>& reaction, const std::tuple<>& outputs) {}
 
 public:
     Reaction(std::string name, Reactor *parent, InputTuple inputs, DependencyTuple deps, OutputTuple outputs, Fn func)
@@ -274,12 +279,12 @@ public:
 };
 
 template <typename ReactorType>
-class ReactionInternalsParameterless : public ReactionBase {
+class ReactionChamberParameterless : public ReactionBase {
     ReactorType *reactor_;
 protected:
     const size_t &bank_index = reactor_->bank_index;
 public:
-    ReactionInternalsParameterless(Reactor *owner)
+    ReactionChamberParameterless(Reactor *owner)
         : ReactionBase("reaction-internals-parameterless", owner), reactor_((ReactorType*) owner) {
         reactor_->add_reaction_internals(this);
     }
@@ -306,14 +311,14 @@ public:
 };
 
 template <typename ReactorType, typename ParameterType>
-class ReactionInternals : public ReactionBase {
+class ReactionChamber : public ReactionBase {
     ReactorType *reactor_;
 
 protected:
     const ParameterType &parameters;
     const size_t &bank_index = reactor_->bank_index;
 public:
-    ReactionInternals(Reactor *owner, ParameterType &param)
+    ReactionChamber(Reactor *owner, ParameterType &param)
         : ReactionBase("reaction-internals", owner), reactor_((ReactorType*) owner), parameters(param) {
         reactor_->add_reaction_internals(this);
     }
@@ -340,10 +345,10 @@ public:
 };
 
 #define REACTION_SCOPE_START(ReactorType, ParamType) \
-class Internals : public ReactionInternals<ReactorType, ParamType> { \
+class Internals : public ReactionChamber<ReactorType, ParamType> { \
 public: \
     Internals(Reactor *reactor, ParamType &params) \
-        : ReactionInternals<ReactorType, ParamType>(reactor, params) {} \
+        : ReactionChamber<ReactorType, ParamType>(reactor, params) {} \
 private:
 
 #define REACTION_SCOPE_END(reactor, param) \
@@ -351,10 +356,10 @@ private:
 Internals reaction_internals{reactor, param};
 
 #define REACTION_SCOPE_START_NO_PARAMS(ReactorType) \
-class Internals : public ReactionInternalsParameterless<ReactorType> { \
+class Internals : public ReactionChamberParameterless<ReactorType> { \
 public: \
     Internals(Reactor *reactor) \
-        : ReactionInternalsParameterless<ReactorType>(reactor) {} \
+        : ReactionChamberParameterless<ReactorType>(reactor) {} \
 private:
 
 #define REACTION_SCOPE_END_NO_PARAMS(reactor) \
