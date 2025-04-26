@@ -26,14 +26,16 @@ private:
   void change_size(std::size_t new_size);
 
 public:
-  MutationChangeOutputMultiportSize(ModifableMultiport<Output<T>>* multiport, std::size_t size);
+  MutationChangeOutputMultiportSize(Reaction* reaction, ModifableMultiport<Output<T>>* multiport, std::size_t size);
   MutationChangeOutputMultiportSize() = default;
   MutationChangeOutputMultiportSize(const MutationChangeOutputMultiportSize& other)
-      : multiport_(other.multiport_)
+      : Mutation(other.reaction_)
+      , multiport_(other.multiport_)
       , desired_size_(other.desired_size_)
       , size_before_application_(other.size_before_application_) {}
   MutationChangeOutputMultiportSize(MutationChangeOutputMultiportSize&& other) noexcept
-      : multiport_(other.multiport_)
+      : Mutation(other.reaction_)
+      , multiport_(other.multiport_)
       , desired_size_(other.desired_size_)
       , size_before_application_(other.size_before_application_) {}
   ~MutationChangeOutputMultiportSize() override = default;

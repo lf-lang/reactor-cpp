@@ -19,13 +19,11 @@ class Reactor;
 class Environment;
 
 class Transaction {
-private:
   Environment* environment_ = nullptr;
-  Reactor* parent_ = nullptr;
   std::vector<std::shared_ptr<Mutation>> mutations_{};
 
 public:
-  explicit Transaction(Reactor* parent);
+  explicit Transaction(Environment* env);
   Transaction(const Transaction& other) = default;
   Transaction(Transaction&& other) = default;
   auto operator=(const Transaction& other) -> Transaction& = default;

@@ -17,8 +17,8 @@ using namespace std::chrono_literals;
 
 class Consumer final : public Reactor { // NOLINT
   class Inner : public Scope {
-    Inner(Reactor* reactor, std::size_t index)
-        : Scope(reactor)
+    Inner(Reaction* reaction, std::size_t index)
+        : Scope(reaction)
         , index_(index) {}
     std::size_t index_ = 0;
 
@@ -30,12 +30,12 @@ class Consumer final : public Reactor { // NOLINT
   };
 
   Inner _lf_inner;
-  Reaction handle{"handle", 1, this, [this]() { _lf_inner.reaction_1(this->in); }};
+  Reaction handle{"handle", 1, false, this, [this]() { _lf_inner.reaction_1(this->in); }};
 
 public:
   Consumer(const std::string& name, Environment* env, std::size_t index)
       : Reactor(name, env)
-      , _lf_inner(this, index) {
+      , _lf_inner(&handle, index) {
     std::cout << "creating instance of consumer" << '\n';
   }
   ~Consumer() override { std::cout << "Consumer Object is deleted" << '\n'; };

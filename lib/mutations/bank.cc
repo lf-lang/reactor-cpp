@@ -11,11 +11,12 @@
 
 template <class T>
 reactor::MutationChangeBankSize<T>::MutationChangeBankSize(
-    std::vector<T>* bank, Environment* env, const std::size_t size,
+    Reaction* reaction, std::vector<T>* bank, const std::size_t size,
     std::function<T(Environment* env, std::size_t index)> create_lambda)
-    : bank_(bank)
+    : Mutation(reaction)
+    , bank_(bank)
     , desired_size_(size)
-    , env_(env)
+    , reaction_(reaction)
     , create_lambda_(std::move(create_lambda)) {}
 
 template <class T> void reactor::MutationChangeBankSize<T>::change_size(std::size_t new_size) {
@@ -28,7 +29,7 @@ template <class T> void reactor::MutationChangeBankSize<T>::change_size(std::siz
     bank_->reserve(new_size);
 
     for (auto i = 0; i < new_size - current_size; i++) {
-      bank_->push_back(create_lambda_(env_, current_size + i));
+      bank_->push_back(create_lambda_(reaction_->environment(), current_size + i));
       (*bank_)[bank_->size() - 1]->assemble();
     }
   }

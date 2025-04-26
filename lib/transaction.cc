@@ -10,9 +10,8 @@
 #include "reactor-cpp/environment.hh"
 #include "reactor-cpp/reactor.hh"
 
-reactor::Transaction::Transaction(Reactor* parent)
-    : environment_(parent->environment())
-    , parent_(parent) {}
+reactor::Transaction::Transaction(Environment* env)
+    : environment_(env) {}
 
 auto reactor::Transaction::execute(const bool recalculate) -> MutationResult {
   this->environment_->start_mutation();

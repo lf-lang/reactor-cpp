@@ -17,18 +17,15 @@ using namespace std::chrono_literals;
 class Producer final : public Reactor { // NOLINT
 private:
   Timer timer{"timer", this, 1s, 1s};
-  Reaction r_timer{"r_timer", 1, this, [this]() { _lf_inner.reaction_1(this->value); }};
+  Reaction r_timer{"r_timer", 1, false, this, [this]() { _lf_inner.reaction_1(this->value); }};
 
   class Inner : public Scope {
     unsigned int counter_ = 0;
 
-    void reaction_1([[maybe_unused]] Output<unsigned>& out) {
-      // std::cout << "producing value:" << counter_ << "\n";
-      out.set(counter_++);
-    }
+    void reaction_1([[maybe_unused]] Output<unsigned>& out) { out.set(counter_++); }
 
-    explicit Inner(Reactor* reactor)
-        : Scope(reactor) {}
+    explicit Inner(Reaction* reaction)
+        : Scope(reaction) {}
 
     friend Producer;
   };
@@ -38,7 +35,7 @@ private:
 public:
   Producer(const std::string& name, Environment* env)
       : Reactor(name, env)
-      , _lf_inner(this) {
+      , _lf_inner(&r_timer) {
     std::cout << "creating instance of producer\n";
   }
   Producer() = delete;

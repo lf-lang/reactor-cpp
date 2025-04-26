@@ -17,47 +17,45 @@
 namespace reactor {
 
 class Scope {
-private:
-  Reactor* reactor_;
+protected:
+  Reaction* reaction_ = nullptr;
 
 public:
-  explicit Scope(Reactor* reactor)
-      : reactor_(reactor) {}
+  explicit Scope(Reaction* reaction)
+      : reaction_(reaction) {}
 
   [[nodiscard]] static auto get_physical_time() noexcept -> TimePoint { return Reactor::get_physical_time(); }
-  [[nodiscard]] auto get_tag() const noexcept -> Tag { return reactor_->get_tag(); }
-  [[nodiscard]] auto get_logical_time() const noexcept -> TimePoint { return reactor_->get_logical_time(); }
-  [[nodiscard]] auto get_microstep() const noexcept -> mstep_t { return reactor_->get_microstep(); }
+  [[nodiscard]] auto get_tag() const noexcept -> Tag { return reaction_->container()->get_tag(); }
+  [[nodiscard]] auto get_logical_time() const noexcept -> TimePoint {
+    return reaction_->container()->get_logical_time();
+  }
+  [[nodiscard]] auto get_microstep() const noexcept -> mstep_t { return reaction_->container()->get_microstep(); }
   [[nodiscard]] auto get_elapsed_logical_time() const noexcept -> Duration {
-    return reactor_->get_elapsed_logical_time();
+    return reaction_->container()->get_elapsed_logical_time();
   }
   [[nodiscard]] auto get_elapsed_physical_time() const noexcept -> Duration {
-    return reactor_->get_elapsed_physical_time();
+    return reaction_->container()->get_elapsed_physical_time();
   }
-  [[nodiscard]] auto environment() const noexcept -> Environment* { return reactor_->environment(); }
+  [[nodiscard]] auto environment() const noexcept -> Environment* { return reaction_->container()->environment(); }
   void request_stop() const { environment()->sync_shutdown(); }
 };
 
 class MutableScope : public Scope {
 public:
   Transaction transaction_;
-  Reactor* reactor_;
   Environment* env_ = nullptr;
 
-  explicit MutableScope(Reactor* reactor)
-      : Scope(reactor)
-      , transaction_(reactor)
-      , reactor_(reactor)
-      , env_(reactor->environment()) {}
+  explicit MutableScope(Reaction* reaction)
+      : Scope(reaction)
+      , transaction_(reaction->environment())
+      , env_(reaction->environment()) {}
   MutableScope(const MutableScope& other)
-      : Scope(other.reactor_)
+      : Scope(other.reaction_)
       , transaction_(other.transaction_)
-      , reactor_(other.reactor_)
       , env_(other.env_) {}
   MutableScope(MutableScope&& other) noexcept
-      : Scope(other.reactor_)
+      : Scope(other.reaction_)
       , transaction_(std::move(other.transaction_))
-      , reactor_(other.reactor_)
       , env_(other.env_) {}
   ~MutableScope() = default;
   auto operator=(const MutableScope& other) -> MutableScope& = default;

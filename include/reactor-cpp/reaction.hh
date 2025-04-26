@@ -17,6 +17,9 @@
 #include "reactor_element.hh"
 
 namespace reactor {
+class Mutation;
+}
+namespace reactor {
 
 class Reaction : public ReactorElement { // NOLINT(cppcoreguidelines-special-member-functions)
 private:
@@ -28,6 +31,7 @@ private:
 
   const int priority_;
   unsigned int index_{};
+  bool mutation_ = false;
 
   std::function<void(void)> body_{nullptr};
 
@@ -37,7 +41,7 @@ private:
   void set_deadline_impl(Duration deadline, const std::function<void(void)>& handler);
 
 public:
-  Reaction(const std::string& name, int priority, Reactor* container, std::function<void(void)> body);
+  Reaction(const std::string& name, int priority, bool mutation, Reactor* container, std::function<void(void)> body);
 
   ~Reaction() override = default;
 
@@ -71,6 +75,10 @@ public:
   [[nodiscard]] auto has_deadline() const noexcept -> bool { return deadline_ != Duration::zero(); }
 
   [[nodiscard]] auto index() const noexcept -> unsigned int { return index_; }
+
+  [[nodiscard]] auto mutation() const noexcept -> bool { return mutation_; }
+
+  friend Mutation;
 };
 
 } // namespace reactor

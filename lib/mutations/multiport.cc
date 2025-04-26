@@ -10,8 +10,9 @@
 
 template <class T>
 reactor::MutationChangeOutputMultiportSize<T>::MutationChangeOutputMultiportSize(
-    ModifableMultiport<Output<T>>* multiport, const std::size_t size)
-    : multiport_(multiport)
+    Reaction* reaction, ModifableMultiport<Output<T>>* multiport, const std::size_t size)
+    : Mutation(reaction)
+    , multiport_(multiport)
     , desired_size_(size) {}
 
 template <class T> void reactor::MutationChangeOutputMultiportSize<T>::change_size(std::size_t new_size) {

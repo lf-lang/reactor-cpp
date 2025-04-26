@@ -10,12 +10,13 @@ set(SOURCE_FILES
     time.cc
     multiport.cc
     reactor_element.cc
-        scopes.cc
-        transaction.cc
-        mutations/bank.cc
-        mutations/multiport.cc
-        mutations/connection.cc
-    )
+    scopes.cc
+    transaction.cc
+    topology_lock.cc
+    mutations/bank.cc
+    mutations/multiport.cc
+    mutations/connection.cc
+)
 
 if(REACTOR_CPP_TRACE)
   set(SOURCE_FILES ${SOURCE_FILES} trace.cc )

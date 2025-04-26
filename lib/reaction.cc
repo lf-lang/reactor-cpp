@@ -17,9 +17,11 @@
 
 namespace reactor {
 
-Reaction::Reaction(const std::string& name, const int priority, Reactor* container, std::function<void(void)> body)
+Reaction::Reaction(const std::string& name, const int priority, bool mutation, Reactor* container,
+                   std::function<void(void)> body)
     : ReactorElement(name, ReactorElement::Type::Reaction, container)
     , priority_(priority)
+    , mutation_(mutation)
     , body_(std::move(std::move(body))) {
   reactor_assert(priority != 0);
 }

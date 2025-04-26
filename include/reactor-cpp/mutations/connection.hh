@@ -21,21 +21,20 @@ private:
   B* sink_;
   bool add_connection_ = true;
   bool connection_ = false;
-  Environment* env_ = nullptr;
 
 public:
-  explicit MutationAddConnection(A* source, B* sink, Environment* env, bool add_connection);
+  explicit MutationAddConnection(Reaction* reaction, A* source, B* sink, bool add_connection);
   MutationAddConnection(const MutationAddConnection& other)
-      : source_(other.source_)
+      : Mutation(other.reaction_)
+      , source_(other.source_)
       , sink_(other.sink_)
       , add_connection_(other.add_connection_)
-      , connection_(other.connection_)
-      , env_(other.env_) {}
+      , connection_(other.connection_) {}
   MutationAddConnection(MutationAddConnection&& other) noexcept
-      : source_(other.source_)
+      : Mutation(other.reaction_)
+      , source_(other.source_)
       , sink_(other.sink_)
-      , connection_(other.connection_)
-      , env_(other.env_) {}
+      , connection_(other.connection_) {}
   MutationAddConnection() = default;
   ~MutationAddConnection() override = default;
   auto operator=(const MutationAddConnection& other) -> MutationAddConnection& = default;

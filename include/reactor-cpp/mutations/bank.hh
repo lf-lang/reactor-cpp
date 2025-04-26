@@ -22,7 +22,7 @@ template <class T> class MutationChangeBankSize final : public Mutation {
   std::vector<T>* bank_ = nullptr;
   std::size_t desired_size_ = 0;
   std::size_t size_before_application_ = 0;
-  Environment* env_ = nullptr;
+  Reaction* reaction_ = nullptr;
   std::function<T(Environment* env, std::size_t index)> create_lambda_;
 
   void change_size(std::size_t new_size);
@@ -30,18 +30,18 @@ template <class T> class MutationChangeBankSize final : public Mutation {
 public:
   MutationChangeBankSize() = default;
   MutationChangeBankSize(const MutationChangeBankSize& other) noexcept
-      : bank_(other.bank_)
+      : Mutation(other.reaction_)
+      , bank_(other.bank_)
       , desired_size_(other.desired_size_)
       , size_before_application_(other.size_before_application_)
-      , env_(other.env_)
       , create_lambda_(other.create_lambda_) {}
   MutationChangeBankSize(MutationChangeBankSize&& other) noexcept
-      : bank_(other.bank_)
+      : Mutation(other.reaction_)
+      , bank_(other.bank_)
       , desired_size_(other.desired_size_)
       , size_before_application_(other.size_before_application_)
-      , env_(other.env_)
       , create_lambda_(other.create_lambda_) {}
-  explicit MutationChangeBankSize(std::vector<T>* bank, Environment* env, std::size_t size,
+  explicit MutationChangeBankSize(Reaction* reaction_, std::vector<T>* bank, std::size_t size,
                                   std::function<T(Environment* env, std::size_t index)> create_lambda);
   ~MutationChangeBankSize() override = default;
   auto operator=(const MutationChangeBankSize& other) -> MutationChangeBankSize& = default;

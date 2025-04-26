@@ -22,17 +22,21 @@ class Deployment final : public Reactor { // NOLINT
   std::unique_ptr<LoadBalancer> load_balancer_;
   std::vector<std::unique_ptr<Consumer>> consumers_;
 
-  Reaction scale_bank{"scale_bank", 1, this,
-                      [this]() { this->_inner.reaction_1(this->scale, this->consumers_, load_balancer_->out); }};
+  Reaction scale_bank{"scale_bank", 1, true, this, [this]() {
+                        this->_inner.reaction_1(this->scale, this->consumers_, load_balancer_->out);
+                        //
+                      }};
 
+  class InnerNonMutable : public Scope {};
   class Inner : public MutableScope {
     int state = 0;
 
   public:
-    explicit Inner(Reactor* reactor)
-        : MutableScope(reactor) {}
+    explicit Inner(Reaction* reaction)
+        : MutableScope(reaction) {}
     void reaction_1(const Input<unsigned>& scale, std::vector<std::unique_ptr<Consumer>>& reactor_bank,
                     ModifableMultiport<Output<unsigned>>& load_balancer) {
+      std::cout << "mutation reaction is being executed" << std::endl;
       std::size_t new_size = *scale.get();
 
       std::function lambda = [](Environment* env, std::size_t index) {
@@ -41,11 +45,11 @@ class Deployment final : public Reactor { // NOLINT
       };
 
       std::function get_input_port = [](const std::unique_ptr<Consumer>& consumer) { return &consumer->in; };
+
       const auto rescale = std::make_shared<ResizeMultiportToBank<unsigned, Consumer>>(
-          &load_balancer, &reactor_bank, get_input_port, lambda, new_size);
+          reaction_, &load_balancer, &reactor_bank, get_input_port, lambda, new_size);
 
       add_to_transaction(rescale);
-
       commit_transaction(true);
     }
 
@@ -57,7 +61,7 @@ class Deployment final : public Reactor { // NOLINT
 public:
   Deployment(const std::string& name, Environment* env)
       : Reactor(name, env)
-      , _inner(this)
+      , _inner(&scale_bank)
       , producer_(std::make_unique<Producer>("producer", environment()))
       , load_balancer_(std::make_unique<LoadBalancer>("load_balancer", environment())) {
     std::cout << "creating instance of deployment" << '\n';

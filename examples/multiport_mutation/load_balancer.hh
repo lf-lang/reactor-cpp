@@ -17,16 +17,20 @@ using namespace std::chrono_literals;
 
 class LoadBalancer final : public Reactor { // NOLINT
   class Inner : public MutableScope {
-    explicit Inner(Reactor* reactor)
-        : MutableScope(reactor) {}
+    explicit Inner(Reaction* reaction)
+        : MutableScope(reaction) {}
 
     // reaction bodies
     static void reaction_1(const Input<unsigned>& inbound, Output<unsigned>& scale_bank,
                            Multiport<Output<unsigned>>& outbound) {
-      if (std::rand() % 15 == 0) {            // NOLINT
+      if (std::rand() % 15 == 0) { // NOLINT
+
+        std::cout << "triggering mutation" << std::endl;
         scale_bank.set(std::rand() % 20 + 1); // NOLINT
       }
       const unsigned outbound_port = std::rand() % outbound.size(); // NOLINT
+
+      std::cout << "forwarding to: " << outbound_port << std::endl;
       outbound[outbound_port].set(inbound.get());
     }
 
@@ -34,12 +38,13 @@ class LoadBalancer final : public Reactor { // NOLINT
   };
 
   Inner _lf_inner;
-  Reaction process{"process", 1, this, [this]() { Inner::reaction_1(this->inbound, this->scale_bank, this->out); }};
+  Reaction process{"process", 1, false, this,
+                   [this]() { Inner::reaction_1(this->inbound, this->scale_bank, this->out); }};
 
 public:
   LoadBalancer(const std::string& name, Environment* env)
       : Reactor(name, env)
-      , _lf_inner(this) {
+      , _lf_inner(&process) {
     out.reserve(4);
     for (size_t _lf_idx = 0; _lf_idx < 4; _lf_idx++) {
       out.create_new_port();
