@@ -6,7 +6,7 @@
 using namespace reactor;
 using namespace std::chrono_literals;
 
-class Hello : public Reactor {
+class Hello final : public Reactor {
 private:
   // actions
   Timer timer{"timer", this, 1s, 2s};

@@ -19,6 +19,7 @@
 #include "reactor-cpp/logging.hh"
 #include "reactor-cpp/time.hh"
 #include "scheduler.hh"
+#include "transaction.hh"
 
 namespace reactor {
 
@@ -33,7 +34,8 @@ enum class Phase : std::uint8_t {
   Startup = 2,
   Execution = 3,
   Shutdown = 4,
-  Deconstruction = 5
+  Deconstruction = 5,
+  Mutation = 6
 };
 
 class Environment {
@@ -74,7 +76,7 @@ private:
   Graph<BasePort*, ConnectionProperties> graph_{};
   Graph<BasePort*, ConnectionProperties> optimized_graph_{};
 
-  void build_dependency_graph(Reactor* reactor);
+  void build_dependency_graph(const Reactor* reactor);
   void calculate_indexes();
 
   std::mutex shutdown_mutex_{};
@@ -102,11 +104,28 @@ public:
     }
   }
 
+  template <class T> void remove_connection(Port<T>& source, Port<T>& sink) { this->remove_connection(&source, &sink); }
+
+  template <class T> void remove_connection(Port<T>* source, Port<T>* sink) {
+    if (top_environment_ == nullptr || top_environment_ == this) {
+      log::Debug() << "removing connection: " << source->fqn() << " --> " << sink->fqn();
+      graph_.remove_edge(source, sink);
+    } else {
+      top_environment_->remove_connection(source, sink);
+    }
+  }
+
+  void start_mutation() { phase_ = Phase::Mutation; }
+  void stop_mutation() { phase_ = Phase::Execution; }
+
   void optimize();
 
   void register_reactor(Reactor* reactor);
+  void unregister_reactor(Reactor* reactor);
   void register_port(BasePort* port) noexcept;
+  void unregister_port(BasePort* reactor) noexcept;
   void register_input_action(BaseAction* action);
+
   void assemble();
   auto startup() -> std::thread;
   void sync_shutdown();
@@ -133,6 +152,7 @@ public:
   [[nodiscard]] auto max_reaction_index() const noexcept -> unsigned int { return max_reaction_index_; }
 
   friend Scheduler;
+  friend Transaction;
 };
 } // namespace reactor
 

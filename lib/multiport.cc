@@ -20,16 +20,15 @@ auto reactor::BaseMultiport::get_set_callback(std::size_t index) noexcept -> rea
   };
 }
 
-void reactor::BaseMultiport::set_present(std::size_t index) {
-  auto calculated_index = size_.fetch_add(1, std::memory_order_relaxed);
+void reactor::BaseMultiport::set_present(const std::size_t index) {
+  const auto calculated_index = size_.fetch_add(1, std::memory_order_relaxed);
 
   reactor_assert(calculated_index < present_ports_.size());
 
   present_ports_[calculated_index] = index;
 }
 
-void reactor::BaseMultiport::register_port(BasePort& port, size_t idx) {
-  // need to add one new slot t the present list
+void reactor::BaseMultiport::register_port(BasePort& port, const size_t idx) {
   reactor_assert(this->present_ports_.size() == idx);
   this->present_ports_.emplace_back(0);
 

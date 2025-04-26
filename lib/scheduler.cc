@@ -28,10 +28,17 @@ namespace reactor {
 // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
 thread_local const Worker* Worker::current_worker = nullptr;
 
+Worker::Worker(Scheduler* scheduler, bool mutation, unsigned int identity, const std::string& name)
+    : scheduler_{scheduler}
+    , mutation_(mutation)
+    , identity_{identity}
+    , log_(name) {
+  std::cout << "creating worker: mut" << mutation << std::endl;
+}
+
 void Worker::work() const {
   // initialize the current worker thread local variable
   current_worker = this;
-
   log_.debug() << "Starting";
 
   if (identity_ == 0) {
@@ -41,7 +48,13 @@ void Worker::work() const {
 
   while (true) {
     // wait for a ready reaction
-    auto* reaction = scheduler_->ready_queue_.pop();
+
+    Reaction* reaction = nullptr;
+    if (mutation_) {
+      reaction = scheduler_->mutation_ready_queue_.pop();
+    } else {
+      reaction = scheduler_->ready_queue_.pop();
+    }
 
     // receiving a nullptr indicates that the worker should terminate
     if (reaction == nullptr) {
@@ -52,11 +65,21 @@ void Worker::work() const {
     execute_reaction(reaction);
 
     // was this the very last reaction?
-    if (scheduler_->reactions_to_process_.fetch_sub(1, std::memory_order_acq_rel) == 1) {
-      // Yes, then schedule. The atomic decrement above ensures that only one
-      // thread enters this block.
-      scheduler_->schedule();
+
+    if (mutation_) {
+      if (scheduler_->mutation_reactions_to_process_.fetch_sub(1, std::memory_order_acq_rel) == 1) {
+        // Yes, then schedule. The atomic decrement above ensures that only one
+        // thread enters this block.
+        scheduler_->finished_executing_mutations();
+      }
+    } else {
+      if (scheduler_->reactions_to_process_.fetch_sub(1, std::memory_order_acq_rel) == 1) {
+        // Yes, then schedule. The atomic decrement above ensures that only one
+        // thread enters this block.
+        scheduler_->schedule();
+      }
     }
+
     // continue otherwise
   }
 
@@ -87,6 +110,7 @@ void Scheduler::schedule() noexcept {
     log_.debug() << "call next()";
     next();
     reaction_queue_pos_ = 0;
+    mutation_reaction_queue_pos_ = 0;
 
     found_ready_reactions = schedule_ready_reactions();
   }
@@ -104,7 +128,7 @@ auto ReadyQueue::pop() -> Reaction* {
     // FIXME: Protect against underflow?
   }
 
-  auto pos = old_size - 1;
+  const auto pos = old_size - 1;
   return queue_[pos];
 }
 
@@ -115,8 +139,8 @@ void ReadyQueue::fill_up(std::vector<Reaction*>& ready_reactions) {
 
   // update the atomic size counter and release the semaphore to wake up
   // waiting worker threads
-  auto new_size = static_cast<std::ptrdiff_t>(queue_.size());
-  auto old_size = size_.exchange(new_size, std::memory_order_acq_rel);
+  const auto new_size = static_cast<std::ptrdiff_t>(queue_.size());
+  const auto old_size = size_.exchange(new_size, std::memory_order_acq_rel);
 
   // calculate how many workers to wake up. -old_size indicates the number of
   // workers who started waiting since the last update.
@@ -125,14 +149,13 @@ void ReadyQueue::fill_up(std::vector<Reaction*>& ready_reactions) {
   // the semaphore.
   // Also, we do not want to wake up more workers than there is work. new_size
   // indicates the number of ready reactions. Since there is always at least
-  // one worker running running, new_size - running_workers indicates the
+  // one worker running, new_size - running_workers indicates the
   // number of additional workers needed to process all reactions.
   waiting_workers_ += -old_size;
-  std::ptrdiff_t running_workers{num_workers_ - waiting_workers_};
-  auto workers_to_wakeup = std::min(waiting_workers_, new_size - running_workers);
+  const std::ptrdiff_t running_workers{num_workers_ - waiting_workers_};
 
   // wakeup other workers_
-  if (workers_to_wakeup > 0) {
+  if (auto workers_to_wakeup = std::min(waiting_workers_, new_size - running_workers); workers_to_wakeup > 0) {
     waiting_workers_ -= workers_to_wakeup;
     log_.debug() << "Wakeup " << workers_to_wakeup << " workers";
     sem_.release(static_cast<int>(workers_to_wakeup));
@@ -158,8 +181,7 @@ auto EventQueue::extract_next_event() -> ActionListPtr {
 auto EventQueue::insert_event_at(const Tag& tag) -> const ActionListPtr& {
   auto shared_lock = std::shared_lock<std::shared_mutex>(mutex_);
 
-  auto event_it = event_queue_.find(tag);
-  if (event_it == event_queue_.end()) {
+  if (const auto event_it = event_queue_.find(tag); event_it == event_queue_.end()) {
     shared_lock.unlock();
     {
       auto unique_lock = std::unique_lock<std::shared_mutex>(mutex_);
@@ -198,6 +220,14 @@ void Scheduler::terminate_all_workers() {
 
 auto Scheduler::schedule_ready_reactions() -> bool {
   // insert any triggered reactions_ into the reaction queue
+
+  for (auto& vec_reaction : triggered_mutation_reactions_) {
+    for (auto* reaction : vec_reaction) {
+      mutation_reaction_queue_[reaction->index()].push_back(reaction);
+    }
+    vec_reaction.clear();
+  }
+
   for (auto& vec_reaction : triggered_reactions_) {
     for (auto* reaction : vec_reaction) {
       reaction_queue_[reaction->index()].push_back(reaction);
@@ -205,7 +235,36 @@ auto Scheduler::schedule_ready_reactions() -> bool {
     vec_reaction.clear();
   }
 
+  bool ready_reactions = false;
+
   log_.debug() << "Scanning the reaction queue for ready reactions";
+  // continue iterating over the reaction queue
+  for (; mutation_reaction_queue_pos_ < mutation_reaction_queue_.size(); mutation_reaction_queue_pos_++) {
+    auto& reactions = mutation_reaction_queue_[mutation_reaction_queue_pos_];
+
+    // any ready reactions of current priority?
+    if (!reactions.empty()) {
+      log_.debug() << "Process reactions of priority " << mutation_reaction_queue_pos_;
+
+      // Make sure that any reaction is only executed once even if it
+      // was triggered multiple times.
+      std::sort(reactions.begin(), reactions.end());
+      reactions.erase(std::unique(reactions.begin(), reactions.end()), reactions.end());
+
+      if constexpr (log::debug_enabled || tracing_enabled) {
+        for (auto* reaction : reactions) {
+          log_.debug() << "Reaction " << reaction->fqn() << " is ready for execution";
+          tracepoint(reactor_cpp, trigger_reaction, reaction->container()->fqn(), reaction->name(), logical_time_);
+        }
+      }
+
+      mutation_reactions_to_process_.store(static_cast<std::ptrdiff_t>(reactions.size()), std::memory_order_release);
+      mutation_ready_queue_.fill_up(reactions);
+      mutation_release_.acquire();
+      ready_reactions = true;
+      break;
+    }
+  }
 
   // continue iterating over the reaction queue
   for (; reaction_queue_pos_ < reaction_queue_.size(); reaction_queue_pos_++) {
@@ -230,13 +289,13 @@ auto Scheduler::schedule_ready_reactions() -> bool {
       reactions_to_process_.store(static_cast<std::ptrdiff_t>(reactions.size()), std::memory_order_release);
       ready_queue_.fill_up(reactions);
 
-      // break out of the loop and return
-      return true;
+      ready_reactions = true;
+      break;
     }
   }
 
   log_.debug() << "Reached end of reaction queue";
-  return false;
+  return ready_reactions;
 }
 
 void Scheduler::start() {
@@ -265,21 +324,28 @@ void Scheduler::start() {
   auto num_workers = environment_->num_workers();
   // initialize the reaction queue, set ports vector, and triggered reactions
   // vector
-  reaction_queue_.resize(environment_->max_reaction_index() + 1);
   set_ports_.resize(num_workers);
+  reaction_queue_.resize(environment_->max_reaction_index() + 1);
+  mutation_reaction_queue_.resize(environment_->max_reaction_index() + 1);
   triggered_reactions_.resize(num_workers);
+  triggered_mutation_reactions_.resize(num_workers);
 
   // Initialize and start the workers. By resizing the workers vector first,
   // we make sure that there is sufficient space for all the workers and non of
   // them needs to be moved. This is important because a running worker may not
   // be moved.
-  workers_.reserve(num_workers);
+  workers_.reserve(num_workers + 1);
   for (unsigned i = 0; i < num_workers; i++) {
     std::stringstream stream;
     stream << "Worker " << environment_->name() << " " << i;
-    workers_.emplace_back(this, i, stream.str());
-    workers_.back().start_thread();
+    workers_.emplace_back(this, false, i, stream.str());
+    workers_[i].start_thread();
   }
+
+  std::stringstream stream;
+  stream << "Mutation Worker " << environment_->name() << " " << num_workers;
+  workers_.emplace_back(this, true, num_workers, stream.str());
+  workers_[num_workers].start_thread();
 
   // join all worker threads
   for (auto& worker : workers_) {
@@ -344,8 +410,8 @@ void Scheduler::next() { // NOLINT(readability-function-cognitive-complexity)
       if (stop_) {
         continue_execution_ = false;
         log_.debug() << "Shutting down the scheduler";
-        Tag t_next = Tag::from_logical_time(logical_time_).delay();
-        if (!event_queue_.empty() && t_next == event_queue_.next_tag()) {
+        if (Tag t_next = Tag::from_logical_time(logical_time_).delay();
+            !event_queue_.empty() && t_next == event_queue_.next_tag()) {
           log_.debug() << "Trigger the last round of reactions including all "
                           "shutdown reactions";
           triggered_actions_ = event_queue_.extract_next_event();
@@ -359,7 +425,7 @@ void Scheduler::next() { // NOLINT(readability-function-cognitive-complexity)
         // synchronize with physical time if not in fast forward mode
         if (!environment_->fast_fwd_execution()) {
           log_.debug() << "acquire tag " << t_next << " from physical time barrier";
-          bool result = PhysicalTimeBarrier::acquire_tag(
+          const bool result = PhysicalTimeBarrier::acquire_tag(
               t_next, lock, this, [&t_next, this]() { return t_next != event_queue_.next_tag(); });
           // If acquire tag returns false, then a new event was inserted into the queue and we need to start over
           if (!result) {
@@ -372,7 +438,7 @@ void Scheduler::next() { // NOLINT(readability-function-cognitive-complexity)
         bool result{true};
         for (auto* action : environment_->input_actions_) {
           log_.debug() << "acquire tag " << t_next << " from input action " << action->fqn();
-          bool inner_result =
+          const bool inner_result =
               action->acquire_tag(t_next, lock, [&t_next, this]() { return t_next != event_queue_.next_tag(); });
           // If the wait was aborted or if the next tag changed in the meantime,
           // we need to break from the loop and continue with the main loop.
@@ -439,7 +505,8 @@ Scheduler::Scheduler(Environment* env)
     : using_workers_(env->num_workers() > 1)
     , environment_(env)
     , log_("Scheduler " + env->name())
-    , ready_queue_(log_, env->num_workers()) {}
+    , ready_queue_(log_, env->num_workers())
+    , mutation_ready_queue_(log_, 1) {}
 
 Scheduler::~Scheduler() = default;
 
@@ -521,7 +588,11 @@ void Scheduler::set_port_helper(BasePort* port) {
 
   // Record all triggered reactions
   for (auto* reaction : port->triggers()) {
-    triggered_reactions_[Worker::current_worker_id()].push_back(reaction);
+    if (reaction->mutation()) {
+      triggered_mutation_reactions_[Worker::current_worker_id()].push_back(reaction);
+    } else {
+      triggered_reactions_[Worker::current_worker_id()].push_back(reaction);
+    }
   }
 
   // Continue recursively
@@ -550,5 +621,7 @@ void Scheduler::release_current_tag() {
     callback(logical_time_);
   }
 }
+
+void Scheduler::finished_executing_mutations() { mutation_release_.release(); }
 
 } // namespace reactor

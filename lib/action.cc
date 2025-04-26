@@ -15,7 +15,7 @@
 
 namespace reactor {
 
-BaseAction::BaseAction(const std::string& name, Environment* environment, bool logical, Duration min_delay)
+BaseAction::BaseAction(const std::string& name, Environment* environment, const bool logical, const Duration min_delay)
     : ReactorElement(name, ReactorElement::Type::Action, environment)
     , min_delay_(min_delay)
     , logical_(logical) {
@@ -27,9 +27,8 @@ void BaseAction::register_trigger(Reaction* reaction) {
   reactor_assert(this->environment() == reaction->environment());
   assert_phase(this, Phase::Assembly);
   validate(this->container() == reaction->container(),
-           "Action triggers must belong to the same reactor as the triggered "
-           "reaction");
-  [[maybe_unused]] bool result = triggers_.insert(reaction).second;
+           "Action triggers must belong to the same reactor as the triggered reaction");
+  [[maybe_unused]] const bool result = triggers_.insert(reaction).second;
   reactor_assert(result);
 }
 
@@ -40,7 +39,7 @@ void BaseAction::register_scheduler(Reaction* reaction) {
   // the reaction must belong to the same reactor as this action
   validate(this->container() == reaction->container(), "Scheduable actions must belong to the same reactor as the "
                                                        "triggered reaction");
-  [[maybe_unused]] bool result = schedulers_.insert(reaction).second;
+  [[maybe_unused]] const bool result = schedulers_.insert(reaction).second;
   reactor_assert(result);
 }
 
@@ -62,8 +61,8 @@ void Timer::cleanup() noexcept {
   BaseAction::cleanup();
   // schedule the timer again
   if (period_ != Duration::zero()) {
-    Tag now = Tag::from_logical_time(environment()->logical_time());
-    Tag next = now.delay(period_);
+    const Tag now = Tag::from_logical_time(environment()->logical_time());
+    const Tag next = now.delay(period_);
     environment()->scheduler()->schedule_sync(this, next);
   }
 }
@@ -74,7 +73,7 @@ ShutdownTrigger::ShutdownTrigger(const std::string& name, Reactor* container)
 void ShutdownTrigger::setup() noexcept { BaseAction::setup(); }
 
 void ShutdownTrigger::shutdown() {
-  Tag tag = Tag::from_logical_time(environment()->logical_time()).delay();
+  const Tag tag = Tag::from_logical_time(environment()->logical_time()).delay();
   environment()->scheduler()->schedule_sync(this, tag);
 }
 

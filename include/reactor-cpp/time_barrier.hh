@@ -9,7 +9,6 @@
 #ifndef REACTOR_CPP_TIME_BARRIER_HH
 #define REACTOR_CPP_TIME_BARRIER_HH
 
-#include "fwd.hh"
 #include "logical_time.hh"
 #include "scheduler.hh"
 #include "time.hh"
@@ -80,8 +79,8 @@ public:
   // The caller must hold a lock on the scheduler mutex
   auto try_acquire_tag(const Tag& tag) { return tag <= released_time_; }
 
-  auto acquire_tag(const Tag& tag, std::unique_lock<std::mutex>& lock,
-                   const std::function<bool(void)>& abort_waiting) -> bool {
+  auto acquire_tag(const Tag& tag, std::unique_lock<std::mutex>& lock, const std::function<bool(void)>& abort_waiting)
+      -> bool {
     if (try_acquire_tag(tag)) {
       return true;
     }

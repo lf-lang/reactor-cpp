@@ -11,7 +11,6 @@
 
 #include <atomic>
 
-#include "reactor-cpp/config.hh"
 #include "reactor-cpp/logging.hh"
 
 namespace reactor {
@@ -23,7 +22,7 @@ private:
 #else
   constexpr static bool enabled_{false};
 #endif
-  // NOLINTBEGIN(cppcoreguidelines-avoid-non-const-global-variables)
+  // NOLINT BEGIN(cppcoreguidelines-avoid-non-const-global-variables)
   inline static std::atomic_size_t reactor_instances_{0};
   inline static std::atomic_size_t connections_{0};
   inline static std::atomic_size_t reactions_{0};
@@ -34,11 +33,17 @@ private:
   inline static std::atomic_size_t triggered_actions_{0};
   inline static std::atomic_size_t set_ports_{0};
   inline static std::atomic_size_t scheduled_actions_{0};
-  // NOLINTEND(cppcoreguidelines-avoid-non-const-global-variables)
+  // NOLINT END(cppcoreguidelines-avoid-non-const-global-variables)
 
   static void increment(std::atomic_size_t& counter) {
     if constexpr (enabled_) {
       counter.fetch_add(1, std::memory_order_release);
+    }
+  }
+
+  static void decrement(std::atomic_size_t& counter) {
+    if constexpr (enabled_) {
+      counter.fetch_sub(1, std::memory_order_release);
     }
   }
 
@@ -48,11 +53,18 @@ public:
   static void increment_reactions() { increment(reactions_); }
   static void increment_actions() { increment(actions_); }
   static void increment_ports() { increment(ports_); }
+
   static void increment_processed_events() { increment(processed_events_); }
   static void increment_processed_reactions() { increment(processed_reactions_); }
   static void increment_triggered_actions() { increment(triggered_actions_); }
   static void increment_set_ports() { increment(set_ports_); }
   static void increment_scheduled_actions() { increment(scheduled_actions_); }
+
+  static void decrement_reactor_instances() { decrement(reactor_instances_); }
+  static void decrement_connections() { decrement(connections_); }
+  static void decrement_reactions() { decrement(reactions_); }
+  static void decrement_actions() { decrement(actions_); }
+  static void decrement_ports() { decrement(ports_); }
 
   static auto reactor_instances() { return reactor_instances_.load(std::memory_order_acquire); }
   static auto connections() { return connections_.load(std::memory_order_acquire); }

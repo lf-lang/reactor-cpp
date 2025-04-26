@@ -114,15 +114,15 @@ public:
     return tree;
   }
 
-  [[nodiscard]] auto get_destinations(E source) const noexcept -> std::vector<std::pair<P, E>> {
-    return graph_[source];
-  }
+  auto remove_edge(E source, E destinations) noexcept {
+    if (graph_.find(source) == std::end(graph_)) {
+      return;
+    }
+    auto conns = std::find_if(std::begin(graph_[source]), std::end(graph_[source]),
+                              [destinations](auto val) { return val.second == destinations; });
 
-  [[nodiscard]] auto get_upstream(E vertex) const noexcept -> std::optional<E> {
-    for (const auto& [source, sinks] : graph_) {
-      if (sinks.second.contains(vertex)) {
-        return source;
-      }
+    if (conns != std::end(graph_[source])) {
+      graph_[source].erase(conns);
     }
   }
 

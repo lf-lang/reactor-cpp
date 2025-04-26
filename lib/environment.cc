@@ -24,7 +24,7 @@
 
 namespace reactor {
 
-Environment::Environment(unsigned int num_workers, bool fast_fwd_execution, const Duration& timeout)
+Environment::Environment(const unsigned int num_workers, const bool fast_fwd_execution, const Duration& timeout)
     : log_("Environment")
     , num_workers_(num_workers)
     , fast_fwd_execution_(fast_fwd_execution)
@@ -41,23 +41,32 @@ Environment::Environment(const std::string& name, Environment* containing_enviro
     , top_environment_(containing_environment_->top_environment_)
     , scheduler_(this)
     , timeout_(containing_environment->timeout()) {
-  [[maybe_unused]] bool result = containing_environment->contained_environments_.insert(this).second;
+  [[maybe_unused]] const bool result = containing_environment->contained_environments_.insert(this).second;
   reactor_assert(result);
 }
 
 void Environment::register_reactor(Reactor* reactor) {
   reactor_assert(reactor != nullptr);
-  validate(this->phase() == Phase::Construction, "Reactors may only be registered during construction phase!");
+  validate(this->phase() == Phase::Construction || this->phase() == Phase::Mutation,
+           "Reactors may only be registered during construction phase!");
   validate(reactor->is_top_level(), "The environment may only contain top level reactors!");
-  [[maybe_unused]] bool result = top_level_reactors_.insert(reactor).second;
+  [[maybe_unused]] const bool result = top_level_reactors_.insert(reactor).second;
   reactor_assert(result);
+}
+
+void Environment::unregister_reactor(Reactor* reactor) {
+  reactor_assert(reactor != nullptr);
+  validate(this->phase() == Phase::Construction || this->phase() == Phase::Mutation,
+           "Reactors may only be unregistered during construction phase!");
+  validate(reactor->is_top_level(), "The environment may only contain top level reactors!");
+  top_level_reactors_.erase(reactor);
 }
 
 void Environment::register_input_action(BaseAction* action) {
   reactor_assert(action != nullptr);
   validate(this->phase() == Phase::Construction || this->phase() == Phase::Assembly,
            "Input actions may only be registered during construction or assembly phase!");
-  [[maybe_unused]] bool result = input_actions_.insert(action).second;
+  [[maybe_unused]] const bool result = input_actions_.insert(action).second;
   reactor_assert(result);
   run_forever_ = true;
 }
@@ -144,7 +153,7 @@ void Environment::assemble() { // NOLINT(readability-function-cognitive-complexi
   }
 }
 
-void Environment::build_dependency_graph(Reactor* reactor) {
+void Environment::build_dependency_graph(const Reactor* reactor) {
   // obtain dependencies from each contained reactor
   for (auto* sub_reactor : reactor->reactors()) {
     build_dependency_graph(sub_reactor);
@@ -160,7 +169,7 @@ void Environment::build_dependency_graph(Reactor* reactor) {
   // connect all reactions_ this reaction depends on
   for (auto* reaction : reactor->reactions()) {
     for (auto* dependency : reaction->dependencies()) {
-      auto* source = dependency;
+      const auto* source = dependency;
       while (source->has_inward_binding()) {
         source = source->inward_binding();
       }
@@ -176,7 +185,7 @@ void Environment::build_dependency_graph(Reactor* reactor) {
     auto next = std::next(iterator);
     while (next != priority_map.end()) {
       dependencies_.emplace_back(next->second, iterator->second);
-      iterator++;
+      ++iterator;
       next = std::next(iterator);
     }
   }
@@ -211,7 +220,7 @@ void Environment::async_shutdown() {
   sync_shutdown();
 }
 
-auto dot_name([[maybe_unused]] ReactorElement* reactor_element) -> std::string {
+auto dot_name([[maybe_unused]] const ReactorElement* reactor_element) -> std::string {
   std::string fqn{reactor_element->fqn()};
   std::replace(fqn.begin(), fqn.end(), '.', '_');
   return fqn;

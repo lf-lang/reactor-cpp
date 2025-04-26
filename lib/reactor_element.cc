@@ -18,13 +18,14 @@
 
 namespace reactor {
 
-ReactorElement::ReactorElement(const std::string& name, ReactorElement::Type type, Reactor* container)
+ReactorElement::ReactorElement(const std::string& name, const ReactorElement::Type type, Reactor* container)
     : name_(name)
-    , container_(container) {
+    , container_(container)
+    , type_(type) {
   reactor_assert(container != nullptr);
   this->environment_ = container->environment();
   reactor_assert(this->environment_ != nullptr);
-  validate(this->environment_->phase() == Phase::Construction ||
+  validate(this->environment_->phase() == Phase::Construction || this->environment_->phase() == Phase::Mutation ||
                (type == Type::Action && this->environment_->phase() == Phase::Assembly),
            "Reactor elements can only be created during construction phase!");
   // We need a reinterpret_cast here as the derived class is not yet created
@@ -64,14 +65,15 @@ ReactorElement::ReactorElement(const std::string& name, ReactorElement::Type typ
   fqn_ = string_stream.str();
 }
 
-ReactorElement::ReactorElement(const std::string& name, ReactorElement::Type type, Environment* environment)
+ReactorElement::ReactorElement(const std::string& name, const ReactorElement::Type type, Environment* environment)
     : name_(name)
     , fqn_(name)
-    , environment_(environment) {
+    , environment_(environment)
+    , type_(type) {
   reactor_assert(environment != nullptr);
 
   validate(type == Type::Reactor || type == Type::Action, "Only reactors and actions can be owned by the environment!");
-  validate(this->environment_->phase() == Phase::Construction ||
+  validate(this->environment_->phase() == Phase::Construction || this->environment_->phase() == Phase::Mutation ||
                (type == Type::Action && this->environment_->phase() == Phase::Assembly),
            "Reactor elements can only be created during construction phase!");
 
@@ -86,4 +88,37 @@ ReactorElement::ReactorElement(const std::string& name, ReactorElement::Type typ
     break;
   }
 }
+
+ReactorElement::~ReactorElement() {
+  switch (type_) {
+  case Type::Action:
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+    container_->unregister_action(reinterpret_cast<BaseAction*>(this));
+    break;
+  case Type::Input:
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+    container_->unregister_input(reinterpret_cast<BasePort*>(this));
+    break;
+  case Type::Output:
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+    container_->unregister_output(reinterpret_cast<BasePort*>(this));
+    break;
+  case Type::Reaction:
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+    container_->unregister_reaction(reinterpret_cast<Reaction*>(this));
+    break;
+  case Type::Reactor:
+    if (container_ == nullptr) {
+      // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+      environment_->unregister_reactor(reinterpret_cast<Reactor*>(this));
+    } else {
+      // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+      container_->unregister_reactor(reinterpret_cast<Reactor*>(this));
+    }
+    break;
+  default:
+    break;
+  }
+}
+
 } // namespace reactor

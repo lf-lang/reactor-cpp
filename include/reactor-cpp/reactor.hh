@@ -10,7 +10,6 @@
 #define REACTOR_CPP_REACTOR_HH
 
 #include <set>
-#include <sstream>
 #include <string>
 
 #include "action.hh"
@@ -35,10 +34,16 @@ private:
   void register_reaction(Reaction* reaction);
   void register_reactor(Reactor* reactor);
 
+  void unregister_action(BaseAction* action);
+  void unregister_input(BasePort* port);
+  void unregister_output(BasePort* port);
+  void unregister_reaction(Reaction* reaction);
+  void unregister_reactor(Reactor* reactor);
+
 public:
   Reactor(const std::string& name, Reactor* container);
   Reactor(const std::string& name, Environment* environment);
-  ~Reactor() override = default;
+  ~Reactor() override;
 
   void register_connection(std::unique_ptr<BaseAction>&& connection);
   [[nodiscard]] auto actions() const noexcept -> const auto& { return actions_; }

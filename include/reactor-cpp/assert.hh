@@ -13,7 +13,6 @@
 #include "reactor-cpp/fwd.hh"
 
 #include <cassert>
-#include <sstream>
 #include <stdexcept>
 #include <string>
 
@@ -71,7 +70,7 @@ public:
       : std::runtime_error(build_message(msg)) {}
 };
 
-constexpr void validate([[maybe_unused]] bool condition, [[maybe_unused]] const std::string_view message) {
+constexpr void validate([[maybe_unused]] const bool condition, [[maybe_unused]] const std::string_view message) {
   if constexpr (runtime_validation) {
     if (!condition) {
       print_backtrace();
@@ -80,8 +79,8 @@ constexpr void validate([[maybe_unused]] bool condition, [[maybe_unused]] const 
   }
 }
 
-template <typename E> constexpr auto extract_value(E enum_value) -> typename std::underlying_type_t<E> {
-  return static_cast<typename std::underlying_type_t<E>>(enum_value);
+template <typename E> constexpr auto extract_value(E enum_value) -> std::underlying_type_t<E> {
+  return static_cast<std::underlying_type_t<E>>(enum_value);
 }
 
 void assert_phase([[maybe_unused]] const ReactorElement* ptr, [[maybe_unused]] Phase phase);

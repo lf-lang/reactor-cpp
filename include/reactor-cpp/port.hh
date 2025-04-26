@@ -103,6 +103,17 @@ public:
   void register_set_callback(const PortCallback& callback);
   void register_clean_callback(const PortCallback& callback);
 
+  void overwrite(const BasePort& other) noexcept {
+    anti_dependencies_ = other.anti_dependencies_;
+    dependencies_ = other.dependencies_;
+    triggers_ = other.triggers_;
+    inward_binding_ = other.inward_binding_;
+    outward_bindings_ = other.outward_bindings_;
+    set_callback_ = other.set_callback_;
+    clean_callback_ = other.clean_callback_;
+    type_ = other.type_;
+  }
+
   friend class Reaction;
   friend class Scheduler;
 };
@@ -168,7 +179,7 @@ public:
   void shutdown() final {}
 };
 
-template <class T> class Input : public Port<T> { // NOLINT(cppcoreguidelines-special-member-functions)
+template <class T> class Input final : public Port<T> { // NOLINT(cppcoreguidelines-special-member-functions)
 public:
   Input(const std::string& name, Reactor* container)
       : Port<T>(name, PortType::Input, container) {}
@@ -176,12 +187,12 @@ public:
   Input(Input&&) noexcept = default;
 };
 
-template <class T> class Output : public Port<T> { // NOLINT(cppcoreguidelines-special-member-functions)
+template <class T> class Output final : public Port<T> { // NOLINT(cppcoreguidelines-special-member-functions)
 public:
   Output(const std::string& name, Reactor* container)
       : Port<T>(name, PortType::Output, container) {}
 
-  Output(Output&&) noexcept = default;
+  Output(Output<T>&&) noexcept = default;
 };
 
 } // namespace reactor

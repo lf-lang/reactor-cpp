@@ -14,6 +14,7 @@
 #include <cstddef>
 #include <iostream>
 #include <type_traits>
+#include <utility>
 #include <vector>
 
 #include "assert.hh"
@@ -22,9 +23,13 @@
 namespace reactor {
 
 class BaseMultiport { // NOLINT cppcoreguidelines-special-member-functions,-warnings-as-errors
+protected:
+  std::atomic<std::size_t> size_{0};         // NOLINT cppcoreguidelines-non-private-member-variables-in-classes
+  std::vector<std::size_t> present_ports_{}; // NOLINT cppcoreguidelines-non-private-member-variables-in-classes
+
 private:
-  std::atomic<std::size_t> size_{0};
-  std::vector<std::size_t> present_ports_{};
+  std::string name_{};
+  Reactor* container_ = nullptr;
 
   // record that the port with the given index has been set
   void set_present(std::size_t index);
@@ -46,14 +51,25 @@ protected:
   void register_port(BasePort& port, size_t idx);
 
 public:
-  BaseMultiport() = default;
+  BaseMultiport(std::string name, Reactor* container)
+      : name_(std::move(name))
+      , container_(container) {}
   ~BaseMultiport() = default;
+
+  [[nodiscard]] auto name() const noexcept -> const std::string& { return name_; }
+  [[nodiscard]] auto container() const noexcept -> Reactor* { return container_; }
 };
 
 template <class T, class A = std::allocator<T>>
 class Multiport : public BaseMultiport { // NOLINT cppcoreguidelines-special-member-functions
 protected:
   std::vector<T> ports_{}; // NOLINT cppcoreguidelines-non-private-member-variables-in-classes
+
+  template <class... Args> void emplace_back(Args&&... args) noexcept {
+    static_assert(std::is_constructible_v<T, Args...>);
+    ports_.emplace_back(std::forward<Args>(args)...);
+    register_port(ports_.back(), ports_.size() - 1);
+  }
 
 public:
   using value_type = typename A::value_type;
@@ -62,7 +78,8 @@ public:
   using iterator = typename std::vector<T>::iterator;
   using const_iterator = typename std::vector<T>::const_iterator;
 
-  Multiport() noexcept = default;
+  Multiport(const std::string& name, Reactor* container) noexcept
+      : BaseMultiport(name, container) {}
   ~Multiport() noexcept = default;
 
   auto operator==(const Multiport& other) const noexcept -> bool {
@@ -81,6 +98,14 @@ public:
 
   auto size() const noexcept -> size_type { return ports_.size(); };
   [[nodiscard]] auto empty() const noexcept -> bool { return ports_.empty(); };
+  void resize(std::size_t new_size) {
+    reactor_assert(size() >= new_size);
+
+    for (auto i = size(); i > new_size; i--) {
+      ports_.pop_back();
+      present_ports_.pop_back();
+    }
+  }
 
   [[nodiscard]] auto present_indices_unsorted() const noexcept -> std::vector<std::size_t> {
     return std::vector<std::size_t>(std::begin(present_ports()), std::begin(present_ports()) + present_ports_size());
@@ -95,6 +120,9 @@ public:
 
 template <class T, class A = std::allocator<T>> class ModifableMultiport : public Multiport<T, A> {
 public:
+  ModifableMultiport(std::string name, Reactor* container)
+      : Multiport<T, A>(name, container) {}
+
   void reserve(std::size_t size) noexcept {
     this->ports_.reserve(size);
     this->present_ports_reserve(size);
@@ -105,9 +133,10 @@ public:
     this->register_port(this->ports_.back(), this->ports_.size() - 1);
   }
 
-  template <class... Args> void emplace_back(Args&&... args) noexcept {
-    this->ports_.emplace_back(std::forward<Args>(args)...);
-    this->register_port(this->ports_.back(), this->ports_.size() - 1);
+  void create_new_port() noexcept {
+    std::string _lf_port_name = this->name() + "_" + std::to_string(this->size());
+    Reactor* container = this->container();
+    this->emplace_back(_lf_port_name, container);
   }
 };
 } // namespace reactor

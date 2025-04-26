@@ -11,11 +11,6 @@
 // workaround than an actual solution, but apparently clang-tidy does not allow
 // something nicer at the moment.
 
-#include <string>
-
-#include "reactor-cpp/config.hh"
-#include "reactor-cpp/logical_time.hh"
-
 // Only enable tracing if REACTOR_CPP_TRACE is set.
 // Also, disable tracing if clang analytics are run as it produces many errors.
 #if defined(REACTOR_CPP_TRACE) && !defined(__clang_analyzer__)

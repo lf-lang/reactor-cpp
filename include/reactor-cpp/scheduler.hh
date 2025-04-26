@@ -14,6 +14,7 @@
 #include <future>
 #include <map>
 #include <mutex>
+#include <semaphore>
 #include <set>
 #include <shared_mutex>
 #include <thread>
@@ -39,21 +40,18 @@ class Worker;
 class Worker {
 private:
   Scheduler* scheduler_;
+  bool mutation_ = false;
   unsigned int identity_{0};
   std::thread thread_{};
   log::NamedLogger log_;
 
   // NOLINTNEXTLINE (cppcoreguidelines-avoid-non-const-global-variables)
   static thread_local const Worker* current_worker;
-
   void work() const;
   void execute_reaction(Reaction* reaction) const;
 
 public:
-  Worker(Scheduler* scheduler, unsigned int identity, const std::string& name)
-      : scheduler_{scheduler}
-      , identity_{identity}
-      , log_(name) {}
+  Worker(Scheduler* scheduler, bool mutation, unsigned int identity, const std::string& name);
   Worker(Worker&& worker) = default;
   Worker(const Worker& worker) = delete;
   ~Worker() = default;
@@ -153,11 +151,18 @@ private:
 
   std::vector<std::vector<BasePort*>> set_ports_{};
   std::vector<std::vector<Reaction*>> triggered_reactions_{};
+  std::vector<std::vector<Reaction*>> triggered_mutation_reactions_{};
   std::vector<std::vector<Reaction*>> reaction_queue_{};
+  std::vector<std::vector<Reaction*>> mutation_reaction_queue_{};
+  std::vector<bool> mutation_reaction_present_{};
   unsigned int reaction_queue_pos_{std::numeric_limits<unsigned>::max()};
+  unsigned int mutation_reaction_queue_pos_{std::numeric_limits<unsigned>::max()};
+  std::counting_semaphore<> mutation_release_{0}; // FIXME:
 
   ReadyQueue ready_queue_;
+  ReadyQueue mutation_ready_queue_;
   std::atomic<std::ptrdiff_t> reactions_to_process_{0};
+  std::atomic<std::ptrdiff_t> mutation_reactions_to_process_{0};
 
   std::atomic<bool> stop_{false};
   bool continue_execution_{true};
@@ -206,6 +211,7 @@ public:
 
   void start();
   void stop();
+  void finished_executing_mutations();
 
   void register_release_tag_callback(const ReleaseTagCallback& callback);
 

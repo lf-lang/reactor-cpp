@@ -11,8 +11,6 @@
 #define REACTOR_CPP_REACTOR_ELEMENT_HH
 
 #include <cstdint>
-#include <memory>
-#include <set>
 #include <sstream>
 #include <string>
 
@@ -20,6 +18,9 @@
 
 namespace reactor {
 class ReactorElement { // NOLINT(cppcoreguidelines-special-member-functions)
+public:
+  enum class Type : std::uint8_t { Action, Port, Reaction, Reactor, Input, Output };
+
 private:
   std::string name_{};
   std::string fqn_{};
@@ -27,15 +28,14 @@ private:
   // The reactor owning this element
   Reactor* container_{nullptr};
   Environment* environment_{};
+  Type type_;
 
   auto fqn_detail(std::stringstream& string_stream) const noexcept -> std::stringstream&;
 
 public:
-  enum class Type : std::uint8_t { Action, Port, Reaction, Reactor, Input, Output };
-
   ReactorElement(const std::string& name, Type type, Reactor* container);
   ReactorElement(const std::string& name, Type type, Environment* environment);
-  virtual ~ReactorElement() = default;
+  virtual ~ReactorElement();
 
   // not copyable, but movable
   ReactorElement(const ReactorElement&) = delete;
