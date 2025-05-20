@@ -3,6 +3,9 @@ A Reactor-Oriented Programming Framework in C++
 
 ![CI](https://github.com/lf-lang/reactor-cpp/workflows/CI/badge.svg)
 
+> [!IMPORTANT]  
+> This repository is currently not actively maintained and developed as the core contributors focus on other projects. Please check out the [Xronos SDK](https://github.com/xronos-inc/xronos) which uses a fork of this runtime and [reactor-uc](https://github.com/lf-lang/reactor-uc) which applies the same underlying ideas to embedded devices.
+
 While reactor-cpp can be used as a standalone framework, it is designed to work
 in conjunction with [Lingua Franca](https://github.com/lf-lang/lingua-franca/),
 a polyglot metaprogramming language. Read the Lingua Franca [handbook](https://www.lf-lang.org/docs/) 
