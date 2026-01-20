@@ -9,6 +9,13 @@ endif()
 
 project(${LIB_TARGET} LANGUAGES CXX VERSION 0.0.1)
 
+if (NOT DEFINED LF_REACTOR_CPP_SUFFIX)
+  find_package(ament_cmake QUIET)
+  if(ament_cmake_FOUND)
+    set(REACTOR_CPP_USE_AMENT ON)
+  endif()
+endif()
+
 # require C++17
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -70,4 +77,10 @@ if (DEFINED LF_REACTOR_CPP_SUFFIX)
   install(DIRECTORY include/ DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${LIB_TARGET}")
 else()
   install(DIRECTORY include/ DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
+endif()
+
+if (REACTOR_CPP_USE_AMENT)
+  ament_export_targets(${LIB_TARGET}Config HAS_LIBRARY_TARGET)
+  ament_export_include_directories(include)
+  ament_package()
 endif()
