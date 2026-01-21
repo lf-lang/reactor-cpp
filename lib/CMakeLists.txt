@@ -61,9 +61,12 @@ if(REACTOR_CPP_INSTALL)
     install(FILES "${PROJECT_BINARY_DIR}/include/reactor-cpp/config.hh" DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/reactor-cpp")
   endif()
 
-  install(TARGETS ${LIB_TARGET} EXPORT ${LIB_TARGET}
+  install(TARGETS ${LIB_TARGET} EXPORT ${LIB_TARGET}Config
       ARCHIVE  DESTINATION "${CMAKE_INSTALL_LIBDIR}" OPTIONAL
       LIBRARY  DESTINATION "${CMAKE_INSTALL_LIBDIR}" OPTIONAL
       RUNTIME  DESTINATION "${CMAKE_INSTALL_BINDIR}" OPTIONAL)
-  # Note: install(EXPORT ...) moved to root CMakeLists.txt for ament compatibility
+
+  install(EXPORT ${LIB_TARGET}Config DESTINATION share/${LIB_TARGET}/cmake)
+
+  export(TARGETS ${PROJECT_NAME} FILE ${LIB_TARGET}Config.cmake)
 endif()
