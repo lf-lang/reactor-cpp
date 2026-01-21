@@ -61,7 +61,6 @@ if(REACTOR_CPP_INSTALL)
     install(FILES "${PROJECT_BINARY_DIR}/include/reactor-cpp/config.hh" DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/reactor-cpp")
   endif()
 
-  message(WARNING "reactor-cpp: Installing target ${LIB_TARGET} with EXPORT ${LIB_TARGET}")
   install(TARGETS ${LIB_TARGET} EXPORT ${LIB_TARGET}
       ARCHIVE  DESTINATION "${CMAKE_INSTALL_LIBDIR}" OPTIONAL
       LIBRARY  DESTINATION "${CMAKE_INSTALL_LIBDIR}" OPTIONAL
