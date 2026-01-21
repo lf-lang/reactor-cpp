@@ -66,10 +66,5 @@ if(REACTOR_CPP_INSTALL)
       ARCHIVE  DESTINATION "${CMAKE_INSTALL_LIBDIR}" OPTIONAL
       LIBRARY  DESTINATION "${CMAKE_INSTALL_LIBDIR}" OPTIONAL
       RUNTIME  DESTINATION "${CMAKE_INSTALL_BINDIR}" OPTIONAL)
-
-  # Install the export file. Both ament and non-ament builds need this.
-  # For ament builds, ament_package() generates Config.cmake that includes this file.
-  message(WARNING "reactor-cpp: Installing EXPORT ${LIB_TARGET} to share/${LIB_TARGET}/cmake")
-  install(EXPORT ${LIB_TARGET}
-      DESTINATION share/${LIB_TARGET}/cmake)
+  # Note: install(EXPORT ...) moved to root CMakeLists.txt for ament compatibility
 endif()
