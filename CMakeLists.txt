@@ -80,7 +80,7 @@ else()
 endif()
 
 if (REACTOR_CPP_USE_AMENT)
-  ament_export_targets(${LIB_TARGET}Config HAS_LIBRARY_TARGET)
+  ament_export_targets(${LIB_TARGET}Targets HAS_LIBRARY_TARGET)
   ament_export_include_directories(include)
   ament_package()
 endif()
