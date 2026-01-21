@@ -61,13 +61,13 @@ if(REACTOR_CPP_INSTALL)
     install(FILES "${PROJECT_BINARY_DIR}/include/reactor-cpp/config.hh" DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/reactor-cpp")
   endif()
 
-  install(TARGETS ${LIB_TARGET} EXPORT ${LIB_TARGET}Targets
+  install(TARGETS ${LIB_TARGET} EXPORT ${LIB_TARGET}
       ARCHIVE  DESTINATION "${CMAKE_INSTALL_LIBDIR}" OPTIONAL
       LIBRARY  DESTINATION "${CMAKE_INSTALL_LIBDIR}" OPTIONAL
       RUNTIME  DESTINATION "${CMAKE_INSTALL_BINDIR}" OPTIONAL)
 
   # Install the export file. Both ament and non-ament builds need this.
   # For ament builds, ament_package() generates Config.cmake that includes this file.
-  install(EXPORT ${LIB_TARGET}Targets
+  install(EXPORT ${LIB_TARGET}
       DESTINATION share/${LIB_TARGET}/cmake)
 endif()
