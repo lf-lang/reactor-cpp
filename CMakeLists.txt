@@ -87,7 +87,7 @@ if (REACTOR_CPP_USE_AMENT)
   message(WARNING "reactor-cpp: CMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}")
   # Install the export file - must be in root CMakeLists.txt for ament compatibility
   message(WARNING "reactor-cpp: Installing EXPORT ${LIB_TARGET} to share/${LIB_TARGET}/cmake")
-  install(EXPORT ${LIB_TARGET} DESTINATION share/${LIB_TARGET}/cmake)
+  install(EXPORT ${LIB_TARGET} DESTINATION share/${LIB_TARGET}/cmake NAMESPACE ${LIB_TARGET}::)
   message(WARNING "reactor-cpp: Exporting ament targets: ${LIB_TARGET}")
   ament_export_targets(${LIB_TARGET} HAS_LIBRARY_TARGET)
   ament_export_include_directories(include)
