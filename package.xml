@@ -10,13 +10,3 @@
    <build_type>cmake</build_type>
  </export>
 </package>
-<package format="3">
- <name>reactor-cpp-default</name>
- <version>0.0.0</version>
- <description>A C++ reactor runtime</description>
- <maintainer email="christian.menard@tu-dresden.de">user</maintainer>
- <license>ISC License</license>
- <export>
-   <build_type>cmake</build_type>
- </export>
-</package>
