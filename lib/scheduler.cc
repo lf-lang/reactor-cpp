@@ -372,8 +372,8 @@ void Scheduler::next() { // NOLINT(readability-function-cognitive-complexity)
         bool result{true};
         for (auto* action : environment_->input_actions_) {
           log_.debug() << "acquire tag " << t_next << " from input action " << action->fqn();
-          bool inner_result =
-              action->acquire_tag(t_next, lock, [&t_next, this]() -> bool { return t_next != event_queue_.next_tag(); });
+          bool inner_result = action->acquire_tag(
+              t_next, lock, [&t_next, this]() -> bool { return t_next != event_queue_.next_tag(); });
           // If the wait was aborted or if the next tag changed in the meantime,
           // we need to break from the loop and continue with the main loop.
           if (!inner_result || t_next != event_queue_.next_tag()) {
