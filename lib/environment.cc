@@ -184,7 +184,7 @@ void Environment::build_dependency_graph(Reactor* reactor) {
 
 void Environment::sync_shutdown() {
   {
-    std::lock_guard<std::mutex> lock{shutdown_mutex_};
+    std::scoped_lock lock{shutdown_mutex_};
 
     if (phase_ >= Phase::Shutdown) {
       // sync_shutdown() was already called -> abort
@@ -347,7 +347,7 @@ auto Environment::startup(const TimePoint& start_time) -> std::thread {
   // start processing events
   phase_ = Phase::Execution;
 
-  return std::thread([this, start_time]() {
+  return std::thread([this, start_time]() -> void {
     std::vector<std::thread> threads;
     threads.reserve(contained_environments_.size());
     // startup all contained environments recursively

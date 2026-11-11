@@ -15,7 +15,7 @@
 
 namespace reactor {
 
-enum ConnectionType : std::uint8_t {
+enum class ConnectionType : std::uint8_t {
   Normal,
   Delayed,
   Enclaved,

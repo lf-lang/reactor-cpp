@@ -129,7 +129,7 @@ void Port<void>::instantiate_connection_to(const ConnectionProperties& propertie
 // same port (one if the port is in a multiport, and one if it is upstream of
 // a delayed connection).
 auto compose_callbacks(const PortCallback& callback1, const PortCallback& callback2) -> PortCallback {
-  return [=](const BasePort& port) {
+  return [=](const BasePort& port) -> void {
     callback1(port);
     callback2(port);
   };

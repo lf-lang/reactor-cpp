@@ -15,7 +15,7 @@ private:
   PhysicalAction<void> req{"req", this};
 
   // reactions
-  Reaction r1{"1", 1, this, [this]() { reaction_1(); }};
+  Reaction r1{"1", 1, this, [this]() -> void { reaction_1(); }};
 
   void reaction_1() {}
 
@@ -41,8 +41,8 @@ private:
   PhysicalAction<void> pol{"pol", this};
 
   // reactions
-  Reaction r1{"1", 1, this, [this]() { reaction_1(); }};
-  Reaction r2{"2", 2, this, [this]() { reaction_2(); }};
+  Reaction r1{"1", 1, this, [this]() -> void { reaction_1(); }};
+  Reaction r2{"2", 2, this, [this]() -> void { reaction_2(); }};
 
   void reaction_1() {}
   void reaction_2() {}
@@ -67,7 +67,7 @@ public:
   Output<void> force{"force", this}; // NOLINT
 
 private:
-  Reaction r1{"1", 1, this, [this]() { reaction_1(); }};
+  Reaction r1{"1", 1, this, [this]() -> void { reaction_1(); }};
 
   void reaction_1() {}
 
@@ -94,9 +94,9 @@ private:
   PhysicalAction<void> rev{"rev", this};
 
   // reactions
-  Reaction r1{"1", 1, this, [this]() { reaction_1(); }};
-  Reaction r2{"2", 2, this, [this]() { reaction_2(); }};
-  Reaction r3{"3", 3, this, [this]() { reaction_3(); }};
+  Reaction r1{"1", 1, this, [this]() -> void { reaction_1(); }};
+  Reaction r2{"2", 2, this, [this]() -> void { reaction_2(); }};
+  Reaction r3{"3", 3, this, [this]() -> void { reaction_3(); }};
 
   void reaction_1() {}
   void reaction_2() {}
@@ -125,7 +125,7 @@ public:
 
 private:
   // reactions_
-  Reaction r1{"1", 1, this, [this]() { reaction_1(); }};
+  Reaction r1{"1", 1, this, [this]() -> void { reaction_1(); }};
 
   void reaction_1() {}
 
@@ -143,7 +143,7 @@ public:
 
 private:
   // reactions_
-  Reaction r1{"1", 1, this, [this]() { reaction_1(); }};
+  Reaction r1{"1", 1, this, [this]() -> void { reaction_1(); }};
 
   void reaction_1() {}
 

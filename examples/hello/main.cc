@@ -13,8 +13,8 @@ private:
   ShutdownTrigger sa{"terminate", this};
 
   // reactions
-  Reaction r_hello{"r_hello", 1, this, [this]() { hello(); }};
-  Reaction r_terminate{"r_terminate", 2, this, [this]() { terminate(); }};
+  Reaction r_hello{"r_hello", 1, this, [this]() -> void { hello(); }};
+  Reaction r_terminate{"r_terminate", 2, this, [this]() -> void { terminate(); }};
 
 public:
   explicit Hello(Environment* env)

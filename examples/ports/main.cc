@@ -8,7 +8,7 @@ using namespace std::chrono_literals;
 class Trigger : public Reactor {
 private:
   Timer timer;
-  Reaction r_timer{"r_timer", 1, this, [this]() { on_timer(); }};
+  Reaction r_timer{"r_timer", 1, this, [this]() -> void { on_timer(); }};
 
 public:
   Trigger(const std::string& name, Environment* env, Duration period)
@@ -28,7 +28,7 @@ public:
 class Counter : public Reactor {
 private:
   int value_{0};
-  Reaction r_trigger{"r_trigger", 1, this, [this]() { on_trigger(); }};
+  Reaction r_trigger{"r_trigger", 1, this, [this]() -> void { on_trigger(); }};
 
 public:
   Counter(const std::string& name, Environment* env)
@@ -51,7 +51,7 @@ public:
 
 class Printer : public Reactor {
 private:
-  Reaction r_value{"r_value", 1, this, [this]() { on_value(); }};
+  Reaction r_value{"r_value", 1, this, [this]() -> void { on_value(); }};
 
 public:
   Input<int> value{"value", this};     // NOLINT
@@ -69,7 +69,7 @@ public:
 
 class Adder : public Reactor {
 private:
-  Reaction r_add{"r_add", 1, this, [this]() { add(); }};
+  Reaction r_add{"r_add", 1, this, [this]() -> void { add(); }};
 
 public:
   Input<int> i1{"i1", this};    // NOLINT

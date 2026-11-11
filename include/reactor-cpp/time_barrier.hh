@@ -85,7 +85,9 @@ public:
     if (try_acquire_tag(tag)) {
       return true;
     }
-    scheduler_->wait(lock, [this, &tag, &abort_waiting]() { return try_acquire_tag(tag) || abort_waiting(); });
+    scheduler_->wait(lock, [this, &tag, &abort_waiting]() -> bool {
+      return try_acquire_tag(tag) || abort_waiting();
+    });
     return !abort_waiting();
   }
 };

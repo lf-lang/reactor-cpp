@@ -27,7 +27,7 @@ public:
 
   void release(int increment) {
     {
-      std::lock_guard<std::mutex> lock_guard(mutex_);
+      std::scoped_lock lock_guard(mutex_);
       count_ += increment;
     }
     cv_.notify_all();
@@ -35,7 +35,7 @@ public:
 
   void acquire() {
     std::unique_lock<std::mutex> lock_guard(mutex_);
-    cv_.wait(lock_guard, [&]() { return count_ != 0; });
+    cv_.wait(lock_guard, [&]() -> bool { return count_ != 0; });
     count_--;
   }
 };

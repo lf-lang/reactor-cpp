@@ -31,7 +31,7 @@ template <class T> template <class Dur> void Action<T>::schedule(const Immutable
     scheduler->schedule_sync(this, tag);
     events_[tag] = value_ptr;
   } else {
-    std::lock_guard<std::mutex> lock{mutex_events_};
+    std::scoped_lock lock{mutex_events_};
     // We must call schedule_async while holding the mutex, because otherwise
     // the scheduler could already start processing the event that we schedule
     // and call setup() on this action before we insert the value in events_.
@@ -68,7 +68,7 @@ template <class T> auto Action<T>::schedule_at(const ImmutableValuePtr<T>& value
     scheduler->schedule_sync(this, tag);
     events_[tag] = value_ptr;
   } else {
-    std::lock_guard<std::mutex> lock{mutex_events_};
+    std::scoped_lock lock{mutex_events_};
     // We must call schedule_async while holding the mutex, because otherwise
     // the scheduler could already start processing the event that we schedule
     // and call setup() on this action before we insert the value in events_.

@@ -66,7 +66,7 @@ protected:
       : Connection<T>(name, environment, is_logical, delay) {}
 
   auto upstream_set_callback() noexcept -> PortCallback override {
-    return [this](const BasePort& port) {
+    return [this](const BasePort& port) -> void {
       // We know that port must be of type Port<T>
       auto& typed_port = reinterpret_cast<const Port<T>&>(port); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
       if constexpr (std::is_same<T, void>::value) {
@@ -124,7 +124,7 @@ public:
       , log_{this->fqn()} {};
 
   auto upstream_set_callback() noexcept -> PortCallback override {
-    return [this](const BasePort& port) {
+    return [this](const BasePort& port) -> void {
       // We know that port must be of type Port<T>
       // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
       auto& typed_port = reinterpret_cast<const Port<T>&>(port);
@@ -177,7 +177,7 @@ public:
 
   void bind_upstream_port(Port<T>* port) override {
     Connection<T>::bind_upstream_port(port);
-    port->environment()->scheduler()->register_release_tag_callback([this](const LogicalTime& tag) {
+    port->environment()->scheduler()->register_release_tag_callback([this](const LogicalTime& tag) -> void {
       logical_time_barrier_.release_tag(tag);
       log_.debug() << "upstream released tag " << tag;
       this->environment()->scheduler()->notify();
@@ -191,7 +191,7 @@ public:
       : EnclaveConnection<T>(name, enclave, delay) {}
 
   auto upstream_set_callback() noexcept -> PortCallback override {
-    return [&](const BasePort& port) {
+    return [&](const BasePort& port) -> void {
       // This callback will be called from a reaction executing in the context
       // of the upstream port. Hence, we can retrieve the current tag directly
       // without locking.
@@ -228,7 +228,7 @@ public:
       : EnclaveConnection<T>(name, enclave) {}
 
   auto upstream_set_callback() noexcept -> PortCallback override {
-    return [this](const BasePort& port) {
+    return [this](const BasePort& port) -> void {
       // We know that port must be of type Port<T>
       // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
       auto& typed_port = reinterpret_cast<const Port<T>&>(port);

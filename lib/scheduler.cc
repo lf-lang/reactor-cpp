@@ -246,7 +246,7 @@ void Scheduler::start() {
     // Other schedulers (enclaves or federates) could try to access our logical
     // time and our event queue. Thus, we need to lock the main scheduling mutex
     // in order to avoid data races.
-    std::lock_guard<std::mutex> lock_guard(scheduling_mutex_);
+    std::scoped_lock lock_guard(scheduling_mutex_);
 
     // Initialize our logical time to the value right before the start tag. This
     // is important for usage with enclaves/federates, to indicate, that no events
@@ -334,7 +334,7 @@ void Scheduler::next() { // NOLINT(readability-function-cognitive-complexity)
       if (event_queue_.empty() && !stop_) {
         if (environment_->run_forever()) {
           // wait for a new asynchronous event
-          cv_schedule_.wait(lock, [this]() { return !event_queue_.empty() || stop_; });
+          cv_schedule_.wait(lock, [this]() -> bool { return !event_queue_.empty() || stop_; });
         } else {
           log_.debug() << "No more events in queue_. -> Terminate!";
           environment_->sync_shutdown();
@@ -360,7 +360,7 @@ void Scheduler::next() { // NOLINT(readability-function-cognitive-complexity)
         if (!environment_->fast_fwd_execution()) {
           log_.debug() << "acquire tag " << t_next << " from physical time barrier";
           bool result = PhysicalTimeBarrier::acquire_tag(
-              t_next, lock, this, [&t_next, this]() { return t_next != event_queue_.next_tag(); });
+              t_next, lock, this, [&t_next, this]() -> bool { return t_next != event_queue_.next_tag(); });
           // If acquire tag returns false, then a new event was inserted into the queue and we need to start over
           if (!result) {
             log_.debug() << "abort waiting and restart as the event queue was modified";
@@ -373,7 +373,7 @@ void Scheduler::next() { // NOLINT(readability-function-cognitive-complexity)
         for (auto* action : environment_->input_actions_) {
           log_.debug() << "acquire tag " << t_next << " from input action " << action->fqn();
           bool inner_result =
-              action->acquire_tag(t_next, lock, [&t_next, this]() { return t_next != event_queue_.next_tag(); });
+              action->acquire_tag(t_next, lock, [&t_next, this]() -> bool { return t_next != event_queue_.next_tag(); });
           // If the wait was aborted or if the next tag changed in the meantime,
           // we need to break from the loop and continue with the main loop.
           if (!inner_result || t_next != event_queue_.next_tag()) {
@@ -461,7 +461,7 @@ void Scheduler::schedule_sync(BaseAction* action, const Tag& tag) {
 auto Scheduler::schedule_async(BaseAction* action, const Duration& delay) -> Tag {
   Tag tag;
   {
-    std::lock_guard<std::mutex> lock_guard(scheduling_mutex_);
+    std::scoped_lock lock_guard(scheduling_mutex_);
     tag = Tag::from_physical_time(get_physical_time() + delay);
     schedule_sync(action, tag);
   }
@@ -471,7 +471,7 @@ auto Scheduler::schedule_async(BaseAction* action, const Duration& delay) -> Tag
 
 auto Scheduler::schedule_async_at(BaseAction* action, const Tag& tag) -> bool {
   {
-    std::lock_guard<std::mutex> lock_guard(scheduling_mutex_);
+    std::scoped_lock lock_guard(scheduling_mutex_);
     if (tag <= logical_time_) {
       return false;
     }
@@ -483,7 +483,7 @@ auto Scheduler::schedule_async_at(BaseAction* action, const Tag& tag) -> bool {
 
 auto Scheduler::schedule_empty_async_at(const Tag& tag) -> bool {
   {
-    std::lock_guard<std::mutex> lock_guard(scheduling_mutex_);
+    std::scoped_lock lock_guard(scheduling_mutex_);
     if (tag <= logical_time_) {
       // If we try to insert an empty event at the current logical time, then we
       // succeeded because there must be an event at this tag that is currently
