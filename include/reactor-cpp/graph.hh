@@ -32,23 +32,12 @@ private:
 
 public:
   Graph() noexcept = default;
-  Graph(const Graph& graph) noexcept
-      : graph_(graph.graph_) {}
-  Graph(const Graph&& graph) noexcept
-      : graph_(std::move(graph.graph_)) {}
+  Graph(const Graph&) noexcept = default;
+  Graph(Graph&&) noexcept = default;
   ~Graph() noexcept = default;
 
-  auto operator=(const Graph& other) noexcept -> Graph& {
-    if (this != &other) {
-      graph_ = other.graph_;
-    }
-    return *this;
-  }
-
-  auto operator=(Graph&& other) noexcept -> Graph& {
-    graph_ = std::move(other.graph_);
-    return *this;
-  }
+  auto operator=(const Graph&) noexcept -> Graph& = default;
+  auto operator=(Graph&&) noexcept -> Graph& = default;
 
   // adds a single edge to the graph structure
   void add_edge(E source, E destination, P properties) noexcept {
