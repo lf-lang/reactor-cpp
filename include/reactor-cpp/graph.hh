@@ -39,7 +39,9 @@ public:
   ~Graph() noexcept = default;
 
   auto operator=(const Graph& other) noexcept -> Graph& {
-    graph_ = other.graph_;
+    if (this != &other) {
+      graph_ = other.graph_;
+    }
     return *this;
   }
 
