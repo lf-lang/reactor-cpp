@@ -11,7 +11,8 @@ Checks: '
     llvm-*,
     cert-*,
     -clang-analyzer-core.CallAndMessage,
-    -readability-redundant-member-init'
+    -readability-redundant-member-init,
+    -boost-use-ranges'
 WarningsAsErrors: true
 HeaderFilterRegex: ''
 FormatStyle: none
